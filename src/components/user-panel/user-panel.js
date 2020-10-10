@@ -9,11 +9,11 @@ export default function ({ menuMode }) {
 
   const menuItems = useMemo(() => ([
     {
-      text: 'Profile',
+      text: 'Профиль',
       icon: 'user'
     },
     {
-      text: 'Logout',
+      text: 'Выход',
       icon: 'runner',
       onClick: signOut
     }
@@ -22,8 +22,8 @@ export default function ({ menuMode }) {
   return (
     <div className={'user-panel'}>
       <div className={'user-info'}>
-        <div className={'image-container'}>          
-            <div className={'dx-icon dx-icon-user'}></div>
+        <div className={'image-container'}>
+            <div className={'dx-icon dx-icon-user'}/>
         </div>
         <div className={'user-name'}>{user.email}</div>
       </div>

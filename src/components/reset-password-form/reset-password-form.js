@@ -66,7 +66,7 @@ export default function (props) {
         </ButtonItem>
         <Item>
           <div className={'login-link'}>
-            Return to <Link to={'/login'}>Sign In</Link>
+            Return to <Link to={'/login'}>Вход</Link>
           </div>
         </Item>
       </Form>

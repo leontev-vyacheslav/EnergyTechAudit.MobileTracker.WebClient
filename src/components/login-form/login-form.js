@@ -44,8 +44,8 @@ export default function () {
           editorType={'dxTextBox'}
           editorOptions={emailEditorOptions}
         >
-          <RequiredRule message="Email is required" />
-          <EmailRule message="Email is invalid" />
+          <RequiredRule message="Требуется адрес почты" />
+          <EmailRule message="Неверный адрес почты" />
           <Label visible={false} />
         </Item>
         <Item
@@ -53,7 +53,7 @@ export default function () {
           editorType={'dxTextBox'}
           editorOptions={passwordEditorOptions}
         >
-          <RequiredRule message="Password is required" />
+          <RequiredRule message="Требуется пароль" />
           <Label visible={false} />
         </Item>
         <Item
@@ -73,19 +73,19 @@ export default function () {
               {
                 loading
                   ? <LoadIndicator width={'24px'} height={'24px'} visible={true} />
-                  : 'Sign In'
+                  : 'Вход'
               }
             </span>
           </ButtonOptions>
         </ButtonItem>
         <Item>
           <div className={'link'}>
-            <Link to={'/reset-password'}>Forgot password?</Link>
+            <Link to={'/reset-password'}>Забыли пароль?</Link>
           </div>
         </Item>
         <ButtonItem>
           <ButtonOptions
-            text={'Create an account'}
+            text={'Создать аккаунт'}
             width={'100%'}
             onClick={onCreateAccountClick}
           />
@@ -95,6 +95,6 @@ export default function () {
   );
 }
 
-const emailEditorOptions = { stylingMode: 'filled', placeholder: 'Email', mode: 'email' };
-const passwordEditorOptions = { stylingMode: 'filled', placeholder: 'Password', mode: 'password' };
-const rememberMeEditorOptions = { text: 'Remember me', elementAttr: { class: 'form-text' } };
+const emailEditorOptions = { stylingMode: 'filled', placeholder: 'Электронная почта', mode: 'email' };
+const passwordEditorOptions = { stylingMode: 'filled', placeholder: 'Пароль', mode: 'password' };
+const rememberMeEditorOptions = { text: 'Запомнить меня', elementAttr: { class: 'form-text' } };

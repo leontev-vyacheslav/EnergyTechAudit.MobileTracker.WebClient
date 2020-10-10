@@ -7,25 +7,25 @@ export default function () {
   return (
     <Switch>
       <Route exact path='/login' >
-        <SingleCard title="Sign In">
+        <SingleCard title="Вход">
           <LoginForm />
         </SingleCard>
       </Route>
       <Route exact path='/create-account' >
-        <SingleCard title="Sign Up">
+        <SingleCard title="Создать аккаунт">
           <CreateAccountForm />
         </SingleCard>
       </Route>
       <Route exact path='/reset-password' >
         <SingleCard
-          title="Reset Password"
+          title="Сбросить пароль"
           description="Please enter the email address that you used to register, and we will send you a link to reset your password via Email."
         >
           <ResetPasswordForm />
         </SingleCard>
       </Route>
       <Route exact path='/change-password/:recoveryCode' >
-        <SingleCard title="Change Password">
+        <SingleCard title="Изменить пароль">
           <ChangePasswordForm />
         </SingleCard>
       </Route>

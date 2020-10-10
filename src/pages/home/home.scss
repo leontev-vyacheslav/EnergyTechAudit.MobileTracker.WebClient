@@ -22,23 +22,23 @@
   margin-bottom: 19px;
 }
 
-.react-logo {
-  width: 184px;
-  height: 68px;
-}
-
-.plus {
-  margin: 23px 10px;
-  width: 22px;
-  height: 22px;
+.home-page-content {
+  p {
+    line-height: 30px;
+    text-align: justify;
+  } 
 }
 
 .screen-x-small .logos-container {
   svg {
-    width: 100%;
+    margin: 0 auto;
+    width: 50%;
     display: block;
-    &.plus {
-      margin: 0;
-    }
+    
   }
+}
+
+.screen-x-small .logos-container span {
+  margin: initial;
+  font-size: 16px;
 }

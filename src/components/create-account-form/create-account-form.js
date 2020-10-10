@@ -47,8 +47,8 @@ export default function (props) {
           editorType={'dxTextBox'}
           editorOptions={emailEditorOptions}
         >
-          <RequiredRule message="Email is required" />
-          <EmailRule message="Email is invalid" />
+          <RequiredRule message="Требуется адрес почты" />
+          <EmailRule message="Неверный адрес почты" />
           <Label visible={false} />
         </Item>
         <Item
@@ -56,7 +56,7 @@ export default function (props) {
           editorType={'dxTextBox'}
           editorOptions={passwordEditorOptions}
         >
-          <RequiredRule message="Password is required" />
+          <RequiredRule message="Требуется пароль" />
           <Label visible={false} />
         </Item>
         <Item
@@ -64,16 +64,16 @@ export default function (props) {
           editorType={'dxTextBox'}
           editorOptions={confirmedPasswordEditorOptions}
         >
-          <RequiredRule message="Password is required" />
+          <RequiredRule message="Требуется пароль" />
           <CustomRule
-            message={'Passwords do not match'}
+            message={'Пароль не соответствует учетной записи'}
             validationCallback={confirmPassword}
           />
           <Label visible={false} />
         </Item>
         <Item>
           <div className='policy-info'>
-            By creating an account, you agree to the <Link to="#">Terms of Service</Link> and <Link to="#">Privacy Policy</Link>
+            Создавая учетную запись, вы соглашаетесь с <Link to="#">Terms of Service</Link> и <Link to="#">Privacy Policy</Link>
           </div>
         </Item>
         <ButtonItem>
@@ -86,14 +86,14 @@ export default function (props) {
               {
                 loading
                   ? <LoadIndicator width={'24px'} height={'24px'} visible={true} />
-                  : 'Create a new account'
+                  : 'Создать аккаунт'
               }
             </span>
           </ButtonOptions>
         </ButtonItem>
         <Item>
           <div className={'login-link'}>
-            Have an account? <Link to={'/login'}>Sign In</Link>
+            Уже есть учетная запись? <Link to={'/login'}>Вход</Link>
           </div>
         </Item>
       </Form>
@@ -101,6 +101,6 @@ export default function (props) {
   );
 }
 
-const emailEditorOptions = { stylingMode: 'filled', placeholder: 'Email', mode: 'email' };
-const passwordEditorOptions = { stylingMode: 'filled', placeholder: 'Password', mode: 'password' };
-const confirmedPasswordEditorOptions = { stylingMode: 'filled', placeholder: 'Confirm Password', mode: 'password' };
+const emailEditorOptions = { stylingMode: 'filled', placeholder: 'Электронная почта', mode: 'email' };
+const passwordEditorOptions = { stylingMode: 'filled', placeholder: 'Пароль', mode: 'password' };
+const confirmedPasswordEditorOptions = { stylingMode: 'filled', placeholder: 'Подтверждение пароля', mode: 'password' };

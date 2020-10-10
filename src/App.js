@@ -1,3 +1,6 @@
+import ruMessages from "devextreme/localization/messages/ru.json";
+import { locale, loadMessages } from "devextreme/localization";
+
 import 'devextreme/dist/css/dx.common.css';
 import './themes/generated/theme.base.css';
 import './themes/generated/theme.additional.css';
@@ -12,6 +15,10 @@ import Content from './Content';
 import NotAuthenticatedContent from './NotAuthenticatedContent';
 
 function App() {
+
+  loadMessages(ruMessages);
+  locale(navigator.language);
+
   const { user, loading } = useAuth();
 
   if (loading) {
