@@ -1,27 +1,32 @@
 export const navigation = [
-  {
-    text: 'Главная',
-    path: '/home',
-    icon: 'home'
-  },
-  {
-    text: 'Устройства',
-    icon: 'folder',
-    items: [
-      
-      {
-        text: 'Мобильные устройства',
-        path: '/mobileDevices',       
-      }
-    ]
-  }, {
+    {
+        text: 'Главная',
+        path: '/home',
+        icon: 'home'
+    },
+    {
+        text: 'Настройки',
+        path: '/settings',
+        icon: 'preferences'
+    },
+    {
+        text: 'Устройства',
+        icon: 'folder',
+        items: [
+
+            {
+                text: 'Мобильные устройства',
+                path: '/mobileDevices',
+            }
+        ]
+    }, {
         text: 'Профиль',
-        path: '/profile', 
+        path: '/profile',
         icon: 'user'
-      },
-  {
-    text: 'О программе',
-    path: '/about',
-    icon: 'info'
-  }
-  ];
+    },
+    {
+        text: 'О программе',
+        path: '/about',
+        icon: 'info'
+    }
+];
