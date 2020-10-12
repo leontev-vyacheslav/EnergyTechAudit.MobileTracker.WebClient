@@ -1,15 +1,15 @@
-import React from "react";
-import appInfo from "../../app-info";
+import React from 'react';
+import appInfo from '../../app-info';
 
-import "./about.scss";
+import './about.scss';
 
 export default () => (
   <React.Fragment>
-    <h2 className={"content-block"}>О программе</h2>
-    <div className={"content-block"}>
+    <h2 className={'content-block'}>О программе</h2>
+    <div className={'content-block'}>
 
-      <div className={"dx-card responsive-paddings"}>
-        <div className={'about-app-info'} style={{display:"flex", flexDirection: "row"}}>
+      <div className={'dx-card responsive-paddings'}>
+        <div className={'about-app-info'} style={{display:'flex', flexDirection: 'row'}}>
           <svg version="1.1" x="0" y="0" width="50" height="50" viewBox="0 0 500 500">
               <g>
                 <path d="M364.312,255.212c-0.133-3.75-0.58-7.456-1.309-11.11l-16.021,33.04l-50.274-103.674l-24.961-10.68

@@ -1,11 +1,11 @@
-import React, {useMemo, useRef} from "react";
+import React, {useMemo, useRef} from 'react';
 import Form from 'devextreme-react/form'
 import Button from 'devextreme-react/button'
-import {useAppSettings} from "../../contexts/app-settings";
+import {useAppSettings} from '../../contexts/app-settings';
 
-import "./settings.scss";
-import notify from "devextreme/ui/notify";
-import {useScreenSize} from "../../utils/media-query";
+import './settings.scss';
+import notify from 'devextreme/ui/notify';
+import {useScreenSize} from '../../utils/media-query';
 
 export default () => {
     let dxAppSettingsFormRef = useRef(null);
@@ -52,14 +52,14 @@ export default () => {
                 }
             ]
         }
-    }, []);
+    }, [appSettingsData]);
     const { isXSmall, isLarge } = useScreenSize();
 
     return (
         <React.Fragment>
-            <h2 className={"content-block"}>Настройки</h2>
-            <div className={"content-block"}>
-                <div className={"dx-card responsive-paddings"}>
+            <h2 className={'content-block'}>Настройки</h2>
+            <div className={'content-block'}>
+                <div className={'dx-card responsive-paddings'}>
                     <Form
                         colCount={formOptions.colCount}
                         items={formOptions.items}
@@ -71,7 +71,7 @@ export default () => {
                             onClick={() => {
                                 const formRef = dxAppSettingsFormRef.current;
                                 if(formRef && formRef.instance) {
-                                    setAppSettingsData({...appSettingsData, ...formRef.instance.option("formData")});
+                                    setAppSettingsData({...appSettingsData, ...formRef.instance.option('formData')});
                                     notify({
                                             message: 'Настройки приложения успешно сохранены.',
                                             width: 300,
