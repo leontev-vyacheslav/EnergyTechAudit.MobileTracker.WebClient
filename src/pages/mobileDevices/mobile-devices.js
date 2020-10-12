@@ -1,13 +1,14 @@
 import React from 'react';
 import CustomStore from 'devextreme/data/custom_store';
-import  './mobileDevice.scss';
+import TrackDetail from './track-detail'
+import  './mobile-device.scss';
 
 import DataGrid, {
-  Column,
-  Pager,
-  Paging,
-  FilterRow,
-  Grouping,
+    Column,
+    Pager,
+    Paging,
+    FilterRow,
+    Grouping, MasterDetail,
 } from 'devextreme-react/data-grid';
 
 export default () => (
@@ -77,7 +78,10 @@ export default () => (
         allowSorting={false}
         hidingPriority={1}
       />
-
+        <MasterDetail
+            enabled={true}
+            component={TrackDetail}
+        />
     </DataGrid>
   </React.Fragment>
 );

@@ -24,7 +24,10 @@
     "postinstall": "npm run build-themes"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "rules": {
+      "quotes": ["error", "single"]
+    }
   },
   "browserslist": {
     "production": [

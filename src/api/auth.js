@@ -13,7 +13,7 @@ export async function signIn(email, password) {
   catch {
     return {
       isOk: false,
-      message: "Authentication failed"
+      message: 'Authentication failed'
     };
   }
 }
@@ -46,7 +46,7 @@ export async function createAccount(email, password) {
   catch {
     return {
       isOk: false,
-      message: "Failed to create account"
+      message: 'Failed to create account'
     };
   }
 }
@@ -63,9 +63,9 @@ export async function changePassword(email, recoveryCode) {
   catch {
     return {
       isOk: false,
-      message: "Failed to change password"
+      message: 'Failed to change password'
     }
-  };
+  }
 }
 
 export async function resetPassword(email) {
@@ -80,7 +80,7 @@ export async function resetPassword(email) {
   catch {
     return {
       isOk: false,
-      message: "Failed to reset password"
+      message: 'Failed to reset password'
     };
   }
 }

@@ -1,5 +1,5 @@
-import ruMessages from "devextreme/localization/messages/ru.json";
-import {locale, loadMessages} from "devextreme/localization";
+import ruMessages from 'devextreme/localization/messages/ru.json';
+import {locale, loadMessages} from 'devextreme/localization';
 
 import 'devextreme/dist/css/dx.common.css';
 import './themes/generated/theme.base.css';
@@ -13,7 +13,7 @@ import {AuthProvider, useAuth} from './contexts/auth';
 import {useScreenSizeClass} from './utils/media-query';
 import Content from './Content';
 import NotAuthenticatedContent from './NotAuthenticatedContent';
-import {AppSettingsProvider, useAppSettings} from "./contexts/app-settings";
+import {AppSettingsProvider} from './contexts/app-settings';
 
 function App() {
     const {user, loading} = useAuth();
