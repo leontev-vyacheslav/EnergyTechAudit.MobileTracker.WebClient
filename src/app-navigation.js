@@ -19,10 +19,6 @@ export const navigation = [
                 path: '/mobileDevices',
             }
         ]
-    }, {
-        text: 'Профиль',
-        path: '/profile',
-        icon: 'user'
     },
     {
         text: 'О программе',
