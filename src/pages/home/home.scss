@@ -1,19 +1,21 @@
 .logos-container {
   text-align: center;
-  
+  display: flex;
   svg {
-    display: inline-block;  
-  };
-  span {
-    color: #666666;
-    font-size: 24px;
-    font-weight: bold;
-    vertical-align: top;
-    margin-top: 30px;    
-    margin-left: 30px;    
     display: inline-block;
-    text-align: center;
-  }
+    circle {
+      fill: #2c394c;
+    }
+  };
+  div {
+    flex: 1;
+    align-self: center;
+    text-align: left;
+    font-size: 24px;
+    margin-left: 10px;
+    color: #666666;
+    font-weight: bold;
+  };
 }
 
 .devextreme-logo {
@@ -26,15 +28,18 @@
   p {
     line-height: 30px;
     text-align: justify;
-  } 
+  }
 }
 
 .screen-x-small .logos-container {
+  flex-direction: column;
+  div {
+    text-align: inherit;
+  };
   svg {
     margin: 0 auto;
     width: 50%;
     display: block;
-    
   }
 }
 

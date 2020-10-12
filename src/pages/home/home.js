@@ -11,7 +11,8 @@ export default () => (
       <div className={"dx-card responsive-paddings home-page-content"}>
         <div className={"logos-container"}>
           <Eta24LogoSvg width={100} />
-          <span>{appInfo.companyName}</span>
+
+          <div>{appInfo.companyName}</div>
         </div>
 
         <p>
@@ -36,7 +37,7 @@ export default () => (
             Для получения более подробной технической информацией относительно{" "}
             <span style={{ fontWeight: "bold" }}>{appInfo.title}</span> обращайтесь в офисы компании{" "}
           </span>
-          <a style={{whiteSpace: 'nowrap'}} href="https://ic-eta.ru" target="_blank" rel="noopener noreferrer">
+          <a href="https://ic-eta.ru" target="_blank" rel="noopener noreferrer">
             {appInfo.companyName}
           </a>
           <span>.</span>
