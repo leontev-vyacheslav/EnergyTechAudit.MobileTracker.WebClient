@@ -1,7 +1,8 @@
 .about-app-info {
   display: flex;
-    border-bottom: gray solid 4px;
-    width: 400px;
+  border-bottom: gray solid 4px;
+  width: 400px;
+
   svg {
     height: 100px;
     width: 100px;
@@ -10,9 +11,11 @@
     justify-self: left;
   }
 }
+
 .about-app-title, .about-app-company {
-    font-weight: bold;
+  font-weight: bold;
 }
+
 .screen-x-small .about-app-info {
-    width: 100%;
-  }
+  width: 100%;
+}

@@ -5,43 +5,43 @@ import { useAuth } from '../../contexts/auth';
 import './user-panel.scss';
 
 export default function ({ menuMode }) {
-  const { user, signOut } = useAuth();
+    const { user, signOut } = useAuth();
 
-  const menuItems = useMemo(() => ([
-    {
-      text: 'Профиль',
-      icon: 'user'
-    },
-    {
-      text: 'Выход',
-      icon: 'runner',
-      onClick: signOut
-    }
-  ]), [signOut]);
+    const menuItems = useMemo(() => ( [
+        {
+            text: 'Профиль',
+            icon: 'user'
+        },
+        {
+            text: 'Выход',
+            icon: 'runner',
+            onClick: signOut
+        }
+    ] ), [signOut]);
 
-  return (
-    <div className={'user-panel'}>
-      <div className={'user-info'}>
-        <div className={'image-container'}>
-            <div className={'dx-icon dx-icon-user'}/>
+    return (
+        <div className={ 'user-panel' }>
+            <div className={ 'user-info' }>
+                <div className={ 'image-container' }>
+                    <div className={ 'dx-icon dx-icon-user' }/>
+                </div>
+                <div className={ 'user-name' }>{ user.email }</div>
+            </div>
+
+            { menuMode === 'context' && (
+                <ContextMenu
+                    items={ menuItems }
+                    target={ '.user-button' }
+                    showEvent={ 'dxclick' }
+                    width={ 320 }
+                    cssClass={ 'user-menu' }
+                >
+                    <Position my={ 'top center' } at={ 'bottom center' }/>
+                </ContextMenu>
+            ) }
+            { menuMode === 'list' && (
+                <List className={ 'dx-toolbar-menu-action' } items={ menuItems }/>
+            ) }
         </div>
-        <div className={'user-name'}>{user.email}</div>
-      </div>
-
-      {menuMode === 'context' && (
-        <ContextMenu
-          items={menuItems}
-          target={'.user-button'}
-          showEvent={'dxclick'}
-          width={320}
-          cssClass={'user-menu'}
-        >
-          <Position my={'top center'} at={'bottom center'} />
-        </ContextMenu>
-      )}
-      {menuMode === 'list' && (
-        <List className={'dx-toolbar-menu-action'} items={menuItems} />
-      )}
-    </div>
-  );
+    );
 }

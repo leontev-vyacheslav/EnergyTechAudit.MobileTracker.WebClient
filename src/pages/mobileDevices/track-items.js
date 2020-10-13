@@ -1,5 +1,5 @@
 import React from 'react';
-import DataGrid, {Button, Column, Scrolling, Selection, Summary, TotalItem} from 'devextreme-react/ui/data-grid';
+import DataGrid, { Button, Column, Scrolling, Selection, Summary, TotalItem } from 'devextreme-react/ui/data-grid';
 
 const TrackItems = () => {
 
