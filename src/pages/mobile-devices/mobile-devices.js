@@ -1,27 +1,28 @@
 import React from 'react';
 import CustomStore from 'devextreme/data/custom_store';
 import Timelines from './timelines'
-import './mobile-devices.scss';
 import { getMobileDevices } from '../../api/mobile-devices';
 import appConstants from '../../constants/app-constants'
-
+import {  MdSmartphone } from 'react-icons/md';
 import DataGrid, {
     Column,
     Pager,
     Paging,
-    FilterRow,
     Grouping, MasterDetail,
 } from 'devextreme-react/data-grid';
+
+import './mobile-devices.scss';
 
 export default () => (
     <React.Fragment>
         <h2 className={ 'content-block' }>Мобильные устройства</h2>
         <DataGrid
-            className={ 'dx-card wide-card' }
-            noDataText={appConstants.noDataLongText}
+            className={ 'mobile-devices dx-card wide-card' }
+            noDataText={ appConstants.noDataLongText }
             dataSource={ dataSource }
             showBorders={ false }
             focusedRowEnabled={ true }
+            showColumnHeaders={false}
             defaultFocusedRowIndex={ 0 }
             columnAutoWidth={ true }
             columnHidingEnabled={ true }
@@ -31,9 +32,12 @@ export default () => (
         >
             <Paging defaultPageSize={ 10 }/>
             <Pager showPageSizeSelector={ true } showInfo={ true }/>
-            <FilterRow visible={ true }/>
-            <Grouping autoExpandAll={ true } key={ 'userId' }/>
 
+            <Grouping autoExpandAll={ true } key={ 'userId' }/>
+            <Column type={ 'buttons' } width={ 50 } cellRender={ () => {
+
+                return <MdSmartphone size={24}/>
+            } }/>
             <Column
                 dataField={ 'id' }
                 caption={ 'Ид' }
@@ -48,10 +52,13 @@ export default () => (
                     const items = template.data.items === null ? template.data.collapsedItems : template.data.items;
                     const groupDataItem = items[0];
                     return (
-                        <React.Fragment>
-                            <div>Пользователь: { groupDataItem.userName }</div>
-                            <div>{ groupDataItem.email }</div>
-                        </React.Fragment>
+                        <div className={ 'mobile-devices-group' }>
+                            <div className={ 'dx-icon dx-icon-user' }/>
+                            <div>
+                                <div>Пользователь: { groupDataItem.userName }</div>
+                                <div>{ groupDataItem.email }</div>
+                            </div>
+                        </div>
                     );
                 } }
                 visible={ false }
@@ -62,13 +69,14 @@ export default () => (
                 width={ 150 }
                 allowSorting={ false }
                 hidingPriority={ 3 }
-            /><Column
-            dataField={ 'model' }
-            caption={ 'Модель' }
-            width={ 100 }
-            allowSorting={ false }
-            hidingPriority={ 4 }
-        />
+            />
+            <Column
+                dataField={ 'model' }
+                caption={ 'Модель' }
+                width={ 100 }
+                allowSorting={ false }
+                hidingPriority={ 4 }
+            />
             <Column
                 dataField={ 'os' }
                 caption={ 'ОС' }
@@ -92,7 +100,8 @@ export default () => (
             />
         </DataGrid>
     </React.Fragment>
-);
+)
+;
 
 const dataSource = new CustomStore({
     key: 'id',

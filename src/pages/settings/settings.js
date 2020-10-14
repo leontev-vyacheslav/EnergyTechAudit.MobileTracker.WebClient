@@ -53,7 +53,7 @@ export default () => {
             ]
         }
     }, [appSettingsData]);
-    const { isXSmall, isLarge } = useScreenSize();
+    const { isXSmall } = useScreenSize();
 
     return (
         <React.Fragment>
