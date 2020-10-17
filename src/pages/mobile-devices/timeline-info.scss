@@ -6,7 +6,19 @@
   font-size: 12px;
   line-height: 18px;
 }
-
+.timeline-info-user {
+  display: flex;
+  color: $base-darkgrey-text-color;
+  align-items: center;
+  font-weight: bold;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: 12px;
+  line-height: 18px;
+  svg {
+    margin-right: 10px;
+  }
+}
 .timeline-info-points {
   .departure, .destination {
     display: flex;

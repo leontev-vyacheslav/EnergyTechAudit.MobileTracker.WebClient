@@ -1,7 +1,6 @@
 import React from 'react';
 import { ReactComponent as Eta24LogoSvg } from '../../assets/Core.Common.PreloaderLogo.Medium.SpringDepression.svg';
 import appInfo from '../../app-info';
-
 import './home.scss';
 
 export default () => (

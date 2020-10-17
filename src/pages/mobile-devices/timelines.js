@@ -1,4 +1,4 @@
-import React, { useEffect,  useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DataGrid, {
     Column,
     MasterDetail,
@@ -42,15 +42,23 @@ const Timelines = ({ currentMobileDevice }) => {
                     onRowExpanding={ (e) => {
                         e.component.collapseAll(-1);
                     } }
-                    onInitialized={ (e) =>
-                    {
-                        e.component.selectAll();
+                    onRowExpanded={ () => {
+                        const masterDetailRow = document.querySelector('.timeline .dx-master-detail-row')
+                        if (masterDetailRow) {
+                            const previousMasterDetailRow = masterDetailRow.previousElementSibling;
+                            if (previousMasterDetailRow) {
+                                previousMasterDetailRow.style.fontWeight = 'bold';
+                            }
+                        }
                     }}
+                    onInitialized={ (e) => {
+                        e.component.selectAll();
+                    } }
                 >
                     <Scrolling showScrollbar={ 'always' }/>
                     <Selection mode={ 'multiple' }/>
                     <Column type={ 'buttons' } width={ 50 } cellRender={ () => {
-                        return <MdTimeline size={ 24 } color={ '#464646' }/>
+                        return <MdTimeline size={ 24 } b   color={ '#464646' }/>
                     } }/>
                     <Column dataField={ 'id' } dataType={ 'number' } caption={ 'Ид' } width={ 50 }/>
                     <Column dataField={ 'beginDate' } dataType={ 'datetime' } hidingPriority={ 1 } caption={ 'Начало периода' } width={ 150 }/>
@@ -88,27 +96,7 @@ const Timelines = ({ currentMobileDevice }) => {
                         enabled={ true }
                         render={ (e) => {
                             const masterData = e.data;
-                            let id = 0;
-                            const timelineInfo = [
-                                {
-                                    id: ++id,
-                                    name: 'Расчет по краевым точкам:',
-                                    value: masterData.takeAccountOutsidePoints === true ? 'Да' : 'Heт'
-                                },
-                                { id: ++id, name: 'Был разрыв:', value: masterData.hasGap === true ? 'Да' : 'Нет' },
-
-                                { id: ++id, name: 'Средняя точность:', value: `${ masterData.averageAccuracy } м` },
-                                { id: ++id, name: 'Наилучшая точность:', value: `${ masterData.bestAccuracy } м` },
-                                { id: ++id, name: 'Наихудшая точность:', value: `${ masterData.worstAccuracy } м` },
-
-                                { id: ++id, name: 'Наибольший интервал:', value: `${ masterData.largestInterval } м` },
-                                { id: ++id, name: 'Наименьший интервал:', value: `${ masterData.smallestInterval } м` },
-
-                                { id: ++id, name: 'Значимых отсчетов:', value: masterData.valuableAmountLocations },
-                                { id: ++id, name: 'Все отсчетов:', value: masterData.totalAmountLocations },
-                            ];
-
-                            return <TimelineInfo timelineInfo={ timelineInfo } timeline={ masterData }/>;
+                            return <TimelineInfo timeline={ masterData } currentMobileDevice = {currentMobileDevice}/>;
                         } }
                     />
                 </DataGrid>

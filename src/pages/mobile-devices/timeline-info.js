@@ -6,12 +6,42 @@ import DataSource from 'devextreme/data/data_source';
 import ArrayStore from 'devextreme/data/array_store';
 import Geocode from '../../api/geocode';
 
-import { MdLocationOn } from 'react-icons/md';
+import { MdAdjust, MdCompareArrows, MdGpsFixed, MdMoreHoriz, MdSettingsEthernet } from 'react-icons/md';
+import { TimelineInfoHeader } from './timeline-info-header';
 
-const TimelineInfo = ({ timelineInfo, timeline }) => {
+const IconComponents = {
+    Marks: MdGpsFixed,
+    Break: MdCompareArrows,
+    Intervals: MdSettingsEthernet,
+    OutsidePoints: MdMoreHoriz,
+    Accuracy: MdAdjust
+};
+
+const TimelineInfo = ({ timeline, currentMobileDevice }) => {
 
     const [departure, setDeparture] = useState(null);
     const [destination, setDestination] = useState(null);
+    const [timelineInfo, setTimelineInfo] = useState(null);
+
+    useEffect(() => {
+        const timeLineLocal = { ...timeline };
+        let timelineInfo = [
+            { name: 'По краевым точкам:', icon: 'OutsidePoints', value: timeLineLocal.takeAccountOutsidePoints === true ? 'Да' : 'Heт' },
+            { name: 'Разрыв:', icon: 'Break', value: timeLineLocal.hasGap === true ? 'Да' : 'Нет' },
+            {
+                name: 'Точность:',
+                icon: 'Accuracy',
+                value: `${ timeLineLocal.bestAccuracy } м / ${ timeLineLocal.worstAccuracy } м (${ timeline.averageAccuracy } м)`
+            },
+            { name: 'Интервал:', icon: 'Intervals', value: `${ timeLineLocal.smallestInterval } м / ${ timeLineLocal.largestInterval } м` },
+            { name: 'Отсчетов:', icon: 'Marks', value: `${ timeLineLocal.valuableAmountLocations } /  ${ timeLineLocal.totalAmountLocations }` },
+        ].map((t, i) => {
+            t['id'] = i;
+            return t;
+        });
+
+        setTimelineInfo(timelineInfo);
+    }, [timeline]);
 
     useEffect(() => {
         ( async () => {
@@ -30,16 +60,7 @@ const TimelineInfo = ({ timelineInfo, timeline }) => {
     return ( ( departure !== null && destination !== null ) ?
         (
             <React.Fragment>
-                <div className={ 'timeline-info-points' }>
-                    <div className={ 'departure' }>
-                        <MdLocationOn size={18} />
-                        <div>{ departure }</div>
-                    </div>
-                    <div className={ 'destination' }>
-                        <MdLocationOn size={18} />
-                        <div>{ destination }</div>
-                    </div>
-                </div>
+                <TimelineInfoHeader currentMobileDevice={ currentMobileDevice } departure={ departure } destination={ destination }/>
                 <DataGrid
                     className={ 'timeline-info' }
                     width={ '100%' }
@@ -54,7 +75,17 @@ const TimelineInfo = ({ timelineInfo, timeline }) => {
                     showColumnLines={ true }
                     showRowLines={ true }
                 >
-                    <Column dataField={ 'name' } caption={ 'Параметр' } width={ 250 }/>
+                    <Column dataField={ 'name' } caption={ 'Параметр' } width={ 200 } cellRender={ (e) => {
+                        if (e.data) {
+                            const Icon = (props) => React.createElement(IconComponents[`${ e.data.icon }`], props);
+                            return (
+                                <div style={ { display: 'flex' } }>
+                                    { ( e.data.icon ? <Icon size={ 18 } style={ { marginRight: 10 } }/> : null ) }
+                                    <div>{ e.data.name }</div>
+                                </div>
+                            );
+                        }
+                    } }/>
                     <Column dataField={ 'value' } caption={ 'Значение' } width={ 150 } alignment={ 'left' }/>
                 </DataGrid>
             </React.Fragment> )

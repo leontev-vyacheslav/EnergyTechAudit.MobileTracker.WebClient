@@ -4,6 +4,7 @@ import Button from 'devextreme-react/button';
 import UserPanel from '../user-panel/user-panel';
 import './header.scss';
 import { Template } from 'devextreme-react/core/template';
+import { ReactComponent as Eta24LogoSvg } from '../../assets/Core.Common.PreloaderLogo.Medium.SpringDepression.svg';
 
 export default ({ menuToggleEnabled, title, toggleMenu, userMenuItems }) => (
     <header className={ 'header-component' }>
@@ -21,6 +22,15 @@ export default ({ menuToggleEnabled, title, toggleMenu, userMenuItems }) => (
                 cssClass={ 'header-title' }
                 text={ title }
                 visible={ !!title }
+            render={() => {
+                return (
+                    <div className={'header-title-logo-container'}>
+                        <Eta24LogoSvg width={ 60 }/>
+                        <div>{title}</div>
+                    </div>
+                    )
+            }}
+
             />
             <Item
                 location={ 'after' }

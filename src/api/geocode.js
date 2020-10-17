@@ -14,7 +14,6 @@ async function handleUrl(url) {
     });
 
     if (json.status === 'OK') {
-        console.log(json);
         return json;
     }
     console.log(

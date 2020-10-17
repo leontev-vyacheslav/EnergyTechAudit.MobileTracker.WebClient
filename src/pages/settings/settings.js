@@ -10,8 +10,6 @@ import { useScreenSize } from '../../utils/media-query';
 export default () => {
     let dxAppSettingsFormRef = useRef(null);
     const { appSettingsData, setAppSettingsData } = useAppSettings();
-    console.log(appSettingsData);
-
     const formOptions = useMemo(() => {
         return {
             colCount: 1,

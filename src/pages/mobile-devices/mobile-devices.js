@@ -3,7 +3,7 @@ import CustomStore from 'devextreme/data/custom_store';
 import Timelines from './timelines'
 import { getMobileDevices } from '../../api/mobile-devices';
 import appConstants from '../../constants/app-constants'
-import {  MdSmartphone } from 'react-icons/md';
+import { MdSmartphone } from 'react-icons/md';
 import DataGrid, {
     Column,
     Pager,
@@ -22,7 +22,7 @@ export default () => (
             dataSource={ dataSource }
             showBorders={ false }
             focusedRowEnabled={ true }
-            showColumnHeaders={false}
+            showColumnHeaders={ false }
             defaultFocusedRowIndex={ 0 }
             columnAutoWidth={ true }
             columnHidingEnabled={ true }
@@ -36,7 +36,7 @@ export default () => (
             <Grouping autoExpandAll={ true } key={ 'userId' }/>
             <Column type={ 'buttons' } width={ 50 } cellRender={ () => {
 
-                return <MdSmartphone size={24}/>
+                return <MdSmartphone size={ 24 }/>
             } }/>
             <Column
                 dataField={ 'id' }
@@ -63,35 +63,10 @@ export default () => (
                 } }
                 visible={ false }
             />
-            <Column
-                dataField={ 'deviceUid' }
-                caption={ 'Уид устройства' }
-                width={ 150 }
-                allowSorting={ false }
-                hidingPriority={ 3 }
-            />
-            <Column
-                dataField={ 'model' }
-                caption={ 'Модель' }
-                width={ 100 }
-                allowSorting={ false }
-                hidingPriority={ 4 }
-            />
-            <Column
-                dataField={ 'os' }
-                caption={ 'ОС' }
-                width={ 100 }
-                allowSorting={ false }
-                hidingPriority={ 2 }
-            />
-            <Column
-                dataField={ 'registrationDate' }
-                caption={ 'Регистрация' }
-                dataType={ 'datetime' }
-                allowSorting={ false }
-                hidingPriority={ 1 }
-            />
-
+            <Column dataField={ 'deviceUid' } caption={ 'Уид устройства' } width={ 150 } allowSorting={ false } hidingPriority={ 3 }/>
+            <Column dataField={ 'model' } caption={ 'Модель' } width={ 100 } allowSorting={ false } hidingPriority={ 4 }/>
+            <Column dataField={ 'os' } caption={ 'ОС' } width={ 100 } allowSorting={ false } hidingPriority={ 2 }/>
+            <Column dataField={ 'registrationDate' } caption={ 'Регистрация' } dataType={ 'datetime' } allowSorting={ false } hidingPriority={ 1 }/>
             <MasterDetail
                 enabled={ true }
                 render={ (e) => {

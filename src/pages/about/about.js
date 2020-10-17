@@ -55,7 +55,6 @@ export default () => (
                     <p>420124, г. Казань, ул. Меридианная, д.6</p>
                     <p>тел./факс +7(843)211–10–10</p>
                     <p>E-mail: kazan@ic-eta.ru</p>
-                    <div>Test deployment another yet</div>
                 </div>
             </div>
         </div>
