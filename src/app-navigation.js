@@ -10,7 +10,7 @@ export const navigation = [
         icon: 'preferences'
     },
     {
-        text: 'Устройства',
+        text: 'Списки',
         icon: 'folder',
         items: [
 

@@ -8,3 +8,9 @@
   font-size: 13px;
   line-height: 18px;
 }
+
+.timeline .dx-datagrid .dx-row-focused {
+svg {
+  fill: white;
+}
+}

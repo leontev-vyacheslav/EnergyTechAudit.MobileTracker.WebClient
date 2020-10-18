@@ -20,7 +20,10 @@ const Timelines = ({ currentMobileDevice }) => {
 
     useEffect(() => {
         ( async () => {
-            const timeline = await getTimelinesAsync(currentMobileDevice.id, appSettingsData.workDate);
+            let timeline = await getTimelinesAsync(currentMobileDevice.id, appSettingsData.workDate);
+            timeline = timeline.map(t => {
+                return { ...t, ...{ active: true } };
+            });
             setCurrentTimeline(timeline);
         } )();
     }, [appSettingsData.workDate, currentMobileDevice.id]);
@@ -35,36 +38,46 @@ const Timelines = ({ currentMobileDevice }) => {
                     showColumnLines={ true }
                     showRowLines={ true }
                     showBorders={ true }
+
                     noDataText={ appConstants.noDataLongText }
+
                     onSelectionChanged={ (e) => {
                         e.component.refresh(true);
                     } }
+
                     onRowExpanding={ (e) => {
                         e.component.collapseAll(-1);
                     } }
+
                     onRowExpanded={ () => {
                         const masterDetailRow = document.querySelector('.timeline .dx-master-detail-row')
                         if (masterDetailRow) {
                             const previousMasterDetailRow = masterDetailRow.previousElementSibling;
                             if (previousMasterDetailRow) {
                                 previousMasterDetailRow.style.fontWeight = 'bold';
+                                previousMasterDetailRow.classList.add('dx-row-focused');
                             }
                         }
-                    }}
+                    } }
+
                     onInitialized={ (e) => {
                         e.component.selectAll();
                     } }
                 >
+                    <Selection mode={'multiple'}/>
                     <Scrolling showScrollbar={ 'always' }/>
-                    <Selection mode={ 'multiple' }/>
-                    <Column type={ 'buttons' } width={ 50 } cellRender={ () => {
-                        return <MdTimeline size={ 24 } b   color={ '#464646' }/>
+                    <Column type={ 'buttons' } width={ 50 }
+                            cellRender={ () => {
+                        return (
+                            <>
+                                <MdTimeline size={ 24 } color={ '#464646' } />
+                            </>
+                        )
                     } }/>
                     <Column dataField={ 'id' } dataType={ 'number' } caption={ 'Ид' } width={ 50 }/>
                     <Column dataField={ 'beginDate' } dataType={ 'datetime' } hidingPriority={ 1 } caption={ 'Начало периода' } width={ 150 }/>
                     <Column dataField={ 'endDate' } dataType={ 'datetime' } hidingPriority={ 0 } caption={ 'Конец периода' } width={ 150 }/>
                     <Column dataField={ 'distance' } dataType={ 'number' } caption={ 'Расстояние' } width={ 150 } alignment={ 'left' }/>
-
                     <Summary calculateCustomSummary={ (options) => {
                         if (!currentTimeline) return;
                         if (options.name === 'totalDistance') {
@@ -95,8 +108,7 @@ const Timelines = ({ currentMobileDevice }) => {
                     <MasterDetail
                         enabled={ true }
                         render={ (e) => {
-                            const masterData = e.data;
-                            return <TimelineInfo timeline={ masterData } currentMobileDevice = {currentMobileDevice}/>;
+                            return <TimelineInfo timeline={ e.data } currentMobileDevice={ currentMobileDevice }/>;
                         } }
                     />
                 </DataGrid>
