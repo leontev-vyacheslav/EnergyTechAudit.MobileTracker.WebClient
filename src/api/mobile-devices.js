@@ -25,3 +25,35 @@ export async function getTimelinesAsync (mobileDeviceId, workDate) {
         return Promise.reject(error);
     });
 }
+
+export async function getLocationRecordsAsync (mobileDeviceId, workDate) {
+    const response = await fetch(`${ appConstants.routes.host }${ appConstants.routes.locationRecord }/${ mobileDeviceId }?workDate=${ new Date(workDate).toISOString() }`, {
+        method: 'GET',
+        headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${ appConstants.testToken }`
+        },
+    }).catch((error) => {
+        return Promise.reject(error);
+    });
+
+    return await response.json().catch((error) => {
+        return Promise.reject(error);
+    });
+}
+
+export async function getLocationRecordsByRangeAsync (mobileDeviceId, beginDate, endDate) {
+    const response = await fetch(`${ appConstants.routes.host }${ appConstants.routes.locationRecord }/byRange/${ mobileDeviceId }?beginDate=${ new Date(beginDate).toISOString() }&endDate=${ new Date(endDate).toISOString() }`, {
+        method: 'GET',
+        headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${ appConstants.testToken }`
+        },
+    }).catch((error) => {
+        return Promise.reject(error);
+    });
+
+    return await response.json().catch((error) => {
+        return Promise.reject(error);
+    });
+}

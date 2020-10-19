@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import DataGrid, {
     Column,
     MasterDetail,
@@ -11,8 +11,9 @@ import { getTimelinesAsync } from '../../api/mobile-devices';
 import { useAppSettings } from '../../contexts/app-settings';
 import appConstants from '../../constants/app-constants'
 import TimelineInfo from './timeline-info';
-import { MdTimeline } from 'react-icons/md';
+import { MdTimeline, MdMap } from 'react-icons/md';
 import './timeline.scss';
+import TrackMap from './track-map';
 
 const Timelines = ({ currentMobileDevice }) => {
     const { appSettingsData } = useAppSettings();
@@ -28,6 +29,22 @@ const Timelines = ({ currentMobileDevice }) => {
         } )();
     }, [appSettingsData.workDate, currentMobileDevice.id]);
 
+    const toggleRowDetailByRowKey = useCallback(({ dataGrid, rowKey, mode }) => {
+        if (dataGrid.isRowExpanded(rowKey) && dataGrid.timelineDetailMode !== mode) {
+            dataGrid.collapseRow(rowKey);
+            dataGrid.expandRow(rowKey);
+            dataGrid.timelineDetailMode = mode;
+        } else {
+            if (dataGrid.isRowExpanded(rowKey)) {
+                dataGrid.collapseRow(rowKey);
+                dataGrid.timelineDetailMode = null;
+            } else {
+                dataGrid.expandRow(rowKey);
+                dataGrid.timelineDetailMode = mode;
+            }
+        }
+    }, []);
+
     return ( ( currentTimeline !== null && currentTimeline.length > 0 ) ?
         ( <React.Fragment>
                 <DataGrid
@@ -38,17 +55,13 @@ const Timelines = ({ currentMobileDevice }) => {
                     showColumnLines={ true }
                     showRowLines={ true }
                     showBorders={ true }
-
                     noDataText={ appConstants.noDataLongText }
-
                     onSelectionChanged={ (e) => {
                         e.component.refresh(true);
                     } }
-
                     onRowExpanding={ (e) => {
                         e.component.collapseAll(-1);
                     } }
-
                     onRowExpanded={ () => {
                         const masterDetailRow = document.querySelector('.timeline .dx-master-detail-row')
                         if (masterDetailRow) {
@@ -59,21 +72,25 @@ const Timelines = ({ currentMobileDevice }) => {
                             }
                         }
                     } }
-
                     onInitialized={ (e) => {
                         e.component.selectAll();
                     } }
                 >
-                    <Selection mode={'multiple'}/>
+                    <Selection mode={ 'multiple' } showCheckBoxesMode={ 'always' }/>
                     <Scrolling showScrollbar={ 'always' }/>
-                    <Column type={ 'buttons' } width={ 50 }
-                            cellRender={ () => {
-                        return (
-                            <>
-                                <MdTimeline size={ 24 } color={ '#464646' } />
-                            </>
-                        )
-                    } }/>
+                    <Column type={ 'buttons' } width={ 85 }
+                            cellRender={ (e) => {
+                                return (
+                                    <React.Fragment>
+                                        <MdTimeline style={{cursor: 'pointer'}} size={ 24 } color={ '#464646' } onClick={ () => {
+                                            toggleRowDetailByRowKey({ dataGrid: e.component, rowKey: e.row.key, mode: 'info' });
+                                        } }/>
+                                        <MdMap style={{cursor: 'pointer', marginLeft: 10}} size={ 24 } color={ '#464646' } onClick={ () => {
+                                            toggleRowDetailByRowKey({ dataGrid: e.component, rowKey: e.row.key, mode: 'map' });
+                                        } }/>
+                                    </React.Fragment>
+                                )
+                            } }/>
                     <Column dataField={ 'id' } dataType={ 'number' } caption={ 'Ид' } width={ 50 }/>
                     <Column dataField={ 'beginDate' } dataType={ 'datetime' } hidingPriority={ 1 } caption={ 'Начало периода' } width={ 150 }/>
                     <Column dataField={ 'endDate' } dataType={ 'datetime' } hidingPriority={ 0 } caption={ 'Конец периода' } width={ 150 }/>
@@ -106,9 +123,15 @@ const Timelines = ({ currentMobileDevice }) => {
                         />
                     </Summary>
                     <MasterDetail
-                        enabled={ true }
+                        enabled={ false }
                         render={ (e) => {
-                            return <TimelineInfo timeline={ e.data } currentMobileDevice={ currentMobileDevice }/>;
+                            let detailComponent = null;
+                            if (e.component.timelineDetailMode === 'info') {
+                                detailComponent = <TimelineInfo timeline={ e.data } currentMobileDevice={ currentMobileDevice }/>;
+                            } else {
+                                detailComponent = <TrackMap timeline={ e.data } currentMobileDevice={ currentMobileDevice }/>;
+                            }
+                            return detailComponent;
                         } }
                     />
                 </DataGrid>
