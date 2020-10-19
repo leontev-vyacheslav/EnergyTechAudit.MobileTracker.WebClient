@@ -5,7 +5,7 @@ import appConstants from '../../constants/app-constants'
 import { getLocationRecordsByRangeAsync } from '../../api/mobile-devices';
 import './track-map.scss';
 
-const TrackMap = ({ timeline, currentMobileDevice }) => {
+const TrackMap = ({ currentMobileDevice, timelineItem }) => {
 
     const [locations, setLocations] = useState(null);
     const [mapInstance, setMapInstance] = useState(null);
@@ -18,12 +18,12 @@ const TrackMap = ({ timeline, currentMobileDevice }) => {
         ( async () => {
             const locationData = await getLocationRecordsByRangeAsync(
                 currentMobileDevice.id,
-                Date.parse(timeline.beginDate),
-                Date.parse(timeline.endDate)
+                Date.parse(timelineItem.beginDate),
+                Date.parse(timelineItem.endDate)
             );
             setLocations(locationData);
         } )()
-    }, [currentMobileDevice.id, timeline]);
+    }, [currentMobileDevice.id, timelineItem]);
 
     const getBoundsByMarkers = useCallback((locationList) => {
         const boundBox = new window.google.maps.LatLngBounds();
@@ -53,7 +53,7 @@ const TrackMap = ({ timeline, currentMobileDevice }) => {
                         styles: [{ featureType: 'all', stylers: [{ saturation: 2.5 }, { gamma: 0.25 }] }]
                     } }
                     center={ { lng: 49.156374, lat: 55.796685 } }
-                    mapContainerStyle={ { height: 400 } }
+                    mapContainerStyle={ { height: '100%', width: '100%' } }
                     onLoad={ (map) => {
                         setMapInstance(map);
                         fitMapBoundsByLocations(map, locations);
@@ -70,7 +70,7 @@ const TrackMap = ({ timeline, currentMobileDevice }) => {
                             } }
                                     icon={ {
                                         path: window.google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-                                        scale: 2,
+                                        scale: 3,
                                         fillOpacity: 1,
                                         strokeWeight: 0.8,
                                         fillColor: '#FF5722',
