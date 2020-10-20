@@ -8,18 +8,21 @@ import DataGrid, {
     TotalItem
 } from 'devextreme-react/ui/data-grid';
 import { Popup } from 'devextreme-react/ui/popup'
+import { MdTimeline, MdMap } from 'react-icons/md';
 import { getTimelinesAsync } from '../../api/mobile-devices';
 import { useAppSettings } from '../../contexts/app-settings';
 import appConstants from '../../constants/app-constants'
 import TimelineInfo from './timeline-info';
-import { MdTimeline, MdMap } from 'react-icons/md';
-import './timeline.scss';
 import TrackMap from './track-map';
+
+import './timeline.scss';
+import { useScreenSize } from '../../utils/media-query';
 
 const Timelines = ({ currentMobileDevice }) => {
     const { appSettingsData } = useAppSettings();
     const [currentTimeline, setCurrentTimeline] = useState(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState(null);
+    const { isXSmall } = useScreenSize();
 
     useEffect(() => {
         ( async () => {
@@ -51,8 +54,8 @@ const Timelines = ({ currentMobileDevice }) => {
             ( <React.Fragment>
                     { currentTimelineItem !== null ?
                         <Popup className={'track-map-popup'} title={ 'Карта маршрута' } c dragEnabled={ false } visible={ true } showTitle={ true }
-                               width={ 1024 }
-                               height={ 600 }
+                               width={ isXSmall ? '90%' :'70%' }
+                               height={ isXSmall ? '90%' :'70%' }
                                contentRender={ () => {
                                    return <TrackMap currentMobileDevice={ currentMobileDevice } timelineItem={ currentTimelineItem }/>
                                } }

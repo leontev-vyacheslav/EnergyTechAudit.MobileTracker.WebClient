@@ -7,11 +7,13 @@ import TrackMapCallout from './track-map-callout';
 import { getLocationRecordsByRangeAsync } from '../../api/mobile-devices';
 import './track-map.scss';
 import CheckBox from 'devextreme-react/ui/check-box';
+import { useScreenSize } from '../../utils/media-query';
 
 const TrackMap = ({ currentMobileDevice, timelineItem }) => {
 
     const [locationRecords, setLocationRecords] = useState(null);
     let mapInstance = null, currentInfoWindow = null, trackPath = null, currentMarkers = [];
+    const { isXSmall } = useScreenSize();
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: 'AIzaSyBLE0ThOFO5aYYVrsDP8AIJUAVDCiTPiLQ'
@@ -142,7 +144,6 @@ const TrackMap = ({ currentMobileDevice, timelineItem }) => {
                         trackPath = null;
                         showLocationMarkers();
                     } else {
-
                         currentMarkers.forEach(m => {
                             m.setMap(null);
                         });
@@ -157,7 +158,7 @@ const TrackMap = ({ currentMobileDevice, timelineItem }) => {
                         styles: [{ featureType: 'all', stylers: [{ saturation: 2.5 }, { gamma: 0.25 }] }]
                     } }
                     center={ { lng: 49.156374, lat: 55.796685 } }
-                    mapContainerStyle={ { height: '90%', width: '100%' } }
+                    mapContainerStyle={ { height: (isXSmall ? '80%' : '90%'), width: '100%' } }
                     onLoad={ (googleMap) => {
                         mapInstance = googleMap;
                         fitMapBoundsByLocations(googleMap, locationRecords);
