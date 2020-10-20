@@ -15,17 +15,11 @@ import TimelineInfo from './timeline-info';
 import { MdTimeline, MdMap } from 'react-icons/md';
 import './timeline.scss';
 import TrackMap from './track-map';
-import { useScreenSize } from '../../utils/media-query';
 
 const Timelines = ({ currentMobileDevice }) => {
     const { appSettingsData } = useAppSettings();
     const [currentTimeline, setCurrentTimeline] = useState(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState(null);
-
-    const { isXSmall, isLarge } = useScreenSize();
-    const [mapDialogStatus, setMapDialogStatus] = useState(
-        isLarge ? 'Opened' : 'Closed'
-    );
 
     useEffect(() => {
         ( async () => {
@@ -38,8 +32,6 @@ const Timelines = ({ currentMobileDevice }) => {
     }, [appSettingsData.workDate, currentMobileDevice.id]);
 
     const toggleRowDetailByRowKey = useCallback(({ dataGrid, rowKey, mode }) => {
-
-
         if (dataGrid.isRowExpanded(rowKey) && dataGrid.timelineDetailMode !== mode) {
             dataGrid.collapseRow(rowKey);
             dataGrid.expandRow(rowKey);
@@ -58,7 +50,7 @@ const Timelines = ({ currentMobileDevice }) => {
     return ( ( currentTimeline !== null && currentTimeline.length > 0 ) ?
             ( <React.Fragment>
                     { currentTimelineItem !== null ?
-                        <Popup title={ 'Карта маршрута' } c dragEnabled={ false } visible={ true } showTitle={ true }
+                        <Popup className={'track-map-popup'} title={ 'Карта маршрута' } c dragEnabled={ false } visible={ true } showTitle={ true }
                                width={ 1024 }
                                height={ 600 }
                                contentRender={ () => {

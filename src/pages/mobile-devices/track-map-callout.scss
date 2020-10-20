@@ -1,0 +1,27 @@
+.track-info-window tr {
+  height: 30px
+}
+
+.track-info-window tr td:first-child {
+  width: 125px
+}
+
+.track-info-window tr td:first-child span {
+  background-color: #363640;
+  color: whitesmoke;
+  padding: 4px 10px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.track-info-window tr td:nth-child(2) {
+  width: 175px
+}
+
+.track-info-window tr td:nth-child(2) span {
+  background-color: #d75028;
+  color: black;
+  padding: 4px 10px;
+  border-radius: 5px;
+  display: inline-block;
+}
