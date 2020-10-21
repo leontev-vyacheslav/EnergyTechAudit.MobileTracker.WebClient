@@ -2,13 +2,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 
-import appConstants from '../../../constants/app-constants'
+import appConstants from '../../../../constants/app-constants'
 import TrackMapCallout from './track-map-callout';
-import { getLocationRecordsByRangeAsync } from '../../../api/mobile-devices';
+import { getLocationRecordsByRangeAsync } from '../../../../api/mobile-devices';
 import './track-map.scss';
 import CheckBox from 'devextreme-react/ui/check-box';
-import { useScreenSize } from '../../../utils/media-query';
-import Geocode from '../../../api/geocode';
+import { useScreenSize } from '../../../../utils/media-query';
+import Geocode from '../../../../api/geocode';
 import TrackMapInfoBox from './track-map-info-box';
 
 const TrackMap = ({ mobileDevice, timelineItem }) => {

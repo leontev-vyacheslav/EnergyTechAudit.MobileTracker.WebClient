@@ -29,39 +29,4 @@
   padding: 7px 7px 7px 8px;
 }
 
-.track-map-popup {
-  .dx-popup-content {
-    padding: 10px;
-  }
-  .dx-popup-title.dx-toolbar .dx-toolbar-items-container {
-    height: 46px;
-  }
 
-  .nodata {
-    position: relative;
-    margin: 20px;
-  }
-
-  .track-map-check-box {
-    margin-left: 10px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-  }
-
-  .track-map-info-box {
-    display: inline-flex;
-    position: relative;
-    align-items: flex-start;
-    left: 10px;
-    top: 60px;
-    background: aliceblue;
-    border-radius: 2px;
-    flex-direction: column;
-    padding: 5px;
-    .track-map-info-box-item {
-      display: flex;
-      alignItems: center;
-      padding: 6px;
-    }
-  }
-}

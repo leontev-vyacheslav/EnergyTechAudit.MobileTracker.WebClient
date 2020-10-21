@@ -7,23 +7,21 @@ import DataGrid, {
     Summary,
     TotalItem
 } from 'devextreme-react/ui/data-grid';
-import { Popup } from 'devextreme-react/ui/popup'
 import { MdTimeline, MdMap } from 'react-icons/md';
 import { getTimelinesAsync } from '../../../api/mobile-devices';
 import { useAppSettings } from '../../../contexts/app-settings';
 import appConstants from '../../../constants/app-constants'
-import TimelineInfo from '../timeline-info/timeline-info';
-import TrackMap from '../track-map/track-map';
+import TimelineInfo from './timeline-info/timeline-info';
+import TrackMapPopup from '../track-map-popup/track-map-popup';
 
 import './timeline.scss';
-import { useScreenSize } from '../../../utils/media-query';
 import { Button } from 'devextreme-react/ui/button';
 
 const Timelines = ({ currentMobileDevice }) => {
     const { appSettingsData } = useAppSettings();
     const [currentTimeline, setCurrentTimeline] = useState(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState(null);
-    const { isXSmall } = useScreenSize();
+
 
     useEffect(() => {
         ( async () => {
@@ -54,17 +52,11 @@ const Timelines = ({ currentMobileDevice }) => {
     return ( ( currentTimeline !== null && currentTimeline.length > 0 ) ?
             ( <React.Fragment>
                     { currentTimelineItem !== null ?
-                        <Popup className={ 'track-map-popup' } title={ 'Карта маршрута' } c dragEnabled={ false } visible={ true } showTitle={ true }
-                               width={ isXSmall ? '90%' : '70%' }
-                               height={ isXSmall ? '90%' : '70%' }
-                               contentRender={ () => {
-                                   return <TrackMap mobileDevice={ currentMobileDevice } timelineItem={ currentTimelineItem }/>
-                               } }
-                               onHiding={ () => {
-                                   setCurrentTimelineItem(null);
-                               } }
-                        >
-                        </Popup>
+
+                        <TrackMapPopup mobileDevice={ currentMobileDevice } timelineItem={ currentTimelineItem } onHiding={ () => {
+                            setCurrentTimelineItem(null);
+                        } }
+                        />
                         : null }
                     <DataGrid
                         className={ 'timeline dx-card wide-card' }
