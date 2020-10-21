@@ -1,12 +1,12 @@
 import React from 'react';
 import './track-map-callout.scss'
 
-const TrackMapCallout = ({ locationRecord }) => {
+const TrackMapCallout = ({ locationRecord, address }) => {
     return (
         <table className={ 'track-info-window' }>
             <tbody>
             <tr>
-                {/*<td style="width: initial" colspan="2"><span>{trustedAddress.formatted_address}</span></td>*/ }
+                <td style={ { width: 'initial' } } colSpan={2}><span>{ address }</span></td>
             </tr>
             <tr>
                 <td><span>Время:</span></td>

@@ -1,6 +1,6 @@
 import React from 'react';
 import CustomStore from 'devextreme/data/custom_store';
-import Timelines from './timelines'
+import Timelines from './timeline/timelines'
 import { getMobileDevices } from '../../api/mobile-devices';
 import appConstants from '../../constants/app-constants'
 import { MdSmartphone } from 'react-icons/md';

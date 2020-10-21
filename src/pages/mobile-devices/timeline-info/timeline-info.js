@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import DataGrid, { Column } from 'devextreme-react/ui/data-grid';
 import './timeline-info.scss';
-import appConstants from '../../constants/app-constants';
+import appConstants from '../../../constants/app-constants';
 import DataSource from 'devextreme/data/data_source';
 import ArrayStore from 'devextreme/data/array_store';
-import Geocode from '../../api/geocode';
+import Geocode from '../../../api/geocode';
 
 import { MdAdjust, MdCompareArrows, MdGpsFixed, MdMoreHoriz, MdSettingsEthernet } from 'react-icons/md';
 import { TimelineInfoHeader } from './timeline-info-header';

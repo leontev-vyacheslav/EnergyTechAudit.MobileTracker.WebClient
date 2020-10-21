@@ -9,14 +9,15 @@ import DataGrid, {
 } from 'devextreme-react/ui/data-grid';
 import { Popup } from 'devextreme-react/ui/popup'
 import { MdTimeline, MdMap } from 'react-icons/md';
-import { getTimelinesAsync } from '../../api/mobile-devices';
-import { useAppSettings } from '../../contexts/app-settings';
-import appConstants from '../../constants/app-constants'
-import TimelineInfo from './timeline-info';
-import TrackMap from './track-map';
+import { getTimelinesAsync } from '../../../api/mobile-devices';
+import { useAppSettings } from '../../../contexts/app-settings';
+import appConstants from '../../../constants/app-constants'
+import TimelineInfo from '../timeline-info/timeline-info';
+import TrackMap from '../track-map/track-map';
 
 import './timeline.scss';
-import { useScreenSize } from '../../utils/media-query';
+import { useScreenSize } from '../../../utils/media-query';
+import { Button } from 'devextreme-react/ui/button';
 
 const Timelines = ({ currentMobileDevice }) => {
     const { appSettingsData } = useAppSettings();
@@ -36,16 +37,16 @@ const Timelines = ({ currentMobileDevice }) => {
 
     const toggleRowDetailByRowKey = useCallback(({ dataGrid, rowKey, mode }) => {
         if (dataGrid.isRowExpanded(rowKey) && dataGrid.timelineDetailMode !== mode) {
+            dataGrid.timelineDetailMode = mode;
             dataGrid.collapseRow(rowKey);
             dataGrid.expandRow(rowKey);
-            dataGrid.timelineDetailMode = mode;
         } else {
             if (dataGrid.isRowExpanded(rowKey)) {
-                dataGrid.collapseRow(rowKey);
                 dataGrid.timelineDetailMode = null;
+                dataGrid.collapseRow(rowKey);
             } else {
-                dataGrid.expandRow(rowKey);
                 dataGrid.timelineDetailMode = mode;
+                dataGrid.expandRow(rowKey);
             }
         }
     }, []);
@@ -53,11 +54,11 @@ const Timelines = ({ currentMobileDevice }) => {
     return ( ( currentTimeline !== null && currentTimeline.length > 0 ) ?
             ( <React.Fragment>
                     { currentTimelineItem !== null ?
-                        <Popup className={'track-map-popup'} title={ 'Карта маршрута' } c dragEnabled={ false } visible={ true } showTitle={ true }
-                               width={ isXSmall ? '90%' :'70%' }
-                               height={ isXSmall ? '90%' :'70%' }
+                        <Popup className={ 'track-map-popup' } title={ 'Карта маршрута' } c dragEnabled={ false } visible={ true } showTitle={ true }
+                               width={ isXSmall ? '90%' : '70%' }
+                               height={ isXSmall ? '90%' : '70%' }
                                contentRender={ () => {
-                                   return <TrackMap currentMobileDevice={ currentMobileDevice } timelineItem={ currentTimelineItem }/>
+                                   return <TrackMap mobileDevice={ currentMobileDevice } timelineItem={ currentTimelineItem }/>
                                } }
                                onHiding={ () => {
                                    setCurrentTimelineItem(null);
@@ -69,6 +70,7 @@ const Timelines = ({ currentMobileDevice }) => {
                         className={ 'timeline dx-card wide-card' }
                         width={ '100%' }
                         keyExpr={ 'id' }
+                        focusedRowEnabled={ true }
                         dataSource={ currentTimeline }
                         showColumnLines={ true }
                         showRowLines={ true }
@@ -99,15 +101,21 @@ const Timelines = ({ currentMobileDevice }) => {
                         <Column type={ 'buttons' } width={ 85 }
 
                                 cellRender={ (e) => {
+                                    const buttonIconProps = { style: { cursor: 'pointer' }, size: 16, color: '#464646' };
                                     return (
                                         <React.Fragment>
-                                            <MdTimeline style={ { cursor: 'pointer' } } size={ 24 } color={ '#464646' } onClick={ () => {
+                                            <Button className={ 'time-line-command-button' } onClick={ () => {
                                                 toggleRowDetailByRowKey({ dataGrid: e.component, rowKey: e.row.key, mode: 'info' });
-                                            } }/>
-                                            <MdMap style={ { cursor: 'pointer', marginLeft: 10 } } size={ 24 } color={ '#464646' } onClick={ () => {
-                                                e.component.collapseRow(e.row.key);
+                                            } }>
+                                                <MdTimeline { ...buttonIconProps }/>
+                                            </Button>
+                                            <Button className={ 'time-line-command-button' } style={ { marginLeft: 3 } } onClick={ () => {
+                                                e.component.timelineDetailMode = null;
+                                                e.component.collapseAll(-1);
                                                 setCurrentTimelineItem(e.data);
-                                            } }/>
+                                            } }>
+                                                <MdMap { ...buttonIconProps } />
+                                            </Button>
                                         </React.Fragment>
                                     )
                                 } }/>

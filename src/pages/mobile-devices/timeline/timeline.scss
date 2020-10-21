@@ -1,0 +1,67 @@
+@import "../../../themes/generated/variables.base";
+
+.dx-link.dx-icon-map.dx-link-icon {
+  color: $base-accent !important;
+}
+
+.timeline .dx-datagrid .dx-row > td {
+  padding-top: 8px;
+  padding-bottom: 7px;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.timeline .time-line-command-button {
+  border-radius: 50%;
+  box-shadow: 0 0 transparent;
+  width: 30px;
+  height: 30px;
+  min-height: 30px;
+  min-width: 30px;
+}
+
+.timeline .dx-row-focused .time-line-command-button {
+  background-color: inherit;
+  border-radius: 50%;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+}
+.time-line-command-button .dx-button-content {
+  padding: 7px 7px 7px 8px;
+}
+
+.track-map-popup {
+  .dx-popup-content {
+    padding: 10px;
+  }
+  .dx-popup-title.dx-toolbar .dx-toolbar-items-container {
+    height: 46px;
+  }
+
+  .nodata {
+    position: relative;
+    margin: 20px;
+  }
+
+  .track-map-check-box {
+    margin-left: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+  }
+
+  .track-map-info-box {
+    display: inline-flex;
+    position: relative;
+    align-items: flex-start;
+    left: 10px;
+    top: 60px;
+    background: aliceblue;
+    border-radius: 2px;
+    flex-direction: column;
+    padding: 5px;
+    .track-map-info-box-item {
+      display: flex;
+      alignItems: center;
+      padding: 6px;
+    }
+  }
+}
