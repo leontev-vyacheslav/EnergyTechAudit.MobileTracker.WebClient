@@ -1,0 +1,18 @@
+.track-map-info-box {
+  display: inline-flex;
+  position: relative;
+  align-items: flex-start;
+  left: 10px;
+  top: 90px;
+  background: aliceblue;
+  border-radius: 2px;
+  flex-direction: column;
+  padding: 5px;
+  .track-map-info-box-item {
+    display: flex;
+    align-items: center;
+  }
+  div {
+    padding: 5px;
+  }
+}

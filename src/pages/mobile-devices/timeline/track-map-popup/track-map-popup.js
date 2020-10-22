@@ -2,7 +2,7 @@ import React from 'react';
 
 import TrackMap from './track-map/track-map';
 import { Popup } from 'devextreme-react/ui/popup';
-import { useScreenSize } from '../../../utils/media-query';
+import { useScreenSize } from '../../../../utils/media-query';
 
 import './track-map-popup.scss';
 

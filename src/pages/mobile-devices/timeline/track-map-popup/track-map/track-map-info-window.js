@@ -1,9 +1,9 @@
 import React from 'react';
-import './track-map-callout.scss'
+import './track-map-info-window.scss'
 
-const TrackMapCallout = ({ locationRecord, address }) => {
+const TrackMapInfoWindow = ({ locationRecord, address }) => {
     return (
-        <table className={ 'track-info-window' }>
+        <table className={ 'track-map-info-window' }>
             <tbody>
             <tr>
                 <td style={ { width: 'initial' } } colSpan={2}><span>{ address }</span></td>
@@ -41,4 +41,4 @@ const TrackMapCallout = ({ locationRecord, address }) => {
     );
 };
 
-export default TrackMapCallout;
+export default TrackMapInfoWindow;

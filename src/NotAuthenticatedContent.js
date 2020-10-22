@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { SingleCard } from './layouts';
-import { LoginForm, ResetPasswordForm, ChangePasswordForm, CreateAccountForm } from './components';
+import { LoginForm } from './components';
 
 export default function () {
     return (
@@ -9,24 +9,6 @@ export default function () {
             <Route exact path='/login'>
                 <SingleCard title="Вход">
                     <LoginForm/>
-                </SingleCard>
-            </Route>
-            <Route exact path='/create-account'>
-                <SingleCard title="Создать аккаунт">
-                    <CreateAccountForm/>
-                </SingleCard>
-            </Route>
-            <Route exact path='/reset-password'>
-                <SingleCard
-                    title="Сбросить пароль"
-                    description="Please enter the email address that you used to register, and we will send you a link to reset your password via Email."
-                >
-                    <ResetPasswordForm/>
-                </SingleCard>
-            </Route>
-            <Route exact path='/change-password/:recoveryCode'>
-                <SingleCard title="Изменить пароль">
-                    <ChangePasswordForm/>
                 </SingleCard>
             </Route>
             <Redirect to={ '/login' }/>

@@ -1,27 +1,19 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import DataGrid, {
-    Column,
-    MasterDetail,
-    Scrolling,
-    Selection,
-    Summary,
-    TotalItem
-} from 'devextreme-react/ui/data-grid';
+import DataGrid, { Column, MasterDetail, Scrolling, Selection, Summary, TotalItem } from 'devextreme-react/ui/data-grid';
+import { Button } from 'devextreme-react/ui/button';
 import { MdTimeline, MdMap } from 'react-icons/md';
 import { getTimelinesAsync } from '../../../api/mobile-devices';
 import { useAppSettings } from '../../../contexts/app-settings';
 import appConstants from '../../../constants/app-constants'
 import TimelineInfo from './timeline-info/timeline-info';
-import TrackMapPopup from '../track-map-popup/track-map-popup';
+import TrackMapPopup from './track-map-popup/track-map-popup';
 
 import './timeline.scss';
-import { Button } from 'devextreme-react/ui/button';
 
 const Timelines = ({ currentMobileDevice }) => {
     const { appSettingsData } = useAppSettings();
     const [currentTimeline, setCurrentTimeline] = useState(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState(null);
-
 
     useEffect(() => {
         ( async () => {
@@ -52,7 +44,6 @@ const Timelines = ({ currentMobileDevice }) => {
     return ( ( currentTimeline !== null && currentTimeline.length > 0 ) ?
             ( <React.Fragment>
                     { currentTimelineItem !== null ?
-
                         <TrackMapPopup mobileDevice={ currentMobileDevice } timelineItem={ currentTimelineItem } onHiding={ () => {
                             setCurrentTimelineItem(null);
                         } }

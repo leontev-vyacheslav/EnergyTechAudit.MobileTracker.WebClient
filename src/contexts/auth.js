@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useCallback } from 'react';
-import { getUser, signIn as sendSignInRequest } from '../api/auth';
+import {getUser, signInAsync as sendSignInRequest } from '../api/auth';
 
 function AuthProvider (props) {
     const [user, setUser] = useState();
@@ -7,11 +7,10 @@ function AuthProvider (props) {
 
     useEffect(() => {
         ( async function () {
-            const result = await getUser();
-            if (result.isOk) {
-                setUser(result.data);
+            const userAuthData = await getUser();
+            if (userAuthData) {
+                setUser(userAuthData);
             }
-
             setLoading(false);
         } )();
     }, []);
@@ -21,14 +20,13 @@ function AuthProvider (props) {
         if (result.isOk) {
             setUser(result.data);
         }
-
         return result;
     }, []);
 
     const signOut = useCallback(() => {
-        setUser();
+        localStorage.removeItem('userAuthData');
+        setUser(null);
     }, []);
-
 
     return (
         <AuthContext.Provider value={ { user, signIn, signOut, loading } } { ...props } />

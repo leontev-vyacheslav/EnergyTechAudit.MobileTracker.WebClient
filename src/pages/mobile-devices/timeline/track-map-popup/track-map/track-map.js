@@ -2,13 +2,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 
-import appConstants from '../../../../constants/app-constants'
-import TrackMapCallout from './track-map-callout';
-import { getLocationRecordsByRangeAsync } from '../../../../api/mobile-devices';
+import appConstants from '../../../../../constants/app-constants'
+import TrackMapInfoWindow from './track-map-info-window';
+import { getLocationRecordsByRangeAsync } from '../../../../../api/mobile-devices';
 import './track-map.scss';
 import CheckBox from 'devextreme-react/ui/check-box';
-import { useScreenSize } from '../../../../utils/media-query';
-import Geocode from '../../../../api/geocode';
+import { useScreenSize } from '../../../../../utils/media-query';
+import Geocode from '../../../../../api/external/geocode';
 import TrackMapInfoBox from './track-map-info-box';
 
 const TrackMap = ({ mobileDevice, timelineItem }) => {
@@ -70,7 +70,7 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
 
             const content = ReactDOMServer.renderToString(
                 React.createElement(
-                    TrackMapCallout,
+                    TrackMapInfoWindow,
                     { locationRecord: locationRecord, address: address }
                 )
             );
@@ -174,14 +174,19 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
                     } }
                     center={ { lng: 49.156374, lat: 55.796685 } }
                     mapContainerStyle={ { height: (isXSmall ? '80%' : '90%'), width: '100%' } }
+
                     onLoad={ (googleMap) => {
                         mapInstance = googleMap;
-                        fitMapBoundsByLocations(googleMap, locationRecords);
-                        showTrackPath();
+
+                        setTimeout( () => {
+                            showTrackPath();
+                            fitMapBoundsByLocations(googleMap, locationRecords);
+                        }, 250);
                     } }
                     onRightClick={ () => {
                         fitMapBoundsByLocations(mapInstance, locationRecords);
                     } }
+
                 >
                     { isXSmall ? null :
                         <TrackMapInfoBox mobileDevice={ mobileDevice } timelineItem={ timelineItem }/>

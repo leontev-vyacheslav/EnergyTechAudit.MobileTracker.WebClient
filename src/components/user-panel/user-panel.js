@@ -8,10 +8,10 @@ export default function ({ menuMode }) {
     const { user, signOut } = useAuth();
 
     const menuItems = useMemo(() => ( [
-        {
+        /*{
             text: 'Профиль',
             icon: 'user'
-        },
+        },*/
         {
             text: 'Выход',
             icon: 'runner',
@@ -25,7 +25,7 @@ export default function ({ menuMode }) {
                 <div className={ 'image-container' }>
                     <div className={ 'dx-icon dx-icon-user' }/>
                 </div>
-                <div className={ 'user-name' }>{ user.email }</div>
+                <div className={ 'user-name' }>{ user.userName }</div>
             </div>
 
             { menuMode === 'context' && (

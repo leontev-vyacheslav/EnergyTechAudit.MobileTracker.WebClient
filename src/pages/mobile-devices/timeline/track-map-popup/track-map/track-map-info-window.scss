@@ -1,12 +1,12 @@
-.track-info-window tr {
+.track-map-info-window tr {
   height: 30px
 }
 
-.track-info-window tr td:first-child {
+.track-map-info-window tr td:first-child {
   width: 125px
 }
 
-.track-info-window tr td:first-child span {
+.track-map-info-window tr td:first-child span {
   background-color: #363640;
   color: whitesmoke;
   padding: 4px 10px;
@@ -14,11 +14,11 @@
   display: inline-block;
 }
 
-.track-info-window tr td:nth-child(2) {
+.track-map-info-window tr td:nth-child(2) {
   width: 175px
 }
 
-.track-info-window tr td:nth-child(2) span {
+.track-map-info-window tr td:nth-child(2) span {
   background-color: #d75028;
   color: black;
   padding: 4px 10px;
