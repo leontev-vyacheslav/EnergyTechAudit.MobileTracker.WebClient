@@ -1,5 +1,6 @@
 import { refreshTokenAsync } from './auth';
 
+
 export async function fetchWithCredentials (url, options) {
     const userAuthDataStr = localStorage.getItem('userAuthData');
     let userAuthData = null;
@@ -21,6 +22,7 @@ export async function fetchWithCredentials (url, options) {
 
         const refreshResponse = await refreshTokenAsync(userAuthData.token, userAuthData.refreshToken);
         if (!refreshResponse.ok) {
+            localStorage.removeItem('userAuthData');
             return response;
         }
         const jsonRefreshResponse = await refreshResponse.json();

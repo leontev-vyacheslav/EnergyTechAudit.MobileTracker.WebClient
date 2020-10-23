@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useCallback } from 'react';
-import {getUser, signInAsync as sendSignInRequest } from '../api/auth';
+import {getUser, loginAsync as sendSignInRequest } from '../api/auth';
 
 function AuthProvider (props) {
     const [user, setUser] = useState();
@@ -15,11 +15,10 @@ function AuthProvider (props) {
         } )();
     }, []);
 
-    const signIn = useCallback(async (email, password) => {
-        const result = await sendSignInRequest(email, password);
-        if (result.isOk) {
-            setUser(result.data);
-        }
+    const signIn = useCallback(async (userName, password) => {
+        const result = await sendSignInRequest(userName, password);
+        setUser(result);
+
         return result;
     }, []);
 

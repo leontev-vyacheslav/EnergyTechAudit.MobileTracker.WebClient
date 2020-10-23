@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^7.1.2",
     "devextreme": "20.1-stable",
     "devextreme-react": "20.1-stable",
+    "history": "^5.0.0",
     "node-sass": "^4.11.0",
     "react": "^16.13.1",
     "react-app-polyfill": "^1.0.0",

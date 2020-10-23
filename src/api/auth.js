@@ -1,7 +1,7 @@
 import appConstants from '../constants/app-constants'
 
 export async function refreshTokenAsync (jwtToken, refreshToken) {
-    return fetch(`${appConstants.routes.host}/token/refresh`, {
+    return fetch(`${appConstants.routes.host}/account/refresh`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -13,7 +13,7 @@ export async function refreshTokenAsync (jwtToken, refreshToken) {
     });
 }
 
-export async function signInAsync (userName, password) {
+export async function loginAsync (userName, password) {
     try {
         const response = await fetch(`${ appConstants.routes.host }/account/login?userName=${userName}&password=${password}`, {
             method: 'GET',
@@ -45,7 +45,6 @@ export async function getUser () {
 export async function createAccount (email, password) {
     try {
         // Send request
-        console.log(email, password);
 
         return {
             isOk: true

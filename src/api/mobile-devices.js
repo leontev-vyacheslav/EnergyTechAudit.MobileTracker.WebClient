@@ -21,7 +21,7 @@ export async function getTimelinesAsync (mobileDeviceId, workDate) {
         return Promise.reject(error);
     });
 
-    return await response.json().catch((error) => {
+    return response.json().catch((error) => {
         return Promise.reject(error);
     });
 }
@@ -36,7 +36,7 @@ export async function getLocationRecordsAsync (mobileDeviceId, workDate) {
         return Promise.reject(error);
     });
 
-    return await response.json().catch((error) => {
+    return response.json().catch((error) => {
         return Promise.reject(error);
     });
 }
@@ -51,7 +51,7 @@ export async function getLocationRecordsByRangeAsync (mobileDeviceId, beginDate,
         return Promise.reject(error);
     });
 
-    return await response.json().catch((error) => {
+    return response.json().catch((error) => {
         return Promise.reject(error);
     });
 }

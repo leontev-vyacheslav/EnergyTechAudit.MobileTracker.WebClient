@@ -11,7 +11,6 @@ import Form, {
 import LoadIndicator from 'devextreme-react/load-indicator';
 import notify from 'devextreme/ui/notify';
 import { useAuth } from '../../contexts/auth';
-import { signInAsync } from '../../api/auth';
 
 import './login-form.scss';
 
@@ -25,8 +24,7 @@ export default function () {
         e.preventDefault();
         const { userName, password } = formData.current;
         setLoading(true);
-
-        const userAuthData = await signInAsync(userName, password);
+        const userAuthData = await signIn(userName, password)
         if (!userAuthData) {
             notify('Пользователь не найден или неверный пароль.', 'error', 10000);
         }
@@ -34,7 +32,7 @@ export default function () {
             history.go('/home');
         }
         setLoading(false);
-    }, [signIn, history]);
+    }, [history, signIn]);
 
     return (
         <form className={ 'login-form' } onSubmit={ onSubmit }>
