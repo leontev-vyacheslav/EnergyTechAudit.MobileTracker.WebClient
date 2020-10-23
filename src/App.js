@@ -14,6 +14,7 @@ import { useScreenSizeClass } from './utils/media-query';
 import Content from './Content';
 import NotAuthenticatedContent from './NotAuthenticatedContent';
 import { AppSettingsProvider } from './contexts/app-settings';
+import { AppDataProvider } from './contexts/app-data';
 
 function App () {
     const { user, loading } = useAuth();
@@ -37,11 +38,13 @@ export default function () {
         <Router>
             <AppSettingsProvider>
                 <AuthProvider>
-                    <NavigationProvider>
-                        <div className={ `app ${ screenSizeClass }` }>
-                            <App/>
-                        </div>
-                    </NavigationProvider>
+                    <AppDataProvider>
+                        <NavigationProvider>
+                            <div className={ `app ${ screenSizeClass }` }>
+                                <App/>
+                            </div>
+                        </NavigationProvider>
+                    </AppDataProvider>
                 </AuthProvider>
             </AppSettingsProvider>
         </Router>

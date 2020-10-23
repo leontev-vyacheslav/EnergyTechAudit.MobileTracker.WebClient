@@ -2,20 +2,21 @@ import React, { useCallback, useEffect, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 
-import appConstants from '../../../../../constants/app-constants'
 import TrackMapInfoWindow from './track-map-info-window';
-import { getLocationRecordsByRangeAsync } from '../../../../../api/mobile-devices';
-import './track-map.scss';
 import CheckBox from 'devextreme-react/ui/check-box';
-import { useScreenSize } from '../../../../../utils/media-query';
 import Geocode from '../../../../../api/external/geocode';
 import TrackMapInfoBox from './track-map-info-box';
+import appConstants from '../../../../../constants/app-constants'
+import { useScreenSize } from '../../../../../utils/media-query';
+import { useAppData } from '../../../../../contexts/app-data';
 
+import './track-map.scss';
 const TrackMap = ({ mobileDevice, timelineItem }) => {
 
     const [locationRecords, setLocationRecords] = useState(null);
     let mapInstance = null, currentInfoWindow = null, trackPath = null, currentMarkers = [];
     const { isXSmall } = useScreenSize();
+    const { getLocationRecordsByRangeAsync } = useAppData();
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: 'AIzaSyBLE0ThOFO5aYYVrsDP8AIJUAVDCiTPiLQ'
@@ -30,7 +31,7 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
             );
             setLocationRecords(locationRecordsData);
         } )()
-    }, [mobileDevice.id, timelineItem]);
+    }, [getLocationRecordsByRangeAsync, mobileDevice.id, timelineItem]);
 
     const getBoundsByMarkers = useCallback((locationList) => {
         const boundBox = new window.google.maps.LatLngBounds();

@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import DataGrid, { Column, MasterDetail, Scrolling, Selection, Summary, TotalItem } from 'devextreme-react/ui/data-grid';
 import { Button } from 'devextreme-react/ui/button';
 import { MdTimeline, MdMap } from 'react-icons/md';
-import { getTimelinesAsync } from '../../../api/mobile-devices';
 import { useAppSettings } from '../../../contexts/app-settings';
+import { useAppData } from '../../../contexts/app-data';
 import appConstants from '../../../constants/app-constants'
 import TimelineInfo from './timeline-info/timeline-info';
 import TrackMapPopup from './track-map-popup/track-map-popup';
@@ -14,6 +14,7 @@ const Timelines = ({ currentMobileDevice }) => {
     const { appSettingsData } = useAppSettings();
     const [currentTimeline, setCurrentTimeline] = useState(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState(null);
+    const { getTimelinesAsync } = useAppData();
 
     useEffect(() => {
         ( async () => {
@@ -23,7 +24,7 @@ const Timelines = ({ currentMobileDevice }) => {
             });
             setCurrentTimeline(timeline);
         } )();
-    }, [appSettingsData.workDate, currentMobileDevice.id]);
+    }, [getTimelinesAsync, appSettingsData.workDate, currentMobileDevice.id]);
 
     const toggleRowDetailByRowKey = useCallback(({ dataGrid, rowKey, mode }) => {
         if (dataGrid.isRowExpanded(rowKey) && dataGrid.timelineDetailMode !== mode) {

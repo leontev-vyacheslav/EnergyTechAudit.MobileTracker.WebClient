@@ -21,12 +21,14 @@ export default function () {
     const history = useHistory();
 
     const onSubmit = useCallback(async (e) => {
+
         e.preventDefault();
         const { userName, password } = formData.current;
         setLoading(true);
-        const userAuthData = await signIn(userName, password)
+        const userAuthData = await signIn(userName, password);
+
         if (!userAuthData) {
-            notify('Пользователь не найден или неверный пароль.', 'error', 10000);
+            notify('Пользователь не найден или неверный пароль.', 'error', 5000);
         }
         else {
             history.go('/home');
