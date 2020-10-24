@@ -18,7 +18,6 @@ import { AppDataProvider } from './contexts/app-data';
 
 function App () {
     const { user, loading } = useAuth();
-
     loadMessages(ruMessages);
     locale(navigator.language);
 

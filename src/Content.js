@@ -20,11 +20,7 @@ export default function () {
                 <Redirect to={ '/home' }/>
             </Switch>
             <Footer>
-                Copyright © { new Date().getFullYear() } { appInfo.companyName }.
-                <br/>
-                <br/>
-                Все товарные знаки или зарегистрированные товарные знаки являются собственностью соответствующих
-                владельцев.
+                <div> Copyright © { new Date().getFullYear() } { appInfo.companyName }.</div>
             </Footer>
         </SideNavBarLayout>
     );

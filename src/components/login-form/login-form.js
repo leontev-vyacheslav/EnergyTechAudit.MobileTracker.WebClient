@@ -1,12 +1,10 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { useHistory } from 'react-router';
 import Form, {
     Item,
     Label,
     ButtonItem,
     ButtonOptions,
-    RequiredRule,
-
+    RequiredRule
 } from 'devextreme-react/form';
 import LoadIndicator from 'devextreme-react/load-indicator';
 import notify from 'devextreme/ui/notify';
@@ -18,10 +16,8 @@ export default function () {
     const { signIn } = useAuth();
     const [loading, setLoading] = useState(false);
     const formData = useRef({});
-    const history = useHistory();
 
     const onSubmit = useCallback(async (e) => {
-
         e.preventDefault();
         const { userName, password } = formData.current;
         setLoading(true);
@@ -30,11 +26,8 @@ export default function () {
         if (!userAuthData) {
             notify('Пользователь не найден или неверный пароль.', 'error', 5000);
         }
-        else {
-            history.go('/home');
-        }
         setLoading(false);
-    }, [history, signIn]);
+    }, [signIn]);
 
     return (
         <form className={ 'login-form' } onSubmit={ onSubmit }>
@@ -61,7 +54,6 @@ export default function () {
                         </span>
                     </ButtonOptions>
                 </ButtonItem>
-
             </Form>
         </form>
     );

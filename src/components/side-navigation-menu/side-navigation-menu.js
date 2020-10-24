@@ -77,7 +77,7 @@ export default function (props) {
                     items={ items }
                     keyExpr={ 'path' }
                     selectionMode={ 'single' }
-                    focusStateEnabled={ false }
+                    focusStateEnabled={ true }
                     expandEvent={ 'click' }
                     onItemClick={ selectedItemChanged }
                     onContentReady={ onMenuReady }

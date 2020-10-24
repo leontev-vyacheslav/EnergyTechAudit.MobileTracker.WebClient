@@ -24,5 +24,10 @@ export const navigation = [
         text: 'О программе',
         path: '/about',
         icon: 'info'
+    },
+    {
+        text: 'Выход',
+        path: '/logout',
+        icon: 'runner'
     }
 ];

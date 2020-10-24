@@ -28,6 +28,14 @@
         font-size: 24px;
       }
 
+      .header-title-logo-container {
+        margin-bottom: 20px;
+
+        div {
+          font-size: 24px
+        }
+      }
+
       .description {
         color: rgba($base-text-color, alpha($base-text-color) * 0.7);
         line-height: 18px;

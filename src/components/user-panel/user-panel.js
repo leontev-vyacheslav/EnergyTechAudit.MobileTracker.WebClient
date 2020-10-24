@@ -33,10 +33,10 @@ export default function ({ menuMode }) {
                     items={ menuItems }
                     target={ '.user-button' }
                     showEvent={ 'dxclick' }
-                    width={ 320 }
+                    width={ 250 }
                     cssClass={ 'user-menu' }
                 >
-                    <Position my={ 'top center' } at={ 'bottom center' }/>
+                    <Position my={ 'top right' } at={ 'bottom right' }/>
                 </ContextMenu>
             ) }
             { menuMode === 'list' && (

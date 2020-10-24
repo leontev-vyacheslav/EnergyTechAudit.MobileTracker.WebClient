@@ -6,7 +6,7 @@ import './header.scss';
 import { Template } from 'devextreme-react/core/template';
 import { ReactComponent as Eta24LogoSvg } from '../../assets/Core.Common.PreloaderLogo.Medium.SpringDepression.svg';
 
-export default ({ menuToggleEnabled, title, toggleMenu, userMenuItems }) => (
+export default ({ menuToggleEnabled, title, toggleMenu }) => (
     <header className={ 'header-component' }>
         <Toolbar className={ 'header-toolbar' }>
             <Item
@@ -22,15 +22,14 @@ export default ({ menuToggleEnabled, title, toggleMenu, userMenuItems }) => (
                 cssClass={ 'header-title' }
                 text={ title }
                 visible={ !!title }
-            render={() => {
-                return (
-                    <div className={'header-title-logo-container'}>
-                        <Eta24LogoSvg width={ 60 }/>
-                        <div>{title}</div>
-                    </div>
+                render={ () => {
+                    return (
+                        <div className={ 'header-title-logo-container' }>
+                            <Eta24LogoSvg width={ 60 }/>
+                            <div>{ title }</div>
+                        </div>
                     )
-            }}
-
+                } }
             />
             <Item
                 location={ 'after' }
@@ -39,7 +38,7 @@ export default ({ menuToggleEnabled, title, toggleMenu, userMenuItems }) => (
             >
                 <Button
                     className={ 'user-button authorization' }
-                    width={ 320 }
+                    width={ 200 }
                     height={ '100%' }
                     stylingMode={ 'text' }
                 >

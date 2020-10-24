@@ -1,5 +1,4 @@
 import React from 'react';
-import { ReactComponent as Eta24LogoSvg } from '../../assets/Core.Common.PreloaderLogo.Medium.SpringDepression.svg';
 import appInfo from '../../app-info';
 import './home.scss';
 
@@ -10,8 +9,6 @@ export default () => {
             <div className={ 'content-block' }>
                 <div className={ 'dx-card responsive-paddings home-page-content' }>
                     <div className={ 'logos-container' }>
-                        <Eta24LogoSvg width={ 100 }/>
-
                         <div>{ appInfo.companyName }</div>
                     </div>
 

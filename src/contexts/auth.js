@@ -6,6 +6,44 @@ function AuthProvider (props) {
     const [user, setUser] = useState();
     const [loading, setLoading] = useState(true);
 
+    const getUserAuthDataFromStorage = useCallback(() => {
+        let userAuthData ;
+        try {
+            const userAuthDataStr = localStorage.getItem('userAuthData');
+            if (userAuthDataStr) {
+                userAuthData = JSON.parse(userAuthDataStr);
+            }
+        }
+        catch  {
+            userAuthData = null;
+        }
+        return userAuthData;
+    }, []);
+
+    const refreshTokenAsync = useCallback(async () => {
+        const userAuthData = getUserAuthDataFromStorage();
+        return fetch(`${appConstants.routes.host}/account/refresh`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userAuthData)
+        });
+    }, [getUserAuthDataFromStorage]);
+
+    const revokeTokenAsync = useCallback(async () => {
+        const userAuthData = getUserAuthDataFromStorage();
+
+        return await fetch(`${appConstants.routes.host}/account/revoke`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authentication: `Bearer ${ userAuthData.token }`
+            },
+            body: JSON.stringify(userAuthData)
+        });
+    }, [getUserAuthDataFromStorage]);
+
     useEffect(() => {
         ( async function () {
             let userAuthData ;
@@ -22,6 +60,8 @@ function AuthProvider (props) {
             setLoading(false);
         } )();
     }, []);
+
+
 
     const signIn = useCallback(async (userName, password) => {
         let userAuthData;
@@ -40,37 +80,20 @@ function AuthProvider (props) {
         return userAuthData;
     }, []);
 
-    const signOut = useCallback(() => {
+    const signOut = useCallback( () => {
+
+        (async () => {
+            await revokeTokenAsync();
+        }) ();
 
         localStorage.removeItem('userAuthData');
         setUser(null);
-    }, []);
+    }, [revokeTokenAsync]);
 
-    const refreshTokenAsync = useCallback(async (token, refreshToken) => {
-        return fetch(`${appConstants.routes.host}/account/refresh`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                token: token,
-                refreshToken: refreshToken
-            })
-        });
-    }, []);
 
-    const revokeTokenAsync = useCallback(async (token) => {
-        return await fetch(`${appConstants.routes.host}/account/revoke`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authentication: `Bearer ${ token }`
-            }
-        });
-    }, []);
 
     return (
-        <AuthContext.Provider value={ { user, signIn, signOut, refreshTokenAsync, loading } } { ...props } />
+        <AuthContext.Provider value={ { user, signIn, signOut, getUserAuthDataFromStorage, refreshTokenAsync, loading } } { ...props } />
     );
 }
 
