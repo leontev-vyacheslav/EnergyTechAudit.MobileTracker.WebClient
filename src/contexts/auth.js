@@ -61,8 +61,6 @@ function AuthProvider (props) {
         } )();
     }, []);
 
-
-
     const signIn = useCallback(async (userName, password) => {
         let userAuthData;
         try {
@@ -89,8 +87,6 @@ function AuthProvider (props) {
         localStorage.removeItem('userAuthData');
         setUser(null);
     }, [revokeTokenAsync]);
-
-
 
     return (
         <AuthContext.Provider value={ { user, signIn, signOut, getUserAuthDataFromStorage, refreshTokenAsync, loading } } { ...props } />

@@ -30,7 +30,7 @@ function AppDataProvider (props) {
                 const refreshResponse = await refreshTokenAsync();
                 if (!refreshResponse.ok) {
                     signOut();
-                    return refreshResponse;
+                    return Promise.reject();
                 }
                 const jsonRefreshResponse = await refreshResponse.json();
                 localStorage.setItem('userAuthData', JSON.stringify(jsonRefreshResponse));
