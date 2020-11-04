@@ -2,10 +2,10 @@ import React, { useMemo, useRef } from 'react';
 import Form from 'devextreme-react/form'
 import Button from 'devextreme-react/button'
 import { useAppSettings } from '../../contexts/app-settings';
-
-import './settings.scss';
 import notify from 'devextreme/ui/notify';
 import { useScreenSize } from '../../utils/media-query';
+
+import './settings.scss';
 
 export default () => {
     let dxAppSettingsFormRef = useRef(null);
@@ -53,7 +53,7 @@ export default () => {
     }, [appSettingsData]);
     const { isXSmall } = useScreenSize();
 
-    return (
+    return  (
         <React.Fragment>
             <h2 className={ 'content-block' }>Настройки</h2>
             <div className={ 'content-block' }>
@@ -64,7 +64,6 @@ export default () => {
                         formData={ formOptions.formData }
                         ref={ dxAppSettingsFormRef }
                     />
-
                     <Button className={ 'form-success-button' } text={ 'OK' } width={ 125 } type={ 'success' }
                             onClick={ () => {
                                 const formRef = dxAppSettingsFormRef.current;
@@ -87,5 +86,5 @@ export default () => {
                 </div>
             </div>
         </React.Fragment>
-    )
+    );
 };

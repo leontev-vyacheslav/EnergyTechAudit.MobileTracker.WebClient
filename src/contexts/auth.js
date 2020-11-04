@@ -1,10 +1,9 @@
 import React, { useState, useEffect, createContext, useContext, useCallback } from 'react';
 
-import appConstants from '../constants/app-constants';
+import routes from '../constants/routes';
 
 function AuthProvider (props) {
     const [user, setUser] = useState();
-    const [loading, setLoading] = useState(true);
 
     const getUserAuthDataFromStorage = useCallback(() => {
         let userAuthData ;
@@ -22,7 +21,7 @@ function AuthProvider (props) {
 
     const refreshTokenAsync = useCallback(async () => {
         const userAuthData = getUserAuthDataFromStorage();
-        return fetch(`${appConstants.routes.host}/account/refresh`, {
+        return fetch(`${routes.host}${routes.accountRefresh}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -34,7 +33,7 @@ function AuthProvider (props) {
     const revokeTokenAsync = useCallback(async () => {
         const userAuthData = getUserAuthDataFromStorage();
 
-        return await fetch(`${appConstants.routes.host}/account/revoke`, {
+        return await fetch(`${routes.host}${routes.accountRevoke}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -57,14 +56,13 @@ function AuthProvider (props) {
                 userAuthData = null;
             }
             setUser(userAuthData);
-            setLoading(false);
         } )();
     }, []);
 
     const signIn = useCallback(async (userName, password) => {
         let userAuthData;
         try {
-            const response = await fetch(`${ appConstants.routes.host }/account/login?userName=${ userName }&password=${ password }`, {
+            const response = await fetch(`${ routes.host }${ routes.accountLogin }?userName=${ userName }&password=${ password }`, {
                 method: 'GET',
             })
             if (response.ok === true) {
@@ -89,7 +87,7 @@ function AuthProvider (props) {
     }, [revokeTokenAsync]);
 
     return (
-        <AuthContext.Provider value={ { user, signIn, signOut, getUserAuthDataFromStorage, refreshTokenAsync, loading } } { ...props } />
+        <AuthContext.Provider value={ { user, signIn, signOut, getUserAuthDataFromStorage, refreshTokenAsync } } { ...props } />
     );
 }
 

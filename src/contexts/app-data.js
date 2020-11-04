@@ -1,32 +1,34 @@
 import React, { createContext, useCallback, useContext, useMemo } from 'react';
-import appConstants from '../constants/app-constants';
-
+import routes from '../constants/routes';
 import { useAuth } from './auth';
 
 function AppDataProvider (props) {
-
     const { signOut, refreshTokenAsync, getUserAuthDataFromStorage } = useAuth();
 
-    const defaultHeaders = useMemo(() => { return {
-        Accept: 'application/json'
-    }}, []);
+    const defaultHeaders = useMemo(() => {
+        return {
+            Accept: 'application/json'
+        }
+    }, []);
 
     const fetchWithCredentials = useCallback(async (url, options) => {
+
         let userAuthData = getUserAuthDataFromStorage();
 
         if (userAuthData) {
             options = options || {};
-            options.headers = defaultHeaders;
-            options.headers['Authorization'] = `Bearer ${ userAuthData.token }`;
+            options.headers = options.headers || {};
+            options.headers = { ...options.headers, ...defaultHeaders };
+            options.headers.Authorization = `Bearer ${ userAuthData.token }`;
+
             let response = await fetch(url, options).catch(e => {
                 console.warn(e);
+                return Promise.reject(e);
             });
             if (response.ok) {
                 return response;
             }
-
             if (response.status === 401 && response.headers.has('Expires')) {
-
                 const refreshResponse = await refreshTokenAsync();
                 if (!refreshResponse.ok) {
                     signOut();
@@ -34,13 +36,11 @@ function AppDataProvider (props) {
                 }
                 const jsonRefreshResponse = await refreshResponse.json();
                 localStorage.setItem('userAuthData', JSON.stringify(jsonRefreshResponse));
-
                 return await fetchWithCredentials(url, options);
             } else {
                 return response;
             }
-        }
-        else {
+        } else {
             signOut();
             return Promise.reject();
         }
@@ -48,70 +48,66 @@ function AppDataProvider (props) {
 
     const getMobileDevices = useCallback(async () => {
 
-        const response = await fetchWithCredentials(`${ appConstants.routes.host }${ appConstants.routes.mobileDevices }`, {
+        const response = await fetchWithCredentials(`${ routes.host }${ routes.mobileDevices }`, {
             method: 'GET'
         }).catch((error) => {
             return Promise.reject(error);
         });
 
-        if(response) {
+        if (response) {
             return response.json().catch((error) => {
                 return Promise.reject(error);
             });
-        }
-        else {
+        } else {
             return Promise.reject(new Error('Internal error'));
         }
 
     }, [fetchWithCredentials]);
 
     const getTimelinesAsync = useCallback(async (mobileDeviceId, workDate) => {
-        const response = await fetchWithCredentials(`${ appConstants.routes.host }${ appConstants.routes.timeline }?mobileDeviceId=${ mobileDeviceId }&workDate=${ new Date(workDate).toISOString() }`, {
+        const response = await fetchWithCredentials(`${ routes.host }${ routes.timeline }?mobileDeviceId=${ mobileDeviceId }&workDate=${ new Date(workDate).toISOString() }`, {
             method: 'GET'
         }).catch((error) => {
             return Promise.reject(error);
         });
 
-        if(response) {
+        if (response) {
             return response.json().catch((error) => {
                 return Promise.reject(error);
             });
-        }
-        else {
+        } else {
             return Promise.reject(new Error('Internal error'));
         }
     }, [fetchWithCredentials]);
 
     const getLocationRecordsAsync = useCallback(async (mobileDeviceId, workDate) => {
-        const response = await fetchWithCredentials(`${ appConstants.routes.host }${ appConstants.routes.locationRecord }/${ mobileDeviceId }?workDate=${ new Date(workDate).toISOString() }`, {
+        const response = await fetchWithCredentials(`${ routes.host }${ routes.locationRecord }/${ mobileDeviceId }?workDate=${ new Date(workDate).toISOString() }`, {
             method: 'GET'
         }).catch((error) => {
             return Promise.reject(error);
         });
 
-        if(response) {
+        if (response) {
             return response.json().catch((error) => {
                 return Promise.reject(error);
             });
-        }
-        else {
+        } else {
             return Promise.reject(new Error('Internal error'));
         }
     }, [fetchWithCredentials]);
 
     const getLocationRecordsByRangeAsync = useCallback(async (mobileDeviceId, beginDate, endDate) => {
-        const response = await fetchWithCredentials(`${ appConstants.routes.host }${ appConstants.routes.locationRecord }/byRange/${ mobileDeviceId }?beginDate=${ new Date(beginDate).toISOString() }&endDate=${ new Date(endDate).toISOString() }`, {
+        const response = await fetchWithCredentials(`${ routes.host }${ routes.locationRecord }/byRange/${ mobileDeviceId }?beginDate=${ new Date(beginDate).toISOString() }&endDate=${ new Date(endDate).toISOString() }`, {
             method: 'GET'
         }).catch((error) => {
             return Promise.reject(error);
         });
 
-        if(response) {
+        if (response) {
             return response.json().catch((error) => {
                 return Promise.reject(error);
             });
-        }
-        else {
+        } else {
             return Promise.reject(new Error('Internal error'));
         }
     }, [fetchWithCredentials]);

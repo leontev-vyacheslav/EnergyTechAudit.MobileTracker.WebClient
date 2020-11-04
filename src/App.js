@@ -7,7 +7,6 @@ import './themes/generated/theme.additional.css';
 import React from 'react';
 import { HashRouter as Router } from 'react-router-dom';
 import './dx-styles.scss';
-import LoadPanel from 'devextreme-react/load-panel';
 import { NavigationProvider } from './contexts/navigation';
 import { AuthProvider, useAuth } from './contexts/auth';
 import { useScreenSizeClass } from './utils/media-query';
@@ -17,22 +16,17 @@ import { AppSettingsProvider } from './contexts/app-settings';
 import { AppDataProvider } from './contexts/app-data';
 
 function App () {
-    const { user, loading } = useAuth();
+    const { user } = useAuth();
     loadMessages(ruMessages);
     locale(navigator.language);
 
-    if (loading) {
-        return <LoadPanel visible={ true }/>;
-    }
-    if (user) {
-        return <Content/>;
-    }
-    return <NotAuthenticatedContent/>;
+    return user ?
+        <Content/>
+        : <NotAuthenticatedContent/>;
 }
 
 export default function () {
     const screenSizeClass = useScreenSizeClass();
-
     return (
         <Router>
             <AppSettingsProvider>

@@ -1,20 +1,25 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {  useCallback, useEffect, useState } from 'react';
 import DataGrid, { Column, MasterDetail, Scrolling, Selection, Summary, TotalItem } from 'devextreme-react/ui/data-grid';
 import { Button } from 'devextreme-react/ui/button';
 import { MdTimeline, MdMap } from 'react-icons/md';
 import { useAppSettings } from '../../../contexts/app-settings';
 import { useAppData } from '../../../contexts/app-data';
-import appConstants from '../../../constants/app-constants'
 import TimelineInfo from './timeline-info/timeline-info';
 import TrackMapPopup from './track-map-popup/track-map-popup';
+import Loader from '../../../components/loader/loader';
+import AppConstants from '../../../constants/app-constants';
 
 import './timeline.scss';
-
 const Timelines = ({ currentMobileDevice }) => {
     const { appSettingsData } = useAppSettings();
     const [currentTimeline, setCurrentTimeline] = useState(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState(null);
     const { getTimelinesAsync } = useAppData();
+
+    const [isDelayComplete, setIsDelayComplete] = useState(false);
+    setTimeout(() => {
+        setIsDelayComplete( true );
+    }, AppConstants.loadingDelay);
 
     useEffect(() => {
         ( async () => {
@@ -42,8 +47,9 @@ const Timelines = ({ currentMobileDevice }) => {
         }
     }, []);
 
-    return ( ( currentTimeline !== null && currentTimeline.length > 0 ) ?
-            ( <React.Fragment>
+    return ( ( currentTimeline !== null && currentTimeline.length > 0 && isDelayComplete) ?
+            (
+                <React.Fragment>
                     { currentTimelineItem !== null ?
                         <TrackMapPopup mobileDevice={ currentMobileDevice } timelineItem={ currentTimelineItem } onHiding={ () => {
                             setCurrentTimelineItem(null);
@@ -59,7 +65,7 @@ const Timelines = ({ currentMobileDevice }) => {
                         showColumnLines={ true }
                         showRowLines={ true }
                         showBorders={ true }
-                        noDataText={ appConstants.noDataLongText }
+                        noDataText={ AppConstants.noDataLongText }
                         onSelectionChanged={ (e) => {
                             e.component.refresh(true);
                         } }
@@ -148,9 +154,9 @@ const Timelines = ({ currentMobileDevice }) => {
                         />
                     </DataGrid>
                 </React.Fragment>
-            ) :
-            <span className={ 'dx-datagrid-nodata' }>Нет данных для отображения</span>
-    )
+            ) : /*<span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>*/
+                <Loader/>
+    );
 };
 
 export default Timelines;

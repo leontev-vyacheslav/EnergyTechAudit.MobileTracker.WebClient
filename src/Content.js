@@ -6,6 +6,7 @@ import { SideNavOuterToolbar as SideNavBarLayout } from './layouts';
 import { Footer } from './components';
 
 export default function () {
+
     return (
         <SideNavBarLayout title={ appInfo.title }>
             <Switch>

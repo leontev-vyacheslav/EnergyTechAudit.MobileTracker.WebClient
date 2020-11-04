@@ -9,7 +9,7 @@ import './track-map-popup.scss';
 const TrackMapPopup = ({ mobileDevice, timelineItem, onHiding }) => {
     const { isXSmall } = useScreenSize();
     return (
-        <Popup className={ 'track-map-popup' } title={ 'Карта маршрута' } c dragEnabled={ false } visible={ true } showTitle={ true }
+        <Popup className={ 'track-map-popup' } title={ 'Карта маршрута' } dragEnabled={ false } visible={ true } showTitle={ true }
                onHiding={ onHiding }
                width={ isXSmall ? '90%' : '70%' }
                height={ isXSmall ? '90%' : '70%' }

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import DataGrid, { Column } from 'devextreme-react/ui/data-grid';
 import './timeline-info.scss';
-import appConstants from '../../../../constants/app-constants';
 import DataSource from 'devextreme/data/data_source';
 import ArrayStore from 'devextreme/data/array_store';
 import Geocode from '../../../../api/external/geocode';
 
 import { MdAdjust, MdCompareArrows, MdGpsFixed, MdMoreHoriz, MdSettingsEthernet } from 'react-icons/md';
 import { TimelineInfoHeader } from './timeline-info-header';
+import Loader from '../../../../components/loader/loader';
+import AppConstants from '../../../../constants/app-constants';
 
 const IconComponents = {
     Marks: MdGpsFixed,
@@ -22,6 +23,10 @@ const TimelineInfo = ({ timeline, currentMobileDevice }) => {
     const [departure, setDeparture] = useState(null);
     const [destination, setDestination] = useState(null);
     const [timelineInfo, setTimelineInfo] = useState(null);
+    const [isDelayComplete, setIsDelayComplete] = useState(false);
+    setTimeout(() => {
+        setIsDelayComplete( true );
+    }, AppConstants.loadingDelay);
 
     useEffect(() => {
         const timeLineLocal = { ...timeline };
@@ -57,14 +62,14 @@ const TimelineInfo = ({ timeline, currentMobileDevice }) => {
         } )();
     }, [timeline.firstLocationRecord, timeline.lastLocationRecord]);
 
-    return ( ( departure !== null && destination !== null ) ?
+    return ( ( departure !== null && destination !== null && isDelayComplete) ?
         (
             <React.Fragment>
                 <TimelineInfoHeader currentMobileDevice={ currentMobileDevice } departure={ departure } destination={ destination }/>
                 <DataGrid
                     className={ 'timeline-info' }
                     width={ '100%' }
-                    noDataText={ appConstants.noDataLongText }
+                    noDataText={ AppConstants.noDataLongText }
                     dataSource={ new DataSource({
                         store: new ArrayStore({
                             key: 'id',
@@ -89,7 +94,7 @@ const TimelineInfo = ({ timeline, currentMobileDevice }) => {
                     <Column dataField={ 'value' } caption={ 'Значение' } width={ 150 } alignment={ 'left' }/>
                 </DataGrid>
             </React.Fragment> )
-        : null );
+        : <Loader/> );
 };
 
 export default TimelineInfo;

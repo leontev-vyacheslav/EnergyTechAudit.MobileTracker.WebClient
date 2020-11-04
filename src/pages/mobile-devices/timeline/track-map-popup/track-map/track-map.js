@@ -1,22 +1,26 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
-
 import TrackMapInfoWindow from './track-map-info-window';
 import CheckBox from 'devextreme-react/ui/check-box';
 import Geocode from '../../../../../api/external/geocode';
 import TrackMapInfoBox from './track-map-info-box';
-import appConstants from '../../../../../constants/app-constants'
 import { useScreenSize } from '../../../../../utils/media-query';
 import { useAppData } from '../../../../../contexts/app-data';
-
+import Loader from '../../../../../components/loader/loader';
+import AppConstants from '../../../../../constants/app-constants';
 import './track-map.scss';
+
 const TrackMap = ({ mobileDevice, timelineItem }) => {
 
     const [locationRecords, setLocationRecords] = useState(null);
     let mapInstance = null, currentInfoWindow = null, trackPath = null, currentMarkers = [];
     const { isXSmall } = useScreenSize();
     const { getLocationRecordsByRangeAsync } = useAppData();
+    const [isDelayComplete, setIsDelayComplete] = useState(false);
+    setTimeout(() => {
+        setIsDelayComplete( true );
+    }, AppConstants.loadingDelay);
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: 'AIzaSyBLE0ThOFO5aYYVrsDP8AIJUAVDCiTPiLQ'
@@ -151,7 +155,7 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
         });
     };
 
-    return ( isLoaded && locationRecords !== null ?
+    return ( isLoaded && locationRecords !== null && isDelayComplete ?
             <React.Fragment>
                 <CheckBox className={ 'track-map-check-box' } text={ 'Показывать маркерами геолокации' } onValueChanged={ (e) => {
                     if (e.value === true) {
@@ -194,7 +198,8 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
                     }
                 </GoogleMap>
             </React.Fragment>
-            : <div className={ 'dx-datagrid-nodata nodata' }>{ appConstants.noDataLongText }</div>
+            : /*<span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>*/
+            <Loader/>
     );
 };
 export default TrackMap;
