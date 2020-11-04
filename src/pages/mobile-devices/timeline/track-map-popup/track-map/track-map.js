@@ -30,11 +30,14 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
 
     useEffect(() => {
         ( async () => {
-            const locationRecordsData = await getLocationRecordsByRangeAsync(
+            let locationRecordsData = await getLocationRecordsByRangeAsync(
                 mobileDevice.id,
                 Date.parse(timelineItem.beginDate),
                 Date.parse(timelineItem.endDate)
             );
+            if (locationRecordsData) {
+                locationRecordsData = locationRecordsData.filter(l => l.accuracy <= 100);
+            }
             setLocationRecords(locationRecordsData);
         } )()
     }, [getLocationRecordsByRangeAsync, mobileDevice.id, timelineItem]);
@@ -58,7 +61,7 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
         }
     };
 
-    const fetchAddressAsync =  async (location) => {
+    const fetchAddressAsync = async (location) => {
         const geocodeResponse = await Geocode.fromLatLng(location.latitude, location.longitude);
         if (geocodeResponse && geocodeResponse.status === 'OK') {
             return geocodeResponse.results.find((e, i) => i === 0).formatted_address;
@@ -99,7 +102,7 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
     };
 
     const initOverlays = () => {
-        if(trackPath !== null) {
+        if (trackPath !== null) {
             trackPath.setMap(null);
             trackPath = null;
         }
@@ -109,14 +112,21 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
         currentMarkers = [];
     };
 
-    const buildMarker = (locationRecord) => {
+    const buildMarker = (locationRecord, mode, order) => {
         const marker = new window.google.maps.Marker(
             {
                 position: {
                     lat: locationRecord.latitude,
                     lng: locationRecord.longitude
                 },
+                label: mode === 'track' ? {
+                    text: `${ order }`,
+                    fontSize: '11px',
+                    color: 'darkblue',
+                    fontWeight: '600'
+                } : null,
                 icon: {
+                    labelOrigin: { x: -3, y: -1 },
                     path: window.google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
                     scale: 3,
                     fillOpacity: 1,
@@ -133,8 +143,34 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
         currentMarkers.push(marker);
     };
 
-    const showTrackPath = () => {
+    const buildOutsideMarkers = () => {
+        const firstMarker = new window.google.maps.Marker({
+            position: {
+                lat: locationRecords[0].latitude,
+                lng: locationRecords[0].longitude
+            },
+            map: mapInstance,
+            label: {text: 'A'}
+        });
+        firstMarker.addListener('click', async () => {
+            await showInfoWindowAsync(locationRecords[0]);
+        });
+        currentMarkers.unshift(firstMarker);
+        const lastMarker = new window.google.maps.Marker({
+            position: {
+                lat: locationRecords[locationRecords.length - 1].latitude,
+                lng: locationRecords[locationRecords.length - 1].longitude
+            },
+            map: mapInstance,
+            label: { text: 'B' }
+        });
+        lastMarker.addListener('click', async () => {
+            await showInfoWindowAsync(locationRecords[locationRecords.length - 1]);
+        });
+        currentMarkers.push(lastMarker);
+    };
 
+    const showTrackPath = () => {
         initOverlays();
         if (trackPath === null) {
             trackPath = new window.google.maps.Polyline({
@@ -165,21 +201,25 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
             }
             locationRecords
                 .filter((_, i) => i % p === 0)
-                .forEach((locationRecord) => {
-                    buildMarker(locationRecord);
+                .concat(locationRecords[locationRecords.length - 1])
+                .forEach((locationRecord, i) => {
+                    buildMarker(locationRecord, 'track', i + 1);
                 });
+
+            buildOutsideMarkers();
         }
     };
 
     const showLocationMarkers = () => {
         initOverlays();
-        locationRecords.forEach((locationRecord) => {
-            buildMarker(locationRecord)
+        locationRecords.forEach((locationRecord, i) => {
+            buildMarker(locationRecord, 'onlyMarkers', i + 1)
         });
+        buildOutsideMarkers();
     };
 
     return ( isLoaded && locationRecords !== null && isDelayComplete ?
-            <React.Fragment>
+            <>
                 <CheckBox className={ 'track-map-check-box' } text={ 'Показывать маркерами геолокации' } onValueChanged={ (e) => {
                     if (e.value === true) {
                         showLocationMarkers();
@@ -214,7 +254,7 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
                         <TrackMapInfoBox mobileDevice={ mobileDevice } timelineItem={ timelineItem }/>
                     }
                 </GoogleMap>
-            </React.Fragment>
+            </>
             :
             <Loader/>
     );
