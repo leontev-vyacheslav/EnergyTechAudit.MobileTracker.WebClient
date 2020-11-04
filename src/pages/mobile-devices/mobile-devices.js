@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import DataGrid, {
-    Column,
-    Pager,
-    Paging,
-    Grouping, MasterDetail,
-} from 'devextreme-react/data-grid';
+import DataGrid, { Column, Pager, Paging, Grouping, MasterDetail } from 'devextreme-react/data-grid';
 import { useAppData } from '../../contexts/app-data';
 import Timelines from './timeline/timelines'
 import AppConstants from '../../constants/app-constants'
 import { MdSmartphone } from 'react-icons/md';
+import Loader from '../../components/loader/loader';
 
 import './mobile-devices.scss';
-import Loader from '../../components/loader/loader';
 
 const MobileDevice = () => {
     const { getMobileDevices } = useAppData({});
@@ -38,7 +33,6 @@ const MobileDevice = () => {
                 <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
             </>
         );
-
     } else {
         content = (
             <>
@@ -102,13 +96,9 @@ const MobileDevice = () => {
                         } }
                     />
                 </DataGrid>
-
-                }
             </>
         );
     }
-
-
     return content;
 };
 

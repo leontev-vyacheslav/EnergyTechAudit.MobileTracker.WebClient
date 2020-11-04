@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import TrackMapInfoWindow from './track-map-info-window';
@@ -14,12 +14,14 @@ import './track-map.scss';
 const TrackMap = ({ mobileDevice, timelineItem }) => {
 
     const [locationRecords, setLocationRecords] = useState(null);
+
     let mapInstance = null, currentInfoWindow = null, trackPath = null, currentMarkers = [];
+
     const { isXSmall } = useScreenSize();
     const { getLocationRecordsByRangeAsync } = useAppData();
     const [isDelayComplete, setIsDelayComplete] = useState(false);
     setTimeout(() => {
-        setIsDelayComplete( true );
+        setIsDelayComplete(true);
     }, AppConstants.loadingDelay);
 
     const { isLoaded } = useJsApiLoader({
@@ -37,7 +39,7 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
         } )()
     }, [getLocationRecordsByRangeAsync, mobileDevice.id, timelineItem]);
 
-    const getBoundsByMarkers = useCallback((locationList) => {
+    const getBoundsByMarkers = (locationList) => {
         const boundBox = new window.google.maps.LatLngBounds();
         for (let i = 0; i < locationList.length; i++) {
             boundBox.extend({
@@ -46,18 +48,17 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
             });
         }
         return boundBox;
-    }, []);
+    };
 
-    const fitMapBoundsByLocations = useCallback((map, locationList) => {
+    const fitMapBoundsByLocations = (map, locationList) => {
         if (locationList && locationList.length > 0) {
             const boundBox = getBoundsByMarkers(locationList);
             map.setCenter(boundBox.getCenter());
             map.fitBounds(boundBox);
         }
-    }, [getBoundsByMarkers]);
+    };
 
-
-    const fetchAddressAsync = async (location) => {
+    const fetchAddressAsync =  async (location) => {
         const geocodeResponse = await Geocode.fromLatLng(location.latitude, location.longitude);
         if (geocodeResponse && geocodeResponse.status === 'OK') {
             return geocodeResponse.results.find((e, i) => i === 0).formatted_address;
@@ -70,7 +71,6 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
             if (currentInfoWindow !== null) {
                 currentInfoWindow.close();
             }
-
             const address = await fetchAddressAsync(locationRecord);
 
             const content = ReactDOMServer.renderToString(
@@ -98,7 +98,44 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
         }
     };
 
+    const initOverlays = () => {
+        if(trackPath !== null) {
+            trackPath.setMap(null);
+            trackPath = null;
+        }
+        currentMarkers.forEach(m => {
+            m.setMap(null);
+        });
+        currentMarkers = [];
+    };
+
+    const buildMarker = (locationRecord) => {
+        const marker = new window.google.maps.Marker(
+            {
+                position: {
+                    lat: locationRecord.latitude,
+                    lng: locationRecord.longitude
+                },
+                icon: {
+                    path: window.google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                    scale: 3,
+                    fillOpacity: 1,
+                    strokeWeight: 0.8,
+                    fillColor: '#FF5722',
+                    strokeColor: 'black',
+                    rotation: locationRecord.heading
+                }
+            });
+        marker.addListener('click', async () => {
+            await showInfoWindowAsync(locationRecord);
+        });
+        marker.setMap(mapInstance);
+        currentMarkers.push(marker);
+    };
+
     const showTrackPath = () => {
+
+        initOverlays();
         if (trackPath === null) {
             trackPath = new window.google.maps.Polyline({
                 path: locationRecords.map(locationRecord => {
@@ -108,50 +145,36 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
                     }
                 }),
                 geodesic: true,
-                icons: [
-                    {
-                        icon: {
-                            path: window.google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-                            scale: 3,
-                            fillOpacity: 1,
-                            strokeWeight: 0.8,
-                            fillColor: '#FF5722',
-                            strokeColor: '#FF5722',
-                        }, repeat: '5%'
-                    }
-                ],
                 strokeColor: '#FF5722',
                 strokeOpacity: .7,
                 strokeWeight: 8,
             });
             trackPath.setMap(mapInstance);
+
+            let p = 1;
+            if (locationRecords.length <= 10) {
+                p = 1; // 100 %
+            } else if (locationRecords.length <= 100) {
+                p = 5; // 20 %
+            } else if (locationRecords.length <= 1000) {
+                p = 10; // 10 %
+            } else if (( locationRecords.length <= 10000 )) {
+                p = 20 // 5 %
+            } else {
+                p = 50 // 2 %
+            }
+            locationRecords
+                .filter((_, i) => i % p === 0)
+                .forEach((locationRecord) => {
+                    buildMarker(locationRecord);
+                });
         }
     };
 
     const showLocationMarkers = () => {
-
+        initOverlays();
         locationRecords.forEach((locationRecord) => {
-            const marker = new window.google.maps.Marker(
-                {
-                    position: {
-                        lat: locationRecord.latitude,
-                        lng: locationRecord.longitude
-                    },
-                    icon: {
-                        path: window.google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-                        scale: 3,
-                        fillOpacity: 1,
-                        strokeWeight: 0.8,
-                        fillColor: '#FF5722',
-                        strokeColor: 'black',
-                        rotation: locationRecord.heading
-                    }
-                });
-            marker.addListener('click', async () => {
-                await showInfoWindowAsync(locationRecord);
-            });
-            marker.setMap(mapInstance);
-            currentMarkers.push(marker);
+            buildMarker(locationRecord)
         });
     };
 
@@ -159,14 +182,8 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
             <React.Fragment>
                 <CheckBox className={ 'track-map-check-box' } text={ 'Показывать маркерами геолокации' } onValueChanged={ (e) => {
                     if (e.value === true) {
-                        trackPath.setMap(null);
-                        trackPath = null;
                         showLocationMarkers();
                     } else {
-                        currentMarkers.forEach(m => {
-                            m.setMap(null);
-                        });
-                        currentMarkers = [];
                         showTrackPath();
                     }
                 } }/>
@@ -178,12 +195,12 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
                         styles: [{ featureType: 'all', stylers: [{ saturation: 2.5 }, { gamma: 0.25 }] }]
                     } }
                     center={ { lng: 49.156374, lat: 55.796685 } }
-                    mapContainerStyle={ { height: (isXSmall ? '80%' : '90%'), width: '100%' } }
+                    mapContainerStyle={ { height: ( isXSmall ? '80%' : '90%' ), width: '100%' } }
 
                     onLoad={ (googleMap) => {
                         mapInstance = googleMap;
 
-                        setTimeout( () => {
+                        setTimeout(() => {
                             showTrackPath();
                             fitMapBoundsByLocations(googleMap, locationRecords);
                         }, 250);
@@ -198,7 +215,7 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
                     }
                 </GoogleMap>
             </React.Fragment>
-            : /*<span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>*/
+            :
             <Loader/>
     );
 };
