@@ -1,4 +1,4 @@
-import React, {  useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import DataGrid, { Column, MasterDetail, Scrolling, Selection, Summary, TotalItem } from 'devextreme-react/ui/data-grid';
 import { Button } from 'devextreme-react/ui/button';
 import { MdTimeline, MdMap } from 'react-icons/md';
@@ -10,6 +10,7 @@ import Loader from '../../../components/loader/loader';
 import AppConstants from '../../../constants/app-constants';
 
 import './timeline.scss';
+
 const Timelines = ({ currentMobileDevice }) => {
     const { appSettingsData } = useAppSettings();
     const [currentTimeline, setCurrentTimeline] = useState(null);
@@ -18,7 +19,7 @@ const Timelines = ({ currentMobileDevice }) => {
 
     const [isDelayComplete, setIsDelayComplete] = useState(false);
     setTimeout(() => {
-        setIsDelayComplete( true );
+        setIsDelayComplete(true);
     }, AppConstants.loadingDelay);
 
     useEffect(() => {
@@ -46,9 +47,14 @@ const Timelines = ({ currentMobileDevice }) => {
             }
         }
     }, []);
-
-    return ( ( currentTimeline !== null && currentTimeline.length > 0 && isDelayComplete) ?
-            (
+    let content;
+    if (currentTimeline === null || !isDelayComplete) {
+        content = <Loader/>;
+    } else {
+        if (currentTimeline.length === 0) {
+            content = <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
+        } else {
+            content = (
                 <React.Fragment>
                     { currentTimelineItem !== null ?
                         <TrackMapPopup mobileDevice={ currentMobileDevice } timelineItem={ currentTimelineItem } onHiding={ () => {
@@ -154,9 +160,10 @@ const Timelines = ({ currentMobileDevice }) => {
                         />
                     </DataGrid>
                 </React.Fragment>
-            ) : /*<span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>*/
-                <Loader/>
-    );
+            );
+        }
+    }
+    return content;
 };
 
 export default Timelines;
