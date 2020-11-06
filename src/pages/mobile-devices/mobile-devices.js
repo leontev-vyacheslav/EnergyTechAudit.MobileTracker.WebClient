@@ -3,15 +3,23 @@ import DataGrid, { Column, Pager, Paging, Grouping, MasterDetail } from 'devextr
 import { useAppData } from '../../contexts/app-data';
 import Timelines from './timeline/timelines'
 import AppConstants from '../../constants/app-constants'
-import { MdSmartphone } from 'react-icons/md';
+import { MdMap } from 'react-icons/md';
 import Loader from '../../components/loader/loader';
 
 import './mobile-devices.scss';
+import { Button } from 'devextreme-react/ui/button';
+import TrackMapPopup from './timeline/track-map-popup/track-map-popup';
+import { useAppSettings } from '../../contexts/app-settings';
 
 const MobileDevice = () => {
+    const  { appSettingsData } = useAppSettings();
     const { getMobileDevices } = useAppData({});
+
     const [mobileDevices, setMobileDevices] = useState(null);
     const [isDelayComplete, setIsDelayComplete] = useState(true);
+    const [currentTimelineItem, setCurrentTimelineItem] = useState(null);
+    const [currentMobileDevice, setCurrentMobileDevice] = useState(null);
+
     setTimeout(() => {
         setIsDelayComplete(true);
     }, AppConstants.loadingDelay);
@@ -56,10 +64,27 @@ const MobileDevice = () => {
                     <Pager showPageSizeSelector={ true } showInfo={ true }/>
 
                     <Grouping autoExpandAll={ true } key={ 'userId' }/>
-                    <Column type={ 'buttons' } width={ 50 } cellRender={ () => {
+                    <Column type={ 'buttons' } width={ 85 }  cellRender={ (e) => {
+                        const rowData = e.data;
+                        const buttonIconProps = { style: { cursor: 'pointer' }, size: 16, color: '#464646' };
+                        return (
+                            <>
+                                <Button className={ 'time-line-command-button' } style={ {} } onClick={()=>
+                                {
+                                    const mobileDevice = rowData;
+                                    const beginDate = new Date(appSettingsData.workDate);
+                                    const endDate = new Date(appSettingsData.workDate);
+                                    endDate.setHours(23,59,59,999);
 
-                        return <MdSmartphone size={ 24 }/>
-                    } }/>
+                                    setCurrentMobileDevice(mobileDevice);
+                                    setCurrentTimelineItem({ beginDate: beginDate.toISOString(), endDate: endDate.toISOString()});
+                                }}>
+                                    <MdMap { ...buttonIconProps } />
+                                </Button>
+                            </>
+                        )
+                    } }
+                    />
                     <Column
                         dataField={ 'id' }
                         caption={ 'Ид' }
@@ -96,6 +121,12 @@ const MobileDevice = () => {
                         } }
                     />
                 </DataGrid>
+                { currentTimelineItem !== null ?
+                    <TrackMapPopup mobileDevice={ currentMobileDevice } timelineItem={ currentTimelineItem } onHiding={ () => {
+                        setCurrentTimelineItem(null);
+                    } } />
+                    : null
+                }
             </>
         );
     }

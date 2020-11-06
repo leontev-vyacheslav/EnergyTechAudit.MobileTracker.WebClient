@@ -11,7 +11,7 @@
   line-height: 18px;
 }
 
-.timeline .time-line-command-button {
+.timeline .time-line-command-button, .mobile-devices .time-line-command-button{
   border-radius: 50%;
   box-shadow: 0 0 transparent;
   width: 30px;
@@ -20,7 +20,7 @@
   min-width: 30px;
 }
 
-.timeline .dx-row-focused .time-line-command-button {
+.timeline .dx-row-focused .time-line-command-button, .mobile-devices .dx-row-focused  .time-line-command-button {
   background-color: inherit;
   border-radius: 50%;
   box-shadow: 0 1px 1px rgba(0, 0, 0, .1);

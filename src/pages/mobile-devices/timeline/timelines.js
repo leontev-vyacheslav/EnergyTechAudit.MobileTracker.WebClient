@@ -55,13 +55,7 @@ const Timelines = ({ currentMobileDevice }) => {
             content = <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
         } else {
             content = (
-                <React.Fragment>
-                    { currentTimelineItem !== null ?
-                        <TrackMapPopup mobileDevice={ currentMobileDevice } timelineItem={ currentTimelineItem } onHiding={ () => {
-                            setCurrentTimelineItem(null);
-                        } }
-                        />
-                        : null }
+                <>
                     <DataGrid
                         className={ 'timeline dx-card wide-card' }
                         width={ '100%' }
@@ -159,7 +153,16 @@ const Timelines = ({ currentMobileDevice }) => {
                             } }
                         />
                     </DataGrid>
-                </React.Fragment>
+                    { currentTimelineItem !== null ?
+                        <TrackMapPopup
+                            mobileDevice={ currentMobileDevice }
+                            timelineItem={ currentTimelineItem }
+                            onHiding={ () => {
+                                setCurrentTimelineItem(null);
+                            } }/>
+                        : null
+                    }
+                </>
             );
         }
     }
