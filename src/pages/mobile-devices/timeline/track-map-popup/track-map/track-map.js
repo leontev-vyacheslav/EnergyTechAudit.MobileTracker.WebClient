@@ -17,7 +17,7 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
 
     let mapInstance = null, currentInfoWindow = null, trackPath = null, currentMarkers = [];
 
-    const { isXSmall } = useScreenSize();
+    const { isXSmall, isSmall } = useScreenSize();
     const { getLocationRecordsByRangeAsync } = useAppData();
     const [isDelayComplete, setIsDelayComplete] = useState(false);
     setTimeout(() => {
@@ -220,14 +220,16 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
 
     return ( isLoaded && locationRecords !== null && isDelayComplete ?
             <>
-                <CheckBox className={ 'track-map-check-box' } text={ 'Показывать маркерами геолокации' } onValueChanged={ (e) => {
-                    if (e.value === true) {
-                        showLocationMarkers();
-                    } else {
-                        showTrackPath();
-                    }
-                } }/>
-
+                { isXSmall || isSmall
+                    ? null
+                    : <CheckBox className={ 'track-map-check-box' } text={ 'Показывать маркерами геолокации' } onValueChanged={ (e) => {
+                        if (e.value === true) {
+                            showLocationMarkers();
+                        } else {
+                            showTrackPath();
+                        }
+                    } }/>
+                }
                 <GoogleMap
                     zoom={ 15 }
                     mapTypeId={ window.google.maps.MapTypeId.ROADMAP }
@@ -235,7 +237,7 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
                         styles: [{ featureType: 'all', stylers: [{ saturation: 2.5 }, { gamma: 0.25 }] }]
                     } }
                     center={ { lng: 49.156374, lat: 55.796685 } }
-                    mapContainerStyle={ { height: ( isXSmall ? '80%' : '90%' ), width: '100%' } }
+                    mapContainerStyle={ { height: ( isXSmall || isSmall  ? '100%' : '90%' ), width: '100%' } }
 
                     onLoad={ (googleMap) => {
                         mapInstance = googleMap;
@@ -248,9 +250,8 @@ const TrackMap = ({ mobileDevice, timelineItem }) => {
                     onRightClick={ () => {
                         fitMapBoundsByLocations(mapInstance, locationRecords);
                     } }
-
                 >
-                    { isXSmall ? null :
+                    { isXSmall || isSmall ? null :
                         <TrackMapInfoBox mobileDevice={ mobileDevice } timelineItem={ timelineItem }/>
                     }
                 </GoogleMap>

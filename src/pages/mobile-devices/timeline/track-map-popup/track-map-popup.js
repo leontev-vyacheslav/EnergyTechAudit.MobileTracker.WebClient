@@ -7,12 +7,16 @@ import { useScreenSize } from '../../../../utils/media-query';
 import './track-map-popup.scss';
 
 const TrackMapPopup = ({ mobileDevice, timelineItem, onHiding }) => {
-    const { isXSmall } = useScreenSize();
+    const { isXSmall, isSmall } = useScreenSize();
     return (
-        <Popup className={ 'track-map-popup' } title={ 'Карта маршрута' } dragEnabled={ false } visible={ true } showTitle={ true }
+        <Popup className={ 'track-map-popup' } title={ 'Карта маршрута' }
+               dragEnabled={ false }
+               visible={ true }
+               showTitle={ true }
+               showCloseButton={ true }
                onHiding={ onHiding }
-               width={ isXSmall ? '90%' : '70%' }
-               height={ isXSmall ? '90%' : '70%' }
+               width={ isXSmall || isSmall  ? '90%' : '70%' }
+               height={ isXSmall || isSmall ? '90%' : '70%' }
                contentRender={ () => {
                    return <TrackMap mobileDevice={ mobileDevice } timelineItem={ timelineItem }/>
                } }>
