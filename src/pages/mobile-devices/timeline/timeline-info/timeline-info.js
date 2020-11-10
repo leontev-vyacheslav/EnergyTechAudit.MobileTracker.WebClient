@@ -25,7 +25,7 @@ const TimelineInfo = ({ timeline, currentMobileDevice }) => {
     const [timelineInfo, setTimelineInfo] = useState(null);
     const [isDelayComplete, setIsDelayComplete] = useState(false);
     setTimeout(() => {
-        setIsDelayComplete( true );
+        setIsDelayComplete(true);
     }, AppConstants.loadingDelay);
 
     useEffect(() => {
@@ -62,7 +62,7 @@ const TimelineInfo = ({ timeline, currentMobileDevice }) => {
         } )();
     }, [timeline.firstLocationRecord, timeline.lastLocationRecord]);
 
-    return ( ( departure !== null && destination !== null && isDelayComplete) ?
+    return ( ( departure !== null && destination !== null && isDelayComplete ) ?
         (
             <React.Fragment>
                 <TimelineInfoHeader currentMobileDevice={ currentMobileDevice } departure={ departure } destination={ destination }/>

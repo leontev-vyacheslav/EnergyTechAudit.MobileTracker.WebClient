@@ -8,10 +8,6 @@ export default function ({ menuMode }) {
     const { user, signOut } = useAuth();
 
     const menuItems = useMemo(() => ( [
-        /*{
-            text: 'Профиль',
-            icon: 'user'
-        },*/
         {
             text: 'Выход',
             icon: 'runner',

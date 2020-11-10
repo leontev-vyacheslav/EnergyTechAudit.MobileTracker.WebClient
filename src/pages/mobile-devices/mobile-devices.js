@@ -12,7 +12,7 @@ import TrackMapPopup from './timeline/track-map-popup/track-map-popup';
 import { useAppSettings } from '../../contexts/app-settings';
 
 const MobileDevice = () => {
-    const  { appSettingsData } = useAppSettings();
+    const { appSettingsData } = useAppSettings();
     const { getMobileDevices } = useAppData({});
 
     const [mobileDevices, setMobileDevices] = useState(null);
@@ -64,21 +64,20 @@ const MobileDevice = () => {
                     <Pager showPageSizeSelector={ true } showInfo={ true }/>
 
                     <Grouping autoExpandAll={ true } key={ 'userId' }/>
-                    <Column type={ 'buttons' } width={ 85 }  cellRender={ (e) => {
+                    <Column type={ 'buttons' } width={ 85 } cellRender={ (e) => {
                         const rowData = e.data;
                         const buttonIconProps = { style: { cursor: 'pointer' }, size: 16, color: '#464646' };
                         return (
                             <>
-                                <Button className={ 'time-line-command-button' } style={ {} } onClick={()=>
-                                {
+                                <Button className={ 'time-line-command-button' } style={ {} } onClick={ () => {
                                     const mobileDevice = rowData;
                                     const beginDate = new Date(appSettingsData.workDate);
                                     const endDate = new Date(appSettingsData.workDate);
-                                    endDate.setHours(23,59,59,999);
+                                    endDate.setHours(23, 59, 59, 999);
 
                                     setCurrentMobileDevice(mobileDevice);
-                                    setCurrentTimelineItem({ beginDate: beginDate.toISOString(), endDate: endDate.toISOString()});
-                                }}>
+                                    setCurrentTimelineItem({ beginDate: beginDate.toISOString(), endDate: endDate.toISOString() });
+                                } }>
                                     <MdMap { ...buttonIconProps } />
                                 </Button>
                             </>
@@ -122,9 +121,12 @@ const MobileDevice = () => {
                     />
                 </DataGrid>
                 { currentTimelineItem !== null ?
-                    <TrackMapPopup mobileDevice={ currentMobileDevice } timelineItem={ currentTimelineItem } onHiding={ () => {
-                        setCurrentTimelineItem(null);
-                    } } />
+                    <TrackMapPopup mobileDevice={ currentMobileDevice }
+                                   timelineItem={ currentTimelineItem }
+                                   timeline={ null }
+                                   onHiding={ () => {
+                                       setCurrentTimelineItem(null);
+                                   } }/>
                     : null
                 }
             </>

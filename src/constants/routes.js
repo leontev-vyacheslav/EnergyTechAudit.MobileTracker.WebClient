@@ -5,5 +5,5 @@ export default {
     locationRecord: '/api/locationRecord',
     accountLogin: '/account/login',
     accountRefresh: '/account/refresh',
-    accountRevoke: '/account/revoke'
-}
+    accountRevoke: '/account/revoke',
+};

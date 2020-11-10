@@ -3,15 +3,15 @@ import { Switch, Route } from 'react-router-dom';
 import { useAuth } from '../../contexts/auth';
 
 export default function () {
-    const {signOut} = useAuth();
+    const { signOut } = useAuth();
 
-    useEffect(() =>{
+    useEffect(() => {
         signOut();
     }, [signOut]);
 
     return (
         <Switch>
-            <Route exact path='/logout' />
+            <Route exact path='/logout'/>
         </Switch>
     );
 }

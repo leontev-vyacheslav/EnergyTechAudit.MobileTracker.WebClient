@@ -27,7 +27,6 @@
 }
 
 
-
 .dx-toolbar.header-toolbar .dx-toolbar-items-container .dx-toolbar-after {
   padding: 0 40px;
 
@@ -46,16 +45,20 @@
   padding: 0;
   margin: 0;
 }
+
 .header-title-logo-container {
   display: flex;
   align-items: center;
+
   svg {
     margin-right: 10px;
   }
+
   svg circle {
     fill: $base-company-color;
   }
 }
+
 .dx-theme-generic {
   .dx-toolbar {
     padding: 10px 0;

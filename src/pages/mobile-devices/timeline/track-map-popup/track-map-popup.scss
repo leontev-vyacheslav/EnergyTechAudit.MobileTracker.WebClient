@@ -2,6 +2,7 @@
   .dx-popup-content {
     padding: 10px;
   }
+
   .dx-popup-title.dx-toolbar .dx-toolbar-items-container {
     height: 46px;
   }
@@ -11,10 +12,13 @@
     margin: 20px;
   }
 
-  .track-map-check-box {
-    margin-left: 10px;
-    margin-top: 5px;
-    margin-bottom: 10px;
+  .track-map-header {
+    display: flex;
+    height: 40px;
+    align-items: center;
+  }
+  .track-map-check-box, .track-map-select-box {
+    margin-left: 5px;
   }
 
 }

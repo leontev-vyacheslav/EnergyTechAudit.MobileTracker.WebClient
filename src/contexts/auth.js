@@ -6,14 +6,13 @@ function AuthProvider (props) {
     const [user, setUser] = useState();
 
     const getUserAuthDataFromStorage = useCallback(() => {
-        let userAuthData ;
+        let userAuthData;
         try {
             const userAuthDataStr = localStorage.getItem('userAuthData');
             if (userAuthDataStr) {
                 userAuthData = JSON.parse(userAuthDataStr);
             }
-        }
-        catch  {
+        } catch {
             userAuthData = null;
         }
         return userAuthData;
@@ -21,38 +20,37 @@ function AuthProvider (props) {
 
     const refreshTokenAsync = useCallback(async () => {
         const userAuthData = getUserAuthDataFromStorage();
-        return fetch(`${routes.host}${routes.accountRefresh}`, {
+        return fetch(`${ routes.host }${ routes.accountRefresh }`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(userAuthData)
+            body: JSON.stringify(userAuthData),
         });
     }, [getUserAuthDataFromStorage]);
 
     const revokeTokenAsync = useCallback(async () => {
         const userAuthData = getUserAuthDataFromStorage();
 
-        return await fetch(`${routes.host}${routes.accountRevoke}`, {
+        return await fetch(`${ routes.host }${ routes.accountRevoke }`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authentication: `Bearer ${ userAuthData.token }`
+                Authentication: `Bearer ${ userAuthData.token }`,
             },
-            body: JSON.stringify(userAuthData)
+            body: JSON.stringify(userAuthData),
         });
     }, [getUserAuthDataFromStorage]);
 
     useEffect(() => {
         ( async function () {
-            let userAuthData ;
+            let userAuthData;
             try {
                 const userAuthDataStr = localStorage.getItem('userAuthData');
                 if (userAuthDataStr) {
                     userAuthData = JSON.parse(userAuthDataStr);
                 }
-            }
-            catch  {
+            } catch {
                 userAuthData = null;
             }
             setUser(userAuthData);
@@ -62,9 +60,12 @@ function AuthProvider (props) {
     const signIn = useCallback(async (userName, password) => {
         let userAuthData;
         try {
-            const response = await fetch(`${ routes.host }${ routes.accountLogin }?userName=${ userName }&password=${ password }`, {
-                method: 'GET',
-            })
+            const response = await fetch(
+                `${ routes.host }${ routes.accountLogin }?userName=${ userName }&password=${ password }`,
+                {
+                    method: 'GET',
+                },
+            );
             if (response.ok === true) {
                 userAuthData = await response.json();
             }
@@ -76,22 +77,24 @@ function AuthProvider (props) {
         return userAuthData;
     }, []);
 
-    const signOut = useCallback( () => {
-
-        (async () => {
+    const signOut = useCallback(() => {
+        ( async () => {
             await revokeTokenAsync();
-        }) ();
+        } )();
 
         localStorage.removeItem('userAuthData');
         setUser(null);
     }, [revokeTokenAsync]);
 
     return (
-        <AuthContext.Provider value={ { user, signIn, signOut, getUserAuthDataFromStorage, refreshTokenAsync } } { ...props } />
+        <AuthContext.Provider
+            value={ { user, signIn, signOut, getUserAuthDataFromStorage, refreshTokenAsync } }
+            { ...props }
+        />
     );
 }
 
 const AuthContext = createContext({});
 const useAuth = () => useContext(AuthContext);
 
-export { AuthProvider, useAuth }
+export { AuthProvider, useAuth };

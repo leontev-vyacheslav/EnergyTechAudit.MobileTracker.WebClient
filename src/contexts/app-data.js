@@ -7,66 +7,50 @@ function AppDataProvider (props) {
 
     const defaultHeaders = useMemo(() => {
         return {
-            Accept: 'application/json'
-        }
+            Accept: 'application/json',
+        };
     }, []);
 
-    const fetchWithCredentials = useCallback(async (url, options) => {
+    const fetchWithCredentials = useCallback(
+        async (url, options) => {
+            let userAuthData = getUserAuthDataFromStorage();
 
-        let userAuthData = getUserAuthDataFromStorage();
+            if (userAuthData) {
+                options = options || {};
+                options.headers = options.headers || {};
+                options.headers = { ...options.headers, ...defaultHeaders };
+                options.headers.Authorization = `Bearer ${ userAuthData.token }`;
 
-        if (userAuthData) {
-            options = options || {};
-            options.headers = options.headers || {};
-            options.headers = { ...options.headers, ...defaultHeaders };
-            options.headers.Authorization = `Bearer ${ userAuthData.token }`;
-
-            let response = await fetch(url, options).catch(e => {
-                console.warn(e);
-                return Promise.reject(e);
-            });
-            if (response.ok) {
-                return response;
-            }
-            if (response.status === 401 && response.headers.has('Expires')) {
-                const refreshResponse = await refreshTokenAsync();
-                if (!refreshResponse.ok) {
-                    signOut();
-                    return Promise.reject();
+                let response = await fetch(url, options).catch((e) => {
+                    console.warn(e);
+                    return Promise.reject(e);
+                });
+                if (response.ok) {
+                    return response;
                 }
-                const jsonRefreshResponse = await refreshResponse.json();
-                localStorage.setItem('userAuthData', JSON.stringify(jsonRefreshResponse));
-                return await fetchWithCredentials(url, options);
+                if (response.status === 401 && response.headers.has('Expires')) {
+                    const refreshResponse = await refreshTokenAsync();
+                    if (!refreshResponse.ok) {
+                        signOut();
+                        return Promise.reject();
+                    }
+                    const jsonRefreshResponse = await refreshResponse.json();
+                    localStorage.setItem('userAuthData', JSON.stringify(jsonRefreshResponse));
+                    return await fetchWithCredentials(url, options);
+                } else {
+                    return response;
+                }
             } else {
-                return response;
+                signOut();
+                return Promise.reject();
             }
-        } else {
-            signOut();
-            return Promise.reject();
-        }
-    }, [signOut, refreshTokenAsync, defaultHeaders, getUserAuthDataFromStorage]);
+        },
+        [signOut, refreshTokenAsync, defaultHeaders, getUserAuthDataFromStorage],
+    );
 
     const getMobileDevices = useCallback(async () => {
-
         const response = await fetchWithCredentials(`${ routes.host }${ routes.mobileDevices }`, {
-            method: 'GET'
-        }).catch((error) => {
-            return Promise.reject(error);
-        });
-
-        if (response) {
-            return response.json().catch((error) => {
-                return Promise.reject(error);
-            });
-        } else {
-            return Promise.reject(new Error('Internal error'));
-        }
-
-    }, [fetchWithCredentials]);
-
-    const getTimelinesAsync = useCallback(async (mobileDeviceId, workDate) => {
-        const response = await fetchWithCredentials(`${ routes.host }${ routes.timeline }?mobileDeviceId=${ mobileDeviceId }&workDate=${ new Date(workDate).toISOString() }`, {
-            method: 'GET'
+            method: 'GET',
         }).catch((error) => {
             return Promise.reject(error);
         });
@@ -80,51 +64,90 @@ function AppDataProvider (props) {
         }
     }, [fetchWithCredentials]);
 
-    const getLocationRecordsAsync = useCallback(async (mobileDeviceId, workDate) => {
-        const response = await fetchWithCredentials(`${ routes.host }${ routes.locationRecord }/${ mobileDeviceId }?workDate=${ new Date(workDate).toISOString() }`, {
-            method: 'GET'
-        }).catch((error) => {
-            return Promise.reject(error);
-        });
-
-        if (response) {
-            return response.json().catch((error) => {
+    const getTimelinesAsync = useCallback(
+        async (mobileDeviceId, workDate) => {
+            const response = await fetchWithCredentials(
+                `${ routes.host }${ routes.timeline }?mobileDeviceId=${ mobileDeviceId }&workDate=${ new Date(
+                    workDate,
+                ).toISOString() }`,
+                {
+                    method: 'GET',
+                },
+            ).catch((error) => {
                 return Promise.reject(error);
             });
-        } else {
-            return Promise.reject(new Error('Internal error'));
-        }
-    }, [fetchWithCredentials]);
 
-    const getLocationRecordsByRangeAsync = useCallback(async (mobileDeviceId, beginDate, endDate) => {
-        const response = await fetchWithCredentials(`${ routes.host }${ routes.locationRecord }/byRange/${ mobileDeviceId }?beginDate=${ new Date(beginDate).toISOString() }&endDate=${ new Date(endDate).toISOString() }`, {
-            method: 'GET'
-        }).catch((error) => {
-            return Promise.reject(error);
-        });
+            if (response) {
+                return response.json().catch((error) => {
+                    return Promise.reject(error);
+                });
+            } else {
+                return Promise.reject(new Error('Internal error'));
+            }
+        },
+        [fetchWithCredentials],
+    );
 
-        if (response) {
-            return response.json().catch((error) => {
+    const getLocationRecordsAsync = useCallback(
+        async (mobileDeviceId, workDate) => {
+            const response = await fetchWithCredentials(
+                `${ routes.host }${ routes.locationRecord }/${ mobileDeviceId }?workDate=${ new Date(workDate).toISOString() }`,
+                {
+                    method: 'GET',
+                },
+            ).catch((error) => {
                 return Promise.reject(error);
             });
-        } else {
-            return Promise.reject(new Error('Internal error'));
-        }
-    }, [fetchWithCredentials]);
+
+            if (response) {
+                return response.json().catch((error) => {
+                    return Promise.reject(error);
+                });
+            } else {
+                return Promise.reject(new Error('Internal error'));
+            }
+        },
+        [fetchWithCredentials],
+    );
+
+    const getLocationRecordsByRangeAsync = useCallback(
+        async (mobileDeviceId, beginDate, endDate) => {
+            const response = await fetchWithCredentials(
+                `${ routes.host }${ routes.locationRecord }/byRange/${ mobileDeviceId }?beginDate=${ new Date(
+                    beginDate,
+                ).toISOString() }&endDate=${ new Date(endDate).toISOString() }`,
+                {
+                    method: 'GET',
+                },
+            ).catch((error) => {
+                return Promise.reject(error);
+            });
+
+            if (response) {
+                return response.json().catch((error) => {
+                    return Promise.reject(error);
+                });
+            } else {
+                return Promise.reject(new Error('Internal error'));
+            }
+        },
+        [fetchWithCredentials],
+    );
 
     return (
-        <AppDataContext.Provider value={
-            {
+        <AppDataContext.Provider
+            value={ {
                 getMobileDevices,
                 getTimelinesAsync,
                 getLocationRecordsAsync,
-                getLocationRecordsByRangeAsync
-            }
-        } { ...props } />
+                getLocationRecordsByRangeAsync,
+            } }
+            { ...props }
+        />
     );
 }
 
 const AppDataContext = createContext({});
 const useAppData = () => useContext(AppDataContext);
 
-export { AppDataProvider, useAppData }
+export { AppDataProvider, useAppData };

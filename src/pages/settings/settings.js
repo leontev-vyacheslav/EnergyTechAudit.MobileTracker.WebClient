@@ -53,7 +53,7 @@ export default () => {
     }, [appSettingsData]);
     const { isXSmall } = useScreenSize();
 
-    return  (
+    return (
         <React.Fragment>
             <h2 className={ 'content-block' }>Настройки</h2>
             <div className={ 'content-block' }>

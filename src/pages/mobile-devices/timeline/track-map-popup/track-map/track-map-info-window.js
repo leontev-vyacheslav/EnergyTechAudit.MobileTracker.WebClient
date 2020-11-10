@@ -6,7 +6,7 @@ const TrackMapInfoWindow = ({ locationRecord, address }) => {
         <table className={ 'track-map-info-window' }>
             <tbody>
             <tr>
-                <td style={ { width: 'initial' } } colSpan={2}><span>{ address }</span></td>
+                <td style={ { width: 'initial' } } colSpan={ 2 }><span>{ address }</span></td>
             </tr>
             <tr>
                 <td><span>Время:</span></td>

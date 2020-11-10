@@ -20,12 +20,10 @@ function App () {
     loadMessages(ruMessages);
     locale(navigator.language);
 
-    return user ?
-        <Content/>
-        : <NotAuthenticatedContent/>;
+    return user ? <Content/> : <NotAuthenticatedContent/>;
 }
 
-export default function () {
+export default function Main () {
     const screenSizeClass = useScreenSizeClass();
     return (
         <Router>

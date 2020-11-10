@@ -15,49 +15,44 @@ export default function ({ title, children }) {
     const history = useHistory();
     const { isXSmall, isLarge } = useScreenSize();
     const [patchCssClass, onMenuReady] = useMenuPatch();
-    const [menuStatus, setMenuStatus] = useState(
-        isLarge ? MenuStatus.Opened : MenuStatus.Closed
-    );
+    const [menuStatus, setMenuStatus] = useState(isLarge ? MenuStatus.Opened : MenuStatus.Closed);
 
     const toggleMenu = useCallback(({ event }) => {
-        setMenuStatus(
-            prevMenuStatus => prevMenuStatus === MenuStatus.Closed
-                ? MenuStatus.Opened
-                : MenuStatus.Closed
+        setMenuStatus((prevMenuStatus) =>
+            prevMenuStatus === MenuStatus.Closed ? MenuStatus.Opened : MenuStatus.Closed,
         );
         event.stopPropagation();
     }, []);
 
     const temporaryOpenMenu = useCallback(() => {
-        setMenuStatus(
-            prevMenuStatus => prevMenuStatus === MenuStatus.Closed
-                ? MenuStatus.TemporaryOpened
-                : prevMenuStatus
+        setMenuStatus((prevMenuStatus) =>
+            prevMenuStatus === MenuStatus.Closed ? MenuStatus.TemporaryOpened : prevMenuStatus,
         );
     }, []);
 
     const onOutsideClick = useCallback(() => {
-        setMenuStatus(
-            prevMenuStatus => prevMenuStatus !== MenuStatus.Closed && !isLarge
-                ? MenuStatus.Closed
-                : prevMenuStatus
+        setMenuStatus((prevMenuStatus) =>
+            prevMenuStatus !== MenuStatus.Closed && !isLarge ? MenuStatus.Closed : prevMenuStatus,
         );
     }, [isLarge]);
 
-    const onNavigationChanged = useCallback(({ itemData: { path }, event, node }) => {
-        if (menuStatus === MenuStatus.Closed || !path || node.selected) {
-            event.preventDefault();
-            return;
-        }
+    const onNavigationChanged = useCallback(
+        ({ itemData: { path }, event, node }) => {
+            if (menuStatus === MenuStatus.Closed || !path || node.selected) {
+                event.preventDefault();
+                return;
+            }
 
-        history.push(path);
-        scrollViewRef.current.instance.scrollTo(0);
+            history.push(path);
+            scrollViewRef.current.instance.scrollTo(0);
 
-        if (!isLarge || menuStatus === MenuStatus.TemporaryOpened) {
-            setMenuStatus(MenuStatus.Closed);
-            event.stopPropagation();
-        }
-    }, [history, menuStatus, isLarge]);
+            if (!isLarge || menuStatus === MenuStatus.TemporaryOpened) {
+                setMenuStatus(MenuStatus.Closed);
+                event.stopPropagation();
+            }
+        },
+        [history, menuStatus, isLarge],
+    );
 
     return (
         <div className={ 'side-nav-inner-toolbar' }>
@@ -71,21 +66,17 @@ export default function ({ title, children }) {
                 maxSize={ 250 }
                 shading={ isLarge ? false : true }
                 opened={ menuStatus === MenuStatus.Closed ? false : true }
-                template={ 'menu' }
-            >
+                template={ 'menu' }>
                 <div className={ 'container' }>
-                    <Header
-                        menuToggleEnabled={ isXSmall }
-                        toggleMenu={ toggleMenu }
-                    />
+                    <Header menuToggleEnabled={ isXSmall } toggleMenu={ toggleMenu }/>
                     <ScrollView ref={ scrollViewRef } className={ 'layout-body with-footer' }>
                         <div className={ 'content' }>
-                            { React.Children.map(children, item => {
+                            { React.Children.map(children, (item) => {
                                 return item.type !== Footer && item;
                             }) }
                         </div>
                         <div className={ 'content-block' }>
-                            { React.Children.map(children, item => {
+                            { React.Children.map(children, (item) => {
                                 return item.type === Footer && item;
                             }) }
                         </div>
@@ -96,18 +87,13 @@ export default function ({ title, children }) {
                         compactMode={ menuStatus === MenuStatus.Closed }
                         selectedItemChanged={ onNavigationChanged }
                         openMenu={ temporaryOpenMenu }
-                        onMenuReady={ onMenuReady }
-                    >
+                        onMenuReady={ onMenuReady }>
                         <Toolbar id={ 'navigation-header' }>
-                            {
-                                !isXSmall &&
-                                <Item
-                                    location={ 'before' }
-                                    cssClass={ 'menu-button' }
-                                >
+                            { !isXSmall && (
+                                <Item location={ 'before' } cssClass={ 'menu-button' }>
                                     <Button icon="menu" stylingMode="text" onClick={ toggleMenu }/>
                                 </Item>
-                            }
+                            ) }
                             <Item location={ 'before' } cssClass={ 'header-title' } text={ title }/>
                         </Toolbar>
                     </SideNavigationMenu>
@@ -120,5 +106,5 @@ export default function ({ title, children }) {
 const MenuStatus = {
     Closed: 1,
     Opened: 2,
-    TemporaryOpened: 3
+    TemporaryOpened: 3,
 };

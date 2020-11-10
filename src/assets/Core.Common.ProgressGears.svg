@@ -7,19 +7,22 @@
     <g transform="translate(50 50)">
         <g transform="translate(-17 -17) scale(0.5)">
             <g transform="rotate(17.5168)">
-                <animateTransform attributeName="transform" type="rotate" values="0;360" keyTimes="0;1" dur="1.7s" begin="0s" repeatCount="indefinite"></animateTransform>
+                <animateTransform attributeName="transform" type="rotate" values="0;360" keyTimes="0;1" dur="1.7s" begin="0s"
+                                  repeatCount="indefinite"></animateTransform>
                 <use xlink:href="#gear"/>
             </g>
         </g>
         <g transform="translate(0 22) scale(0.4)">
             <g transform="rotate(319.983)">
-                <animateTransform attributeName="transform" type="rotate" values="360;0" keyTimes="0;1" dur="1.7s" begin="-0.10625s" repeatCount="indefinite"></animateTransform>
+                <animateTransform attributeName="transform" type="rotate" values="360;0" keyTimes="0;1" dur="1.7s" begin="-0.10625s"
+                                  repeatCount="indefinite"></animateTransform>
                 <use xlink:href="#gear"/>
             </g>
         </g>
         <g transform="translate(28 4) scale(0.3)">
             <g transform="rotate(40.0168)">
-                <animateTransform attributeName="transform" type="rotate" values="0;360" keyTimes="0;1" dur="1.7s" begin="-0.10625s" repeatCount="indefinite"></animateTransform>
+                <animateTransform attributeName="transform" type="rotate" values="0;360" keyTimes="0;1" dur="1.7s" begin="-0.10625s"
+                                  repeatCount="indefinite"></animateTransform>
                 <use xlink:href="#gear"/>
             </g>
         </g>

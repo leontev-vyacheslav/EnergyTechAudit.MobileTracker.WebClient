@@ -6,7 +6,7 @@ import { LoginForm } from './components';
 export default function () {
     return (
         <Switch>
-            <Route exact path='/login'>
+            <Route exact path="/login">
                 <SingleCard title="Вход">
                     <LoginForm/>
                 </SingleCard>

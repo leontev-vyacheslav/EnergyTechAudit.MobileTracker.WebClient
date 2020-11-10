@@ -153,10 +153,11 @@ const Timelines = ({ currentMobileDevice }) => {
                             } }
                         />
                     </DataGrid>
-                    { currentTimelineItem !== null ?
+                    { currentTimeline && currentTimelineItem !== null ?
                         <TrackMapPopup
                             mobileDevice={ currentMobileDevice }
                             timelineItem={ currentTimelineItem }
+                            timeline={ currentTimeline }
                             onHiding={ () => {
                                 setCurrentTimelineItem(null);
                             } }/>

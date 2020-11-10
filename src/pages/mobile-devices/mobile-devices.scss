@@ -4,6 +4,7 @@
   display: flex;
   color: $base-darkgrey-text-color;
   font-weight: bold;
+
   .dx-icon-user {
     align-self: flex-start;
     margin-top: 2px;
@@ -17,6 +18,7 @@
     color: inherit;
   }
 }
+
 .mobile-devices .dx-datagrid-nodata {
   top: initial;
 }

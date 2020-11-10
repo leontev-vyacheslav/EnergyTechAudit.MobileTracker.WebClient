@@ -4,33 +4,33 @@ import { HomePage, MobileDevicesPage, ProfilePage, AboutPage, SettingsPage, Sign
 const routes = [
     {
         path: '/home',
-        component: HomePage
+        component: HomePage,
     },
     {
         path: '/settings',
-        component: SettingsPage
+        component: SettingsPage,
     },
     {
         path: '/mobileDevices',
-        component: MobileDevicesPage
+        component: MobileDevicesPage,
     },
     {
         path: '/profile',
-        component: ProfilePage
+        component: ProfilePage,
     },
     {
         path: '/about',
-        component: AboutPage
+        component: AboutPage,
     },
     {
         path: '/logout',
-        component: SignOutPage
-    }
+        component: SignOutPage,
+    },
 ];
 
-export default routes.map(route => {
+export default routes.map((route) => {
     return {
         ...route,
-        component: withNavigationWatcher(route.component)
+        component: withNavigationWatcher(route.component),
     };
 });
