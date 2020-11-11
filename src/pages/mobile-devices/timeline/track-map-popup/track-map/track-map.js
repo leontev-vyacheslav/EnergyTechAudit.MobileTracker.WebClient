@@ -14,6 +14,7 @@ import './track-map.scss';
 const TrackMap = ({ mobileDevice, timelineItem, timeline }) => {
     const [locationRecords, setLocationRecords] = useState(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState(timelineItem);
+    const [isShownTrackByMarkers, setIsShownTrackByMarkers] = useState(false);
 
     const mapInstance = useRef(null);
     const trackPath = useRef(null);
@@ -160,9 +161,9 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline }) => {
         currentMarkers.current.push(lastMarker);
     }, [locationRecords, showInfoWindowAsync]);
 
-    const showTrackPath = useCallback(() => {
+    const showTrackByPolylinePath = useCallback(() => {
         initOverlays();
-        if (trackPath.current === null) {
+        if (trackPath.current === null && locationRecords && locationRecords.length > 0) {
             trackPath.current = new window.google.maps.Polyline({
                 path: locationRecords.map(locationRecord => {
                     return {
@@ -191,7 +192,7 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline }) => {
             }
             locationRecords
                 .filter((_, i) => i % p === 0)
-                .concat(locationRecords[locationRecords.length - 1])
+                .concat(locationRecords.length > 0 ? locationRecords[locationRecords.length - 1] : [])
                 .forEach((locationRecord, i) => {
                     buildMarker(locationRecord, 'track', i + 1);
                 });
@@ -200,7 +201,7 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline }) => {
         }
     }, [locationRecords, buildMarker, buildOutsideMarkers, initOverlays]);
 
-    const showLocationMarkers = useCallback( () => {
+    const showTrackByMarkers = useCallback(() => {
         initOverlays();
         locationRecords.forEach((locationRecord, i) => {
             buildMarker(locationRecord, 'onlyMarkers', i + 1)
@@ -224,10 +225,15 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline }) => {
 
     useEffect(() => {
         if (mapInstance.current) {
-            showTrackPath();
+            if(isShownTrackByMarkers)  {
+                showTrackByMarkers();
+            }
+            else {
+                showTrackByPolylinePath();
+            }
             fitMapBoundsByLocations(mapInstance.current, locationRecords);
         }
-    }, [locationRecords, fitMapBoundsByLocations, showTrackPath]);
+    }, [locationRecords, fitMapBoundsByLocations, showTrackByPolylinePath, showTrackByMarkers, isShownTrackByMarkers]);
 
     return ( isLoaded && locationRecords !== null && isDelayComplete ?
             <>
@@ -237,14 +243,11 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline }) => {
                         timeline={ timeline }
                         currentTimelineItemId={ currentTimelineItem.id }
                         onIntervalChanged={ (e) => {
-                            setCurrentTimelineItem(timeline.find(i => i.id === e.value));
+                            const currentTimelineItem = timeline.find(i => i.id === e.value);
+                            setCurrentTimelineItem(currentTimelineItem);
                         } }
                         onTrackTypeChanged={ (e) => {
-                            if (e.value === true) {
-                                showLocationMarkers();
-                            } else {
-                                showTrackPath();
-                            }
+                            setIsShownTrackByMarkers(e.value);
                         } }/>
                 }
                 <GoogleMap
@@ -254,13 +257,11 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline }) => {
                         styles: [{ featureType: 'all', stylers: [{ saturation: 2.5 }, { gamma: 0.25 }] }]
                     } }
                     center={ { lng: 49.156374, lat: 55.796685 } }
-                    mapContainerStyle={ { height: ( isXSmall || isSmall ? '100%' : '90%' ), width: '100%' } }
-
+                    mapContainerStyle={ { height: ( ( isXSmall || isSmall ) || timeline === null ? '100%' : '90%' ), width: '100%' } }
                     onLoad={ (googleMap) => {
                         mapInstance.current = googleMap;
-
                         const delayTimer = setTimeout(() => {
-                            showTrackPath();
+                            showTrackByPolylinePath();
                             fitMapBoundsByLocations(mapInstance.current, locationRecords);
                             clearTimeout(delayTimer);
                         }, 250);

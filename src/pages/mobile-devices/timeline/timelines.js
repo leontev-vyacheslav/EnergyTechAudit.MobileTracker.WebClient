@@ -28,6 +28,7 @@ const Timelines = ({ currentMobileDevice }) => {
             timeline = timeline.map(t => {
                 return { ...t, ...{ active: true } };
             });
+
             setCurrentTimeline(timeline);
         } )();
     }, [getTimelinesAsync, appSettingsData.workDate, currentMobileDevice.id]);

@@ -9,6 +9,7 @@ import { MdAdjust, MdCompareArrows, MdGpsFixed, MdMoreHoriz, MdSettingsEthernet 
 import { TimelineInfoHeader } from './timeline-info-header';
 import Loader from '../../../../components/loader/loader';
 import AppConstants from '../../../../constants/app-constants';
+import { useScreenSize } from '../../../../utils/media-query';
 
 const IconComponents = {
     Marks: MdGpsFixed,
@@ -24,6 +25,9 @@ const TimelineInfo = ({ timeline, currentMobileDevice }) => {
     const [destination, setDestination] = useState(null);
     const [timelineInfo, setTimelineInfo] = useState(null);
     const [isDelayComplete, setIsDelayComplete] = useState(false);
+
+    const { isXSmall, isSmall } = useScreenSize();
+
     setTimeout(() => {
         setIsDelayComplete(true);
     }, AppConstants.loadingDelay);
@@ -62,13 +66,14 @@ const TimelineInfo = ({ timeline, currentMobileDevice }) => {
         } )();
     }, [timeline.firstLocationRecord, timeline.lastLocationRecord]);
 
+
     return ( ( departure !== null && destination !== null && isDelayComplete ) ?
         (
-            <React.Fragment>
+            <>
                 <TimelineInfoHeader currentMobileDevice={ currentMobileDevice } departure={ departure } destination={ destination }/>
                 <DataGrid
                     className={ 'timeline-info' }
-                    width={ '100%' }
+                    width={ isXSmall || isSmall ? '100%' : '50%' }
                     noDataText={ AppConstants.noDataLongText }
                     dataSource={ new DataSource({
                         store: new ArrayStore({
@@ -80,20 +85,23 @@ const TimelineInfo = ({ timeline, currentMobileDevice }) => {
                     showColumnLines={ true }
                     showRowLines={ true }
                 >
-                    <Column dataField={ 'name' } caption={ 'Параметр' } width={ 200 } cellRender={ (e) => {
+                    <Column dataField={ 'name' } caption={ 'Параметр' } cellRender={ (e) => {
                         if (e.data) {
                             const Icon = (props) => React.createElement(IconComponents[`${ e.data.icon }`], props);
+
                             return (
-                                <div style={ { display: 'flex' } }>
-                                    { ( e.data.icon ? <Icon size={ 18 } style={ { marginRight: 10 } }/> : null ) }
-                                    <div>{ e.data.name }</div>
+                                <div style={ { display: 'flex', flexDirection: isXSmall || isSmall ? 'column' : 'row' } }>
+                                    <div style={ { display: 'flex', width: 200, padding: isXSmall || isSmall ? 10 : 'initial' } }>
+                                        { ( e.data.icon ? <Icon size={ 18 } style={ { marginRight: 10 } }/> : null ) }
+                                        <div>{ e.data.name }</div>
+                                    </div>
+                                    <div style={ { padding: isXSmall || isSmall ? 10 : 'initial' } }>{ e.data.value }</div>
                                 </div>
-                            );
+                            )
                         }
                     } }/>
-                    <Column dataField={ 'value' } caption={ 'Значение' } width={ 150 } alignment={ 'left' }/>
                 </DataGrid>
-            </React.Fragment> )
+            </> )
         : <Loader/> );
 };
 

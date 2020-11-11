@@ -1,7 +1,9 @@
 import React from 'react';
 import './track-map-info-window.scss'
+import AppConstants from '../../../../../constants/app-constants';
 
 const TrackMapInfoWindow = ({ locationRecord, address }) => {
+    const activityTypeDescription = AppConstants.motionActivityTypeDictionary.find(atd => atd.id === locationRecord.motionActivityTypeId);
     return (
         <table className={ 'track-map-info-window' }>
             <tbody>
@@ -10,7 +12,7 @@ const TrackMapInfoWindow = ({ locationRecord, address }) => {
             </tr>
             <tr>
                 <td><span>Время:</span></td>
-                <td><span>{ locationRecord.mobileDeviceDateTime }</span></td>
+                <td><span>{ new Date( locationRecord.mobileDeviceDateTime ).toLocaleString('ru-RU') }</span></td>
             </tr>
             <tr>
                 <td><span>Точность:</span></td>
@@ -18,7 +20,7 @@ const TrackMapInfoWindow = ({ locationRecord, address }) => {
             </tr>
             <tr>
                 <td><span>Активность:</span></td>
-                <td><span>{ locationRecord.motionActivityTypeId }</span></td>
+                <td><span>{ activityTypeDescription ? activityTypeDescription.description : locationRecord.motionActivityTypeId }</span></td>
             </tr>
             <tr>
                 <td>
