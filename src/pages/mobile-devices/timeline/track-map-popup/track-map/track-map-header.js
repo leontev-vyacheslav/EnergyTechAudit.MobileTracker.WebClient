@@ -6,18 +6,17 @@ import './track-map-header.scss';
 
 const TrackMapHeader = ({ timeline, currentTimelineItemId, onTrackTypeChanged, onIntervalChanged }) => {
 
-    if (!timeline) {
-        return null;
-    }
-
     const currentIndex = timeline.findIndex(t => t.id === currentTimelineItemId);
+    console.log(timeline);
     const dataSource = timeline.map(item => {
         const beginDate = new Date(Date.parse(item.beginDate));
         const endDate = new Date(Date.parse(item.endDate));
-        endDate.setTime(endDate.getTime() - 1000);
+        endDate.setTime(endDate.getTime() - 1);
         return {
-            ...{ id: item.id, beginDate: item.beginDate, endDate: item.endDate },
-            ...{ text: `${ beginDate.toLocaleTimeString('ru-RU') } - ${ endDate.toLocaleTimeString('ru-RU') }` }
+            id: item.id,
+            beginDate: item.beginDate,
+            endDate: item.endDate,
+            text: `${ beginDate.toLocaleTimeString('ru-RU') } - ${ endDate.toLocaleTimeString('ru-RU') }`
         };
     });
 

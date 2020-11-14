@@ -73,10 +73,10 @@ const MobileDevice = () => {
                                     const mobileDevice = rowData;
                                     const beginDate = new Date(appSettingsData.workDate);
                                     const endDate = new Date(appSettingsData.workDate);
-                                    endDate.setHours(23, 59, 59, 999);
+                                    endDate.setHours(24);
 
                                     setCurrentMobileDevice(mobileDevice);
-                                    setCurrentTimelineItem({ beginDate: beginDate.toISOString(), endDate: endDate.toISOString() });
+                                    setCurrentTimelineItem({ id: 0, beginDate: beginDate.toISOString(), endDate: endDate.toISOString() });
                                 } }>
                                     <MdMap { ...buttonIconProps } />
                                 </Button>
@@ -121,12 +121,13 @@ const MobileDevice = () => {
                     />
                 </DataGrid>
                 { currentTimelineItem !== null ?
-                    <TrackMapPopup mobileDevice={ currentMobileDevice }
-                                   timelineItem={ currentTimelineItem }
-                                   timeline={ null }
-                                   onHiding={ () => {
-                                       setCurrentTimelineItem(null);
-                                   } }/>
+                    <TrackMapPopup
+                        mobileDevice={ currentMobileDevice }
+                        timeline={ null }
+                        timelineItem={ currentTimelineItem }
+                        onHiding={ () => {
+                            setCurrentTimelineItem(null);
+                        } }/>
                     : null
                 }
             </>

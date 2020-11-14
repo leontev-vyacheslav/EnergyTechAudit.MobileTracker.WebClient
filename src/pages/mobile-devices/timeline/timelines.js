@@ -13,9 +13,9 @@ import './timeline.scss';
 
 const Timelines = ({ currentMobileDevice }) => {
     const { appSettingsData } = useAppSettings();
+    const { getTimelinesAsync } = useAppData();
     const [currentTimeline, setCurrentTimeline] = useState(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState(null);
-    const { getTimelinesAsync } = useAppData();
 
     const [isDelayComplete, setIsDelayComplete] = useState(false);
     setTimeout(() => {
@@ -28,7 +28,6 @@ const Timelines = ({ currentMobileDevice }) => {
             timeline = timeline.map(t => {
                 return { ...t, ...{ active: true } };
             });
-
             setCurrentTimeline(timeline);
         } )();
     }, [getTimelinesAsync, appSettingsData.workDate, currentMobileDevice.id]);
@@ -157,8 +156,8 @@ const Timelines = ({ currentMobileDevice }) => {
                     { currentTimeline && currentTimelineItem !== null ?
                         <TrackMapPopup
                             mobileDevice={ currentMobileDevice }
-                            timelineItem={ currentTimelineItem }
                             timeline={ currentTimeline }
+                            timelineItem={ currentTimelineItem }
                             onHiding={ () => {
                                 setCurrentTimelineItem(null);
                             } }/>

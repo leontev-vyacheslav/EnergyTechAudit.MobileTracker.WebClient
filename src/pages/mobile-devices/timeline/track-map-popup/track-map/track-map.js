@@ -7,20 +7,38 @@ import TrackMapInfoBox from './track-map-info-box';
 import TrackMapHeader from './track-map-header';
 import { useScreenSize } from '../../../../../utils/media-query';
 import { useAppData } from '../../../../../contexts/app-data';
+import { useAppSettings } from '../../../../../contexts/app-settings';
 import Loader from '../../../../../components/loader/loader';
 import AppConstants from '../../../../../constants/app-constants';
 import './track-map.scss';
 
 const TrackMap = ({ mobileDevice, timelineItem, timeline }) => {
+    const { appSettingsData } = useAppSettings();
+    const { getTimelinesAsync } = useAppData();
+    const [currentTimeline, setCurrentTimeline] = useState(timeline);
+
+    useEffect(() => {
+        const beginDate = new Date(appSettingsData.workDate);
+        const endDate = new Date(appSettingsData.workDate);
+        endDate.setHours(24);
+        const timelineItem = { id: 0, beginDate: beginDate.toISOString(), endDate: endDate.toISOString() };
+        if (!timeline) {
+            ( async () => {
+                let timeline = await getTimelinesAsync(mobileDevice.id, appSettingsData.workDate);
+                setCurrentTimeline([timelineItem, ...timeline]);
+            } )();
+        } else {
+            setCurrentTimeline(previousCurrentTimeline => [timelineItem, ...previousCurrentTimeline]);
+        }
+    }, [getTimelinesAsync, appSettingsData.workDate, mobileDevice.id, timeline]);
+
     const [locationRecords, setLocationRecords] = useState(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState(timelineItem);
     const [isShownTrackByMarkers, setIsShownTrackByMarkers] = useState(false);
-
     const mapInstance = useRef(null);
     const trackPath = useRef(null);
     const currentMarkers = useRef([]);
     const currentInfoWindow = useRef(null);
-
     const { isXSmall, isSmall } = useScreenSize();
     const { getLocationRecordsByRangeAsync } = useAppData();
     const [isDelayComplete, setIsDelayComplete] = useState(false);
@@ -240,10 +258,10 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline }) => {
                 { isXSmall || isSmall
                     ? null
                     : <TrackMapHeader
-                        timeline={ timeline }
+                        timeline={ currentTimeline }
                         currentTimelineItemId={ currentTimelineItem.id }
                         onIntervalChanged={ (e) => {
-                            const currentTimelineItem = timeline.find(i => i.id === e.value);
+                            const currentTimelineItem = currentTimeline.find(i => i.id === e.value);
                             setCurrentTimelineItem(currentTimelineItem);
                         } }
                         onTrackTypeChanged={ (e) => {
@@ -257,7 +275,7 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline }) => {
                         styles: [{ featureType: 'all', stylers: [{ saturation: 2.5 }, { gamma: 0.25 }] }]
                     } }
                     center={ { lng: 49.156374, lat: 55.796685 } }
-                    mapContainerStyle={ { height: ( ( isXSmall || isSmall ) || timeline === null ? '100%' : '90%' ), width: '100%' } }
+                    mapContainerStyle={ { height: ( ( isXSmall || isSmall ) || currentTimeline === null ? '100%' : '90%' ), width: '100%' } }
                     onLoad={ (googleMap) => {
                         mapInstance.current = googleMap;
                         const delayTimer = setTimeout(() => {
