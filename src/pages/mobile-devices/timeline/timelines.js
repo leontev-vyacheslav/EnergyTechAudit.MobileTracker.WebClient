@@ -87,7 +87,7 @@ const Timelines = ({ currentMobileDevice }) => {
                         } }
                     >
                         <Selection mode={ 'multiple' } showCheckBoxesMode={ 'always' }/>
-                        <Scrolling showScrollbar={ 'always' }/>
+                        <Scrolling showScrollbar={ 'never' }/>
                         <Column type={ 'buttons' } width={ 85 }
 
                                 cellRender={ (e) => {

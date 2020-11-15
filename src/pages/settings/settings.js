@@ -45,6 +45,51 @@ export default () => {
                                     editorType: 'dxCheckBox',
                                 }
                             ]
+                        },
+                        {
+                            title: 'Карта',
+                            name: 'Map',
+                            items: [
+                                {
+                                    label: {
+                                        text: 'Показывать интервалы разрыва на карте',
+                                        location: 'top',
+                                        showColon: true
+                                    },
+                                    dataField: 'isShownBreakInterval',
+                                    editorType: 'dxCheckBox',
+                                },
+                                {
+                                    label: {
+                                        text: 'Интервал разрыва, (м)',
+                                        location: 'top',
+                                        showColon: true
+                                    },
+                                    dataField: 'breakInterval',
+                                    editorType: 'dxNumberBox',
+                                    editorOptions: {
+                                        type: 'integer',
+                                        min: 100,
+                                        max: 10000,
+                                        width: 400
+                                    }
+                                },
+                                {
+                                    label: {
+                                        text: 'Минимальная точность, (м)',
+                                        location: 'top',
+                                        showColon: true
+                                    },
+                                    dataField: 'minimalAccuracy',
+                                    editorType: 'dxNumberBox',
+                                    editorOptions: {
+                                        type: 'integer',
+                                        min: 10,
+                                        max: 1000,
+                                        width: 400
+                                    }
+                                }
+                            ]
                         }
                     ]
                 }

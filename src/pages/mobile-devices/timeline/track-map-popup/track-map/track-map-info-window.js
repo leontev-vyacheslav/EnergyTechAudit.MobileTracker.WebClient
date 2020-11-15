@@ -1,11 +1,14 @@
 import React from 'react';
 import './track-map-info-window.scss'
 import AppConstants from '../../../../../constants/app-constants';
+import { useScreenSize } from '../../../../../utils/media-query';
 
 const TrackMapInfoWindow = ({ locationRecord, address }) => {
+    const { isXSmall, isSmall } = useScreenSize();
+
     const activityTypeDescription = AppConstants.motionActivityTypeDictionary.find(atd => atd.id === locationRecord.motionActivityTypeId);
     return (
-        <table className={ 'track-map-info-window' }>
+        <table className={ 'track-map-info-window' } style={ isXSmall ? { fontSize: 10 } : ( isSmall ? { fontSize: 11 } : {} ) }>
             <tbody>
             <tr>
                 <td style={ { width: 'initial' } } colSpan={ 2 }><span>{ address }</span></td>

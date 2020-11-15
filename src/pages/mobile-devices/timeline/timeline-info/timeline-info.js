@@ -10,6 +10,7 @@ import { TimelineInfoHeader } from './timeline-info-header';
 import Loader from '../../../../components/loader/loader';
 import AppConstants from '../../../../constants/app-constants';
 import { useScreenSize } from '../../../../utils/media-query';
+import { Scrolling } from 'devextreme-react/data-grid';
 
 const IconComponents = {
     Marks: MdGpsFixed,
@@ -85,6 +86,7 @@ const TimelineInfo = ({ timeline, currentMobileDevice }) => {
                     showColumnLines={ true }
                     showRowLines={ true }
                 >
+                    <Scrolling showScrollbar={ 'never' }/>
                     <Column dataField={ 'name' } caption={ 'Параметр' } cellRender={ (e) => {
                         if (e.data) {
                             const Icon = (props) => React.createElement(IconComponents[`${ e.data.icon }`], props);

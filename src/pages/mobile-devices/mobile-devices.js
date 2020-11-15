@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import DataGrid, { Column, Pager, Paging, Grouping, MasterDetail } from 'devextreme-react/data-grid';
+import DataGrid, { Column, Pager, Paging, Grouping, Scrolling, MasterDetail } from 'devextreme-react/data-grid';
 import { useAppData } from '../../contexts/app-data';
 import Timelines from './timeline/timelines'
 import AppConstants from '../../constants/app-constants'
@@ -60,9 +60,9 @@ const MobileDevice = () => {
                         e.component.collapseAll(-1);
                     } }
                 >
+                    <Scrolling showScrollbar={ 'never' }/>
                     <Paging defaultPageSize={ 10 }/>
                     <Pager showPageSizeSelector={ true } showInfo={ true }/>
-
                     <Grouping autoExpandAll={ true } key={ 'userId' }/>
                     <Column type={ 'buttons' } width={ 85 } cellRender={ (e) => {
                         const rowData = e.data;

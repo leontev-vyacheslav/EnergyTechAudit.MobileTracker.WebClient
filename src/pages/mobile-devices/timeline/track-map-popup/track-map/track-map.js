@@ -12,10 +12,15 @@ import Loader from '../../../../../components/loader/loader';
 import AppConstants from '../../../../../constants/app-constants';
 import './track-map.scss';
 
+const libraries = ['geometry'];
+
 const TrackMap = ({ mobileDevice, timelineItem, timeline }) => {
     const { appSettingsData } = useAppSettings();
     const { getTimelinesAsync } = useAppData();
     const [currentTimeline, setCurrentTimeline] = useState(timeline);
+    const [locationRecords, setLocationRecords] = useState(null);
+    const [currentTimelineItem, setCurrentTimelineItem] = useState(timelineItem);
+    const [isShownTrackByMarkers, setIsShownTrackByMarkers] = useState(false);
 
     useEffect(() => {
         const beginDate = new Date(appSettingsData.workDate);
@@ -32,13 +37,12 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline }) => {
         }
     }, [getTimelinesAsync, appSettingsData.workDate, mobileDevice.id, timeline]);
 
-    const [locationRecords, setLocationRecords] = useState(null);
-    const [currentTimelineItem, setCurrentTimelineItem] = useState(timelineItem);
-    const [isShownTrackByMarkers, setIsShownTrackByMarkers] = useState(false);
     const mapInstance = useRef(null);
     const trackPath = useRef(null);
     const currentMarkers = useRef([]);
+    const currentBreakIntervals = useRef([]);
     const currentInfoWindow = useRef(null);
+
     const { isXSmall, isSmall } = useScreenSize();
     const { getLocationRecordsByRangeAsync } = useAppData();
     const [isDelayComplete, setIsDelayComplete] = useState(false);
@@ -48,8 +52,9 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline }) => {
     }, AppConstants.loadingDelay);
 
     const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: 'AIzaSyBLE0ThOFO5aYYVrsDP8AIJUAVDCiTPiLQ'
-    })
+        googleMapsApiKey: 'AIzaSyBLE0ThOFO5aYYVrsDP8AIJUAVDCiTPiLQ',
+        libraries: libraries
+    });
 
     const getBoundsByMarkers = useCallback((locationList) => {
         const boundBox = new window.google.maps.LatLngBounds();
@@ -117,7 +122,13 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline }) => {
         }
         currentMarkers.current.forEach(m => {
             m.setMap(null);
+            m = null;
         });
+        currentBreakIntervals.current.forEach( bi => {
+          bi.setMap(null);
+          bi = null;
+        });
+
         currentMarkers.current = [];
     }, []);
 
@@ -179,9 +190,37 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline }) => {
         currentMarkers.current.push(lastMarker);
     }, [locationRecords, showInfoWindowAsync]);
 
+    const buildBreakIntervals = useCallback(() => {
+        for (let i = 0; i < locationRecords.length - 1; i++) {
+
+            const currentLocation = new window.google.maps.LatLng({
+                lat: locationRecords[i].latitude,
+                lng: locationRecords[i].longitude
+            }), nextLocation = new window.google.maps.LatLng({
+                lat: locationRecords[i + 1].latitude,
+                lng: locationRecords[i + 1].longitude
+            });
+
+            const distance = window.google.maps.geometry.spherical.computeDistanceBetween(currentLocation, nextLocation);
+            if (distance >= appSettingsData.breakInterval) {
+                const breakIntervalPath = new window.google.maps.Polyline({
+                    path: [currentLocation, nextLocation],
+                    geodesic: true,
+                    strokeColor: AppConstants.colors.companyColor,
+                    strokeOpacity: 0.8,
+                    strokeWeight: 8,
+                });
+                breakIntervalPath.setMap(mapInstance.current);
+                currentBreakIntervals.current.push(breakIntervalPath);
+            }
+        }
+    }, [appSettingsData.breakInterval, locationRecords]);
+
     const showTrackByPolylinePath = useCallback(() => {
         initOverlays();
+
         if (trackPath.current === null && locationRecords && locationRecords.length > 0) {
+
             trackPath.current = new window.google.maps.Polyline({
                 path: locationRecords.map(locationRecord => {
                     return {
@@ -190,7 +229,7 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline }) => {
                     }
                 }),
                 geodesic: true,
-                strokeColor: '#FF5722',
+                strokeColor: AppConstants.colors.themeBaseAccent,
                 strokeOpacity: .7,
                 strokeWeight: 8,
             });
@@ -216,8 +255,11 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline }) => {
                 });
 
             buildOutsideMarkers();
+            if (appSettingsData.isShownBreakInterval) {
+                buildBreakIntervals();
+            }
         }
-    }, [locationRecords, buildMarker, buildOutsideMarkers, initOverlays]);
+    }, [initOverlays, locationRecords, buildOutsideMarkers, appSettingsData.isShownBreakInterval, buildMarker, buildBreakIntervals]);
 
     const showTrackByMarkers = useCallback(() => {
         initOverlays();
@@ -235,14 +277,15 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline }) => {
                 Date.parse(currentTimelineItem.endDate)
             );
             if (locationRecordsData) {
-                locationRecordsData = locationRecordsData.filter(l => l.accuracy <= 100);
+                locationRecordsData = locationRecordsData.filter(l => l.accuracy <= appSettingsData.minimalAccuracy);
             }
             setLocationRecords(locationRecordsData);
         } )()
-    }, [getLocationRecordsByRangeAsync, mobileDevice.id, currentTimelineItem]);
+    }, [getLocationRecordsByRangeAsync, mobileDevice.id, currentTimelineItem, appSettingsData.minimalAccuracy]);
 
     useEffect(() => {
         if (mapInstance.current) {
+            console.log(window.google.maps.geometry);
             if(isShownTrackByMarkers)  {
                 showTrackByMarkers();
             }
