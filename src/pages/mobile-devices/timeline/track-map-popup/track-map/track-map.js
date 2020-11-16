@@ -234,14 +234,16 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline, refreshToken }) => {
                 strokeWeight: 8,
             });
             trackPath.current.setMap(mapInstance.current);
-
+// debugger;
             let p = 1;
             if (locationRecords.length <= 10) {
                 p = 1; // 100 %
             } else if (locationRecords.length <= 100) {
                 p = 5; // 20 %
-            } else if (locationRecords.length <= 1000) {
+            } else if (locationRecords.length <= 500) {
                 p = 10; // 10 %
+            } else if (locationRecords.length <= 1000) {
+                p = 15; // 7 %
             } else if (( locationRecords.length <= 10000 )) {
                 p = 20 // 5 %
             } else {
