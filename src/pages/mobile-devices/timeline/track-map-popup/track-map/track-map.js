@@ -247,6 +247,9 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline, refreshToken }) => {
                 if (diagonalDistance > 25000) {
                     k = 2
                 }
+                if (diagonalDistance > 50000) {
+                    k = 4
+                }
                 console.log(diagonalDistance);
             }
 
