@@ -42,6 +42,7 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline, refreshToken }) => {
     const currentMarkers = useRef([]);
     const currentBreakIntervals = useRef([]);
     const currentInfoWindow = useRef(null);
+    const currentBoundBox = useRef(null);
 
     const { isXSmall, isSmall } = useScreenSize();
     const { getLocationRecordsByRangeAsync } = useAppData();
@@ -64,6 +65,7 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline, refreshToken }) => {
                 lng: locationList[i].longitude
             });
         }
+        currentBoundBox.current = boundBox;
         return boundBox;
     }, []);
 
@@ -234,20 +236,33 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline, refreshToken }) => {
                 strokeWeight: 8,
             });
             trackPath.current.setMap(mapInstance.current);
-// debugger;
+
+            let k = 1;
+            const boundBox = getBoundsByMarkers(locationRecords);
+            if (boundBox) {
+                const diagonalDistance = window.google.maps.geometry.spherical.computeDistanceBetween(
+                    boundBox.getNorthEast(),
+                    boundBox.getSouthWest()
+                );
+                if (diagonalDistance > 25000) {
+                    k = 2
+                }
+                console.log(diagonalDistance);
+            }
+
             let p = 1;
             if (locationRecords.length <= 10) {
                 p = 1; // 100 %
             } else if (locationRecords.length <= 100) {
                 p = 5; // 20 %
             } else if (locationRecords.length <= 500) {
-                p = 10; // 10 %
-            } else if (locationRecords.length <= 1000) {
-                p = 15; // 7 %
-            } else if (( locationRecords.length <= 10000 )) {
-                p = 20 // 5 %
+                p = 10 * k; // 10 %
+            } else if (locationRecords.length <= 2500) {
+                p = 20 * k; // 5 %
+            } else if (( locationRecords.length <= 12500 )) {
+                p = 40 * k // 1 %
             } else {
-                p = 50 // 2 %
+                p = 80  * k // < 1 %
             }
             locationRecords
                 .filter((_, i) => i % p === 0)
