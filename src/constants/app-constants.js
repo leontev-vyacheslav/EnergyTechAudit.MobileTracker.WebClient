@@ -20,7 +20,28 @@ const AppConstants = {
         { id: 5, code: 'on_bicycle', description: 'Велосипед' },
         { id: 6, code: 'in_vehicle', description: 'Транспортное средство' },
         { id: 7, code: 'unknown', description: 'Неизвестен' }
-    ]
+    ],
+    trackMap:{
+        apiKey: 'AIzaSyBLE0ThOFO5aYYVrsDP8AIJUAVDCiTPiLQ',
+        libraries: ['geometry'],
+        defaultZoom: 15,
+        defaultTheme: [{ featureType: 'all', stylers: [{ saturation: 2.5 }, { gamma: 0.25 }] }],
+        defaultCenter: { lng: 49.156374, lat: 55.796685 },
+
+        polylineTrackPathStrokeWeight: 8,
+        polylineTrackPathStrokeOpacity: 0.8,
+        polylineTrackPathStrokeColor: '#FF5722',
+
+        breakIntervalPathStrokeWeight: 8,
+        breakIntervalPathStrokeOpacity: 0.8,
+        breakIntervalPathStrokeColor: '#2c394c',
+
+        markerScale: 2.5,
+        markerFillOpacity: 1,
+        markerStrokeWeight: 0.8,
+        markerFillColor: '#FF5722',
+        markerStrokeColor: 'black',
+    }
 };
 
 export default AppConstants;

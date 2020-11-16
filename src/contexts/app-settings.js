@@ -10,7 +10,8 @@ function AppSettingsProvider (props) {
         duringWorkingDay: true,
         breakInterval: 1000,
         isShownBreakInterval: true,
-        minimalAccuracy: 100
+        minimalAccuracy: 100,
+        stationaryRadius: 100,
     };
     const initialAppSettingsDataJson =
         localStorage.getItem('appSettingsData') ||
@@ -26,6 +27,9 @@ function AppSettingsProvider (props) {
     }
     if(!initialAppSettingsData.minimalAccuracy)  {
         initialAppSettingsData = { ...initialAppSettingsData, ...{ minimalAccuracy: 100 } };
+    }
+    if(!initialAppSettingsData.stationaryRadius)  {
+        initialAppSettingsData = { ...initialAppSettingsData, ...{ stationaryRadius: 100 } };
     }
 
     const [appSettingsData, setAppSettingsData] = useState(initialAppSettingsData);

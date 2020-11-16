@@ -88,6 +88,20 @@ export default () => {
                                         max: 1000,
                                         width: 400
                                     }
+                                },{
+                                    label: {
+                                        text: 'Радиус стационарности, (м)',
+                                        location: 'top',
+                                        showColon: true
+                                    },
+                                    dataField: 'stationaryRadius',
+                                    editorType: 'dxNumberBox',
+                                    editorOptions: {
+                                        type: 'integer',
+                                        min: 50,
+                                        max: 500,
+                                        width: 400
+                                    }
                                 }
                             ]
                         }

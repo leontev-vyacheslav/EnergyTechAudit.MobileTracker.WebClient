@@ -7,7 +7,6 @@ import './track-map-header.scss';
 const TrackMapHeader = ({ timeline, currentTimelineItemId, onTrackTypeChanged, onIntervalChanged }) => {
 
     const currentIndex = timeline.findIndex(t => t.id === currentTimelineItemId);
-    console.log(timeline);
     const dataSource = timeline.map(item => {
         const beginDate = new Date(Date.parse(item.beginDate));
         const endDate = new Date(Date.parse(item.endDate));
