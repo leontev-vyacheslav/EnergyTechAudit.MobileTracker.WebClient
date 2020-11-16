@@ -63,7 +63,7 @@ const MobileDevice = () => {
                     <Scrolling showScrollbar={ 'never' }/>
                     <Paging defaultPageSize={ 10 }/>
                     <Pager showPageSizeSelector={ true } showInfo={ true }/>
-                    <Grouping autoExpandAll={ true } key={ 'userId' }/>
+                    <Grouping autoExpandAll={ true } key={ 'userId' } />
                     <Column type={ 'buttons' } width={ 85 } cellRender={ (e) => {
                         const rowData = e.data;
                         const buttonIconProps = { style: { cursor: 'pointer' }, size: 16, color: '#464646' };

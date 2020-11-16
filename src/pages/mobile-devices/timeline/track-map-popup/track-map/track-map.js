@@ -14,7 +14,7 @@ import './track-map.scss';
 
 const libraries = ['geometry'];
 
-const TrackMap = ({ mobileDevice, timelineItem, timeline }) => {
+const TrackMap = ({ mobileDevice, timelineItem, timeline, refreshToken }) => {
     const { appSettingsData } = useAppSettings();
     const { getTimelinesAsync } = useAppData();
     const [currentTimeline, setCurrentTimeline] = useState(timeline);
@@ -124,9 +124,9 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline }) => {
             m.setMap(null);
             m = null;
         });
-        currentBreakIntervals.current.forEach( bi => {
-          bi.setMap(null);
-          bi = null;
+        currentBreakIntervals.current.forEach(bi => {
+            bi.setMap(null);
+            bi = null;
         });
 
         currentMarkers.current = [];
@@ -281,15 +281,14 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline }) => {
             }
             setLocationRecords(locationRecordsData);
         } )()
-    }, [getLocationRecordsByRangeAsync, mobileDevice.id, currentTimelineItem, appSettingsData.minimalAccuracy]);
+    }, [getLocationRecordsByRangeAsync, mobileDevice.id, currentTimelineItem, appSettingsData.minimalAccuracy, refreshToken]);
 
     useEffect(() => {
         if (mapInstance.current) {
-            console.log(window.google.maps.geometry);
-            if(isShownTrackByMarkers)  {
+
+            if (isShownTrackByMarkers) {
                 showTrackByMarkers();
-            }
-            else {
+            } else {
                 showTrackByPolylinePath();
             }
             fitMapBoundsByLocations(mapInstance.current, locationRecords);
