@@ -109,8 +109,8 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline, refreshToken }) => {
                 lng: locationRecord.longitude
             });
             const currentZoom = mapInstance.current.getZoom();
-            if (currentZoom <= 15) {
-                mapInstance.current.setZoom(15);
+            if (currentZoom <= AppConstants.trackMap.defaultZoom) {
+                mapInstance.current.setZoom(AppConstants.trackMap.defaultZoom);
             }
             currentInfoWindow.current.open(mapInstance.current);
         }
@@ -145,9 +145,9 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline, refreshToken }) => {
                 },
                 label: mode === 'track' ? {
                     text: `${ order }`,
-                    fontSize: '11px',
-                    color: 'darkblue',
-                    fontWeight: '600'
+                    fontSize: AppConstants.trackMap.markerLabelFontSize,
+                    color: AppConstants.trackMap.markerLabelColor,
+                    fontWeight: AppConstants.trackMap.markerLabelFontWeight
                 } : null,
                 icon: {
                     labelOrigin: { x: -3, y: -1 },
@@ -220,6 +220,59 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline, refreshToken }) => {
         }
     }, [appSettingsData.breakInterval, locationRecords]);
 
+    const buildMarkersOnPolylinePath = useCallback(() => {
+        let k = 1;
+        let diagonalDistance = 0;
+        const boundBox = getBoundsByMarkers(locationRecords);
+        if (boundBox) {
+            diagonalDistance = window.google.maps.geometry.spherical.computeDistanceBetween(
+                boundBox.getNorthEast(),
+                boundBox.getSouthWest()
+            );
+            if (diagonalDistance > 25000) {
+                k = 1.5
+            }
+            if (diagonalDistance > 50000) {
+                k = 2
+            }
+        }
+        if (diagonalDistance <= appSettingsData.stationaryRadius) {
+            diagonalDistance = diagonalDistance > 100 ? diagonalDistance : 100;
+            currentStationaryCircle.current = new window.google.maps.Circle({
+                strokeColor: AppConstants.trackMap.stationaryCircleColor,
+                strokeOpacity: AppConstants.trackMap.stationaryCircleStrokeOpacity,
+                strokeWeight: AppConstants.trackMap.stationaryCircleStrokeWeight,
+                fillColor: AppConstants.trackMap.stationaryCircleColor,
+                fillOpacity: AppConstants.trackMap.stationaryCircleFillOpacity,
+                center: boundBox.getCenter(),
+                radius: ( 3 * diagonalDistance ) / 5
+            });
+            currentStationaryCircle.current.setMap(mapInstance.current);
+            mapInstance.current.fitBounds(currentStationaryCircle.current.getBounds());
+        }
+
+        let p = 1;
+        if (locationRecords.length <= 10) {
+            p = 1; // 100 %
+        } else if (locationRecords.length <= 100) {
+            p = 5; // 20 %
+        } else if (locationRecords.length <= 500) {
+            p = 10 * k; // 10 %
+        } else if (locationRecords.length <= 2500) {
+            p = 20 * k; // 5 %
+        } else if (( locationRecords.length <= 12500 )) {
+            p = 40 * k // 1 %
+        } else {
+            p = 80 * k // < 1 %
+        }
+        locationRecords
+            .filter((_, i) => i % p === 0)
+            .concat(locationRecords.length > 0 ? locationRecords[locationRecords.length - 1] : [])
+            .forEach((locationRecord, i) => {
+                buildMarker(locationRecord, 'track', i + 1);
+            });
+    }, [appSettingsData.stationaryRadius, buildMarker, getBoundsByMarkers, locationRecords]);
+
     const showTrackByPolylinePath = useCallback(() => {
         initOverlays();
 
@@ -238,65 +291,14 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline, refreshToken }) => {
                 strokeWeight: AppConstants.trackMap.polylineTrackPathStrokeWeight,
             });
             trackPath.current.setMap(mapInstance.current);
-
-            let k = 1;
-            let diagonalDistance = 0;
-            const boundBox = getBoundsByMarkers(locationRecords);
-            if (boundBox) {
-                diagonalDistance = window.google.maps.geometry.spherical.computeDistanceBetween(
-                    boundBox.getNorthEast(),
-                    boundBox.getSouthWest()
-                );
-                if (diagonalDistance > 25000) {
-                    k = 2
-                }
-                if (diagonalDistance > 50000) {
-                    k = 4
-                }
-            }
-            if (diagonalDistance <= appSettingsData.stationaryRadius) {
-                currentStationaryCircle.current = new window.google.maps.Circle({
-                    strokeColor: AppConstants.colors.companyColor,
-                    strokeOpacity: 0.8,
-                    strokeWeight: 1,
-                    fillColor: AppConstants.colors.companyColor,
-                    fillOpacity: 0.4,
-                    center: boundBox.getCenter(),
-                    radius: ( 3 * diagonalDistance ) / 5
-                });
-                currentStationaryCircle.current.setMap(mapInstance.current);
-                mapInstance.current.setZoom(mapInstance.current.getZoom() - 2);
-            }
-
-            let p = 1;
-            if (locationRecords.length <= 10) {
-                p = 1; // 100 %
-            } else if (locationRecords.length <= 100) {
-                p = 5; // 20 %
-            } else if (locationRecords.length <= 500) {
-                p = 10 * k; // 10 %
-            } else if (locationRecords.length <= 2500) {
-                p = 20 * k; // 5 %
-            } else if (( locationRecords.length <= 12500 )) {
-                p = 40 * k // 1 %
-            } else {
-                p = 80 * k // < 1 %
-            }
-            locationRecords
-                .filter((_, i) => i % p === 0)
-                .concat(locationRecords.length > 0 ? locationRecords[locationRecords.length - 1] : [])
-                .forEach((locationRecord, i) => {
-                    buildMarker(locationRecord, 'track', i + 1);
-                });
-
+            buildMarkersOnPolylinePath();
             buildOutsideMarkers();
             if (appSettingsData.isShownBreakInterval) {
                 buildBreakIntervals();
             }
         }
-    }, [
-        initOverlays, locationRecords, getBoundsByMarkers, appSettingsData.stationaryRadius,
-        appSettingsData.isShownBreakInterval, buildOutsideMarkers, buildMarker, buildBreakIntervals
+    }, [initOverlays, locationRecords, appSettingsData.isShownBreakInterval,
+        buildOutsideMarkers, buildBreakIntervals, buildMarkersOnPolylinePath
     ]);
 
     const showTrackByMarkers = useCallback(() => {
@@ -329,7 +331,6 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline, refreshToken }) => {
             } else {
                 showTrackByPolylinePath();
             }
-
         }
     }, [locationRecords, fitMapBoundsByLocations, showTrackByPolylinePath, showTrackByMarkers, isShownTrackByMarkers]);
 
