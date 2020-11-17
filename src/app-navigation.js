@@ -5,11 +5,6 @@ export const navigation = [
         icon: 'home'
     },
     {
-        text: 'Настройки',
-        path: '/settings',
-        icon: 'preferences'
-    },
-    {
         text: 'Списки',
         icon: 'folder',
         items: [
@@ -19,6 +14,16 @@ export const navigation = [
                 path: '/mobileDevices',
             }
         ]
+    },
+    {
+        text: 'Рабочая дата',
+        icon: 'event',
+        command: 'workDate'
+    },
+    {
+        text: 'Настройки',
+        path: '/settings',
+        icon: 'preferences'
     },
     {
         text: 'О программе',

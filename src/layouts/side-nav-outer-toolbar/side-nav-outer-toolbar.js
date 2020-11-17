@@ -99,6 +99,7 @@ export default function ({ title, children }) {
                         onMenuReady={ onMenuReady }
                     >
                     </SideNavigationMenu>
+
                 </Template>
             </Drawer>
         </div>

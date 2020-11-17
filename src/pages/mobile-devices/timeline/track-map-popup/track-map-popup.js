@@ -27,7 +27,12 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, timeline, onHiding }) => {
                     }
                 }
             }/>
-
+            <ToolbarItem widget="dxButton" location="after" options={
+                {
+                    icon: 'event', onClick: () => {
+                    }
+                }
+            }/>
         </Popup>
     );
 };

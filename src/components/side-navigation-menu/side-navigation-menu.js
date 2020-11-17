@@ -6,8 +6,11 @@ import { useScreenSize } from '../../utils/media-query';
 import './side-navigation-menu.scss';
 
 import * as events from 'devextreme/events';
+import DateBox from 'devextreme-react/date-box';
+import { useAppSettings } from '../../contexts/app-settings';
 
 export default function (props) {
+    const { appSettingsData, setAppSettingsData } = useAppSettings();
     const {
         children,
         selectedItemChanged,
@@ -35,8 +38,10 @@ export default function (props) {
 
     const { navigationData: { currentPath } } = useNavigation();
 
+    const datePikerRef = useRef();
     const treeViewRef = useRef();
     const wrapperRef = useRef();
+
     const getWrapperRef = useCallback((element) => {
         const prevElement = wrapperRef.current;
         if (prevElement) {
@@ -79,10 +84,26 @@ export default function (props) {
                     selectionMode={ 'single' }
                     focusStateEnabled={ true }
                     expandEvent={ 'click' }
-                    onItemClick={ selectedItemChanged }
+                    onItemClick={ event => {
+                        if(event.itemData.command === 'workDate') {
+                            if (datePikerRef.current) {
+                                datePikerRef.current.instance.open();
+                            }
+                        }
+                        selectedItemChanged(event);
+                    } }
                     onContentReady={ onMenuReady }
                     width={ '100%' }
                 />
+
+                <DateBox ref={ datePikerRef }
+                         style={ { width: 0 } }
+                         visible={ true }
+                         value={ appSettingsData.workDate }
+                         pickerType={ 'rollers' }
+                         onValueChanged={ e => {
+                             setAppSettingsData({ ...appSettingsData, ...{ workDate: e.value } });
+                         } }/>
             </div>
         </div>
     );

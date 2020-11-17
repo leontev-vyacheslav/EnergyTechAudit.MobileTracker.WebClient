@@ -41,6 +41,15 @@ const AppConstants = {
         markerStrokeWeight: 0.8,
         markerFillColor: '#FF5722',
         markerStrokeColor: 'black',
+
+        markerLabelFontSize: '11px',
+        markerLabelColor: 'darkblue',
+        markerLabelFontWeight: '600',
+
+        stationaryCircleColor: '#2c394c',
+        stationaryCircleStrokeOpacity:  0.8,
+        stationaryCircleStrokeWeight: 1,
+        stationaryCircleFillOpacity: 0.4
     }
 };
 
