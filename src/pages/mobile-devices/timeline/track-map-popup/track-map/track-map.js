@@ -12,28 +12,36 @@ import Loader from '../../../../../components/loader/loader';
 import AppConstants from '../../../../../constants/app-constants';
 import './track-map.scss';
 
-const TrackMap = ({ mobileDevice, timelineItem, timeline, refreshToken }) => {
+const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
     const { appSettingsData } = useAppSettings();
     const { getTimelinesAsync } = useAppData();
-    const [currentTimeline, setCurrentTimeline] = useState(timeline);
+    const [currentTimeline, setCurrentTimeline] = useState([]);
     const [locationRecords, setLocationRecords] = useState(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState(timelineItem);
     const [isShownTrackByMarkers, setIsShownTrackByMarkers] = useState(false);
+
+    useEffect(()=>{
+        const beginDate = new Date(appSettingsData.workDate);
+        const endDate = new Date(appSettingsData.workDate);
+        endDate.setHours(24);
+        const timelineItem = { id: 0, beginDate: beginDate.toISOString(), endDate: endDate.toISOString() };
+
+        setCurrentTimelineItem(timelineItem);
+    }, [appSettingsData.workDate]);
 
     useEffect(() => {
         const beginDate = new Date(appSettingsData.workDate);
         const endDate = new Date(appSettingsData.workDate);
         endDate.setHours(24);
         const timelineItem = { id: 0, beginDate: beginDate.toISOString(), endDate: endDate.toISOString() };
-        if (!timeline) {
-            ( async () => {
-                let timeline = await getTimelinesAsync(mobileDevice.id, appSettingsData.workDate);
-                setCurrentTimeline([timelineItem, ...timeline]);
-            } )();
-        } else {
-            setCurrentTimeline(previousCurrentTimeline => [timelineItem, ...previousCurrentTimeline]);
-        }
-    }, [getTimelinesAsync, appSettingsData.workDate, mobileDevice.id, timeline]);
+
+        ( async () => {
+            let timeline = await getTimelinesAsync(mobileDevice.id, appSettingsData.workDate);
+            setCurrentTimeline([timelineItem, ...timeline]);
+        } )();
+
+        setCurrentTimeline(previousCurrentTimeline => [timelineItem, ...previousCurrentTimeline]);
+    }, [getTimelinesAsync, appSettingsData.workDate, mobileDevice.id]);
 
     const mapInstance = useRef(null);
     const trackPath = useRef(null);
@@ -340,7 +348,7 @@ const TrackMap = ({ mobileDevice, timelineItem, timeline, refreshToken }) => {
                     ? null
                     : <TrackMapHeader
                         timeline={ currentTimeline }
-                        currentTimelineItemId={ currentTimelineItem.id }
+                        currentTimelineItem={ currentTimelineItem }
                         onIntervalChanged={ (e) => {
                             const currentTimelineItem = currentTimeline.find(i => i.id === e.value);
                             setCurrentTimelineItem(currentTimelineItem);

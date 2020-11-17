@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import CheckBox from 'devextreme-react/ui/check-box';
 import SelectBox from 'devextreme-react/ui/select-box';
 import { MdTimer, MdTimerOff } from 'react-icons/all';
 import './track-map-header.scss';
 
-const TrackMapHeader = ({ timeline, currentTimelineItemId, onTrackTypeChanged, onIntervalChanged }) => {
+const TrackMapHeader = ({ timeline, currentTimelineItem, onTrackTypeChanged, onIntervalChanged }) => {
 
-    const currentIndex = timeline.findIndex(t => t.id === currentTimelineItemId);
-    const dataSource = timeline.map(item => {
+    const currentIndex = useMemo(() =>
+    {
+        let ind =  timeline.findIndex(t => t.id === currentTimelineItem.id) ;
+        return ind !== -1 ? ind : 0;
+    }, [currentTimelineItem.id, timeline])
+
+    const dataSource = useMemo(() => timeline.map(item => {
         const beginDate = new Date(Date.parse(item.beginDate));
         const endDate = new Date(Date.parse(item.endDate));
         endDate.setTime(endDate.getTime() - 1);
@@ -17,7 +22,7 @@ const TrackMapHeader = ({ timeline, currentTimelineItemId, onTrackTypeChanged, o
             endDate: item.endDate,
             text: `${ beginDate.toLocaleTimeString('ru-RU') } - ${ endDate.toLocaleTimeString('ru-RU') }`
         };
-    });
+    }), [timeline]);
 
     return (
         <>

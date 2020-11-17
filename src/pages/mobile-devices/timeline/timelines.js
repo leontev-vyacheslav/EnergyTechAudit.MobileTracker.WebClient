@@ -156,7 +156,6 @@ const Timelines = ({ currentMobileDevice }) => {
                     { currentTimeline && currentTimelineItem !== null ?
                         <TrackMapPopup
                             mobileDevice={ currentMobileDevice }
-                            timeline={ currentTimeline }
                             timelineItem={ currentTimelineItem }
                             onHiding={ () => {
                                 setCurrentTimelineItem(null);

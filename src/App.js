@@ -12,11 +12,13 @@ import { AuthProvider, useAuth } from './contexts/auth';
 import { useScreenSizeClass } from './utils/media-query';
 import Content from './Content';
 import NotAuthenticatedContent from './NotAuthenticatedContent';
-import { AppSettingsProvider } from './contexts/app-settings';
+import { AppSettingsProvider, useAppSettings } from './contexts/app-settings';
 import { AppDataProvider } from './contexts/app-data';
+import WorkDatePicker from './components/work-date-picker/work-date-picker';
 
 function App () {
     const { user } = useAuth();
+
     loadMessages(ruMessages);
     locale(navigator.language);
 
@@ -25,6 +27,7 @@ function App () {
 
 export default function Main () {
     const screenSizeClass = useScreenSizeClass();
+    const { workDatePickerRef } = useAppSettings();
     return (
         <Router>
             <AppSettingsProvider>
@@ -33,6 +36,7 @@ export default function Main () {
                         <NavigationProvider>
                             <div className={ `app ${ screenSizeClass }` }>
                                 <App/>
+                                <WorkDatePicker ref={ workDatePickerRef }/>
                             </div>
                         </NavigationProvider>
                     </AppDataProvider>
