@@ -76,6 +76,7 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
     }, []);
 
     const fitMapBoundsByLocations = useCallback((map, locationList) => {
+
         if (currentInfoWindow.current) {
             const currentZoom = mapInstance.current.getZoom();
             if (currentZoom <= AppConstants.trackMap.defaultZoom) {
@@ -305,9 +306,9 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
             });
     }, [appSettingsData.stationaryRadius, buildMarker, getBoundsByMarkers, locationRecords]);
 
-    const showTrackByPolylinePath = useCallback(() => {
+    const showTrack = useCallback(() => {
         initOverlays();
-
+        fitMapBoundsByLocations(mapInstance.current, locationRecords);
         if (trackPath.current === null && locationRecords && locationRecords.length > 0) {
 
             trackPath.current = new window.google.maps.Polyline({
@@ -329,9 +330,7 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
                 buildBreakIntervals();
             }
         }
-    }, [initOverlays, locationRecords, appSettingsData.isShownBreakInterval,
-        buildOutsideMarkers, buildBreakIntervals, buildMarkersOnPolylinePath
-    ]);
+    }, [initOverlays, fitMapBoundsByLocations, locationRecords, buildMarkersOnPolylinePath, buildOutsideMarkers, appSettingsData.isShownBreakInterval, buildBreakIntervals]);
 
     useEffect(() => {
         ( async () => {
@@ -349,10 +348,9 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
 
     useEffect(() => {
         if (mapInstance.current) {
-            fitMapBoundsByLocations(mapInstance.current, locationRecords);
-            showTrackByPolylinePath();
+            showTrack();
         }
-    }, [locationRecords, fitMapBoundsByLocations, showTrackByPolylinePath]);
+    }, [locationRecords, showTrack]);
 
     return ( isLoaded && locationRecords !== null && isDelayComplete ?
             <>
@@ -379,8 +377,7 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
                     onLoad={ (googleMap) => {
                         mapInstance.current = googleMap;
                         const delayTimer = setTimeout(() => {
-                            fitMapBoundsByLocations(mapInstance.current, locationRecords);
-                            showTrackByPolylinePath();
+                            showTrack();
                             clearTimeout(delayTimer);
                         }, 250);
                     } }
