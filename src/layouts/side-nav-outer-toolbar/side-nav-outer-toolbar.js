@@ -43,6 +43,12 @@ export default function ({ title, children }) {
     }, [isLarge]);
 
     const onNavigationChanged = useCallback(({ itemData: { path }, event, node }) => {
+
+        if (!isLarge || menuStatus === MenuStatus.TemporaryOpened) {
+            setMenuStatus(MenuStatus.Closed);
+            event.stopPropagation();
+        }
+
         if (menuStatus === MenuStatus.Closed || !path || node.selected) {
             event.preventDefault();
             return;
