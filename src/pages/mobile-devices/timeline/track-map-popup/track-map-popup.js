@@ -1,12 +1,14 @@
-import React, {  useState } from 'react';
+import React, { useState } from 'react';
 import TrackMap from './track-map/track-map';
 import { Popup } from 'devextreme-react/ui/popup';
-import { useScreenSize } from '../../../../utils/media-query';
-import './track-map-popup.scss';
 import { ToolbarItem } from 'devextreme-react/popup';
 import { useAppSettings } from '../../../../contexts/app-settings';
+import { useScreenSize } from '../../../../utils/media-query';
+import Menu from 'devextreme-react/menu';
 
-const TrackMapPopup = ({ mobileDevice, timelineItem,  onHiding }) => {
+import './track-map-popup.scss';
+
+const TrackMapPopup = ({ mobileDevice, timelineItem, onHiding }) => {
     const { isXSmall, isSmall } = useScreenSize();
     const [refreshToken, setRefreshToken] = useState({});
     const { workDatePickerRef } = useAppSettings();
@@ -18,27 +20,43 @@ const TrackMapPopup = ({ mobileDevice, timelineItem,  onHiding }) => {
                showTitle={ true }
                showCloseButton={ true }
                onHiding={ onHiding }
-               width={ isXSmall || isSmall ? '90%' : '70%' }
-               height={ isXSmall || isSmall ? '90%' : '70%' }
+               width={ isXSmall || isSmall ? '95%' : '70%' }
+               height={ isXSmall || isSmall ? '95%' : '80%' }
                contentRender={ () => {
-                   return <TrackMap mobileDevice={ mobileDevice } timelineItem={ timelineItem } refreshToken={ refreshToken } />
+                   return (
+                       <TrackMap
+                           mobileDevice={ mobileDevice }
+                           timelineItem={ timelineItem }
+                           refreshToken={ refreshToken }
+                       />
+                   );
                } }>
-            <ToolbarItem widget="dxButton" location="after" options={
-                {
-                    icon: 'refresh', onClick: () => {
-                        setRefreshToken({ ...{} });
+            <ToolbarItem location={ 'after' }>
+                <Menu items={ [
+                    {
+                        icon: 'menu',
+                        items: [
+                            {
+                                text: 'Обновить',
+                                icon: 'refresh',
+                                onClick: () => {
+                                    setRefreshToken({ ...{} });
+                                },
+                            },
+                            {
+                                text: 'Рабочая дата',
+                                icon: 'event',
+                                onClick: () => {
+                                    if (workDatePickerRef.current) {
+                                        workDatePickerRef.current.instance.open();
+                                    }
+                                }
+                            }
+                        ]
                     }
-                }
-            }/>
-            <ToolbarItem widget="dxButton" location="after" options={
-                {
-                    icon: 'event', onClick: () => {
-                        if (workDatePickerRef.current) {
-                            workDatePickerRef.current.instance.open();
-                        }
-                    }
-                }
-            }/>
+                ] }>
+                </Menu>
+            </ToolbarItem>
         </Popup>
     );
 };

@@ -18,9 +18,8 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
     const [currentTimeline, setCurrentTimeline] = useState([]);
     const [locationRecords, setLocationRecords] = useState(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState(timelineItem);
-    const [isShownTrackByMarkers, setIsShownTrackByMarkers] = useState(false);
 
-    useEffect(()=>{
+    useEffect(() => {
         const beginDate = new Date(appSettingsData.workDate);
         const endDate = new Date(appSettingsData.workDate);
         endDate.setHours(24);
@@ -51,7 +50,7 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
     const currentBoundBox = useRef(null);
     const currentStationaryCircle = useRef(null);
 
-    const { isXSmall } = useScreenSize();
+    const { isXSmall, isSmall } = useScreenSize();
     const { getLocationRecordsByRangeAsync } = useAppData();
     const [isDelayComplete, setIsDelayComplete] = useState(false);
 
@@ -77,10 +76,25 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
     }, []);
 
     const fitMapBoundsByLocations = useCallback((map, locationList) => {
+        if (currentInfoWindow.current) {
+            const currentZoom = mapInstance.current.getZoom();
+            if (currentZoom <= AppConstants.trackMap.defaultZoom) {
+                mapInstance.current.setZoom(AppConstants.trackMap.defaultZoom);
+            }
+            mapInstance.current.setCenter(currentInfoWindow.current.getPosition());
+            return;
+        }
+        if (currentStationaryCircle.current) {
+            map.setCenter(currentStationaryCircle.current.getCenter());
+            mapInstance.current.fitBounds(currentStationaryCircle.current.getBounds());
+            return;
+        }
         if (locationList && locationList.length > 0) {
             const boundBox = getBoundsByMarkers(locationList);
-            map.setCenter(boundBox.getCenter());
-            map.fitBounds(boundBox);
+            if (boundBox) {
+                map.setCenter(boundBox.getCenter());
+                map.fitBounds(boundBox);
+            }
         }
     }, [getBoundsByMarkers]);
 
@@ -110,7 +124,10 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
                     lat: locationRecord.latitude,
                     lng: locationRecord.longitude
                 },
-                content: content
+                content: content,
+            });
+            currentInfoWindow.current.addListener('closeclick', () => {
+                currentInfoWindow.current = null;
             });
             mapInstance.current.setCenter({
                 lat: locationRecord.latitude,
@@ -129,19 +146,26 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
             trackPath.current.setMap(null);
             trackPath.current = null;
         }
+
         currentMarkers.current.forEach(m => {
             m.setMap(null);
             m = null;
         });
+        currentMarkers.current = [];
+
         currentBreakIntervals.current.forEach(bi => {
             bi.setMap(null);
             bi = null;
         });
+
         if (currentStationaryCircle.current) {
             currentStationaryCircle.current.setMap(null);
             currentStationaryCircle.current = null;
         }
-        currentMarkers.current = [];
+        if (currentInfoWindow.current) {
+            currentInfoWindow.current.setMap(null);
+            currentInfoWindow.current = null;
+        }
     }, []);
 
     const buildMarker = useCallback((locationRecord, mode, order) => {
@@ -309,14 +333,6 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
         buildOutsideMarkers, buildBreakIntervals, buildMarkersOnPolylinePath
     ]);
 
-    const showTrackByMarkers = useCallback(() => {
-        initOverlays();
-        locationRecords.forEach((locationRecord, i) => {
-            buildMarker(locationRecord, 'onlyMarkers', i + 1)
-        });
-        buildOutsideMarkers();
-    }, [initOverlays, locationRecords, buildMarker, buildOutsideMarkers]);
-
     useEffect(() => {
         ( async () => {
             let locationRecordsData = await getLocationRecordsByRangeAsync(
@@ -334,37 +350,32 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
     useEffect(() => {
         if (mapInstance.current) {
             fitMapBoundsByLocations(mapInstance.current, locationRecords);
-            if (isShownTrackByMarkers) {
-                showTrackByMarkers();
-            } else {
-                showTrackByPolylinePath();
-            }
+            showTrackByPolylinePath();
         }
-    }, [locationRecords, fitMapBoundsByLocations, showTrackByPolylinePath, showTrackByMarkers, isShownTrackByMarkers]);
+    }, [locationRecords, fitMapBoundsByLocations, showTrackByPolylinePath]);
 
     return ( isLoaded && locationRecords !== null && isDelayComplete ?
             <>
-                { isXSmall
-                    ? null
-                    : <TrackMapHeader
-                        timeline={ currentTimeline }
-                        currentTimelineItem={ currentTimelineItem }
-                        onIntervalChanged={ (e) => {
-                            const currentTimelineItem = currentTimeline.find(i => i.id === e.value);
-                            setCurrentTimelineItem(currentTimelineItem);
-                        } }
-                        onTrackTypeChanged={ (e) => {
-                            setIsShownTrackByMarkers(e.value);
-                        } }/>
-                }
+                <TrackMapHeader
+                    timeline={ currentTimeline }
+                    currentTimelineItem={ currentTimelineItem }
+                    onIntervalChanged={ (e) => {
+                        const currentTimelineItem = currentTimeline.find(i => i.id === e.value);
+                        setCurrentTimelineItem(currentTimelineItem);
+                    } }
+                />
                 <GoogleMap
                     zoom={ AppConstants.trackMap.defaultZoom }
                     mapTypeId={ window.google.maps.MapTypeId.ROADMAP }
-                    options={ {
-                        styles: AppConstants.trackMap.defaultTheme
-                    } }
+                    options={
+                        {
+                            mapTypeControl: !( isXSmall || isSmall ),
+                            scaleControl: !isXSmall,
+                            zoomControl: !( isXSmall || isSmall ),
+                            styles: AppConstants.trackMap.defaultTheme
+                        } }
                     center={ AppConstants.trackMap.defaultCenter }
-                    mapContainerStyle={ { height: ( ( isXSmall ) || currentTimeline === null ? '100%' : '90%' ), width: '100%' } }
+                    mapContainerStyle={ { height: '90%', width: '100%' } }
                     onLoad={ (googleMap) => {
                         mapInstance.current = googleMap;
                         const delayTimer = setTimeout(() => {
@@ -372,6 +383,12 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
                             showTrackByPolylinePath();
                             clearTimeout(delayTimer);
                         }, 250);
+                    } }
+                    onClick={ () => {
+                        if (currentInfoWindow.current !== null) {
+                            currentInfoWindow.current.close();
+                            currentInfoWindow.current = null;
+                        }
                     } }
                     onRightClick={ () => {
                         fitMapBoundsByLocations(mapInstance.current, locationRecords);

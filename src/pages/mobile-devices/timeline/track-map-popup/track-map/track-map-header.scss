@@ -2,16 +2,9 @@
   .track-map-header {
     display: flex;
     height: 40px;
-    align-items: center;
+    justify-content: flex-end;
   }
-
-  .track-map-check-box-container {
-    flex: 4;
-  }
-  .track-map-select-box-container {
-    flex: 1;
-  }
-  .track-map-check-box, .track-map-select-box {
+  .track-map-select-box {
     margin-left: 5px;
   }
 }
