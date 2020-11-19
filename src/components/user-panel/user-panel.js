@@ -3,17 +3,29 @@ import ContextMenu, { Position } from 'devextreme-react/context-menu';
 import List from 'devextreme-react/list';
 import { useAuth } from '../../contexts/auth';
 import './user-panel.scss';
+import { useAppSettings } from '../../contexts/app-settings';
 
 export default function ({ menuMode }) {
     const { user, signOut } = useAuth();
+    const { appSettingsData, workDatePickerRef } = useAppSettings();
 
     const menuItems = useMemo(() => ( [
         {
+            text: 'Рабочая дата',
+            icon: 'event',
+            onClick: () => {
+                if (workDatePickerRef.current) {
+                    if (workDatePickerRef.current) {
+                        workDatePickerRef.current.instance.open();
+                    }
+                }
+            }
+        },{
             text: 'Выход',
             icon: 'runner',
             onClick: signOut
-        }
-    ] ), [signOut]);
+        },
+    ] ), [signOut, workDatePickerRef]);
 
     return (
         <div className={ 'user-panel' }>
@@ -21,7 +33,10 @@ export default function ({ menuMode }) {
                 <div className={ 'image-container' }>
                     <div className={ 'dx-icon dx-icon-user' }/>
                 </div>
-                <div className={ 'user-name' }>{ user.userName }</div>
+                <div style={ { display: 'flex', flexDirection: 'column', marginLeft: 10, lineHeight: 'initial', alignItems: 'center' } }>
+                    <div className={ 'user-name' }>{ user.userName }</div>
+                    <div>{ new Date(Date.parse(appSettingsData.workDate)).toLocaleDateString('ru-RU') }</div>
+                </div>
             </div>
 
             { menuMode === 'context' && (
@@ -29,7 +44,7 @@ export default function ({ menuMode }) {
                     items={ menuItems }
                     target={ '.user-button' }
                     showEvent={ 'dxclick' }
-                    width={ 250 }
+                    width={ 200 }
                     cssClass={ 'user-menu' }
                 >
                     <Position my={ 'top right' } at={ 'bottom right' }/>

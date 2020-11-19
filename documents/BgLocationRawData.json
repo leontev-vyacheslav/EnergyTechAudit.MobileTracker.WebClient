@@ -1,0 +1,18 @@
+{
+  "activity": { "confidence": 100, "type": "still" },
+  "battery": { "is_charging": true, "level": 0.77 },
+  "coords": {
+    "accuracy": 700,
+    "altitude": -1,
+    "heading": -1,
+    "latitude": 55.8759697,
+    "longitude": 49.0605496,
+    "speed": -1
+  },
+  "extras": {},
+  "is_moving": false,
+  "odometer": 0,
+  "sample": true,
+  "timestamp": "2020-07-17T10:58:20.580Z",
+  "uuid": "e8c592c7-26af-4ae6-8150-ef12ccc948be"
+}
