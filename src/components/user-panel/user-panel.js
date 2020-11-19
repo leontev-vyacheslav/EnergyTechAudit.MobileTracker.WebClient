@@ -35,7 +35,7 @@ export default function ({ menuMode }) {
                 </div>
                 <div style={ { display: 'flex', flexDirection: 'column', marginLeft: 10, lineHeight: 'initial', alignItems: 'center' } }>
                     <div className={ 'user-name' }>{ user.userName }</div>
-                    <div>{ new Date(Date.parse(appSettingsData.workDate)).toLocaleDateString('ru-RU') }</div>
+                    <div>{ new Date(appSettingsData.workDate).toLocaleDateString('ru-RU') }</div>
                 </div>
             </div>
 
