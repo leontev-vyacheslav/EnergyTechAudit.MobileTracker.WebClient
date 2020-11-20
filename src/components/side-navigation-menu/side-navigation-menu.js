@@ -1,17 +1,14 @@
 import React, { useEffect, useRef, useCallback, useMemo } from 'react';
 import TreeView from 'devextreme-react/tree-view';
+import * as events from 'devextreme/events';
 import { navigation } from '../../app-navigation';
 import { useNavigation } from '../../contexts/navigation';
 import { useScreenSize } from '../../utils/media-query';
+import { useSharedArea } from '../../contexts/shared-area';
 import './side-navigation-menu.scss';
 
-import * as events from 'devextreme/events';
-
-import { useAppSettings } from '../../contexts/app-settings';
-
-
 export default function (props) {
-    const { workDatePickerRef } = useAppSettings();
+    const { workDatePickerRef } = useSharedArea();
     const {
         children,
         selectedItemChanged,

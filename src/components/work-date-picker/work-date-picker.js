@@ -1,10 +1,11 @@
 import React from 'react';
 import DateBox from 'devextreme-react/date-box';
 import { useAppSettings } from '../../contexts/app-settings';
+import { useSharedArea } from '../../contexts/shared-area';
 
 const WorkDatePicker = () => {
-    const { appSettingsData, setAppSettingsData, workDatePickerRef } = useAppSettings();
-
+    const { appSettingsData, setAppSettingsData } = useAppSettings();
+    const { workDatePickerRef } = useSharedArea();
     return (
         <DateBox ref={ workDatePickerRef }
                  style={ { width: 0 } }

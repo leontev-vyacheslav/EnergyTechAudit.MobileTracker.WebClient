@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 import TrackMap from './track-map/track-map';
 import { Popup } from 'devextreme-react/ui/popup';
 import { ToolbarItem } from 'devextreme-react/popup';
-import { useAppSettings } from '../../../../contexts/app-settings';
 import { useScreenSize } from '../../../../utils/media-query';
 import Menu from 'devextreme-react/menu';
 
 import './track-map-popup.scss';
+import { useSharedArea } from '../../../../contexts/shared-area';
 
 const TrackMapPopup = ({ mobileDevice, timelineItem, onHiding }) => {
     const { isXSmall, isSmall } = useScreenSize();
     const [refreshToken, setRefreshToken] = useState({});
-    const { workDatePickerRef } = useAppSettings();
+    const { workDatePickerRef } = useSharedArea()
+    ;
 
     return (
         <Popup className={ 'track-map-popup' } title={ 'Карта маршрута' }

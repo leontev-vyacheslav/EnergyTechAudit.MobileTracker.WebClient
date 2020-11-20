@@ -4,10 +4,12 @@ import List from 'devextreme-react/list';
 import { useAuth } from '../../contexts/auth';
 import './user-panel.scss';
 import { useAppSettings } from '../../contexts/app-settings';
+import { useSharedArea } from '../../contexts/shared-area';
 
 export default function ({ menuMode }) {
     const { user, signOut } = useAuth();
-    const { appSettingsData, workDatePickerRef } = useAppSettings();
+    const { appSettingsData } = useAppSettings();
+    const { workDatePickerRef } = useSharedArea();
 
     const menuItems = useMemo(() => ( [
         {

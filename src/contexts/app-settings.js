@@ -1,12 +1,10 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import React, { createContext, useContext, useEffect,  useState } from 'react';
 
 const AppSettingsContext = createContext({});
 
 const useAppSettings = () => useContext(AppSettingsContext);
 
 function AppSettingsProvider (props) {
-
-    const workDatePickerRef = useRef();
 
     const coreInitialAppSettingsData = {
         workDate: new Date().setHours(0, 0, 0, 0),
@@ -41,7 +39,7 @@ function AppSettingsProvider (props) {
         localStorage.setItem('appSettingsData', JSON.stringify(appSettingsData));
     }, [appSettingsData]);
 
-    return <AppSettingsContext.Provider value={ { appSettingsData, setAppSettingsData, workDatePickerRef } } { ...props } />;
+    return <AppSettingsContext.Provider value={ { appSettingsData, setAppSettingsData } } { ...props } />;
 }
 
 export { AppSettingsProvider, useAppSettings };

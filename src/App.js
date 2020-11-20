@@ -12,9 +12,10 @@ import { AuthProvider, useAuth } from './contexts/auth';
 import { useScreenSizeClass } from './utils/media-query';
 import Content from './Content';
 import NotAuthenticatedContent from './NotAuthenticatedContent';
-import { AppSettingsProvider, useAppSettings } from './contexts/app-settings';
+import { AppSettingsProvider } from './contexts/app-settings';
 import { AppDataProvider } from './contexts/app-data';
 import WorkDatePicker from './components/work-date-picker/work-date-picker';
+import { SharedAreaProvider, useSharedArea } from './contexts/shared-area';
 
 function App () {
     const { user } = useAuth();
@@ -27,21 +28,23 @@ function App () {
 
 export default function Main () {
     const screenSizeClass = useScreenSizeClass();
-    const { workDatePickerRef } = useAppSettings();
+    const { workDatePickerRef } = useSharedArea();
     return (
         <Router>
-            <AppSettingsProvider>
-                <AuthProvider>
-                    <AppDataProvider>
-                        <NavigationProvider>
-                            <div className={ `app ${ screenSizeClass }` }>
-                                <App/>
-                                <WorkDatePicker ref={ workDatePickerRef }/>
-                            </div>
-                        </NavigationProvider>
-                    </AppDataProvider>
-                </AuthProvider>
-            </AppSettingsProvider>
+            <SharedAreaProvider>
+                <AppSettingsProvider>
+                    <AuthProvider>
+                        <AppDataProvider>
+                            <NavigationProvider>
+                                <div className={ `app ${ screenSizeClass }` }>
+                                    <App/>
+                                    <WorkDatePicker ref={ workDatePickerRef }/>
+                                </div>
+                            </NavigationProvider>
+                        </AppDataProvider>
+                    </AuthProvider>
+                </AppSettingsProvider>
+            </SharedAreaProvider>
         </Router>
     );
 }
