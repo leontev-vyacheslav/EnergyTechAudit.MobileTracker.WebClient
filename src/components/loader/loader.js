@@ -1,26 +1,23 @@
-import AppConstants from '../../constants/app-constants';
-import LoadPanel from 'devextreme-react/load-panel';
-import React, { Fragment } from 'react';
+import React from 'react';
+import { useSharedArea } from '../../contexts/shared-area';
 import { ReactComponent as ProgressGear } from '../../assets/Core.Common.ProgressGears.svg';
-
+import LoadPanel from 'devextreme-react/load-panel';
 import './loader.scss';
 
 const Loader = () => {
+    const { loaderRef } = useSharedArea();
     return (
-        <Fragment>
-            <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
-            <LoadPanel
-                visible={ true }
-                position={ { of: 'body', offset: { x: 0, y: -50 } } }
-                showPane={ true }
-                shading={ true }
-                width={ 200 } height={ 70 }
-                maxWidth={ 200 } maxHeight={ 70 }
-                shadingColor={ 'rgba(0, 0, 0, 0.15)' }>
-                <ProgressGear/>
-                <span>Загрузка...</span>
-            </LoadPanel>
-        </Fragment>
+        <LoadPanel
+            ref={ loaderRef }
+            position={ { of: 'body', offset: { x: 0, y: -50 } } }
+            showPane={ true }
+            shading={ true }
+            width={ 200 } height={ 70 }
+            maxWidth={ 200 } maxHeight={ 70 }
+            shadingColor={ 'rgba(0, 0, 0, 0.15)' }>
+            <ProgressGear/>
+            <span>Загрузка...</span>
+        </LoadPanel>
     );
 };
 
