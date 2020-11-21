@@ -8,7 +8,6 @@ import TrackMapHeader from './track-map-header';
 import { useScreenSize } from '../../../../../utils/media-query';
 import { useAppData } from '../../../../../contexts/app-data';
 import { useAppSettings } from '../../../../../contexts/app-settings';
-import Loader from '../../../../../components/loader/loader';
 import AppConstants from '../../../../../constants/app-constants';
 import './track-map.scss';
 
@@ -52,11 +51,6 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
 
     const { isXSmall, isSmall } = useScreenSize();
     const { getLocationRecordsByRangeAsync } = useAppData();
-    const [isDelayComplete, setIsDelayComplete] = useState(false);
-
-    setTimeout(() => {
-        setIsDelayComplete(true);
-    }, AppConstants.loadingDelay);
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: AppConstants.trackMap.apiKey,
@@ -352,7 +346,7 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
         }
     }, [locationRecords, showTrack]);
 
-    return ( isLoaded && locationRecords !== null && isDelayComplete ?
+    return ( isLoaded && locationRecords !== null ?
             <>
                 <TrackMapHeader
                     timeline={ currentTimeline }
@@ -397,7 +391,7 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
                 </GoogleMap>
             </>
             :
-            <Loader/>
+            <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
     );
 };
 export default TrackMap;

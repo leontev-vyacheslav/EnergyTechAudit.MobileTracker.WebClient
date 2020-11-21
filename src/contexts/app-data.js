@@ -1,9 +1,11 @@
 import React, { createContext, useCallback, useContext, useMemo } from 'react';
 import routes from '../constants/routes';
 import { useAuth } from './auth';
+import { useSharedArea } from './shared-area';
 
 function AppDataProvider (props) {
     const { signOut, refreshTokenAsync, getUserAuthDataFromStorage } = useAuth();
+    const { loaderRef } = useSharedArea();
 
     const defaultHeaders = useMemo(() => {
         return {
@@ -11,41 +13,62 @@ function AppDataProvider (props) {
         };
     }, []);
 
+    const hideLoader = useCallback(() => {
+        setTimeout(() => {
+            if (loaderRef.current) {
+                loaderRef.current.instance.hide();
+                console.log('The loading indicator has been hidden just now.');
+            }
+        }, 250);
+    }, [loaderRef]);
+
+    const showLoader = useCallback(() => {
+        if (loaderRef.current) {
+            loaderRef.current.instance.show();
+            console.log('The loading indicator was shown.');
+        }
+    }, [loaderRef]);
+
     const fetchWithCredentials = useCallback(
         async (url, options) => {
             let userAuthData = getUserAuthDataFromStorage();
-
             if (userAuthData) {
                 options = options || {};
                 options.headers = options.headers || {};
                 options.headers = { ...options.headers, ...defaultHeaders };
                 options.headers.Authorization = `Bearer ${ userAuthData.token }`;
-
+                showLoader();
                 let response = await fetch(url, options).catch((e) => {
                     console.warn(e);
+                    hideLoader();
                     return Promise.reject(e);
                 });
                 if (response.ok) {
+                    hideLoader();
                     return response;
                 }
                 if (response.status === 401 && response.headers.has('Expires')) {
                     const refreshResponse = await refreshTokenAsync();
                     if (!refreshResponse.ok) {
                         signOut();
+                        hideLoader();
                         return Promise.reject();
                     }
                     const jsonRefreshResponse = await refreshResponse.json();
                     localStorage.setItem('userAuthData', JSON.stringify(jsonRefreshResponse));
+                    hideLoader();
                     return await fetchWithCredentials(url, options);
                 } else {
+                    hideLoader();
                     return response;
                 }
             } else {
                 signOut();
+                hideLoader();
                 return Promise.reject();
             }
         },
-        [signOut, refreshTokenAsync, defaultHeaders, getUserAuthDataFromStorage],
+        [getUserAuthDataFromStorage, defaultHeaders, showLoader, hideLoader, refreshTokenAsync, signOut],
     );
 
     const getMobileDevices = useCallback(async () => {

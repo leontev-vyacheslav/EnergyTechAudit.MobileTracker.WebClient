@@ -4,10 +4,8 @@ import './timeline-info.scss';
 import DataSource from 'devextreme/data/data_source';
 import ArrayStore from 'devextreme/data/array_store';
 import Geocode from '../../../../api/external/geocode';
-
 import { MdAdjust, MdCompareArrows, MdGpsFixed, MdMoreHoriz, MdSettingsEthernet } from 'react-icons/md';
 import { TimelineInfoHeader } from './timeline-info-header';
-import Loader from '../../../../components/loader/loader';
 import AppConstants from '../../../../constants/app-constants';
 import { useScreenSize } from '../../../../utils/media-query';
 import { Scrolling } from 'devextreme-react/data-grid';
@@ -25,13 +23,8 @@ const TimelineInfo = ({ timeline, currentMobileDevice }) => {
     const [departure, setDeparture] = useState(null);
     const [destination, setDestination] = useState(null);
     const [timelineInfo, setTimelineInfo] = useState(null);
-    const [isDelayComplete, setIsDelayComplete] = useState(false);
 
     const { isXSmall, isSmall } = useScreenSize();
-
-    setTimeout(() => {
-        setIsDelayComplete(true);
-    }, AppConstants.loadingDelay);
 
     useEffect(() => {
         const timeLineLocal = { ...timeline };
@@ -68,7 +61,7 @@ const TimelineInfo = ({ timeline, currentMobileDevice }) => {
     }, [timeline.firstLocationRecord, timeline.lastLocationRecord]);
 
 
-    return ( ( departure !== null && destination !== null && isDelayComplete ) ?
+    return ( ( departure !== null && destination !== null ) ?
         (
             <>
                 <TimelineInfoHeader currentMobileDevice={ currentMobileDevice } departure={ departure } destination={ destination }/>
@@ -104,7 +97,7 @@ const TimelineInfo = ({ timeline, currentMobileDevice }) => {
                     } }/>
                 </DataGrid>
             </> )
-        : <Loader/> );
+        : <span style={ { position: 'relative', lineHeight: 30, height: 30 } } className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span> );
 };
 
 export default TimelineInfo;

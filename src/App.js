@@ -14,8 +14,7 @@ import Content from './Content';
 import NotAuthenticatedContent from './NotAuthenticatedContent';
 import { AppSettingsProvider } from './contexts/app-settings';
 import { AppDataProvider } from './contexts/app-data';
-import WorkDatePicker from './components/work-date-picker/work-date-picker';
-import { SharedAreaProvider, useSharedArea } from './contexts/shared-area';
+import { SharedAreaProvider } from './contexts/shared-area';
 
 function App () {
     const { user } = useAuth();
@@ -23,12 +22,13 @@ function App () {
     loadMessages(ruMessages);
     locale(navigator.language);
 
-    return user ? <Content/> : <NotAuthenticatedContent/>;
+    return user ?
+        <Content/>
+        : <NotAuthenticatedContent/>;
 }
 
 export default function Main () {
     const screenSizeClass = useScreenSizeClass();
-    const { workDatePickerRef } = useSharedArea();
     return (
         <Router>
             <SharedAreaProvider>
@@ -38,7 +38,6 @@ export default function Main () {
                             <NavigationProvider>
                                 <div className={ `app ${ screenSizeClass }` }>
                                     <App/>
-                                    <WorkDatePicker ref={ workDatePickerRef }/>
                                 </div>
                             </NavigationProvider>
                         </AppDataProvider>

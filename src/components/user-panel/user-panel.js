@@ -8,21 +8,27 @@ import { useSharedArea } from '../../contexts/shared-area';
 
 export default function ({ menuMode }) {
     const { user, signOut } = useAuth();
-    const { appSettingsData } = useAppSettings();
+    const { appSettingsData, setAppSettingsData } = useAppSettings();
     const { workDatePickerRef } = useSharedArea();
 
     const menuItems = useMemo(() => ( [
+        {
+            text: 'Обновить',
+            icon: 'refresh',
+            onClick: () => {
+                setAppSettingsData({ ...appSettingsData, ...{ workDate: appSettingsData.workDate } });
+            }
+        },
         {
             text: 'Рабочая дата',
             icon: 'event',
             onClick: () => {
                 if (workDatePickerRef.current) {
-                    if (workDatePickerRef.current) {
-                        workDatePickerRef.current.instance.open();
-                    }
+                    workDatePickerRef.current.instance.open();
                 }
             }
-        },{
+        },
+        {
             text: 'Выход',
             icon: 'runner',
             onClick: signOut

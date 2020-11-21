@@ -5,8 +5,9 @@ const useSharedArea = () => useContext(SharedAreaContext);
 
 function SharedAreaProvider (props) {
     const workDatePickerRef = useRef();
+    const loaderRef = useRef();
 
-    return <SharedAreaContext.Provider value={ { workDatePickerRef } } { ...props } />;
+    return <SharedAreaContext.Provider value={ { workDatePickerRef, loaderRef } } { ...props } />;
 }
 
 export { useSharedArea, SharedAreaProvider };

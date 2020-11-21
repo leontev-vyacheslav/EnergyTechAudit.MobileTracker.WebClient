@@ -4,39 +4,31 @@ import { useAppData } from '../../contexts/app-data';
 import Timelines from './timeline/timelines'
 import AppConstants from '../../constants/app-constants'
 import { MdMap } from 'react-icons/md';
-import Loader from '../../components/loader/loader';
-
-import './mobile-devices.scss';
 import { Button } from 'devextreme-react/ui/button';
 import TrackMapPopup from './timeline/track-map-popup/track-map-popup';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useScreenSize } from '../../utils/media-query';
 
+import './mobile-devices.scss';
+
 const MobileDevice = () => {
     const { appSettingsData } = useAppSettings();
     const { getMobileDevices } = useAppData();
     const { isXSmall } = useScreenSize();
-
     const [mobileDevices, setMobileDevices] = useState(null);
-    const [isDelayComplete, setIsDelayComplete] = useState(true);
+
     const [currentTimelineItem, setCurrentTimelineItem] = useState(null);
     const [currentMobileDevice, setCurrentMobileDevice] = useState(null);
-
-    setTimeout(() => {
-        setIsDelayComplete(true);
-    }, AppConstants.loadingDelay);
 
     useEffect(() => {
         ( async () => {
             const mobileDevicesData = await getMobileDevices();
             setMobileDevices(mobileDevicesData);
         } )();
-    }, [getMobileDevices]);
+    }, [getMobileDevices, appSettingsData]);
 
     let content;
-    if (mobileDevices === null || !isDelayComplete) {
-        content = <Loader/>;
-    } else if (mobileDevices.length === 0) {
+    if (mobileDevices === null || mobileDevices.length === 0) {
         content = (
             <>
                 <h2 className={ 'content-block' }>Мобильные устройства</h2>
