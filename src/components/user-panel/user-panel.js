@@ -2,9 +2,11 @@ import React, { useMemo } from 'react';
 import ContextMenu, { Position } from 'devextreme-react/context-menu';
 import List from 'devextreme-react/list';
 import { useAuth } from '../../contexts/auth';
-import './user-panel.scss';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useSharedArea } from '../../contexts/shared-area';
+import { confirm } from 'devextreme/ui/dialog';
+
+import './user-panel.scss';
 
 export default function ({ menuMode }) {
     const { user, signOut } = useAuth();
@@ -31,7 +33,15 @@ export default function ({ menuMode }) {
         {
             text: 'Выход',
             icon: 'runner',
-            onClick: signOut
+            onClick: () =>
+            {
+                const result = confirm('<div style="display: flex; align-items: center"><i class="dx-icon dx-icon-runner" style="font-size: 3em"></i><span>Действительно <b>выйти</b> из приложения!</span></div>', 'Выход');
+                result.then((dialogResult) => {
+                    if(dialogResult) {
+                        signOut();
+                    }
+                });
+            }
         },
     ] ), [signOut, workDatePickerRef]);
 

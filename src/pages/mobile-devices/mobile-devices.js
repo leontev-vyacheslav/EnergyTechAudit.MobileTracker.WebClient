@@ -46,7 +46,7 @@ const MobileDevice = () => {
                 dataSource={ mobileDevices }
                 showBorders={ false }
                 focusedRowEnabled={ true }
-                showColumnHeaders={ false }
+                showColumnHeaders={ true }
                 defaultFocusedRowIndex={ 0 }
                 columnAutoWidth={ true }
                 columnHidingEnabled={ true }
@@ -121,8 +121,7 @@ const MobileDevice = () => {
         : null
     }
     </>
-    )
-        ;
+    );
     }
     return content;
 };

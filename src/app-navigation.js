@@ -32,7 +32,7 @@ export const navigation = [
     },
     {
         text: 'Выход',
-        path: '/logout',
+        command: 'exit',
         icon: 'runner'
     }
 ];

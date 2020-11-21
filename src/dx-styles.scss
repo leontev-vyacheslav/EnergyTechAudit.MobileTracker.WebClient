@@ -71,3 +71,15 @@ html, body {
 * {
   box-sizing: border-box;
 }
+
+
+.dx-popup-title .dx-toolbar-items-container {
+  height: 46px !important;
+}
+
+.dx-overlay-content.dx-popup-normal {
+  min-width: 250px !important;
+}
+.dx-popup-content.dx-dialog-content {
+
+}

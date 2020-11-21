@@ -5,9 +5,13 @@ import { navigation } from '../../app-navigation';
 import { useNavigation } from '../../contexts/navigation';
 import { useScreenSize } from '../../utils/media-query';
 import { useSharedArea } from '../../contexts/shared-area';
+import { confirm } from 'devextreme/ui/dialog';
+
 import './side-navigation-menu.scss';
+import { useAuth } from '../../contexts/auth';
 
 export default function (props) {
+    const { signOut } = useAuth();
     const { workDatePickerRef } = useSharedArea();
     const {
         children,
@@ -87,6 +91,14 @@ export default function (props) {
                             if (workDatePickerRef.current) {
                                 workDatePickerRef.current.instance.open();
                             }
+                        }
+                        if(event.itemData.command === 'exit') {
+                            const result = confirm('<div style="display: flex; align-items: center"><i class="dx-icon dx-icon-runner" style="font-size: 3em"></i><span>Действительно <b>выйти</b> из приложения!</span></div>', 'Выход');
+                            result.then((dialogResult) => {
+                                if(dialogResult) {
+                                    signOut();
+                                }
+                            });
                         }
                         selectedItemChanged(event);
                     } }
