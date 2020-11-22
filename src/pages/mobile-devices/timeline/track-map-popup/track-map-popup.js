@@ -11,8 +11,7 @@ import { useSharedArea } from '../../../../contexts/shared-area';
 const TrackMapPopup = ({ mobileDevice, timelineItem, onHiding }) => {
     const { isXSmall, isSmall } = useScreenSize();
     const [refreshToken, setRefreshToken] = useState({});
-    const { workDatePickerRef } = useSharedArea()
-    ;
+    const { showWorkDatePicker } = useSharedArea();
 
     return (
         <Popup className={ 'track-map-popup' } title={ 'Карта маршрута' }
@@ -48,9 +47,7 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, onHiding }) => {
                                 text: 'Рабочая дата',
                                 icon: 'event',
                                 onClick: () => {
-                                    if (workDatePickerRef.current) {
-                                        workDatePickerRef.current.instance.open();
-                                    }
+                                    showWorkDatePicker();
                                 }
                             }
                         ]

@@ -1,21 +1,23 @@
 import React from 'react';
 import DateBox from 'devextreme-react/date-box';
 import { useAppSettings } from '../../contexts/app-settings';
-import { useSharedArea } from '../../contexts/shared-area';
 
-const WorkDatePicker = () => {
+const WorkDatePicker = ({ innerRef, onClosed }) => {
     const { appSettingsData, setAppSettingsData } = useAppSettings();
-    const { workDatePickerRef } = useSharedArea();
+
     return (
-        <DateBox ref={ workDatePickerRef }
-                 style={ { width: 0 } }
+        <DateBox ref={ innerRef }
+                 style={ { width: 0, height: 0 } }
                  visible={ true }
                  value={ appSettingsData.workDate }
                  pickerType={ 'rollers' }
+                 onClosed={ onClosed }
                  onValueChanged={ e => {
                      setAppSettingsData({ ...appSettingsData, ...{ workDate: e.value } });
                  } }/>
     );
 };
 
-export default WorkDatePicker;
+export default React.forwardRef((props, ref) => <WorkDatePicker
+    innerRef={ ref } { ...props }
+/>);

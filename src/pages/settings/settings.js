@@ -113,7 +113,7 @@ export default () => {
     const { isXSmall } = useScreenSize();
 
     return (
-        <React.Fragment>
+        <>
             <h2 className={ 'content-block' }>Настройки</h2>
             <div className={ 'content-block' }>
                 <div className={ 'dx-card responsive-paddings' }>
@@ -144,6 +144,6 @@ export default () => {
                             } }/>
                 </div>
             </div>
-        </React.Fragment>
+        </>
     );
 };

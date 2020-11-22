@@ -1,4 +1,9 @@
 const AppConstants = {
+    appInfo: {
+        companyName: 'Инженерный Центр Энерготехаудит©',
+        title: 'Геолокация ЭТА24™',
+    },
+
     noDataLongText: 'Нет данных для отображения',
     loadingDelay: 500,
     colors: {
@@ -7,7 +12,8 @@ const AppConstants = {
         companyColorDarkHighlight: '#b1c1cd',
         companyMetroHover: '#0072C6',
         borderGreyColor: '#a3a3a3',
-        themeBaseAccent: '#FF5722'
+        themeBaseAccent: '#FF5722',
+        baseDarkgreyTextColor: '#464646'
     },
 
     fullTimeFormat: { hour: '2-digit', minute: '2-digit', second: '2-digit' },
@@ -21,6 +27,7 @@ const AppConstants = {
         { id: 6, code: 'in_vehicle', description: 'Транспортное средство' },
         { id: 7, code: 'unknown', description: 'Неизвестен' }
     ],
+
     trackMap:{
         apiKey: 'AIzaSyBLE0ThOFO5aYYVrsDP8AIJUAVDCiTPiLQ',
         libraries: ['geometry'],

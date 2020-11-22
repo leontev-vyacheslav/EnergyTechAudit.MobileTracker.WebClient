@@ -5,29 +5,13 @@ import { useSharedArea } from './shared-area';
 
 function AppDataProvider (props) {
     const { signOut, refreshTokenAsync, getUserAuthDataFromStorage } = useAuth();
-    const { loaderRef } = useSharedArea();
+    const { showLoader, hideLoader } = useSharedArea();
 
     const defaultHeaders = useMemo(() => {
         return {
             Accept: 'application/json',
         };
     }, []);
-
-    const hideLoader = useCallback(() => {
-        setTimeout(() => {
-            if (loaderRef.current) {
-                loaderRef.current.instance.hide();
-                console.log('The loading indicator has been hidden just now.');
-            }
-        }, 250);
-    }, [loaderRef]);
-
-    const showLoader = useCallback(() => {
-        if (loaderRef.current) {
-            loaderRef.current.instance.show();
-            console.log('The loading indicator was shown.');
-        }
-    }, [loaderRef]);
 
     const fetchWithCredentials = useCallback(
         async (url, options) => {
