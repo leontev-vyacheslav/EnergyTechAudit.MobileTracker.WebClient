@@ -11,7 +11,9 @@ const TrackMapHeader = ({ timeline, currentTimelineItem, onIntervalChanged }) =>
     const currentIndex = useMemo(() => {
         let ind = timeline.findIndex(t => t.id === currentTimelineItem.id);
         return ind !== -1 ? ind : 0;
-    }, [currentTimelineItem.id, timeline])
+    }, [currentTimelineItem.id, timeline]);
+
+    console.log(currentIndex);
 
     const dataSource = useMemo(() => timeline.map(item => {
         const beginDate = new Date(Date.parse(item.beginDate));

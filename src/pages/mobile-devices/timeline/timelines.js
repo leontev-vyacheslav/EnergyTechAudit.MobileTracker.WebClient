@@ -9,18 +9,25 @@ import TrackMapPopup from './track-map-popup/track-map-popup';
 import AppConstants from '../../../constants/app-constants';
 
 import './timeline.scss';
+import { HttpConstants } from '../../../constants/http-constants';
 
 const Timelines = ({ currentMobileDevice }) => {
     const { appSettingsData } = useAppSettings();
     const { getTimelinesAsync } = useAppData();
     const [currentTimeline, setCurrentTimeline] = useState(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState(null);
+    let content;
+
     useEffect(() => {
         ( async () => {
-            let timeline = await getTimelinesAsync(currentMobileDevice.id, appSettingsData.workDate);
-            timeline = timeline.map(t => {
-                return { ...t, ...{ active: true } };
-            });
+            let timeline = [];
+            const response = await getTimelinesAsync(currentMobileDevice.id, appSettingsData.workDate);
+            if (response && response.status === HttpConstants.StatusCodes.Ok ) {
+                timeline = response.data;
+                timeline = timeline.map(t => {
+                    return { ...t, ...{ active: true } };
+                });
+            }
             setCurrentTimeline(timeline);
         } )();
     }, [getTimelinesAsync, appSettingsData.workDate, currentMobileDevice.id]);
@@ -40,7 +47,6 @@ const Timelines = ({ currentMobileDevice }) => {
             }
         }
     }, []);
-    let content;
 
     if (currentTimeline === null || currentTimeline.length === 0) {
         content = <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
@@ -155,7 +161,6 @@ const Timelines = ({ currentMobileDevice }) => {
                 }
             </>
         );
-
     }
     return content;
 };

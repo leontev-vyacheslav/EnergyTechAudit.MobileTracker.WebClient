@@ -1,94 +1,75 @@
 import React, { useState, useEffect, createContext, useContext, useCallback } from 'react';
 
 import routes from '../constants/routes';
+import { HttpConstants } from '../constants/http-constants';
+import * as axios from 'axios';
 
 function AuthProvider (props) {
     const [user, setUser] = useState();
 
-    const getUserAuthDataFromStorage = useCallback(() => {
-        let userAuthData;
+    const getUserAuthDataFromStorageAsync = useCallback(async () => {
+        let userAuthData = null;
         try {
-            const userAuthDataStr = localStorage.getItem('userAuthData');
+            const userAuthDataStr = localStorage.getItem('@userAuthData');
             if (userAuthDataStr) {
                 userAuthData = JSON.parse(userAuthDataStr);
             }
-        } catch {
-            userAuthData = null;
+        } catch (error) {
+            console.log(
+                `The error has occurred during getting auth data object from the app storage: ${error.message}`,
+            );
         }
         return userAuthData;
-    }, []);
-
-    const refreshTokenAsync = useCallback(async () => {
-        const userAuthData = getUserAuthDataFromStorage();
-        return fetch(`${ routes.host }${ routes.accountRefresh }`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userAuthData),
-        });
-    }, [getUserAuthDataFromStorage]);
-
-    const revokeTokenAsync = useCallback(async () => {
-        const userAuthData = getUserAuthDataFromStorage();
-
-        return await fetch(`${ routes.host }${ routes.accountRevoke }`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authentication: `Bearer ${ userAuthData.token }`,
-            },
-            body: JSON.stringify(userAuthData),
-        });
-    }, [getUserAuthDataFromStorage]);
-
-    useEffect(() => {
-        ( async function () {
-            let userAuthData;
-            try {
-                const userAuthDataStr = localStorage.getItem('userAuthData');
-                if (userAuthDataStr) {
-                    userAuthData = JSON.parse(userAuthDataStr);
-                }
-            } catch {
-                userAuthData = null;
-            }
-            setUser(userAuthData);
-        } )();
     }, []);
 
     const signIn = useCallback(async (userName, password) => {
-        let userAuthData;
+        let userAuthData = null;
         try {
-            const response = await fetch(
-                `${ routes.host }${ routes.accountLogin }?userName=${ userName }&password=${ password }`,
-                {
-                    method: 'GET',
-                },
+            const response = await axios.get(
+                `${routes.host}${routes.accountLogin}?userName=${userName}&password=${password}`,
             );
-            if (response.ok === true) {
-                userAuthData = await response.json();
+            if (response && response.status === HttpConstants.StatusCodes.Ok && response.data) {
+                userAuthData = response.data;
+                if (userAuthData) {
+                    localStorage.setItem('@userAuthData', JSON.stringify(userAuthData));
+                }
             }
-        } catch {
-            userAuthData = null;
+            setUser(userAuthData);
+        } catch (error) {
+            console.log(`The authentication process was failed with error: ${error.message}`);
+            throw error;
         }
-        localStorage.setItem('userAuthData', JSON.stringify(userAuthData));
-        setUser(userAuthData);
-        return userAuthData;
     }, []);
 
-    const signOut = useCallback(() => {
-        ( async () => {
-            await revokeTokenAsync();
-        } )();
-
-        localStorage.removeItem('userAuthData');
+    const signOut = useCallback(async () => {
+        const userAuthData = await getUserAuthDataFromStorageAsync();
+        if (userAuthData) {
+            try {
+                await axios.post(`${routes.host}${routes.accountRevoke}`, userAuthData, {
+                    headers: {
+                        ...HttpConstants.Headers.ContentTypeJson,
+                        Authentication: `Bearer ${userAuthData.token}`,
+                    },
+                });
+            } catch (error) {
+                console.log('It was happened error during a process of an user security token revoke!');
+            }
+        }
+        localStorage.removeItem('@userAuthData');
         setUser(null);
-    }, [revokeTokenAsync]);
+
+    }, [getUserAuthDataFromStorageAsync]);
+
+    useEffect(() => {
+        ( async function () {
+            const userAuthData = await getUserAuthDataFromStorageAsync();
+            setUser(userAuthData);
+        } )();
+    }, [getUserAuthDataFromStorageAsync]);
 
     return (
         <AuthContext.Provider
-            value={ { user, signIn, signOut, getUserAuthDataFromStorage, refreshTokenAsync } }
+            value={ { user, signIn, signOut, getUserAuthDataFromStorageAsync } }
             { ...props }
         />
     );

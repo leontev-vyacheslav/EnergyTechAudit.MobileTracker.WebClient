@@ -1,154 +1,70 @@
-import React, { createContext, useCallback, useContext, useMemo } from 'react';
+import React, { createContext, useCallback, useContext } from 'react';
 import routes from '../constants/routes';
 import { useAuth } from './auth';
 import { useSharedArea } from './shared-area';
+import * as axios from 'axios';
+import { HttpConstants } from '../constants/http-constants';
 
 function AppDataProvider (props) {
-    const { signOut, refreshTokenAsync, getUserAuthDataFromStorage } = useAuth();
+    const { getUserAuthDataFromStorageAsync } = useAuth();
     const { showLoader, hideLoader } = useSharedArea();
 
-    const defaultHeaders = useMemo(() => {
-        return {
-            Accept: 'application/json',
-        };
-    }, []);
-
-    const fetchWithCredentials = useCallback(
-        async (url, options) => {
-            let userAuthData = getUserAuthDataFromStorage();
+    const axiosWithCredentials = useCallback(
+        async (config) => {
+            let response = null;
+            const userAuthData = await getUserAuthDataFromStorageAsync();
             if (userAuthData) {
-                options = options || {};
-                options.headers = options.headers || {};
-                options.headers = { ...options.headers, ...defaultHeaders };
-                options.headers.Authorization = `Bearer ${ userAuthData.token }`;
-                showLoader();
-                let response = await fetch(url, options).catch((e) => {
-                    console.warn(e);
+                config = config || {};
+                config.headers = config.headers || {};
+                config.headers = { ...config.headers, ...HttpConstants.Headers.AcceptJson };
+                config.headers.Authorization = `Bearer ${ userAuthData.token }`;
+                try {
+                    showLoader();
+                    response = await axios.request(config);
+                } catch (error) {
+                    response = error.response;
+                    console.log(error);
+                } finally {
                     hideLoader();
-                    return Promise.reject(e);
-                });
-                if (response.ok) {
-                    hideLoader();
-                    return response;
                 }
-                if (response.status === 401 && response.headers.has('Expires')) {
-                    const refreshResponse = await refreshTokenAsync();
-                    if (!refreshResponse.ok) {
-                        signOut();
-                        hideLoader();
-                        return Promise.reject();
-                    }
-                    const jsonRefreshResponse = await refreshResponse.json();
-                    localStorage.setItem('userAuthData', JSON.stringify(jsonRefreshResponse));
-                    hideLoader();
-                    return await fetchWithCredentials(url, options);
-                } else {
-                    hideLoader();
-                    return response;
-                }
-            } else {
-                signOut();
-                hideLoader();
-                return Promise.reject();
             }
+            return response;
         },
-        [getUserAuthDataFromStorage, defaultHeaders, showLoader, hideLoader, refreshTokenAsync, signOut],
+        [getUserAuthDataFromStorageAsync, hideLoader, showLoader],
     );
 
-    const getMobileDevices = useCallback(async () => {
-        const response = await fetchWithCredentials(`${ routes.host }${ routes.mobileDevices }`, {
+    const getMobileDevicesAsync = useCallback(async () => {
+        return await axiosWithCredentials({
+            url: `${ routes.host }${ routes.mobileDevices }`,
             method: 'GET',
-        }).catch((error) => {
-            return Promise.reject(error);
-        });
-
-        if (response) {
-            return response.json().catch((error) => {
-                return Promise.reject(error);
-            });
-        } else {
-            return Promise.reject(new Error('Internal error'));
-        }
-    }, [fetchWithCredentials]);
+        })
+    }, [axiosWithCredentials]);
 
     const getTimelinesAsync = useCallback(
         async (mobileDeviceId, workDate) => {
-            const response = await fetchWithCredentials(
-                `${ routes.host }${ routes.timeline }?mobileDeviceId=${ mobileDeviceId }&workDate=${ new Date(
-                    workDate,
-                ).toISOString() }`,
-                {
+            return await axiosWithCredentials({
+                    url: `${ routes.host }${ routes.timeline }?mobileDeviceId=${ mobileDeviceId }&workDate=${ new Date(workDate,).toISOString() }`,
                     method: 'GET',
                 },
-            ).catch((error) => {
-                return Promise.reject(error);
-            });
-
-            if (response) {
-                return response.json().catch((error) => {
-                    return Promise.reject(error);
-                });
-            } else {
-                return Promise.reject(new Error('Internal error'));
-            }
+            );
         },
-        [fetchWithCredentials],
-    );
-
-    const getLocationRecordsAsync = useCallback(
-        async (mobileDeviceId, workDate) => {
-            const response = await fetchWithCredentials(
-                `${ routes.host }${ routes.locationRecord }/${ mobileDeviceId }?workDate=${ new Date(workDate).toISOString() }`,
-                {
-                    method: 'GET',
-                },
-            ).catch((error) => {
-                return Promise.reject(error);
-            });
-
-            if (response) {
-                return response.json().catch((error) => {
-                    return Promise.reject(error);
-                });
-            } else {
-                return Promise.reject(new Error('Internal error'));
-            }
-        },
-        [fetchWithCredentials],
+        [axiosWithCredentials],
     );
 
     const getLocationRecordsByRangeAsync = useCallback(
         async (mobileDeviceId, beginDate, endDate) => {
-            const response = await fetchWithCredentials(
-                `${ routes.host }${ routes.locationRecord }/byRange/${ mobileDeviceId }?beginDate=${ new Date(
-                    beginDate,
-                ).toISOString() }&endDate=${ new Date(endDate).toISOString() }`,
-                {
+            return await axiosWithCredentials({
+                    url: `${ routes.host }${ routes.locationRecord }/byRange/${ mobileDeviceId }?beginDate=${ new Date(beginDate,).toISOString() }&endDate=${ new Date(endDate).toISOString() }`,
                     method: 'GET',
                 },
-            ).catch((error) => {
-                return Promise.reject(error);
-            });
-
-            if (response) {
-                return response.json().catch((error) => {
-                    return Promise.reject(error);
-                });
-            } else {
-                return Promise.reject(new Error('Internal error'));
-            }
+            );
         },
-        [fetchWithCredentials],
+        [axiosWithCredentials],
     );
 
     return (
         <AppDataContext.Provider
-            value={ {
-                getMobileDevices,
-                getTimelinesAsync,
-                getLocationRecordsAsync,
-                getLocationRecordsByRangeAsync,
-            } }
+            value={ { getMobileDevicesAsync, getTimelinesAsync, getLocationRecordsByRangeAsync, } }
             { ...props }
         />
     );

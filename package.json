@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^12.2.2",
     "devextreme": "^20.2.3",
     "devextreme-react": "^20.2.3",
+    "axios": "^0.21.0",
     "history": "^5.0.0",
     "node-sass": "^4.11.0",
     "react": "^17.0.1",
