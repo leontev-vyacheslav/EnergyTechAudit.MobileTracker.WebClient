@@ -4,6 +4,7 @@ import { useAuth } from './auth';
 import { useSharedArea } from './shared-area';
 import * as axios from 'axios';
 import { HttpConstants } from '../constants/http-constants';
+import { DateEx } from '../utils/DateEx';
 
 function AppDataProvider (props) {
     const { getUserAuthDataFromStorageAsync } = useAuth();
@@ -43,7 +44,7 @@ function AppDataProvider (props) {
     const getTimelinesAsync = useCallback(
         async (mobileDeviceId, workDate) => {
             return await axiosWithCredentials({
-                    url: `${ routes.host }${ routes.timeline }?mobileDeviceId=${ mobileDeviceId }&workDate=${ new Date(workDate,).toISOString() }`,
+                    url: `${ routes.host }${ routes.timeline }?mobileDeviceId=${ mobileDeviceId }&workDate=${ new DateEx(workDate).toLocalISOString() }`,
                     method: 'GET',
                 },
             );
@@ -54,7 +55,7 @@ function AppDataProvider (props) {
     const getLocationRecordsByRangeAsync = useCallback(
         async (mobileDeviceId, beginDate, endDate) => {
             return await axiosWithCredentials({
-                    url: `${ routes.host }${ routes.locationRecord }/byRange/${ mobileDeviceId }?beginDate=${ new Date(beginDate,).toISOString() }&endDate=${ new Date(endDate).toISOString() }`,
+                    url: `${ routes.host }${ routes.locationRecord }/byRange/${ mobileDeviceId }?beginDate=${ new DateEx(beginDate).toLocalISOString() }&endDate=${ new DateEx(endDate).toLocalISOString() }`,
                     method: 'GET',
                 },
             );

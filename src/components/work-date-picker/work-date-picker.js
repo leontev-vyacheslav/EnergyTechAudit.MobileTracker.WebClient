@@ -13,7 +13,7 @@ const WorkDatePicker = ({ innerRef, onClosed }) => {
                  pickerType={ 'rollers' }
                  onClosed={ onClosed }
                  onValueChanged={ e => {
-                     setAppSettingsData({ ...appSettingsData, ...{ workDate: e.value } });
+                     setAppSettingsData({ ...appSettingsData, ...{ workDate: new Date (e.value) } });
                  } }/>
     );
 };
