@@ -99,7 +99,7 @@ const MobileDevice = () => {
                             return (
                                 <div className={ 'mobile-devices-group' }>
                                     <div className={ 'dx-icon dx-icon-user' }/>
-                                    <div>Пользователь: { groupDataItem.userName }</div>
+                                    <div>Пользователь: { groupDataItem.email }</div>
                                 </div>
                             );
                         } }

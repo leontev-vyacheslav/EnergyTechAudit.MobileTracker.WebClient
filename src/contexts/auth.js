@@ -22,11 +22,11 @@ function AuthProvider (props) {
         return userAuthData;
     }, []);
 
-    const signIn = useCallback(async (userName, password) => {
+    const signIn = useCallback(async (email, password) => {
         let userAuthData = null;
         try {
             const response = await axios.get(
-                `${routes.host}${routes.accountLogin}?userName=${userName}&password=${password}`,
+                `${routes.host}${routes.accountLogin}?email=${email}&password=${password}`,
             );
             if (response && response.status === HttpConstants.StatusCodes.Ok && response.data) {
                 userAuthData = response.data;

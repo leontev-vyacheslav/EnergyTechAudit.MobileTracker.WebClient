@@ -5,7 +5,7 @@ export function TimelineInfoHeader (props) {
     return <>
         <div className={ 'timeline-info-user' }>
             <MdPerson size={ 24 }/>
-            <div> Пользователь: { props.currentMobileDevice.userName } / { props.currentMobileDevice.model }</div>
+            <div> Пользователь: { props.currentMobileDevice.email } / { props.currentMobileDevice.model }</div>
         </div>
         <div className={ 'timeline-info-points' }>
             <div className={ 'departure' }>

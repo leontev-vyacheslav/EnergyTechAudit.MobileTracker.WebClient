@@ -12,7 +12,7 @@ const TrackMapInfoBox = ({ mobileDevice, timelineItem }) => {
         <div className={ 'track-map-info-box' }>
             <div className={ 'track-map-info-box-item' }>
                 <MdPerson size={ 18 }/>
-                <div>{ mobileDevice.userName }</div>
+                <div>{ mobileDevice.email }</div>
             </div>
             <div className={ 'track-map-info-box-item' }>
                 <MdSmartphone size={ 18 }/>

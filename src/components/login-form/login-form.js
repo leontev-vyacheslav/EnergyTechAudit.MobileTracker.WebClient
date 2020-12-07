@@ -5,6 +5,7 @@ import Form, {
     ButtonItem,
     ButtonOptions,
     RequiredRule
+
 } from 'devextreme-react/form';
 import LoadIndicator from 'devextreme-react/load-indicator';
 import notify from 'devextreme/ui/notify';
@@ -19,11 +20,12 @@ export default function () {
 
     const onSubmit = useCallback(async (e) => {
         e.preventDefault();
-        const { userName, password } = formData.current;
+        const { email, password } = formData.current;
         setLoading(true);
-        const userAuthData = await signIn(userName, password);
-
-        if (!userAuthData) {
+        try {
+            await signIn(email, password);
+            notify(`Пользователь ${email} успешно выполнил вход.`, 'success', 5000);
+        } catch (error) {
             notify('Пользователь не найден или неверный пароль.', 'error', 5000);
         }
         setLoading(false);
@@ -32,8 +34,8 @@ export default function () {
     return (
         <form className={ 'login-form' } onSubmit={ onSubmit }>
             <Form formData={ formData.current } disabled={ loading }>
-                <Item dataField={ 'userName' } editorType={ 'dxTextBox' } editorOptions={ userNameEditorOptions }>
-                    <RequiredRule message="Требуется имя пользователя"/>
+                <Item dataField={ 'email' } editorType={ 'dxTextBox' } editorOptions={ emailEditorOptions }>
+                    <RequiredRule message="Требуется  электронная почта"/>
                     <Label visible={ false }/>
                 </Item>
                 <Item dataField={ 'password' } editorType={ 'dxTextBox' } editorOptions={ passwordEditorOptions }>
@@ -59,6 +61,6 @@ export default function () {
     );
 }
 
-const userNameEditorOptions = { stylingMode: 'filled', placeholder: 'Имя пользователя', mode: 'text' };
+const emailEditorOptions = { stylingMode: 'filled', placeholder: 'Имя пользователя', mode: 'text' };
 const passwordEditorOptions = { stylingMode: 'filled', placeholder: 'Пароль', mode: 'password' };
 const rememberMeEditorOptions = { text: 'Запомнить меня', elementAttr: { class: 'form-text' } };

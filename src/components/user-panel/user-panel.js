@@ -52,9 +52,9 @@ export default function ({ menuMode }) {
                 <div className={ 'image-container' }>
                     <div className={ 'dx-icon dx-icon-user' }/>
                 </div>
-                <div style={ { display: 'flex', flexDirection: 'column', marginLeft: 10, lineHeight: 'initial', alignItems: 'center' } }>
-                    <div className={ 'user-name' }>{ user.userName }</div>
-                    <div>{ new Date(appSettingsData.workDate).toLocaleDateString('ru-RU') }</div>
+                <div style={ { fontSize: 12, display: 'flex', flexDirection: 'column', marginLeft: 10, lineHeight: 'initial', alignItems: 'flex-start' } }>
+                    <div className={ 'user-name' }>{ user.email }</div>
+                    <div> { new Date(appSettingsData.workDate).toLocaleDateString('ru-RU') }</div>
                 </div>
             </div>
 

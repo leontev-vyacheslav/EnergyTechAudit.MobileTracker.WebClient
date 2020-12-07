@@ -4,7 +4,7 @@ import './themes/generated/theme.additional.css';
 import './dx-styles.scss';
 
 import React from 'react';
-import { HashRouter as Router } from 'react-router-dom';
+import  { HashRouter as Router } from 'react-router-dom';
 import { NavigationProvider } from './contexts/navigation';
 import { AuthProvider, useAuth } from './contexts/auth';
 import { useScreenSizeClass } from './utils/media-query';
