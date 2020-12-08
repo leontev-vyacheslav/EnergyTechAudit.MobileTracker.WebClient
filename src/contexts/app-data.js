@@ -5,6 +5,7 @@ import { useSharedArea } from './shared-area';
 import * as axios from 'axios';
 import { HttpConstants } from '../constants/http-constants';
 import { DateEx } from '../utils/DateEx';
+import Moment from 'moment';
 
 function AppDataProvider (props) {
     const { getUserAuthDataFromStorageAsync } = useAuth();
@@ -43,11 +44,25 @@ function AppDataProvider (props) {
 
     const getTimelinesAsync = useCallback(
         async (mobileDeviceId, workDate) => {
-            return await axiosWithCredentials({
+            const response = await axiosWithCredentials({
                     url: `${ routes.host }${ routes.timeline }?mobileDeviceId=${ mobileDeviceId }&workDate=${ new DateEx(workDate).toLocalISOString() }`,
                     method: 'GET',
                 },
             );
+            if (response && response.status === HttpConstants.StatusCodes.Ok) {
+                let timeline = response.data;
+                const utcOffset = Moment().utcOffset();
+                timeline = timeline.map(t => {
+                    return {
+                        ...t, ...{
+                            beginDate: Moment(t.beginDate).add(-utcOffset, 'm').toDate(),
+                            endDate: Moment(t.endDate).add(-utcOffset, 'm').toDate()
+                        }
+                    }
+                });
+                response.data = timeline;
+            }
+            return response;
         },
         [axiosWithCredentials],
     );
