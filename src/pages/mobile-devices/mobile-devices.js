@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import DataGrid, { Column, Pager, Paging, Grouping, Scrolling, MasterDetail } from 'devextreme-react/data-grid';
+import DataGrid, { Column, Grouping, MasterDetail, Pager, Paging, Scrolling } from 'devextreme-react/data-grid';
 import { useAppData } from '../../contexts/app-data';
 import Timelines from './timeline/timelines'
 import AppConstants from '../../constants/app-constants'
@@ -13,7 +13,7 @@ import './mobile-devices.scss';
 import { HttpConstants } from '../../constants/http-constants';
 
 const MobileDevice = () => {
-    const { appSettingsData } = useAppSettings();
+    const { appSettingsData, getDailyTimelineItem } = useAppSettings();
     const { getMobileDevicesAsync } = useAppData();
     const { isXSmall } = useScreenSize();
     const [mobileDevices, setMobileDevices] = useState(null);
@@ -69,13 +69,8 @@ const MobileDevice = () => {
                         return (
                             <>
                                 <Button className={ 'time-line-command-button' } style={ {} } onClick={ () => {
-                                    const mobileDevice = rowData;
-                                    const beginDate = new Date(appSettingsData.workDate);
-                                    const endDate = new Date(appSettingsData.workDate);
-                                    endDate.setHours(24);
-
-                                    setCurrentMobileDevice(mobileDevice);
-                                    setCurrentTimelineItem({ id: 0, beginDate: beginDate.toISOString(), endDate: endDate.toISOString() });
+                                    setCurrentMobileDevice(rowData);
+                                    setCurrentTimelineItem(getDailyTimelineItem());
                                 } }>
                                     <MdMap { ...buttonIconProps } />
                                 </Button>
@@ -132,5 +127,3 @@ const MobileDevice = () => {
 };
 
 export default MobileDevice;
-
-

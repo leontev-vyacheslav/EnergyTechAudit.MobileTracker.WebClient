@@ -6,8 +6,10 @@ import * as axios from 'axios';
 import { HttpConstants } from '../constants/http-constants';
 import { DateEx } from '../utils/DateEx';
 import Moment from 'moment';
+import { useAppSettings } from './app-settings';
 
 function AppDataProvider (props) {
+    const { appSettingsData } = useAppSettings();
     const { getUserAuthDataFromStorageAsync } = useAuth();
     const { showLoader, hideLoader } = useSharedArea();
 
@@ -44,6 +46,7 @@ function AppDataProvider (props) {
 
     const getTimelinesAsync = useCallback(
         async (mobileDeviceId, workDate) => {
+
             const response = await axiosWithCredentials({
                     url: `${ routes.host }${ routes.timeline }?mobileDeviceId=${ mobileDeviceId }&workDate=${ new DateEx(workDate).toLocalISOString() }`,
                     method: 'GET',
@@ -60,22 +63,32 @@ function AppDataProvider (props) {
                         }
                     }
                 });
-                response.data = timeline;
+                return  timeline;
             }
-            return response;
+            return null;
         },
         [axiosWithCredentials],
     );
 
     const getLocationRecordsByRangeAsync = useCallback(
         async (mobileDeviceId, beginDate, endDate) => {
-            return await axiosWithCredentials({
+
+            const response = await axiosWithCredentials({
                     url: `${ routes.host }${ routes.locationRecord }/byRange/${ mobileDeviceId }?beginDate=${ new DateEx(beginDate).toLocalISOString() }&endDate=${ new DateEx(endDate).toLocalISOString() }`,
                     method: 'GET',
                 },
             );
+
+            if (response && response.status === HttpConstants.StatusCodes.Ok) {
+                let locationRecordsData = response.data;
+                if (locationRecordsData) {
+                    locationRecordsData = locationRecordsData.filter(l => l.accuracy <= appSettingsData.minimalAccuracy);
+                    return locationRecordsData;
+                }
+            }
+            return null;
         },
-        [axiosWithCredentials],
+        [appSettingsData.minimalAccuracy, axiosWithCredentials],
     );
 
     return (

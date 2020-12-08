@@ -14,8 +14,8 @@ const TrackMapHeader = ({ mobileDevice, timeline, currentTimelineItem, onInterva
     }, [currentTimelineItem.id, timeline]);
 
     const dataSource = useMemo(() => timeline.map(item => {
-        const beginDate = new Date(Date.parse(item.beginDate));
-        const endDate = new Date(Date.parse(item.endDate));
+        const beginDate = new Date(item.beginDate);
+        const endDate = new Date(item.endDate);
         endDate.setTime(endDate.getTime() - 1);
         return {
             id: item.id,
@@ -42,8 +42,8 @@ const TrackMapHeader = ({ mobileDevice, timeline, currentTimelineItem, onInterva
                     displayExpr={ 'text' }
                     onValueChanged={ onIntervalChanged }
                     itemRender={ (timelineItem) => {
-                        const beginDate = new Date(Date.parse(timelineItem.beginDate));
-                        const endDate = new Date(Date.parse(timelineItem.endDate));
+                        const beginDate = new Date(timelineItem.beginDate);
+                        const endDate = new Date(timelineItem.endDate);
                         endDate.setTime(endDate.getTime() - 1000);
 
                         return (

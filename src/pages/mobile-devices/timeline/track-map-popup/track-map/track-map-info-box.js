@@ -3,9 +3,9 @@ import { MdDateRange, MdSmartphone, MdTimer, MdTimerOff } from 'react-icons/all'
 import './track-map-info-box.scss';
 
 const TrackMapInfoBox = ({ mobileDevice, timelineItem }) => {
-    const timeFormat = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
-    const beginDate = new Date(Date.parse(timelineItem.beginDate));
-    const endDate = new Date(Date.parse(timelineItem.endDate));
+
+    const beginDate = new Date(timelineItem.beginDate);
+    const endDate = new Date(timelineItem.endDate);
     endDate.setTime(endDate.getTime() -  1000);
 
     return (
@@ -21,11 +21,11 @@ const TrackMapInfoBox = ({ mobileDevice, timelineItem }) => {
 
             <div className={ 'track-map-info-box-item' }>
                 <MdTimer size={ 18 }/>
-                <div>c { beginDate.toLocaleTimeString('ru-RU', timeFormat) }</div>
+                <div>c { beginDate.toLocaleTimeString('ru-RU') }</div>
             </div>
             <div className={ 'track-map-info-box-item' }>
                 <MdTimerOff size={ 18 }/>
-                <div>до { endDate.toLocaleTimeString('ru-RU', timeFormat) }</div>
+                <div>до { endDate.toLocaleTimeString('ru-RU') }</div>
             </div>
         </div>
     );

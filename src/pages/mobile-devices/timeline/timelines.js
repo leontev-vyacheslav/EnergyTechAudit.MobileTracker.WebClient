@@ -9,7 +9,6 @@ import TrackMapPopup from './track-map-popup/track-map-popup';
 import AppConstants from '../../../constants/app-constants';
 
 import './timeline.scss';
-import { HttpConstants } from '../../../constants/http-constants';
 
 const Timelines = ({ currentMobileDevice }) => {
     const { appSettingsData } = useAppSettings();
@@ -20,15 +19,10 @@ const Timelines = ({ currentMobileDevice }) => {
 
     useEffect(() => {
         ( async () => {
-                let timeline = [];
-                const response = await getTimelinesAsync(currentMobileDevice.id, appSettingsData.workDate);
-                console.log(response);
-                if (response && response.status === HttpConstants.StatusCodes.Ok) {
-                    timeline = response.data;
-                    timeline = timeline.map(t => {
-                        return { ...t, ...{ active: true } };
-                    });
-                }
+                let timeline = await getTimelinesAsync(currentMobileDevice.id, appSettingsData.workDate) ?? [];
+                timeline = timeline.map(t => {
+                    return { ...t, ...{ active: true } }
+                });
                 setCurrentTimeline(timeline);
             }
         )();

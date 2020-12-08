@@ -10,10 +10,9 @@ import { useAppData } from '../../../../../contexts/app-data';
 import { useAppSettings } from '../../../../../contexts/app-settings';
 import AppConstants from '../../../../../constants/app-constants';
 import './track-map.scss';
-import { HttpConstants } from '../../../../../constants/http-constants';
 
 const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
-    const { appSettingsData } = useAppSettings();
+    const { appSettingsData, getDailyTimelineItem } = useAppSettings();
     const { getTimelinesAsync } = useAppData();
     const [currentTimeline, setCurrentTimeline] = useState([]);
     const [locationRecords, setLocationRecords] = useState(null);
@@ -305,46 +304,27 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
     }, [initOverlays, fitMapBoundsByLocations, locationRecords, buildMarkersOnPolylinePath, buildOutsideMarkers, appSettingsData.isShownBreakInterval, buildBreakIntervals]);
 
     useEffect(() => {
-        const beginDate = new Date(appSettingsData.workDate);
-        const endDate = new Date(appSettingsData.workDate);
-        endDate.setHours(24);
-        const timelineItem = { id: 0, beginDate: beginDate.toISOString(), endDate: endDate.toISOString() };
-
-        setCurrentTimelineItem(timelineItem);
-    }, [appSettingsData.workDate]);
+        setCurrentTimelineItem(getDailyTimelineItem());
+    }, [getDailyTimelineItem]);
 
     useEffect(() => {
-        const beginDate = new Date(appSettingsData.workDate);
-        const endDate = new Date(appSettingsData.workDate);
-        endDate.setHours(24);
-        const timelineItem = { id: 0, beginDate: beginDate.toISOString(), endDate: endDate.toISOString() };
-
+        const timelineItem = getDailyTimelineItem();
         ( async () => {
-            let timeline = [];
-            const response = await getTimelinesAsync(mobileDevice.id, appSettingsData.workDate);
-            if (response && response.status === HttpConstants.StatusCodes.Ok) {
-                timeline = response.data;
-            }
+            let timeline = await getTimelinesAsync(mobileDevice.id, appSettingsData.workDate) ?? [];
             setCurrentTimeline([timelineItem, ...timeline]);
         } )();
 
         setCurrentTimeline(previousCurrentTimeline => [timelineItem, ...previousCurrentTimeline]);
-    }, [getTimelinesAsync, appSettingsData.workDate, mobileDevice.id]);
+    }, [getTimelinesAsync, appSettingsData.workDate, mobileDevice.id, getDailyTimelineItem]);
 
     useEffect(() => {
         ( async () => {
-            let locationRecordsData = null;
-            const response = await getLocationRecordsByRangeAsync(
+            let locationRecordsData = await getLocationRecordsByRangeAsync(
                 mobileDevice.id,
-                Date.parse(currentTimelineItem.beginDate),
-                Date.parse(currentTimelineItem.endDate)
-            );
-            if (response && response.status === HttpConstants.StatusCodes.Ok) {
-                locationRecordsData = response.data;
-                if (locationRecordsData) {
-                    locationRecordsData = locationRecordsData.filter(l => l.accuracy <= appSettingsData.minimalAccuracy);
-                }
-            }
+                currentTimelineItem.beginDate,
+                currentTimelineItem.endDate
+            ) ?? [];
+
             setLocationRecords(locationRecordsData);
         } )()
     }, [getLocationRecordsByRangeAsync, mobileDevice.id, currentTimelineItem, appSettingsData.minimalAccuracy, refreshToken]);
