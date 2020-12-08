@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
 import SelectBox from 'devextreme-react/ui/select-box';
-import { MdTimer, MdTimerOff } from 'react-icons/all';
+import { MdPerson, MdTimer, MdTimerOff } from 'react-icons/all';
 import './track-map-header.scss';
 import { useScreenSize } from '../../../../../utils/media-query';
 
-const TrackMapHeader = ({ timeline, currentTimelineItem, onIntervalChanged }) => {
+const TrackMapHeader = ({ mobileDevice, timeline, currentTimelineItem, onIntervalChanged }) => {
 
     const { isXSmall } = useScreenSize();
 
@@ -12,8 +12,6 @@ const TrackMapHeader = ({ timeline, currentTimelineItem, onIntervalChanged }) =>
         let ind = timeline.findIndex(t => t.id === currentTimelineItem.id);
         return ind !== -1 ? ind : 0;
     }, [currentTimelineItem.id, timeline]);
-
-    console.log(currentIndex);
 
     const dataSource = useMemo(() => timeline.map(item => {
         const beginDate = new Date(Date.parse(item.beginDate));
@@ -30,12 +28,16 @@ const TrackMapHeader = ({ timeline, currentTimelineItem, onIntervalChanged }) =>
     return (
 
         <div className={ 'track-map-header' }>
+            <div className={ 'track-map-header-email' } style={ { display: !isXSmall ? 'flex' : 'none', alignItems: 'center' } }>
+                <MdPerson size={ 26 }/>
+                <div>{ mobileDevice.email }</div>
+            </div>
             <div className={ 'track-map-select-box-container' } style={ { width: !isXSmall ? '300px' : '100%' } }>
                 <SelectBox
                     dataSource={ dataSource }
                     defaultValue={ timeline[currentIndex].id }
                     selectedItem={ timeline[currentIndex] }
-                    className={ 'track-map-select-box' }
+                    className={ 'track-map-header-select-box' }
                     valueExpr={ 'id' }
                     displayExpr={ 'text' }
                     onValueChanged={ onIntervalChanged }

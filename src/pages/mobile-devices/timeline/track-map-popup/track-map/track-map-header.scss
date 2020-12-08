@@ -2,9 +2,16 @@
   .track-map-header {
     display: flex;
     height: 40px;
-    justify-content: flex-end;
+    align-items: center;
+
+    .track-map-header-email {
+      flex: 3;
+      margin-left: 5px;
+    }
   }
-  .track-map-select-box {
+
+  .track-map-header-select-box {
+    flex: 1;
     margin-left: 5px;
   }
 }

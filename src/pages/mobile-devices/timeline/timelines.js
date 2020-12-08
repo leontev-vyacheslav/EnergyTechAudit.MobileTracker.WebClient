@@ -7,6 +7,7 @@ import { useAppData } from '../../../contexts/app-data';
 import TimelineInfo from './timeline-info/timeline-info';
 import TrackMapPopup from './track-map-popup/track-map-popup';
 import AppConstants from '../../../constants/app-constants';
+import Moment from 'moment';
 
 import './timeline.scss';
 import { HttpConstants } from '../../../constants/http-constants';
@@ -23,9 +24,17 @@ const Timelines = ({ currentMobileDevice }) => {
             let timeline = [];
             const response = await getTimelinesAsync(currentMobileDevice.id, appSettingsData.workDate);
             if (response && response.status === HttpConstants.StatusCodes.Ok ) {
+                console.log(response.data);
                 timeline = response.data;
                 timeline = timeline.map(t => {
-                    return { ...t, ...{ active: true } };
+                    const utcOffset = -Moment().utcOffset();
+                    return {
+                        ...t, ...{
+                            beginDate: Moment(t.beginDate).add(utcOffset, 'm'),
+                            endDate: Moment(t.endDate).add(utcOffset, 'm'),
+                            active: true
+                        }
+                    };
                 });
             }
             setCurrentTimeline(timeline);

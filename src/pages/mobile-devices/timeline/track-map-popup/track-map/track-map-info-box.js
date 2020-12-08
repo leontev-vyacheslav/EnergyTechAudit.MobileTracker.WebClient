@@ -1,5 +1,5 @@
 import React from 'react';
-import { MdDateRange, MdPerson, MdSmartphone, MdTimer, MdTimerOff } from 'react-icons/all';
+import { MdDateRange, MdSmartphone, MdTimer, MdTimerOff } from 'react-icons/all';
 import './track-map-info-box.scss';
 
 const TrackMapInfoBox = ({ mobileDevice, timelineItem }) => {
@@ -10,10 +10,6 @@ const TrackMapInfoBox = ({ mobileDevice, timelineItem }) => {
 
     return (
         <div className={ 'track-map-info-box' }>
-            <div className={ 'track-map-info-box-item' }>
-                <MdPerson size={ 18 }/>
-                <div>{ mobileDevice.email }</div>
-            </div>
             <div className={ 'track-map-info-box-item' }>
                 <MdSmartphone size={ 18 }/>
                 <div>{ mobileDevice.model }</div>

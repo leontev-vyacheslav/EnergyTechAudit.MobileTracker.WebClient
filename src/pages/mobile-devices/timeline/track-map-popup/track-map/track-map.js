@@ -358,6 +358,7 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
     return ( isLoaded && locationRecords !== null ?
             <>
                 <TrackMapHeader
+                    mobileDevice={ mobileDevice }
                     timeline={ currentTimeline }
                     currentTimelineItem={ currentTimelineItem }
                     onIntervalChanged={ (e) => {
