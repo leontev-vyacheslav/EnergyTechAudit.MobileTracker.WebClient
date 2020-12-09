@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import TrackMap from './track-map/track-map';
 import { Popup } from 'devextreme-react/ui/popup';
 import { ToolbarItem } from 'devextreme-react/popup';
-import { useScreenSize } from '../../../../utils/media-query';
 import Menu from 'devextreme-react/menu';
+import { useScreenSize } from '../../../../utils/media-query';
+import { useSharedArea } from '../../../../contexts/shared-area';
 
 import './track-map-popup.scss';
-import { useSharedArea } from '../../../../contexts/shared-area';
 
 const TrackMapPopup = ({ mobileDevice, timelineItem, onHiding }) => {
     const { isXSmall, isSmall } = useScreenSize();

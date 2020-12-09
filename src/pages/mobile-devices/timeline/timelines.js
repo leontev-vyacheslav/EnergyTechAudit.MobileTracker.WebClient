@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import DataGrid, { Column, MasterDetail, Scrolling, Selection, Summary, TotalItem } from 'devextreme-react/ui/data-grid';
 import { Button } from 'devextreme-react/ui/button';
-import { MdTimeline, MdMap } from 'react-icons/md';
+import { MdTimeline } from 'react-icons/md';
 import { useAppSettings } from '../../../contexts/app-settings';
 import { useAppData } from '../../../contexts/app-data';
 import TimelineInfo from './timeline-info/timeline-info';
-import TrackMapPopup from './track-map-popup/track-map-popup';
 import AppConstants from '../../../constants/app-constants';
 
 import './timeline.scss';
@@ -14,8 +13,8 @@ const Timelines = ({ currentMobileDevice }) => {
     const { appSettingsData } = useAppSettings();
     const { getTimelinesAsync } = useAppData();
     const [currentTimeline, setCurrentTimeline] = useState(null);
-    const [currentTimelineItem, setCurrentTimelineItem] = useState(null);
-    let content;
+
+    let content = null;
 
     useEffect(() => {
         ( async () => {
@@ -92,13 +91,6 @@ const Timelines = ({ currentMobileDevice }) => {
                                         } }>
                                             <MdTimeline { ...buttonIconProps }/>
                                         </Button>
-                                        <Button className={ 'time-line-command-button' } style={ { marginLeft: 3 } } onClick={ () => {
-                                            e.component.timelineDetailMode = null;
-                                            e.component.collapseAll(-1);
-                                            setCurrentTimelineItem(e.data);
-                                        } }>
-                                            <MdMap { ...buttonIconProps } />
-                                        </Button>
                                     </React.Fragment>
                                 )
                             } }/>
@@ -146,15 +138,6 @@ const Timelines = ({ currentMobileDevice }) => {
                         } }
                     />
                 </DataGrid>
-                { currentTimeline && currentTimelineItem !== null ?
-                    <TrackMapPopup
-                        mobileDevice={ currentMobileDevice }
-                        timelineItem={ currentTimelineItem }
-                        onHiding={ () => {
-                            setCurrentTimelineItem(null);
-                        } }/>
-                    : null
-                }
             </>
         );
     }

@@ -106,7 +106,7 @@ const MobileDevice = () => {
                         } }
                     />
                 </DataGrid>
-                { currentTimelineItem !== null ?
+                { currentMobileDevice && currentTimelineItem !== null ?
                     <TrackMapPopup
                         mobileDevice={ currentMobileDevice }
                         timelineItem={ currentTimelineItem }

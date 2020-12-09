@@ -12,13 +12,22 @@ import AppConstants from '../../../../../constants/app-constants';
 import './track-map.scss';
 
 const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
-    const { appSettingsData } = useAppSettings();
+    const { appSettingsData, getDailyTimelineItem } = useAppSettings();
     const { isXSmall, isSmall } = useScreenSize();
 
     const { getLocationRecordsByRangeAsync } = useAppData();
 
     const [locationRecords, setLocationRecords] = useState(null);
-    const [currentTimelineItem, setCurrentTimelineItem] = useState(timelineItem);
+    const [currentTimelineItem, setCurrentTimelineItem] = useState({ ...timelineItem });
+
+    const prevWorkDate = useRef(appSettingsData.workDate);
+
+    useEffect(() => {
+        if(prevWorkDate.current !== appSettingsData.workDate) {
+            setCurrentTimelineItem(getDailyTimelineItem());
+        }
+    }, [appSettingsData.workDate, getDailyTimelineItem])
+
 
     const mapInstance = useRef(null);
     const trackPath = useRef(null);

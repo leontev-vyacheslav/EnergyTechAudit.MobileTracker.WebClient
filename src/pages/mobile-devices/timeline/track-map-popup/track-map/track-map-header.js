@@ -22,12 +22,12 @@ const TrackMapHeader = ({ mobileDevice, timelineItem, onCurrentTimelineItemChang
             let timeline = await getTimelinesAsync(mobileDevice.id, appSettingsData.workDate) ?? [];
             setCurrentTimeline([timelineItem, ...timeline]);
         } )();
-    }, [getTimelinesAsync, appSettingsData.workDate, mobileDevice.id, getDailyTimelineItem]);
+    }, [getTimelinesAsync, mobileDevice.id, getDailyTimelineItem, appSettingsData.workDate]);
 
     useEffect(() =>{
         let index = currentTimeline.findIndex(t => t.id === timelineItem.id);
         setCurrentIndex(index);
-    }, [currentTimeline, timelineItem.id])
+    }, [currentTimeline, timelineItem.id, appSettingsData.workDate])
 
     const dataSource = useMemo(() => currentTimeline.map(item => {
         const beginDate = item.beginDate;
@@ -51,7 +51,7 @@ const TrackMapHeader = ({ mobileDevice, timelineItem, onCurrentTimelineItemChang
                 { dataSource && currentIndex !== -1 && dataSource[currentIndex] ? (
                     <SelectBox
                         dataSource={ dataSource }
-                        defaultValue={ dataSource[currentIndex].id }
+                        value={ dataSource[currentIndex].id }
                         selectedItem={ dataSource[currentIndex] }
                         className={ 'track-map-header-select-box' }
                         valueExpr={ 'id' }

@@ -29,6 +29,7 @@ module.exports = {
     }
   },
   'rules': {
+    'no-unused-vars': 'warn',
     'object-curly-spacing': [2, 'always'],
     'prettier/prettier': [0, 'always'],
     'quotes': [
