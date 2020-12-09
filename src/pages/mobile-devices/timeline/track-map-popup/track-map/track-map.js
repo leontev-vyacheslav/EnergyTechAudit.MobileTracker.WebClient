@@ -12,9 +12,11 @@ import AppConstants from '../../../../../constants/app-constants';
 import './track-map.scss';
 
 const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
-    const { appSettingsData, getDailyTimelineItem } = useAppSettings();
-    const { getTimelinesAsync } = useAppData();
-    const [currentTimeline, setCurrentTimeline] = useState([]);
+    const { appSettingsData } = useAppSettings();
+    const { isXSmall, isSmall } = useScreenSize();
+
+    const { getLocationRecordsByRangeAsync } = useAppData();
+
     const [locationRecords, setLocationRecords] = useState(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState(timelineItem);
 
@@ -25,9 +27,6 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
     const currentInfoWindow = useRef(null);
     const currentBoundBox = useRef(null);
     const currentStationaryCircle = useRef(null);
-
-    const { isXSmall, isSmall } = useScreenSize();
-    const { getLocationRecordsByRangeAsync } = useAppData();
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: AppConstants.trackMap.apiKey,
@@ -304,27 +303,12 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
     }, [initOverlays, fitMapBoundsByLocations, locationRecords, buildMarkersOnPolylinePath, buildOutsideMarkers, appSettingsData.isShownBreakInterval, buildBreakIntervals]);
 
     useEffect(() => {
-        setCurrentTimelineItem(getDailyTimelineItem());
-    }, [getDailyTimelineItem]);
-
-    useEffect(() => {
-        const timelineItem = getDailyTimelineItem();
-        ( async () => {
-            let timeline = await getTimelinesAsync(mobileDevice.id, appSettingsData.workDate) ?? [];
-            setCurrentTimeline([timelineItem, ...timeline]);
-        } )();
-
-        setCurrentTimeline(previousCurrentTimeline => [timelineItem, ...previousCurrentTimeline]);
-    }, [getTimelinesAsync, appSettingsData.workDate, mobileDevice.id, getDailyTimelineItem]);
-
-    useEffect(() => {
         ( async () => {
             let locationRecordsData = await getLocationRecordsByRangeAsync(
                 mobileDevice.id,
                 currentTimelineItem.beginDate,
                 currentTimelineItem.endDate
             ) ?? [];
-
             setLocationRecords(locationRecordsData);
         } )()
     }, [getLocationRecordsByRangeAsync, mobileDevice.id, currentTimelineItem, appSettingsData.minimalAccuracy, refreshToken]);
@@ -339,11 +323,11 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
             <>
                 <TrackMapHeader
                     mobileDevice={ mobileDevice }
-                    timeline={ currentTimeline }
-                    currentTimelineItem={ currentTimelineItem }
-                    onIntervalChanged={ (e) => {
-                        const currentTimelineItem = currentTimeline.find(i => i.id === e.value);
-                        setCurrentTimelineItem(currentTimelineItem);
+                    timelineItem={ currentTimelineItem }
+                    onCurrentTimelineItemChanged={ (currentTimelineItem) => {
+                        if(currentTimelineItem) {
+                            setCurrentTimelineItem(currentTimelineItem);
+                        }
                     } }
                 />
                 <GoogleMap

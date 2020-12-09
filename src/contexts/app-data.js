@@ -38,23 +38,27 @@ function AppDataProvider (props) {
     );
 
     const getMobileDevicesAsync = useCallback(async () => {
-        return await axiosWithCredentials({
+        const response = await axiosWithCredentials({
             url: `${ routes.host }${ routes.mobileDevices }`,
-            method: 'GET',
-        })
+            method: HttpConstants.Methods.Get,
+        });
+        if (response && response.status === HttpConstants.StatusCodes.Ok) {
+            return  response.data;
+        }
+        return  null;
     }, [axiosWithCredentials]);
 
     const getTimelinesAsync = useCallback(
         async (mobileDeviceId, workDate) => {
+            const utcOffset = Moment().utcOffset();
 
             const response = await axiosWithCredentials({
-                    url: `${ routes.host }${ routes.timeline }?mobileDeviceId=${ mobileDeviceId }&workDate=${ new DateEx(workDate).toLocalISOString() }`,
-                    method: 'GET',
+                    url: `${ routes.host }${ routes.timeline }?mobileDeviceId=${ mobileDeviceId }&workDate=${ Moment(workDate).add(utcOffset, 'm').toDate().toISOString() }`,
+                    method: HttpConstants.Methods.Get,
                 },
             );
             if (response && response.status === HttpConstants.StatusCodes.Ok) {
                 let timeline = response.data;
-                const utcOffset = Moment().utcOffset();
                 timeline = timeline.map(t => {
                     return {
                         ...t, ...{
@@ -75,10 +79,9 @@ function AppDataProvider (props) {
 
             const response = await axiosWithCredentials({
                     url: `${ routes.host }${ routes.locationRecord }/byRange/${ mobileDeviceId }?beginDate=${ new DateEx(beginDate).toLocalISOString() }&endDate=${ new DateEx(endDate).toLocalISOString() }`,
-                    method: 'GET',
+                    method: HttpConstants.Methods.Get,
                 },
             );
-
             if (response && response.status === HttpConstants.StatusCodes.Ok) {
                 let locationRecordsData = response.data;
                 if (locationRecordsData) {

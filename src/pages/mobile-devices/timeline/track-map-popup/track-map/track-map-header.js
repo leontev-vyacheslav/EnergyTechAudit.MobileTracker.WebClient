@@ -1,67 +1,84 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import SelectBox from 'devextreme-react/ui/select-box';
 import { MdPerson, MdTimer, MdTimerOff } from 'react-icons/all';
-import './track-map-header.scss';
 import { useScreenSize } from '../../../../../utils/media-query';
 
-const TrackMapHeader = ({ mobileDevice, timeline, currentTimelineItem, onIntervalChanged }) => {
+import './track-map-header.scss';
+import { useAppData } from '../../../../../contexts/app-data';
+import { useAppSettings } from '../../../../../contexts/app-settings';
 
+const TrackMapHeader = ({ mobileDevice, timelineItem, onCurrentTimelineItemChanged }) => {
     const { isXSmall } = useScreenSize();
 
-    const currentIndex = useMemo(() => {
-        let ind = timeline.findIndex(t => t.id === currentTimelineItem.id);
-        return ind !== -1 ? ind : 0;
-    }, [currentTimelineItem.id, timeline]);
+    const { appSettingsData, getDailyTimelineItem } = useAppSettings();
+    const { getTimelinesAsync } = useAppData();
 
-    const dataSource = useMemo(() => timeline.map(item => {
-        const beginDate = new Date(item.beginDate);
-        const endDate = new Date(item.endDate);
-        endDate.setTime(endDate.getTime() - 1);
+    const [currentTimeline, setCurrentTimeline] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    useEffect(() => {
+        ( async () => {
+            const timelineItem = getDailyTimelineItem();
+            let timeline = await getTimelinesAsync(mobileDevice.id, appSettingsData.workDate) ?? [];
+            setCurrentTimeline([timelineItem, ...timeline]);
+        } )();
+    }, [getTimelinesAsync, appSettingsData.workDate, mobileDevice.id, getDailyTimelineItem]);
+
+    useEffect(() =>{
+        let index = currentTimeline.findIndex(t => t.id === timelineItem.id);
+        setCurrentIndex(index);
+    }, [currentTimeline, timelineItem.id])
+
+    const dataSource = useMemo(() => currentTimeline.map(item => {
+        const beginDate = item.beginDate;
+        const endDate = item.endDate;
+        endDate.setTime(endDate.getTime() - 1000);
         return {
             id: item.id,
             beginDate: item.beginDate,
             endDate: item.endDate,
             text: `${ beginDate.toLocaleTimeString('ru-RU') } - ${ endDate.toLocaleTimeString('ru-RU') }`
         };
-    }), [timeline]);
+    }), [currentTimeline]);
 
     return (
-
         <div className={ 'track-map-header' }>
             <div className={ 'track-map-header-email' } style={ { display: !isXSmall ? 'flex' : 'none', alignItems: 'center' } }>
                 <MdPerson size={ 26 }/>
                 <div>{ mobileDevice.email }</div>
             </div>
             <div className={ 'track-map-select-box-container' } style={ { width: !isXSmall ? '300px' : '100%' } }>
-                <SelectBox
-                    dataSource={ dataSource }
-                    defaultValue={ timeline[currentIndex].id }
-                    selectedItem={ timeline[currentIndex] }
-                    className={ 'track-map-header-select-box' }
-                    valueExpr={ 'id' }
-                    displayExpr={ 'text' }
-                    onValueChanged={ onIntervalChanged }
-                    itemRender={ (timelineItem) => {
-                        const beginDate = new Date(timelineItem.beginDate);
-                        const endDate = new Date(timelineItem.endDate);
-                        endDate.setTime(endDate.getTime() - 1000);
+                { dataSource && currentIndex !== -1 && dataSource[currentIndex] ? (
+                    <SelectBox
+                        dataSource={ dataSource }
+                        defaultValue={ dataSource[currentIndex].id }
+                        selectedItem={ dataSource[currentIndex] }
+                        className={ 'track-map-header-select-box' }
+                        valueExpr={ 'id' }
+                        displayExpr={ 'text' }
+                        onValueChanged={ (e) => {
+                            const timelineItemId = e.value;
+                            const timelineItem = currentTimeline.find(t => t.id === timelineItemId);
+                            onCurrentTimelineItemChanged(timelineItem);
+                        } }
+                        itemRender={ (timelineItem) => {
+                            return (
+                                <>
+                                    <div style={ { display: 'flex', width: 200, fontSize: 14, } }>
+                                        <div style={ { display: 'flex', marginRight: 10, flex: 1, alignItems: 'center' } }
+                                             className={ 'track-map-info-box-item' }>
+                                            <MdTimer size={ 18 }/>
+                                            <div style={ { marginLeft: 5 } }>c { timelineItem.beginDate.toLocaleTimeString('ru-RU') }</div>
+                                        </div>
+                                        <div style={ { display: 'flex', flex: 1, alignItems: 'center' } } className={ 'track-map-info-box-item' }>
+                                            <MdTimerOff size={ 18 }/>
+                                            <div style={ { marginLeft: 5 } }>до { timelineItem.endDate.toLocaleTimeString('ru-RU') }</div>
+                                        </div>
+                                    </div>
+                                </>
+                            );
+                        } }/> ) : null }
 
-                        return (
-                            <>
-                                <div style={ { display: 'flex', width: 200, fontSize: 14, } }>
-                                    <div style={ { display: 'flex', marginRight: 10, flex: 1, alignItems: 'center' } }
-                                         className={ 'track-map-info-box-item' }>
-                                        <MdTimer size={ 18 }/>
-                                        <div style={ { marginLeft: 5 } }>c { beginDate.toLocaleTimeString('ru-RU') }</div>
-                                    </div>
-                                    <div style={ { display: 'flex', flex: 1, alignItems: 'center' } } className={ 'track-map-info-box-item' }>
-                                        <MdTimerOff size={ 18 }/>
-                                        <div style={ { marginLeft: 5 } }>до { endDate.toLocaleTimeString('ru-RU') }</div>
-                                    </div>
-                                </div>
-                            </>
-                        );
-                    } }/>
             </div>
         </div>
     );

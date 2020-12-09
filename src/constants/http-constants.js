@@ -7,6 +7,11 @@ export const HttpConstants = {
             Accept: 'application/json',
         },
     },
+    Methods:{
+      Get: 'GET',
+      Post: 'POST',
+      Delete: 'DELETE'
+    },
     StatusCodes: {
         Ok: 200,
         BadRequest: 400,

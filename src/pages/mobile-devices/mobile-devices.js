@@ -10,7 +10,6 @@ import { useAppSettings } from '../../contexts/app-settings';
 import { useScreenSize } from '../../utils/media-query';
 
 import './mobile-devices.scss';
-import { HttpConstants } from '../../constants/http-constants';
 
 const MobileDevice = () => {
     const { appSettingsData, getDailyTimelineItem } = useAppSettings();
@@ -24,11 +23,7 @@ const MobileDevice = () => {
 
     useEffect(() => {
         ( async () => {
-            let mobileDevicesData = [];
-            const response = await getMobileDevicesAsync();
-            if (response && response.status === HttpConstants.StatusCodes.Ok) {
-                mobileDevicesData = response.data;
-            }
+            let mobileDevicesData = await getMobileDevicesAsync() ?? [];
             setMobileDevices(mobileDevicesData);
         } )();
     }, [getMobileDevicesAsync, appSettingsData]);
