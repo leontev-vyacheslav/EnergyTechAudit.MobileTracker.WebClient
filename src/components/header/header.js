@@ -34,7 +34,7 @@ export default ({ menuToggleEnabled, title, toggleMenu }) => {
 
                 <Item location={ 'after' } locateInMenu={ 'auto' } menuItemTemplate={ 'hider' } >
                     <div style={ { fontSize: 14, marginTop: 3, fontWeight: 'bold', display: 'flex', flexDirection: 'column', lineHeight: 'initial', alignItems: 'flex-start' } }>
-                        <div> { appSettingsData.workDate.toLocaleDateString('ru-RU') }</div>
+                        <div> { appSettingsData.workDate.toLocaleDateString('ru-RU', { day: '2-digit', month: 'long',  year: 'numeric' }) }</div>
                     </div>
                 </Item>
 
@@ -51,7 +51,7 @@ export default ({ menuToggleEnabled, title, toggleMenu }) => {
                     <div style={ { display: 'flex', alignItems: 'center', borderBottomColor: '#d8d8d8', borderBottomWidth: 1, borderBottomStyle: 'solid'  } } className={ 'dx-item-content dx-list-item-content' }>
                         <span className={ 'dx-icon dx-icon-info dx-list-item-icon' }/>
                         <div style={ { fontSize: 14, marginTop: 3, marginLeft: 15, display: 'flex', flexDirection: 'column', lineHeight: 'initial', alignItems: 'flex-start' } }>
-                            <div> { appSettingsData.workDate.toLocaleDateString('ru-RU') }</div>
+                            <div> { appSettingsData.workDate.toLocaleDateString('ru-RU', { day: '2-digit', month: 'long',  year: 'numeric' }) }</div>
                         </div>
                     </div>
                 </Template>
