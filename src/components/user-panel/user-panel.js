@@ -14,8 +14,32 @@ export default function ({ menuMode }) {
     const { showWorkDatePicker, signOutWithConfirm } = useSharedArea();
     const { navigationData } = useNavigation();
 
+    function ItemTemplate (e) {
+        return (
+            <React.Fragment>
+                <span className={ `dx-icon dx-icon-${ e.icon } ${ menuMode === 'list' ? ' dx-list-item-icon' : '' }` }/>
+                { e.renderItem ? e.renderItem() : e.text }
+            </React.Fragment>
+        );
+    }
+
     const menuItems = useMemo(() => {
+
         let items = [
+            {
+                icon: 'user',
+                text: user.email,
+                renderItem: () => {
+                    return ( <span style={ {
+                        width: 150,
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        display: 'inline-block',
+                        verticalAlign: 'middle'
+                    } }>{ user.email }</span> );
+                }
+            },
             {
                 text: 'Рабочая дата',
                 icon: 'event',
@@ -31,35 +55,34 @@ export default function ({ menuMode }) {
                 }
             },
         ];
+
         if (navigationData.currentPath === '/mobileDevices') {
-            items = [
-                {
-                    text: 'Обновить',
-                    icon: 'refresh',
-                    onClick: () => {
-                        setAppSettingsData({ ...appSettingsData, ...{ workDate: appSettingsData.workDate } });
-                    }
-                },
-                ...items]
+            items.splice(1, 0, {
+                text: 'Обновить',
+                icon: 'refresh',
+                onClick: () => {
+                    setAppSettingsData({ ...appSettingsData, ...{ workDate: appSettingsData.workDate } });
+                }
+            })
         }
         return items;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [navigationData.currentPath, showWorkDatePicker, signOutWithConfirm]);
 
     return (
-        <div className={ 'user-panel' }>
-            <div className={ 'user-info' }>
-                <div className={ 'image-container' }>
-                    <div className={ 'dx-icon dx-icon-user' }/>
-                </div>
-                <div style={ { fontSize: 12, display: 'flex', flexDirection: 'column', marginLeft: 10, lineHeight: 'initial', alignItems: 'flex-start' } }>
-                    <div className={ 'user-name' }>{ user.email }</div>
-                    <div> { new Date(appSettingsData.workDate).toLocaleDateString('ru-RU') }</div>
-                </div>
-            </div>
 
+        <div className={ 'user-panel' }>
+            { menuMode === 'context' && (
+                    <div className={ 'user-info' }>
+                        <div className={ 'image-container' }>
+                            <div className={ 'dx-icon dx-icon-overflow' }/>
+                        </div>
+                    </div>
+                )
+            }
             { menuMode === 'context' && (
                 <ContextMenu
+                    itemRender={ ItemTemplate }
                     items={ menuItems }
                     target={ '.user-button' }
                     showEvent={ 'dxclick' }
@@ -70,7 +93,11 @@ export default function ({ menuMode }) {
                 </ContextMenu>
             ) }
             { menuMode === 'list' && (
-                <List className={ 'dx-toolbar-menu-action' } items={ menuItems }/>
+                <List
+                    className={ 'dx-toolbar-menu-action' }
+                    itemRender={ ItemTemplate }
+                    items={ menuItems }
+                />
             ) }
         </div>
     );

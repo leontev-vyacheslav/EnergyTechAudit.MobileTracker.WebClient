@@ -3,6 +3,11 @@
 .dx-link.dx-icon-map.dx-link-icon {
   color: $base-accent !important;
 }
+.timeline {
+  .dx-command-select {
+    padding-left: 4px !important;
+  }
+}
 
 .timeline .dx-datagrid .dx-row > td {
   padding-top: 8px;

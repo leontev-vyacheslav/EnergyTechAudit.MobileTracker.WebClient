@@ -80,8 +80,8 @@ const Timelines = ({ currentMobileDevice }) => {
                 >
                     <Selection mode={ 'multiple' } showCheckBoxesMode={ 'always' }/>
                     <Scrolling showScrollbar={ 'never' }/>
-                    <Column type={ 'buttons' } width={ 85 }
-
+                    <Column type="selection" width={ 60 }/>
+                    <Column type={ 'buttons' } width={ 60 }
                             cellRender={ (e) => {
                                 const buttonIconProps = { style: { cursor: 'pointer' }, size: 16, color: '#464646' };
                                 return (
@@ -93,8 +93,8 @@ const Timelines = ({ currentMobileDevice }) => {
                                         </Button>
                                     </React.Fragment>
                                 )
-                            } }/>
-                    <Column dataField={ 'id' } dataType={ 'number' } caption={ 'Ид' } width={ 50 }/>
+                    } }/>
+                    <Column dataField={ 'id' } dataType={ 'number' } caption={ 'Ид' } width={ 60 } alignment = { 'center' } />
                     <Column dataField={ 'beginDate' } dataType={ 'datetime' } hidingPriority={ 1 } caption={ 'Начало периода' } width={ 150 }/>
                     <Column dataField={ 'endDate' } dataType={ 'datetime' } hidingPriority={ 0 } caption={ 'Конец периода' } width={ 150 }/>
                     <Column dataField={ 'distance' } dataType={ 'number' } caption={ 'Расстояние' } width={ 150 } alignment={ 'left' }/>
