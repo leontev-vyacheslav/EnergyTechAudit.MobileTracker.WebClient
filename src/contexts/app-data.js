@@ -39,7 +39,7 @@ function AppDataProvider (props) {
 
     const getMobileDevicesAsync = useCallback(async () => {
         const response = await axiosWithCredentials({
-            url: `${ routes.host }${ routes.mobileDevices }`,
+            url: `${ routes.host }${ routes.mobileDevice }`,
             method: HttpConstants.Methods.Get,
         });
         if (response && response.status === HttpConstants.StatusCodes.Ok) {
@@ -48,8 +48,7 @@ function AppDataProvider (props) {
         return  null;
     }, [axiosWithCredentials]);
 
-    const getTimelinesAsync = useCallback(
-        async (mobileDeviceId, workDate) => {
+    const getTimelinesAsync = useCallback(async (mobileDeviceId, workDate) => {
             const utcOffset = Moment().utcOffset();
 
             const response = await axiosWithCredentials({
@@ -74,11 +73,10 @@ function AppDataProvider (props) {
         [axiosWithCredentials],
     );
 
-    const getLocationRecordsByRangeAsync = useCallback(
-        async (mobileDeviceId, beginDate, endDate) => {
+    const getLocationRecordsByRangeAsync = useCallback(async (mobileDeviceId, beginDate, endDate) => {
 
             const response = await axiosWithCredentials({
-                    url: `${ routes.host }${ routes.locationRecord }/byRange/${ mobileDeviceId }?beginDate=${ new DateEx(beginDate).toLocalISOString() }&endDate=${ new DateEx(endDate).toLocalISOString() }`,
+                    url: `${ routes.host }${ routes.locationRecord }?mobileDeviceId=${ mobileDeviceId }&beginDate=${ new DateEx(beginDate).toLocalISOString() }&endDate=${ new DateEx(endDate).toLocalISOString() }`,
                     method: HttpConstants.Methods.Get,
                 },
             );

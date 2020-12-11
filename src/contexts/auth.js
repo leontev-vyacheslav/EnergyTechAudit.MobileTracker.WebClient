@@ -26,7 +26,7 @@ function AuthProvider (props) {
         let userAuthData = null;
         try {
             const response = await axios.get(
-                `${routes.host}${routes.accountLogin}?email=${email}&password=${password}`,
+                `${routes.host}${routes.accountSignIn}?email=${email}&password=${password}`,
             );
             if (response && response.status === HttpConstants.StatusCodes.Ok && response.data) {
                 userAuthData = response.data;
@@ -45,7 +45,7 @@ function AuthProvider (props) {
         const userAuthData = await getUserAuthDataFromStorageAsync();
         if (userAuthData) {
             try {
-                await axios.post(`${routes.host}${routes.accountRevoke}`, userAuthData, {
+                await axios.post(`${routes.host}${routes.accountSignOut}`, userAuthData, {
                     headers: {
                         ...HttpConstants.Headers.ContentTypeJson,
                         Authentication: `Bearer ${userAuthData.token}`,

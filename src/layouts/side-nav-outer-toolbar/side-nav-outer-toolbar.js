@@ -5,8 +5,8 @@ import { useHistory } from 'react-router';
 import { Header, SideNavigationMenu, Footer } from '../../components';
 import './side-nav-outer-toolbar.scss';
 import { useScreenSize } from '../../utils/media-query';
-import { Template } from 'devextreme-react/core/template';
 import { useMenuPatch } from '../../utils/patches';
+import { Template } from 'devextreme-react/core/template';
 
 export default function ({ title, children }) {
     const scrollViewRef = useRef();
@@ -103,9 +103,7 @@ export default function ({ title, children }) {
                         selectedItemChanged={ onNavigationChanged }
                         openMenu={ temporaryOpenMenu }
                         onMenuReady={ onMenuReady }
-                    >
-                    </SideNavigationMenu>
-
+                    />
                 </Template>
             </Drawer>
         </div>
