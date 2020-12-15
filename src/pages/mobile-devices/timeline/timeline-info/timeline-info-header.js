@@ -1,21 +1,24 @@
 import { MdLocationOn, MdPerson } from 'react-icons/md';
 import React from 'react';
 
-export function TimelineInfoHeader (props) {
+export function TimelineInfoHeader ({ currentMobileDevice, departure, destination }) {
     return <>
         <div className={ 'timeline-info-user' }>
             <MdPerson size={ 24 }/>
-            <div> Пользователь: { props.currentMobileDevice.email } / { props.currentMobileDevice.model }</div>
+            <div> Пользователь: { currentMobileDevice.email } / { currentMobileDevice.model }</div>
         </div>
-        <div className={ 'timeline-info-points' }>
-            <div className={ 'departure' }>
-                <MdLocationOn size={ 18 }/>
-                <div>{ props.departure }</div>
+        { destination !== null ?
+            <div className={ 'timeline-info-points' }>
+                <div className={ 'departure' }>
+                    <MdLocationOn size={ 18 }/>
+                    <div>{ departure }</div>
+                </div>
+                <div className={ 'destination' }>
+                    <MdLocationOn size={ 18 }/>
+                    <div>{ destination }</div>
+                </div>
             </div>
-            <div className={ 'destination' }>
-                <MdLocationOn size={ 18 }/>
-                <div>{ props.destination }</div>
-            </div>
-        </div>
+            : null
+        }
     </>;
 }

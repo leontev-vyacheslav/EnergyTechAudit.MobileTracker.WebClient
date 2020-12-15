@@ -5,14 +5,16 @@ import { useScreenSize } from '../../../../../utils/media-query';
 
 const TrackMapInfoWindow = ({ locationRecord, address }) => {
     const { isXSmall, isSmall } = useScreenSize();
-
     const activityTypeDescription = AppConstants.motionActivityTypeDictionary.find(atd => atd.id === locationRecord.motionActivityTypeId);
     return (
         <table className={ 'track-map-info-window' } style={ isXSmall ? { fontSize: 10 } : ( isSmall ? { fontSize: 11 } : {} ) }>
             <tbody>
-            <tr>
-                <td style={ { width: 'initial' } } colSpan={ 2 }><span>{ address }</span></td>
-            </tr>
+            { address !== null ?
+                (<tr>
+                    <td style={ { width: 'initial' } } colSpan={ 2 }><span>{ address ?? AppConstants.noDataLongText }</span></td>
+                </tr>)
+                : null
+            }
             <tr>
                 <td><span>Время:</span></td>
                 <td><span>{ new Date( locationRecord.mobileDeviceDateTime ).toLocaleString('ru-RU') }</span></td>

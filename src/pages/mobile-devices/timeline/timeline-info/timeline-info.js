@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import DataGrid, { Column } from 'devextreme-react/ui/data-grid';
-import './timeline-info.scss';
 import DataSource from 'devextreme/data/data_source';
 import ArrayStore from 'devextreme/data/array_store';
-import Geocode from '../../../../api/external/geocode';
 import { MdAdjust, MdCompareArrows, MdGpsFixed, MdMoreHoriz, MdSettingsEthernet } from 'react-icons/md';
 import { TimelineInfoHeader } from './timeline-info-header';
 import AppConstants from '../../../../constants/app-constants';
-import { useScreenSize } from '../../../../utils/media-query';
 import { Scrolling } from 'devextreme-react/data-grid';
+import { useScreenSize } from '../../../../utils/media-query';
+import { useAppData } from '../../../../contexts/app-data';
+
+import './timeline-info.scss';
 
 const IconComponents = {
     Marks: MdGpsFixed,
@@ -25,6 +26,7 @@ const TimelineInfo = ({ timeline, currentMobileDevice }) => {
     const [timelineInfo, setTimelineInfo] = useState(null);
 
     const { isXSmall, isSmall } = useScreenSize();
+    const { getGeocodedAddressAsync } = useAppData();
 
     useEffect(() => {
         const timeLineLocal = { ...timeline };
@@ -48,20 +50,12 @@ const TimelineInfo = ({ timeline, currentMobileDevice }) => {
 
     useEffect(() => {
         ( async () => {
-            const fetchAddressAsync = async (location) => {
-                const geocodeResponse = await Geocode.fromLatLng(location.latitude, location.longitude);
-                if (geocodeResponse && geocodeResponse.status === 'OK') {
-                    return geocodeResponse.results.find((e, i) => i === 0).formatted_address;
-                }
-                return null;
-            };
-            setDeparture(await fetchAddressAsync(timeline.firstLocationRecord));
-            setDestination(await fetchAddressAsync(timeline.lastLocationRecord));
+            setDeparture(await getGeocodedAddressAsync(timeline.firstLocationRecord));
+            setDestination(await getGeocodedAddressAsync(timeline.lastLocationRecord));
         } )();
-    }, [timeline.firstLocationRecord, timeline.lastLocationRecord]);
+    }, [getGeocodedAddressAsync, timeline.firstLocationRecord, timeline.lastLocationRecord]);
 
-
-    return ( ( departure !== null && destination !== null ) ?
+    return ( window !== 0 ?
         (
             <>
                 <TimelineInfoHeader currentMobileDevice={ currentMobileDevice } departure={ departure } destination={ destination }/>

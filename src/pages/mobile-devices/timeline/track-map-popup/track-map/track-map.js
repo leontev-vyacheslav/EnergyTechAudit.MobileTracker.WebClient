@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
-import Geocode from '../../../../../api/external/geocode';
 import TrackMapInfoWindow from './track-map-info-window';
 import TrackMapInfoBox from './track-map-info-box';
 import TrackMapHeader from './track-map-header';
@@ -15,7 +14,7 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
     const { appSettingsData, getDailyTimelineItem } = useAppSettings();
     const { isXSmall, isSmall } = useScreenSize();
 
-    const { getLocationRecordsByRangeAsync, getLocationRecordAsync } = useAppData();
+    const { getLocationRecordsByRangeAsync, getLocationRecordAsync, getGeocodedAddressAsync } = useAppData();
 
     const [trackLocationRecordList, setTrackLocationRecordList] = useState(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState({ ...timelineItem });
@@ -27,7 +26,6 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
             setCurrentTimelineItem(getDailyTimelineItem());
         }
     }, [appSettingsData.workDate, getDailyTimelineItem])
-
 
     const mapInstance = useRef(null);
     const trackPath = useRef(null);
@@ -78,14 +76,6 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
         }
     }, [getBoundsByMarkers]);
 
-    const fetchAddressAsync = useCallback(async (location) => {
-        const geocodeResponse = await Geocode.fromLatLng(location.latitude, location.longitude);
-        if (geocodeResponse && geocodeResponse.status === 'OK') {
-            return geocodeResponse.results.find((e, i) => i === 0).formatted_address;
-        }
-        return null;
-    }, []);
-
     const showInfoWindowAsync = useCallback(async trackLocationRecord => {
         if (mapInstance.current) {
 
@@ -97,7 +87,7 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
                 currentInfoWindow.current.close();
             }
 
-            const address = await fetchAddressAsync(locationRecord);
+            const address = await getGeocodedAddressAsync(locationRecord);
             const content = ReactDOMServer.renderToString(
                 React.createElement(
                     TrackMapInfoWindow,
@@ -124,7 +114,7 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
             }
             currentInfoWindow.current.open(mapInstance.current);
         }
-    }, [fetchAddressAsync, getLocationRecordAsync]);
+    }, [getGeocodedAddressAsync, getLocationRecordAsync]);
 
     const initOverlays = useCallback(() => {
         if (trackPath.current !== null) {
