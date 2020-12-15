@@ -15,9 +15,9 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
     const { appSettingsData, getDailyTimelineItem } = useAppSettings();
     const { isXSmall, isSmall } = useScreenSize();
 
-    const { getLocationRecordsByRangeAsync } = useAppData();
+    const { getLocationRecordsByRangeAsync, getLocationRecordAsync } = useAppData();
 
-    const [locationRecords, setLocationRecords] = useState(null);
+    const [trackLocationRecordList, setTrackLocationRecordList] = useState(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState({ ...timelineItem });
 
     const prevWorkDate = useRef(appSettingsData.workDate);
@@ -86,13 +86,18 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
         return null;
     }, []);
 
-    const showInfoWindowAsync = useCallback(async locationRecord => {
+    const showInfoWindowAsync = useCallback(async trackLocationRecord => {
         if (mapInstance.current) {
+
+            const locationRecord =  await getLocationRecordAsync(trackLocationRecord.id);
+
+            if(!locationRecord) return;
+
             if (currentInfoWindow.current !== null) {
                 currentInfoWindow.current.close();
             }
-            const address = await fetchAddressAsync(locationRecord);
 
+            const address = await fetchAddressAsync(locationRecord);
             const content = ReactDOMServer.renderToString(
                 React.createElement(
                     TrackMapInfoWindow,
@@ -119,7 +124,7 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
             }
             currentInfoWindow.current.open(mapInstance.current);
         }
-    }, [fetchAddressAsync]);
+    }, [fetchAddressAsync, getLocationRecordAsync]);
 
     const initOverlays = useCallback(() => {
         if (trackPath.current !== null) {
@@ -182,39 +187,39 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
     const buildOutsideMarkers = useCallback(() => {
         const firstMarker = new window.google.maps.Marker({
             position: {
-                lat: locationRecords[0].latitude,
-                lng: locationRecords[0].longitude
+                lat: trackLocationRecordList[0].latitude,
+                lng: trackLocationRecordList[0].longitude
             },
             map: mapInstance.current,
             label: { text: 'A' }
         });
         firstMarker.addListener('click', async () => {
-            await showInfoWindowAsync(locationRecords[0]);
+            await showInfoWindowAsync(trackLocationRecordList[0]);
         });
         currentMarkers.current.unshift(firstMarker);
         const lastMarker = new window.google.maps.Marker({
             position: {
-                lat: locationRecords[locationRecords.length - 1].latitude,
-                lng: locationRecords[locationRecords.length - 1].longitude
+                lat: trackLocationRecordList[trackLocationRecordList.length - 1].latitude,
+                lng: trackLocationRecordList[trackLocationRecordList.length - 1].longitude
             },
             map: mapInstance.current,
             label: { text: 'B' }
         });
         lastMarker.addListener('click', async () => {
-            await showInfoWindowAsync(locationRecords[locationRecords.length - 1]);
+            await showInfoWindowAsync(trackLocationRecordList[trackLocationRecordList.length - 1]);
         });
         currentMarkers.current.push(lastMarker);
-    }, [locationRecords, showInfoWindowAsync]);
+    }, [trackLocationRecordList, showInfoWindowAsync]);
 
     const buildBreakIntervals = useCallback(() => {
-        for (let i = 0; i < locationRecords.length - 1; i++) {
+        for (let i = 0; i < trackLocationRecordList.length - 1; i++) {
 
             const currentLocation = new window.google.maps.LatLng({
-                lat: locationRecords[i].latitude,
-                lng: locationRecords[i].longitude
+                lat: trackLocationRecordList[i].latitude,
+                lng: trackLocationRecordList[i].longitude
             }), nextLocation = new window.google.maps.LatLng({
-                lat: locationRecords[i + 1].latitude,
-                lng: locationRecords[i + 1].longitude
+                lat: trackLocationRecordList[i + 1].latitude,
+                lng: trackLocationRecordList[i + 1].longitude
             });
 
             const distance = window.google.maps.geometry.spherical.computeDistanceBetween(currentLocation, nextLocation);
@@ -230,12 +235,12 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
                 currentBreakIntervals.current.push(breakIntervalPath);
             }
         }
-    }, [appSettingsData.breakInterval, locationRecords]);
+    }, [appSettingsData.breakInterval, trackLocationRecordList]);
 
     const buildMarkersOnPolylinePath = useCallback(() => {
         let k = 1;
         let diagonalDistance = 0;
-        const boundBox = getBoundsByMarkers(locationRecords);
+        const boundBox = getBoundsByMarkers(trackLocationRecordList);
         if (boundBox) {
             diagonalDistance = window.google.maps.geometry.spherical.computeDistanceBetween(
                 boundBox.getNorthEast(),
@@ -264,34 +269,34 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
         }
 
         let p = 1;
-        if (locationRecords.length <= 10) {
+        if (trackLocationRecordList.length <= 10) {
             p = 1; // 100 %
-        } else if (locationRecords.length <= 100) {
+        } else if (trackLocationRecordList.length <= 100) {
             p = 5; // 20 %
-        } else if (locationRecords.length <= 500) {
+        } else if (trackLocationRecordList.length <= 500) {
             p = 10 * k; // 10 %
-        } else if (locationRecords.length <= 2500) {
+        } else if (trackLocationRecordList.length <= 2500) {
             p = 20 * k; // 5 %
-        } else if (( locationRecords.length <= 12500 )) {
+        } else if (( trackLocationRecordList.length <= 12500 )) {
             p = 40 * k // 1 %
         } else {
             p = 80 * k // < 1 %
         }
-        locationRecords
+        trackLocationRecordList
             .filter((_, i) => i % p === 0)
-            .concat(locationRecords.length > 0 ? locationRecords[locationRecords.length - 1] : [])
+            .concat(trackLocationRecordList.length > 0 ? trackLocationRecordList[trackLocationRecordList.length - 1] : [])
             .forEach((locationRecord, i) => {
                 buildMarker(locationRecord, 'track', i + 1);
             });
-    }, [appSettingsData.stationaryRadius, buildMarker, getBoundsByMarkers, locationRecords]);
+    }, [appSettingsData.stationaryRadius, buildMarker, getBoundsByMarkers, trackLocationRecordList]);
 
     const showTrack = useCallback(() => {
         initOverlays();
-        fitMapBoundsByLocations(mapInstance.current, locationRecords);
-        if (trackPath.current === null && locationRecords && locationRecords.length > 0) {
+        fitMapBoundsByLocations(mapInstance.current, trackLocationRecordList);
+        if (trackPath.current === null && trackLocationRecordList && trackLocationRecordList.length > 0) {
 
             trackPath.current = new window.google.maps.Polyline({
-                path: locationRecords.map(locationRecord => {
+                path: trackLocationRecordList.map(locationRecord => {
                     return {
                         lat: locationRecord.latitude,
                         lng: locationRecord.longitude
@@ -309,7 +314,7 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
                 buildBreakIntervals();
             }
         }
-    }, [initOverlays, fitMapBoundsByLocations, locationRecords, buildMarkersOnPolylinePath, buildOutsideMarkers, appSettingsData.isShownBreakInterval, buildBreakIntervals]);
+    }, [initOverlays, fitMapBoundsByLocations, trackLocationRecordList, buildMarkersOnPolylinePath, buildOutsideMarkers, appSettingsData.isShownBreakInterval, buildBreakIntervals]);
 
     useEffect(() => {
         ( async () => {
@@ -318,7 +323,7 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
                 currentTimelineItem.beginDate,
                 currentTimelineItem.endDate
             ) ?? [];
-            setLocationRecords(locationRecordsData);
+            setTrackLocationRecordList(locationRecordsData);
         } )()
     }, [getLocationRecordsByRangeAsync, mobileDevice.id, currentTimelineItem, appSettingsData.minimalAccuracy, refreshToken]);
 
@@ -326,9 +331,9 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
         if (mapInstance.current) {
             showTrack();
         }
-    }, [locationRecords, showTrack]);
+    }, [trackLocationRecordList, showTrack]);
 
-    return ( isLoaded && locationRecords !== null ?
+    return ( isLoaded && trackLocationRecordList !== null ?
             <>
                 <TrackMapHeader
                     mobileDevice={ mobileDevice }
@@ -365,7 +370,7 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
                         }
                     } }
                     onRightClick={ () => {
-                        fitMapBoundsByLocations(mapInstance.current, locationRecords);
+                        fitMapBoundsByLocations(mapInstance.current, trackLocationRecordList);
                     } }
                 >
                     { isXSmall ? null :

@@ -92,9 +92,23 @@ function AppDataProvider (props) {
         [appSettingsData.minimalAccuracy, axiosWithCredentials],
     );
 
+    const getLocationRecordAsync = useCallback(async (locationRecordId) => {
+            const response = await axiosWithCredentials({
+                    url: `${ routes.host }${ routes.locationRecord }/${ locationRecordId }`,
+                    method: HttpConstants.Methods.Get,
+                },
+            );
+            if (response && response.status === HttpConstants.StatusCodes.Ok) {
+                return response.data;
+            }
+            return null;
+        },
+        [axiosWithCredentials],
+    );
+
     return (
         <AppDataContext.Provider
-            value={ { getMobileDevicesAsync, getTimelinesAsync, getLocationRecordsByRangeAsync, } }
+            value={ { getMobileDevicesAsync, getTimelinesAsync, getLocationRecordsByRangeAsync, getLocationRecordAsync } }
             { ...props }
         />
     );
