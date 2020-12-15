@@ -7,6 +7,7 @@ import { HttpConstants } from '../constants/http-constants';
 import { DateEx } from '../utils/DateEx';
 import Moment from 'moment';
 import { useAppSettings } from './app-settings';
+import Geocode from '../api/external/geocode';
 
 function AppDataProvider (props) {
     const { appSettingsData } = useAppSettings();
@@ -74,7 +75,6 @@ function AppDataProvider (props) {
     );
 
     const getLocationRecordsByRangeAsync = useCallback(async (mobileDeviceId, beginDate, endDate) => {
-
             const response = await axiosWithCredentials({
                     url: `${ routes.host }${ routes.locationRecord }?mobileDeviceId=${ mobileDeviceId }&beginDate=${ new DateEx(beginDate).toLocalISOString() }&endDate=${ new DateEx(endDate).toLocalISOString() }`,
                     method: HttpConstants.Methods.Get,
@@ -106,9 +106,22 @@ function AppDataProvider (props) {
         [axiosWithCredentials],
     );
 
+    const getGeocodedAddressAsync = useCallback(async (location) => {
+        try {
+            const geocodeResponse = await Geocode.fromLatLng(location.latitude, location.longitude);
+            if (geocodeResponse && geocodeResponse.status === 'OK') {
+                return geocodeResponse.results.find((e, i) => i === 0).formatted_address;
+            }
+            return null;
+        }
+        catch {
+            return  null;
+        }
+    }, []);
+
     return (
         <AppDataContext.Provider
-            value={ { getMobileDevicesAsync, getTimelinesAsync, getLocationRecordsByRangeAsync, getLocationRecordAsync } }
+            value={ { getMobileDevicesAsync, getTimelinesAsync, getLocationRecordsByRangeAsync, getLocationRecordAsync,  getGeocodedAddressAsync } }
             { ...props }
         />
     );
