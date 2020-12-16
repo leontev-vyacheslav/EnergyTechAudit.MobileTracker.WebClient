@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import DataGrid, { Column, Grouping, MasterDetail, Pager, Paging, Scrolling } from 'devextreme-react/data-grid';
-import ContextMenu from 'devextreme-react/context-menu';
+import ContextMenu, { Position } from 'devextreme-react/context-menu';
 import { useAppData } from '../../contexts/app-data';
 import { useHistory } from 'react-router-dom';
 import Timelines from './timeline/timelines'
@@ -23,6 +23,7 @@ const MobileDevice = () => {
     const [mobileDevices, setMobileDevices] = useState(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState(null);
     const [currentMobileDevice, setCurrentMobileDevice] = useState(null);
+    const rowContextMenuRef = useRef();
 
     const contextMenuItems = useMemo(() => {
         return [
@@ -60,14 +61,7 @@ const MobileDevice = () => {
         } )();
     }, [getMobileDevicesAsync, appSettingsData]);
 
-    if (mobileDevices === null || mobileDevices.length === 0) {
-        content = (
-            <>
-                <h2 className={ 'content-block' }>Мобильные устройства</h2>
-                <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
-            </>
-        );
-    } else {
+    if (!( mobileDevices === null || mobileDevices.length === 0 )) {
         content = (
             <>
                 <h2 className={ 'content-block' }>Мобильные устройства</h2>
@@ -93,7 +87,10 @@ const MobileDevice = () => {
                     <Column type={ 'buttons' } width={ 50 } cellRender={ () => {
                         const buttonIconProps = { style: { cursor: 'pointer' }, size: 16, color: '#464646' };
                         return (
-                            <Button className={ 'time-line-command-button' }>
+                            <Button className={ 'time-line-command-button' } onClick={ (e) => {
+                                rowContextMenuRef.current.instance.option('target', e.element);
+                                rowContextMenuRef.current.instance.show();
+                            } }>
                                 <MdMoreVert { ...buttonIconProps } />
                             </Button>
                         )
@@ -143,13 +140,20 @@ const MobileDevice = () => {
                 }
                 { currentTimelineItem === null ?
                     <ContextMenu
+                        ref={ rowContextMenuRef }
+                        closeOnOutsideClick={ true }
                         items={ contextMenuItems }
-                        target={ '.time-line-command-button' }
-                        showEvent={ 'dxclick' }
-                        width={ 200 }
+                        position={ { my: 'top left', at: 'bottom left' } }
                     />
                     : null
                 }
+            </>
+        );
+    } else {
+        content = (
+            <>
+                <h2 className={ 'content-block' }>Мобильные устройства</h2>
+                <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
             </>
         );
     }

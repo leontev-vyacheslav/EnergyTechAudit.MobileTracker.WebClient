@@ -11,8 +11,10 @@ import { useParams } from 'react-router';
 
 const TrackSheet = () => {
     const dxDataGridRef = useRef(null);
+
     /*const { isXSmall } = useScreenSize();
     const { appSettingsData } = useAppSettings();*/
+
     const { getTrackSheetAsync } = useAppData();
     const [trackSheet, setTrackSheet] = useState(null);
     let { mobileDeviceId } = useParams();
@@ -49,7 +51,6 @@ const TrackSheet = () => {
                     <Paging defaultPageSize={ 10 }/>
                     <Pager showPageSizeSelector={ true } showInfo={ true }/>
                     <Grouping autoExpandAll={ true } key={ 'userId' }/>
-
                     <Column
                         dataField={ 'id' }
                         caption={ 'Ид' }
@@ -57,8 +58,6 @@ const TrackSheet = () => {
                         visible={ false }
                         hidingPriority={ 2 }
                     />
-
-
                 </DataGrid>
             </>
         );
