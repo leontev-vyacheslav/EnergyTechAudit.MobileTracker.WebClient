@@ -106,11 +106,28 @@ function AppDataProvider (props) {
         [axiosWithCredentials],
     );
 
+    const getTrackSheetAsync = useCallback(async (mobileDeviceId) => {
+            const response = await axiosWithCredentials({
+                    url: `${ routes.host }${ routes.mobileDevice }/track-sheet/${ mobileDeviceId }`,
+                    method: HttpConstants.Methods.Get,
+                },
+            );
+            if (response && response.status === HttpConstants.StatusCodes.Ok) {
+                return response.data;
+            }
+            return null;
+        },
+        [axiosWithCredentials],
+    );
+
     const getGeocodedAddressAsync = useCallback(async (location) => {
         try {
-            const geocodeResponse = await Geocode.fromLatLng(location.latitude, location.longitude);
-            if (geocodeResponse && geocodeResponse.status === 'OK') {
-                return geocodeResponse.results.find((e, i) => i === 0).formatted_address;
+            const response = await Geocode.fromLatLng(location.latitude, location.longitude);
+            if (response && response.status === HttpConstants.StatusCodes.Ok) {
+                if(response.results.length > 0)
+                {
+                    return response.find((e, i) => i === 0).formatted_address;
+                }
             }
             return null;
         }
@@ -121,7 +138,7 @@ function AppDataProvider (props) {
 
     return (
         <AppDataContext.Provider
-            value={ { getMobileDevicesAsync, getTimelinesAsync, getLocationRecordsByRangeAsync, getLocationRecordAsync,  getGeocodedAddressAsync } }
+            value={ { getMobileDevicesAsync, getTimelinesAsync, getLocationRecordsByRangeAsync, getLocationRecordAsync,  getGeocodedAddressAsync, getTrackSheetAsync } }
             { ...props }
         />
     );

@@ -8,7 +8,7 @@ import { useSharedArea } from '../../contexts/shared-area';
 
 import './side-navigation-menu.scss';
 
-export default function (props) {
+export default function SideNavigationMenu (props) {
     const {
         children,
         selectedItemChanged,
@@ -63,6 +63,8 @@ export default function (props) {
         }
     }, [currentPath, compactMode]);
 
+    SideNavigationMenu.treeViewRef = treeViewRef;
+
     return (
         <div className={ 'dx-swatch-additional side-navigation-menu' } ref={ getWrapperRef }>
             { children }
@@ -89,4 +91,7 @@ export default function (props) {
             </div>
         </div>
     );
+
 }
+
+
