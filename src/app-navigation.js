@@ -11,7 +11,7 @@ export const navigation = [
 
             {
                 text: 'Мобильные устройства',
-                path: '/mobileDevices',
+                path: '/mobile-devices',
             }
         ]
     },

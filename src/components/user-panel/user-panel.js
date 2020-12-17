@@ -56,7 +56,7 @@ export default function ({ menuMode }) {
             },
         ];
 
-        if (navigationData.currentPath === '/mobileDevices') {
+        if (navigationData.currentPath === '/mobile-devices') {
             items.splice(1, 0, {
                 text: 'Обновить',
                 icon: 'refresh',

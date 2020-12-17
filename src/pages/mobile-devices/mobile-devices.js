@@ -30,7 +30,8 @@ const MobileDevice = () => {
             {
                 text: 'Показать на карте...',
                 icon: 'map',
-                onClick: () => {
+                onClick: (e) => {
+                    e.component.hide();
                     if (dxDataGridRef.current && dxDataGridRef.current.instance) {
                         const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
                         const mobileDevice = mobileDevices.find(md => md.id === currentRowKey);
@@ -42,11 +43,12 @@ const MobileDevice = () => {
             {
                 text: 'Пройдено за месяц...',
                 icon: 'range',
-                onClick: () => {
+                onClick: (e) => {
+                    e.component.hide();
                     if (dxDataGridRef.current && dxDataGridRef.current.instance) {
                         const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
                         const mobileDevice = mobileDevices.find(md => md.id === currentRowKey);
-                        history.push(`/trackSheet/${ mobileDevice.id }`);
+                        history.push(`/track-sheet/${ mobileDevice.id }`);
                     }
                 }
             }];
@@ -85,7 +87,7 @@ const MobileDevice = () => {
                     <Pager showPageSizeSelector={ true } showInfo={ true }/>
                     <Grouping autoExpandAll={ true } key={ 'userId' }/>
                     <Column type={ 'buttons' } width={ 50 } cellRender={ () => {
-                        const buttonIconProps = { style: { cursor: 'pointer' }, size: 16, color: '#464646' };
+                        const buttonIconProps = { style: { cursor: 'pointer' }, size: 18, color: '#464646' };
                         return (
                             <Button className={ 'time-line-command-button' } onClick={ (e) => {
                                 rowContextMenuRef.current.instance.option('target', e.element);
@@ -142,6 +144,7 @@ const MobileDevice = () => {
                     <ContextMenu
                         ref={ rowContextMenuRef }
                         closeOnOutsideClick={ true }
+                        showEvent={ 'suppress' }
                         items={ contextMenuItems }
                         position={ { my: 'top left', at: 'bottom left' } }
                     />

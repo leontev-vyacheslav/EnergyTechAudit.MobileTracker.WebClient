@@ -11,11 +11,11 @@ const routes = [
         component: SettingsPage,
     },
     {
-        path: '/mobileDevices',
+        path: '/mobile-devices',
         component: MobileDevicesPage,
     },
     {
-        path: '/trackSheet/:mobileDeviceId',
+        path: '/track-sheet/:mobileDeviceId',
         component: TrackSheetPage,
     },
     {
