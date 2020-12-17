@@ -114,7 +114,7 @@ const MobileDevice = () => {
                             return (
                                 <div className={ 'mobile-devices-group' }>
                                     <div className={ 'dx-icon dx-icon-user' }/>
-                                    <div>Пользователь: { groupDataItem.email }</div>
+                                    <div>{!isXSmall ? 'Пользователь:' : '' }{ groupDataItem.email }</div>
                                 </div>
                             );
                         } }
