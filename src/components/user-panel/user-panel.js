@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import ContextMenu, { Position } from 'devextreme-react/context-menu';
 import List from 'devextreme-react/list';
+import { MdPerson } from 'react-icons/md';
 import { useAuth } from '../../contexts/auth';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useSharedArea } from '../../contexts/shared-area';
@@ -16,28 +17,38 @@ export default function ({ menuMode }) {
 
     function ItemTemplate (e) {
         return (
-            <React.Fragment>
-                <span className={ `dx-icon dx-icon-${ e.icon } ${ menuMode === 'list' ? ' dx-list-item-icon' : '' }` }/>
-                { e.renderItem ? e.renderItem() : e.text }
-            </React.Fragment>
+            <>
+                { e.renderItem ? e.renderItem(e) : (
+                    <>
+                        <i style={ { marginRight: 24 } } className={ `dx-icon dx-icon-${ e.icon } ${ menuMode === 'list' ? ' dx-list-item-icon' : '' }` }/>
+                        <span className="dx-menu-item-text">{ e.text }</span>
+                    </>
+                ) }
+            </>
         );
     }
 
     const menuItems = useMemo(() => {
-
         let items = [
             {
                 icon: 'user',
                 text: user.email,
-                renderItem: () => {
-                    return ( <span style={ {
-                        width: 150,
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        display: 'inline-block',
-                        verticalAlign: 'middle'
-                    } }>{ user.email }</span> );
+                renderItem: (e) => {
+                    return (
+                        <>
+                            <i style={ { marginRight: 24, marginTop: 4 } } className={ 'dx-icon' }>
+                                <MdPerson size={ 24 }/>
+                            </i>
+                            <span style={ {
+                                width: 150,
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                display: 'inline-block',
+                                verticalAlign: 'middle'
+                            } } className="dx-menu-item-text">{ e.text }</span>
+                        </>
+                    )
                 }
             },
             {

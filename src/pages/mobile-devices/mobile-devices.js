@@ -5,7 +5,7 @@ import { useAppData } from '../../contexts/app-data';
 import { useHistory } from 'react-router-dom';
 import Timelines from './timeline/timelines'
 import AppConstants from '../../constants/app-constants'
-import { MdMoreVert } from 'react-icons/md';
+import { MdTimeline, MdMoreVert } from 'react-icons/md';
 import { Button } from 'devextreme-react/ui/button';
 import TrackMapPopup from './timeline/track-map-popup/track-map-popup';
 import { useAppSettings } from '../../contexts/app-settings';
@@ -25,6 +25,19 @@ const MobileDevice = () => {
     const [currentMobileDevice, setCurrentMobileDevice] = useState(null);
     const rowContextMenuRef = useRef();
 
+    function ItemTemplate (e) {
+        return (
+            <>
+                { e.renderItem ? e.renderItem(e) : (
+                    <>
+                        <i style={ { marginRight: 24 } } className={ `dx-icon dx-icon-${ e.icon }` }/>
+                        <span className="dx-menu-item-text">{ e.text }</span>
+                    </>
+                ) }
+            </>
+        );
+    }
+
     const contextMenuItems = useMemo(() => {
         return [
             {
@@ -43,6 +56,16 @@ const MobileDevice = () => {
             {
                 text: 'Пройдено за месяц...',
                 icon: 'range',
+                renderItem: (e) => {
+                    return (
+                        <>
+                            <i style={ { marginRight: 24, marginTop: 4 } } className={ 'dx-icon' }>
+                                <MdTimeline size={ 18 }/>
+                            </i>
+                            <span className="dx-menu-item-text">{ e.text }</span>
+                        </>
+                    )
+                },
                 onClick: (e) => {
                     e.component.hide();
                     if (dxDataGridRef.current && dxDataGridRef.current.instance) {
@@ -54,8 +77,6 @@ const MobileDevice = () => {
             }];
     }, [getDailyTimelineItem, history, mobileDevices]);
 
-    let content;
-
     useEffect(() => {
         ( async () => {
             const mobileDevicesData = await getMobileDevicesAsync() ?? [];
@@ -64,7 +85,7 @@ const MobileDevice = () => {
     }, [getMobileDevicesAsync, appSettingsData]);
 
     if (!( mobileDevices === null || mobileDevices.length === 0 )) {
-        content = (
+        return (
             <>
                 <h2 className={ 'content-block' }>Мобильные устройства</h2>
                 <DataGrid ref={ dxDataGridRef }
@@ -114,7 +135,7 @@ const MobileDevice = () => {
                             return (
                                 <div className={ 'mobile-devices-group' }>
                                     <div className={ 'dx-icon dx-icon-user' }/>
-                                    <div>{!isXSmall ? 'Пользователь:' : '' }{ groupDataItem.email }</div>
+                                    <div>{ !isXSmall ? 'Пользователь:' : '' }{ groupDataItem.email }</div>
                                 </div>
                             );
                         } }
@@ -144,6 +165,7 @@ const MobileDevice = () => {
                     <ContextMenu
                         ref={ rowContextMenuRef }
                         closeOnOutsideClick={ true }
+                        itemRender={ ItemTemplate }
                         showEvent={ 'suppress' }
                         items={ contextMenuItems }
                         position={ { my: 'top left', at: 'bottom left' } }
@@ -152,15 +174,14 @@ const MobileDevice = () => {
                 }
             </>
         );
-    } else {
-        content = (
-            <>
-                <h2 className={ 'content-block' }>Мобильные устройства</h2>
-                <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
-            </>
-        );
     }
-    return content;
+
+    return (
+        <>
+            <h2 className={ 'content-block' }>Мобильные устройства</h2>
+            <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
+        </>
+    );
 };
 
 export default MobileDevice;
