@@ -108,7 +108,7 @@ function AppDataProvider (props) {
 
     const getTrackSheetAsync = useCallback(async (mobileDeviceId) => {
             const response = await axiosWithCredentials({
-                    url: `${ routes.host }${ routes.mobileDevice }/track-sheet/${ mobileDeviceId }`,
+                    url: `${ routes.host }${ routes.timeline }/${ mobileDeviceId }/track-sheet`,
                     method: HttpConstants.Methods.Get,
                 },
             );

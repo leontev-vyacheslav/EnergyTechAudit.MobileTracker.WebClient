@@ -1,17 +1,17 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import DataGrid, { Column, Grouping, MasterDetail, Pager, Paging, Scrolling } from 'devextreme-react/data-grid';
-import ContextMenu from 'devextreme-react/context-menu';
 import { useAppData } from '../../contexts/app-data';
 import { useHistory } from 'react-router-dom';
 import Timelines from './timeline/timelines'
 import AppConstants from '../../constants/app-constants'
-import { MdTimeline, MdMoreVert } from 'react-icons/md';
+import { MdMoreVert } from 'react-icons/md';
 import { Button } from 'devextreme-react/ui/button';
 import TrackMapPopup from './timeline/track-map-popup/track-map-popup';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useScreenSize } from '../../utils/media-query';
 
 import './mobile-devices.scss';
+import MobileDeviceContextMenu from './mobile-devices-context-menu/mobile-device-context-menu';
 
 const MobileDevice = () => {
     const dxDataGridRef = useRef(null);
@@ -25,57 +25,22 @@ const MobileDevice = () => {
     const [currentMobileDevice, setCurrentMobileDevice] = useState(null);
     const rowContextMenuRef = useRef();
 
-    function ItemTemplate (e) {
-        return (
-            <>
-                { e.renderItem ? e.renderItem(e) : (
-                    <>
-                        <i style={ { marginRight: 24 } } className={ `dx-icon dx-icon-${ e.icon }` }/>
-                        <span className="dx-menu-item-text">{ e.text }</span>
-                    </>
-                ) }
-            </>
-        );
-    }
+    const showTrackMap = useCallback( ()=> {
+        if (dxDataGridRef.current && dxDataGridRef.current.instance) {
+            const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
+            const mobileDevice = mobileDevices.find(md => md.id === currentRowKey);
+            setCurrentMobileDevice(mobileDevice);
+            setCurrentTimelineItem(getDailyTimelineItem());
+        }
+    }, [getDailyTimelineItem, mobileDevices]);
 
-    const contextMenuItems = useMemo(() => {
-        return [
-            {
-                text: 'Показать на карте...',
-                icon: 'map',
-                onClick: (e) => {
-                    e.component.hide();
-                    if (dxDataGridRef.current && dxDataGridRef.current.instance) {
-                        const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
-                        const mobileDevice = mobileDevices.find(md => md.id === currentRowKey);
-                        setCurrentMobileDevice(mobileDevice);
-                        setCurrentTimelineItem(getDailyTimelineItem());
-                    }
-                }
-            },
-            {
-                text: 'Пройдено за месяц...',
-                icon: 'range',
-                renderItem: (e) => {
-                    return (
-                        <>
-                            <i style={ { marginRight: 24, marginTop: 4 } } className={ 'dx-icon' }>
-                                <MdTimeline size={ 18 }/>
-                            </i>
-                            <span className="dx-menu-item-text">{ e.text }</span>
-                        </>
-                    )
-                },
-                onClick: (e) => {
-                    e.component.hide();
-                    if (dxDataGridRef.current && dxDataGridRef.current.instance) {
-                        const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
-                        const mobileDevice = mobileDevices.find(md => md.id === currentRowKey);
-                        history.push(`/track-sheet/${ mobileDevice.id }`);
-                    }
-                }
-            }];
-    }, [getDailyTimelineItem, history, mobileDevices]);
+    const showCoveredDistance = useCallback(() => {
+        if (dxDataGridRef.current && dxDataGridRef.current.instance) {
+            const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
+            const mobileDevice = mobileDevices.find(md => md.id === currentRowKey);
+            history.push(`/track-sheet/${ mobileDevice.id }`);
+        }
+    }, [history, mobileDevices])
 
     useEffect(() => {
         ( async () => {
@@ -162,14 +127,10 @@ const MobileDevice = () => {
                     : null
                 }
                 { currentTimelineItem === null ?
-                    <ContextMenu
+                    <MobileDeviceContextMenu
                         ref={ rowContextMenuRef }
-                        closeOnOutsideClick={ true }
-                        itemRender={ ItemTemplate }
-                        showEvent={ 'suppress' }
-                        items={ contextMenuItems }
-                        position={ { my: 'top left', at: 'bottom left' } }
-                    />
+                        onShowTrackMapItemClick={ showTrackMap }
+                        onShowCoveredDistanceItemClick={ showCoveredDistance }/>
                     : null
                 }
             </>

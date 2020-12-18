@@ -8,7 +8,8 @@ import { useSharedArea } from '../../../../contexts/shared-area';
 import './track-map-popup.scss';
 import { MdMoreVert } from 'react-icons/md';
 import { Button } from 'devextreme-react/ui/button';
-import ContextMenu from 'devextreme-react/context-menu';
+
+import TrackMapPopupMenu from './track-map-popup-menu/track-map-popup-menu'
 
 const TrackMapPopup = ({ mobileDevice, timelineItem, onHiding }) => {
     const { isXSmall, isSmall } = useScreenSize();
@@ -39,27 +40,10 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, onHiding }) => {
                     contextMenuRef.current.instance.show();
                 } } >
                     <MdMoreVert size={ 18 }/>
-                    <ContextMenu
+                    <TrackMapPopupMenu
                         ref={ contextMenuRef }
-                        showEvent={ 'suppress' }
-                        items={ [
-                            {
-                                text: 'Обновить',
-                                icon: 'refresh',
-                                onClick: (e) => {
-                                    e.component.hide();
-                                    setRefreshToken({ ...{} });
-                                },
-                            },
-                            {
-                                text: 'Рабочая дата',
-                                icon: 'event',
-                                onClick: (e) => {
-                                    e.component.hide();
-                                    showWorkDatePicker();
-                                }
-                            } ] }
-                        position={ { my: 'top right', at: 'bottom right' } }
+                        onRefreshTokenItemClick={ () => setRefreshToken({ ...{} }) }
+                        onShowWorkDatePickerItemClick={ () => showWorkDatePicker() }
                     />
                 </Button>
             </ToolbarItem>
