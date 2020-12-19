@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import DataGrid, { Column, MasterDetail, Pager, Paging, Scrolling } from 'devextreme-react/data-grid';
+import DataGrid, { Column, Grouping, MasterDetail, Pager, Paging, Scrolling } from 'devextreme-react/data-grid';
 import { useAppData } from '../../contexts/app-data';
 import AppConstants from '../../constants/app-constants'
 
@@ -9,12 +9,16 @@ import { useParams } from 'react-router';
 import { Button } from 'devextreme-react/ui/button';
 import { MdMoreVert } from 'react-icons/md';
 import Timelines from '../mobile-devices/timeline/timelines';
+import  TrackSheetContextMenu from './track-sheet-context-menu'
+import { useScreenSize } from '../../utils/media-query';
 
 const TrackSheet = () => {
     const dxDataGridRef = useRef(null);
+    const { isXSmall } = useScreenSize();
     const { getMobileDeviceAsync, getTrackSheetAsync } = useAppData();
     const [trackSheet, setTrackSheet] = useState(null);
     const [currentMobileDevice, setCurrentMobileDevice] = useState(null);
+    const rowContextMenuRef = useRef();
 
     let { mobileDeviceId } = useParams();
 
@@ -22,24 +26,28 @@ const TrackSheet = () => {
         (async () => {
             const mobileDevice = await getMobileDeviceAsync(mobileDeviceId);
             setCurrentMobileDevice(mobileDevice);
-            const trackSheet = await getTrackSheetAsync(mobileDeviceId) ?? [];
-            setTrackSheet(trackSheet);
+
+            let trackSheet = await getTrackSheetAsync(mobileDeviceId) ?? [];
+            trackSheet = trackSheet.map(ts => {
+                return { ...ts, ...{ userId: mobileDevice.userId, mobileDeviceId: mobileDevice.id } }
+            });
             console.log(trackSheet);
+            console.log(mobileDevice);
+            setTrackSheet(trackSheet);
         }) ();
     }, [getMobileDeviceAsync, getTrackSheetAsync, mobileDeviceId]);
 
     SideNavigationMenu.treeViewRef?.current?.instance.unselectAll();
 
-    if (!( trackSheet === null || trackSheet.length === 0 )) {
+    if ( trackSheet !== null && trackSheet.length !== 0 && currentMobileDevice ) {
         return (
             <>
-                <h2 className={ 'content-block' }>Путевой отчет: { currentMobileDevice.email.toLowerCase() } / { currentMobileDevice.model }</h2>
+                <h2 className={ 'content-block' }>Путевой отчет</h2>
                 <DataGrid ref={ dxDataGridRef }
                           keyExpr={ 'id' }
                           className={ 'mobile-devices dx-card wide-card' }
                           noDataText={ AppConstants.noDataLongText }
                           dataSource={ trackSheet }
-
                           showBorders={ false }
                           focusedRowEnabled={ true }
                           showColumnHeaders={ true }
@@ -53,12 +61,27 @@ const TrackSheet = () => {
                     <Scrolling showScrollbar={ 'never' }/>
                     <Paging defaultPageSize={ 10 }/>
                     <Pager showPageSizeSelector={ true } showInfo={ true }/>
+                    <Grouping autoExpandAll={ true } key={ 'userId' }/>
 
+                    <Column
+                        dataField={ 'userId' }
+                        groupIndex={ 0 }
+                        groupCellRender={ () => {
+                            return (
+                                <div className={ 'mobile-devices-group' }>
+                                    <div className={ 'dx-icon dx-icon-user' }/>
+                                    <div><span style={ { marginRight: 10 } }>{ !isXSmall ? 'Пользователь:' : '' }</span>{ currentMobileDevice.email.toLowerCase() }</div>
+                                </div>
+                            );
+                        } }
+                        visible={ false }
+                    />
                     <Column type={ 'buttons' } width={ 50 } cellRender={ () => {
                         const buttonIconProps = { style: { cursor: 'pointer' }, size: 18, color: '#464646' };
                         return (
-                            <Button className={ 'time-line-command-button' } onClick={ () => {
-
+                            <Button className={ 'time-line-command-button' } onClick={ (e) => {
+                                rowContextMenuRef.current.instance.option('target', e.element);
+                                rowContextMenuRef.current.instance.show();
                             } }>
                                 <MdMoreVert { ...buttonIconProps } />
                             </Button>
@@ -66,7 +89,7 @@ const TrackSheet = () => {
                     } }
                     />
 
-                    <Column dataField={ 'id' } caption={ 'Ид' } width={ 50 } hidingPriority={ 2 }/>
+                    <Column dataField={ 'id' } caption={ 'День' } width={ 60 } hidingPriority={ 2 }/>
 
                     <Column dataField={ 'date' } caption={ 'Дата' } width={ 100 } dataType={ 'date' } alignment={ 'left' } allowSorting={ false } hidingPriority={ 3 }/>
 
@@ -81,6 +104,9 @@ const TrackSheet = () => {
                         } }
                     />
                 </DataGrid>
+                <TrackSheetContextMenu ref={ rowContextMenuRef } onShowTrackMapItemClick={ () => {
+                    alert('Hi!');
+                } }/>
             </>
         );
     }

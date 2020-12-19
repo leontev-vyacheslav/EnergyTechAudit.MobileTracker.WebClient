@@ -88,7 +88,7 @@ const Timelines = ({ currentMobileDevice, workDate }) => {
                                 </React.Fragment>
                             )
                         } }/>
-                <Column dataField={ 'id' } dataType={ 'number' } caption={ 'Ид' } width={ 60 } alignment={ 'center' }/>
+                <Column dataField={ 'id' } dataType={ 'number' } caption={ 'Час' } width={ 60 } alignment={ 'center' }/>
                 <Column dataField={ 'beginDate' } dataType={ 'datetime' } hidingPriority={ 1 } caption={ 'Начало периода' } width={ 150 }/>
                 <Column dataField={ 'endDate' } dataType={ 'datetime' } hidingPriority={ 0 } caption={ 'Конец периода' } width={ 150 }/>
                 <Column dataField={ 'distance' } dataType={ 'number' } caption={ 'Расстояние' } width={ 150 } alignment={ 'left' }/>
