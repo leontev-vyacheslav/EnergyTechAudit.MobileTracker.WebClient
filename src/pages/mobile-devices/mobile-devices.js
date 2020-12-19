@@ -113,7 +113,7 @@ const MobileDevice = () => {
                     <MasterDetail
                         enabled={ true }
                         render={ (e) => {
-                            return <Timelines currentMobileDevice={ e.data }/>;
+                            return <Timelines currentMobileDevice={ e.data } workDate={ appSettingsData.workDate }/>;
                         } }
                     />
                 </DataGrid>
@@ -146,3 +146,4 @@ const MobileDevice = () => {
 };
 
 export default MobileDevice;
+

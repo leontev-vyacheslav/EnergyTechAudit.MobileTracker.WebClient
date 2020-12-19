@@ -49,6 +49,17 @@ function AppDataProvider (props) {
         return  null;
     }, [axiosWithCredentials]);
 
+    const getMobileDeviceAsync = useCallback(async (mobileDeviceId) => {
+        const response = await axiosWithCredentials({
+            url: `${ routes.host }${ routes.mobileDevice }/${mobileDeviceId}`,
+            method: HttpConstants.Methods.Get
+        });
+        if (response && response.status === HttpConstants.StatusCodes.Ok) {
+            return response.data;
+        }
+        return null;
+    }, [axiosWithCredentials]);
+
     const getTimelinesAsync = useCallback(async (mobileDeviceId, workDate) => {
             const utcOffset = Moment().utcOffset();
 
@@ -138,7 +149,9 @@ function AppDataProvider (props) {
 
     return (
         <AppDataContext.Provider
-            value={ { getMobileDevicesAsync, getTimelinesAsync, getLocationRecordsByRangeAsync, getLocationRecordAsync,  getGeocodedAddressAsync, getTrackSheetAsync } }
+            value={ {
+                getMobileDeviceAsync, getMobileDevicesAsync,  getTimelinesAsync, getLocationRecordsByRangeAsync,
+                getLocationRecordAsync,  getGeocodedAddressAsync, getTrackSheetAsync } }
             { ...props }
         />
     );
