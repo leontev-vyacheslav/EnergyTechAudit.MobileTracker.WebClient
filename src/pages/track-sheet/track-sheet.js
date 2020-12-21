@@ -70,7 +70,7 @@ const TrackSheet = () => {
                             return (
                                 <div className={ 'mobile-devices-group' }>
                                     <div className={ 'dx-icon dx-icon-user' }/>
-                                    <div><span style={ { marginRight: 10 } }>{ !isXSmall ? 'Пользователь:' : '' }</span>{ currentMobileDevice.email.toLowerCase() }</div>
+                                    <div><span style={ { marginRight: 10 } }>{ !isXSmall ? 'Пользователь:' : '' }</span>{ currentMobileDevice.email.toLowerCase() } / { currentMobileDevice.model }</div>
                                 </div>
                             );
                         } }

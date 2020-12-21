@@ -30,6 +30,7 @@ const AppConstants = {
 
     trackMap:{
         apiKey: 'AIzaSyBLE0ThOFO5aYYVrsDP8AIJUAVDCiTPiLQ',
+        geocodeApiUrl: 'https://maps.googleapis.com/maps/api/geocode/json',
         libraries: ['geometry'],
         defaultZoom: 15,
         defaultTheme: [{ featureType: 'all', stylers: [{ saturation: 2.5 }, { gamma: 0.25 }] }],

@@ -72,7 +72,7 @@ const MobileDevice = () => {
                     <Paging defaultPageSize={ 10 }/>
                     <Pager showPageSizeSelector={ true } showInfo={ true }/>
                     <Grouping autoExpandAll={ true } key={ 'userId' }/>
-                    <Column type={ 'buttons' } width={ 50 } cellRender={ () => {
+                    <Column type={ 'buttons' } width={ 40 } cellRender={ () => {
                         const buttonIconProps = { style: { cursor: 'pointer' }, size: 18, color: '#464646' };
                         return (
                             <Button className={ 'time-line-command-button' } onClick={ (e) => {

@@ -7,7 +7,7 @@ import { HttpConstants } from '../constants/http-constants';
 import { DateEx } from '../utils/DateEx';
 import Moment from 'moment';
 import { useAppSettings } from './app-settings';
-import Geocode from '../api/external/geocode';
+import AppConstants from '../constants/app-constants';
 
 function AppDataProvider (props) {
     const { appSettingsData } = useAppSettings();
@@ -117,6 +117,43 @@ function AppDataProvider (props) {
         [axiosWithCredentials],
     );
 
+    const getGeocodedAddressAsync = useCallback(async (locationRecord) => {
+            const latLng = `${ locationRecord.latitude },${ locationRecord.longitude }`;
+            const response = await fetch(
+                `${ AppConstants.trackMap.geocodeApiUrl }?latlng=${ encodeURIComponent(latLng) }&key=${ AppConstants.trackMap.apiKey }&language=ru&region=ru`
+            );
+            if (response && response.status === HttpConstants.StatusCodes.Ok) {
+                const dataResponse = await response.json();
+                if(dataResponse && dataResponse.status === 'OK') {
+                    if(dataResponse.results.length > 0)
+                    {
+                        return dataResponse.results.find((e, i) => i === 0).formatted_address;
+                    }
+                }
+            }
+            return null;
+        },
+        [],
+    );
+
+    const getGeocodedLocationAsync = useCallback(async (address) => {
+            const response = await fetch(
+                `${ AppConstants.trackMap.geocodeApiUrl }?address=${ encodeURIComponent(address) }&key=${ AppConstants.trackMap.apiKey }&language=ru&region=ru`
+            );
+            if (response && response.status === HttpConstants.StatusCodes.Ok) {
+                const dataResponse = await response.json();
+                if(dataResponse && dataResponse.status === 'OK') {
+                    if(dataResponse.results.length > 0)
+                    {
+                        return dataResponse.results.find((e, i) => i === 0);
+                    }
+                }
+            }
+            return null;
+        },
+        [],
+    );
+
     const getTrackSheetAsync = useCallback(async (mobileDeviceId) => {
             const response = await axiosWithCredentials({
                     url: `${ routes.host }${ routes.timeline }/${ mobileDeviceId }/track-sheet`,
@@ -131,27 +168,12 @@ function AppDataProvider (props) {
         [axiosWithCredentials],
     );
 
-    const getGeocodedAddressAsync = useCallback(async (location) => {
-        try {
-            const response = await Geocode.fromLatLng(location.latitude, location.longitude);
-            if (response && response.status === HttpConstants.StatusCodes.Ok) {
-                if(response.results.length > 0)
-                {
-                    return response.find((e, i) => i === 0).formatted_address;
-                }
-            }
-            return null;
-        }
-        catch {
-            return  null;
-        }
-    }, []);
-
     return (
         <AppDataContext.Provider
             value={ {
                 getMobileDeviceAsync, getMobileDevicesAsync,  getTimelinesAsync, getLocationRecordsByRangeAsync,
-                getLocationRecordAsync,  getGeocodedAddressAsync, getTrackSheetAsync } }
+                getLocationRecordAsync,  getGeocodedAddressAsync, getGeocodedLocationAsync, getTrackSheetAsync
+            } }
             { ...props }
         />
     );
