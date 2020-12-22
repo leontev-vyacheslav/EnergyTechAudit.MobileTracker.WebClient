@@ -10,7 +10,7 @@ import { useAppSettings } from '../../../../../contexts/app-settings';
 import AppConstants from '../../../../../constants/app-constants';
 import './track-map.scss';
 
-const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
+const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => {
     const { appSettingsData, getDailyTimelineItem } = useAppSettings();
     const { isXSmall, isSmall } = useScreenSize();
 
@@ -19,13 +19,17 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
     const [trackLocationRecordList, setTrackLocationRecordList] = useState(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState({ ...timelineItem });
 
-    const prevWorkDate = useRef(appSettingsData.workDate);
+    const prevWorkDate = useRef(!initialDate ? appSettingsData.workDate : initialDate);
 
     useEffect(() => {
-        if(prevWorkDate.current !== appSettingsData.workDate) {
-            setCurrentTimelineItem(getDailyTimelineItem());
+        if (!initialDate) {
+            if (prevWorkDate.current !== appSettingsData.workDate) {
+                setCurrentTimelineItem(getDailyTimelineItem());
+            } else {
+                setCurrentTimelineItem(getDailyTimelineItem(initialDate));
+            }
         }
-    }, [appSettingsData.workDate, getDailyTimelineItem])
+    }, [appSettingsData.workDate, getDailyTimelineItem, initialDate])
 
     const mapInstance = useRef(null);
     const trackPath = useRef(null);
@@ -79,9 +83,9 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
     const showInfoWindowAsync = useCallback(async trackLocationRecord => {
         if (mapInstance.current) {
 
-            const locationRecord =  await getLocationRecordAsync(trackLocationRecord.id);
+            const locationRecord = await getLocationRecordAsync(trackLocationRecord.id);
 
-            if(!locationRecord) return;
+            if (!locationRecord) return;
 
             if (currentInfoWindow.current !== null) {
                 currentInfoWindow.current.close();
@@ -304,7 +308,11 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
                 buildBreakIntervals();
             }
         }
-    }, [initOverlays, fitMapBoundsByLocations, trackLocationRecordList, buildMarkersOnPolylinePath, buildOutsideMarkers, appSettingsData.isShownBreakInterval, buildBreakIntervals]);
+    },
+        [
+        initOverlays, fitMapBoundsByLocations, trackLocationRecordList,
+        buildMarkersOnPolylinePath, buildOutsideMarkers, appSettingsData.isShownBreakInterval, buildBreakIntervals
+    ]);
 
     useEffect(() => {
         ( async () => {
@@ -328,8 +336,9 @@ const TrackMap = ({ mobileDevice, timelineItem, refreshToken }) => {
                 <TrackMapHeader
                     mobileDevice={ mobileDevice }
                     timelineItem={ currentTimelineItem }
+                    initialDate={ initialDate }
                     onCurrentTimelineItemChanged={ (currentTimelineItem) => {
-                        if(currentTimelineItem) {
+                        if (currentTimelineItem) {
                             setCurrentTimelineItem(currentTimelineItem);
                         }
                     } }

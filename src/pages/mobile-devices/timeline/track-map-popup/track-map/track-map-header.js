@@ -7,7 +7,7 @@ import './track-map-header.scss';
 import { useAppData } from '../../../../../contexts/app-data';
 import { useAppSettings } from '../../../../../contexts/app-settings';
 
-const TrackMapHeader = ({ mobileDevice, timelineItem, onCurrentTimelineItemChanged }) => {
+const TrackMapHeader = ({ mobileDevice, timelineItem, initialDate, onCurrentTimelineItemChanged }) => {
     const { isXSmall } = useScreenSize();
 
     const { appSettingsData, getDailyTimelineItem } = useAppSettings();
@@ -18,11 +18,11 @@ const TrackMapHeader = ({ mobileDevice, timelineItem, onCurrentTimelineItemChang
 
     useEffect(() => {
         ( async () => {
-            const timelineItem = getDailyTimelineItem();
-            let timeline = await getTimelinesAsync(mobileDevice.id, appSettingsData.workDate) ?? [];
+            const timelineItem = getDailyTimelineItem(initialDate);
+            let timeline = await getTimelinesAsync(mobileDevice.id, initialDate ?? appSettingsData.workDate) ?? [];
             setCurrentTimeline([timelineItem, ...timeline]);
         } )();
-    }, [getTimelinesAsync, mobileDevice.id, getDailyTimelineItem, appSettingsData.workDate]);
+    }, [getTimelinesAsync, mobileDevice.id, getDailyTimelineItem, initialDate, appSettingsData.workDate]);
 
     useEffect(() =>{
         let index = currentTimeline.findIndex(t => t.id === timelineItem.id);
@@ -45,7 +45,7 @@ const TrackMapHeader = ({ mobileDevice, timelineItem, onCurrentTimelineItemChang
         <div className={ 'track-map-header' }>
             <div className={ 'track-map-header-email' } style={ { display: !isXSmall ? 'flex' : 'none', alignItems: 'center' } }>
                 <MdPerson size={ 26 }/>
-                <div>{ mobileDevice.email }</div>
+                <div>{ mobileDevice.email.toLowerCase() }</div>
             </div>
             <div className={ 'track-map-select-box-container' } style={ { width: !isXSmall ? '300px' : '100%' } }>
                 { dataSource && currentIndex !== -1 && dataSource[currentIndex] ? (

@@ -11,7 +11,7 @@ import { Button } from 'devextreme-react/ui/button';
 
 import TrackMapPopupMenu from './track-map-popup-menu/track-map-popup-menu'
 
-const TrackMapPopup = ({ mobileDevice, timelineItem, onHiding }) => {
+const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onHiding }) => {
     const { isXSmall, isSmall } = useScreenSize();
     const [refreshToken, setRefreshToken] = useState({});
     const { showWorkDatePicker } = useSharedArea();
@@ -30,6 +30,7 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, onHiding }) => {
                        <TrackMap
                            mobileDevice={ mobileDevice }
                            timelineItem={ timelineItem }
+                           initialDate={ initialDate }
                            refreshToken={ refreshToken }
                        />
                    );
@@ -42,8 +43,13 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, onHiding }) => {
                     <MdMoreVert size={ 18 }/>
                     <TrackMapPopupMenu
                         ref={ contextMenuRef }
+                        initialDate={ initialDate }
                         onRefreshTokenItemClick={ () => setRefreshToken({ ...{} }) }
-                        onShowWorkDatePickerItemClick={ () => showWorkDatePicker() }
+                        onShowWorkDatePickerItemClick={
+                            () => {
+                                showWorkDatePicker();
+                            }
+                        }
                     />
                 </Button>
             </ToolbarItem>

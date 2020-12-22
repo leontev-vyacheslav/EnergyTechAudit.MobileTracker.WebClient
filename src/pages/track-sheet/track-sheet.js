@@ -11,13 +11,18 @@ import { MdMoreVert } from 'react-icons/md';
 import Timelines from '../mobile-devices/timeline/timelines';
 import  TrackSheetContextMenu from './track-sheet-context-menu'
 import { useScreenSize } from '../../utils/media-query';
+import TrackMapPopup from '../mobile-devices/timeline/track-map-popup/track-map-popup';
+import { useAppSettings } from '../../contexts/app-settings';
 
 const TrackSheet = () => {
     const dxDataGridRef = useRef(null);
     const { isXSmall } = useScreenSize();
+    const { getDailyTimelineItem } = useAppSettings();
     const { getMobileDeviceAsync, getTrackSheetAsync } = useAppData();
     const [trackSheet, setTrackSheet] = useState(null);
     const [currentMobileDevice, setCurrentMobileDevice] = useState(null);
+    const [currentTimelineItem, setCurrentTimelineItem] = useState(null);
+    const [currentDate, setCurrentDate] = useState(null);
     const rowContextMenuRef = useRef();
 
     let { mobileDeviceId } = useParams();
@@ -82,6 +87,7 @@ const TrackSheet = () => {
                             <Button className={ 'time-line-command-button' } onClick={ (e) => {
                                 rowContextMenuRef.current.instance.option('target', e.element);
                                 rowContextMenuRef.current.instance.show();
+
                             } }>
                                 <MdMoreVert { ...buttonIconProps } />
                             </Button>
@@ -105,11 +111,27 @@ const TrackSheet = () => {
                     />
                 </DataGrid>
                 <TrackSheetContextMenu ref={ rowContextMenuRef } onShowTrackMapItemClick={ () => {
-                    alert('Hi!');
+                    if (dxDataGridRef.current && dxDataGridRef.current.instance) {
+                        const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
+                        const currentTrackSheet = trackSheet.find(ts => ts.id === currentRowKey);
+                        setCurrentDate(currentTrackSheet.date)
+                        setCurrentTimelineItem(getDailyTimelineItem(currentTrackSheet.date));
+                    }
                 } }/>
+                { currentMobileDevice && currentTimelineItem !== null ?
+                    <TrackMapPopup
+                        mobileDevice={ currentMobileDevice }
+                        timelineItem={ currentTimelineItem }
+                        initialDate={ currentDate }
+                        onHiding={ () => {
+                            setCurrentTimelineItem(null);
+                        } }/>
+                    : null
+                }
             </>
         );
     }
+
 
     return (
         <>

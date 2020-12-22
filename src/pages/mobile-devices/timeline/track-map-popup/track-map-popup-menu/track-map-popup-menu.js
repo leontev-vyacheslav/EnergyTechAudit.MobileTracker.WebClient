@@ -1,28 +1,31 @@
 import React from 'react';
 import ContextMenu from 'devextreme-react/context-menu';
 
-const TrackMapPopupMenu = ({ innerRef, onRefreshTokenItemClick, onShowWorkDatePickerItemClick }) => {
+const TrackMapPopupMenu = ({ innerRef, initialDate, onRefreshTokenItemClick, onShowWorkDatePickerItemClick }) => {
 
+    const items = [
+        {
+            name: 'refresh',
+            text: 'Обновить',
+            icon: 'refresh',
+            onClick: (e) => {
+                e.component.hide();
+                onRefreshTokenItemClick(e);
+            },
+        },
+        {
+            name: 'workDate',
+            text: 'Рабочая дата',
+            icon: 'event',
+            onClick: (e) => {
+                e.component.hide();
+                onShowWorkDatePickerItemClick(e);
+            }
+        } ];
     return <ContextMenu
         ref={ innerRef }
         showEvent={ 'suppress' }
-        items={ [
-            {
-                text: 'Обновить',
-                icon: 'refresh',
-                onClick: (e) => {
-                    e.component.hide();
-                    onRefreshTokenItemClick(e);
-                },
-            },
-            {
-                text: 'Рабочая дата',
-                icon: 'event',
-                onClick: (e) => {
-                    e.component.hide();
-                    onShowWorkDatePickerItemClick(e);
-                }
-            } ] }
+        items={ items.filter(i => !initialDate || i.name !== 'workDate' ) }
         position={ { my: 'top right', at: 'bottom right' } }
     />
 }

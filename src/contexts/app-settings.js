@@ -46,9 +46,9 @@ function AppSettingsProvider (props) {
         localStorage.setItem('appSettingsData', JSON.stringify(appSettingsData));
     }, [appSettingsData]);
 
-    const getDailyTimelineItem = useCallback( () => {
-        const beginDate = new Date(appSettingsData.workDate.valueOf());
-        const endDate = new Date(appSettingsData.workDate.valueOf());
+    const getDailyTimelineItem = useCallback( (date) => {
+        const beginDate = new Date(date ?? appSettingsData.workDate.valueOf());
+        const endDate = new Date(date ?? appSettingsData.workDate.valueOf());
         endDate.setHours(24);
         return { id: 0, beginDate: beginDate, endDate: endDate };
     }, [appSettingsData.workDate]);
