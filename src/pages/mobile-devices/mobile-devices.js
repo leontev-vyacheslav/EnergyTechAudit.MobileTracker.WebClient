@@ -100,7 +100,7 @@ const MobileDevice = () => {
                             return (
                                 <div className={ 'mobile-devices-group' }>
                                     <div className={ 'dx-icon dx-icon-user' }/>
-                                    <div><span style={ { marginRight: 10 } }>{ !isXSmall ? 'Пользователь:' : '' }</span>{ groupDataItem.email.toLowerCase() }</div>
+                                    <div><span style={ { marginRight: 10 } }>{ !isXSmall ? 'Пользователь:' : '' }</span>{ groupDataItem.email }</div>
                                 </div>
                             );
                         } }

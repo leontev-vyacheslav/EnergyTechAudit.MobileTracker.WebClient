@@ -45,7 +45,7 @@ const TrackMapHeader = ({ mobileDevice, timelineItem, initialDate, onCurrentTime
         <div className={ 'track-map-header' }>
             <div className={ 'track-map-header-email' } style={ { display: !isXSmall ? 'flex' : 'none', alignItems: 'center' } }>
                 <MdPerson size={ 26 }/>
-                <div>{ mobileDevice.email.toLowerCase() }</div>
+                <div>{ mobileDevice.email }</div>
             </div>
             <div className={ 'track-map-select-box-container' } style={ { width: !isXSmall ? '300px' : '100%' } }>
                 { dataSource && currentIndex !== -1 && dataSource[currentIndex] ? (
