@@ -67,7 +67,10 @@ export default function ({ menuMode }) {
             },
         ];
 
-        if (navigationData.currentPath === '/mobile-devices') {
+        if (
+            navigationData.currentPath.indexOf('/mobile-devices') !== -1  ||
+            navigationData.currentPath.indexOf('/track-sheet') !== -1
+        ) {
             items.splice(1, 0, {
                 text: 'Обновить',
                 icon: 'refresh',

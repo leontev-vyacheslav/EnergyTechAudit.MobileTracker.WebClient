@@ -17,7 +17,7 @@ import { useAppSettings } from '../../contexts/app-settings';
 const TrackSheet = () => {
     const dxDataGridRef = useRef(null);
     const { isXSmall } = useScreenSize();
-    const { getDailyTimelineItem } = useAppSettings();
+    const { appSettingsData, getDailyTimelineItem } = useAppSettings();
     const { getMobileDeviceAsync, getTrackSheetAsync } = useAppData();
     const [trackSheet, setTrackSheet] = useState(null);
     const [currentMobileDevice, setCurrentMobileDevice] = useState(null);
@@ -36,11 +36,9 @@ const TrackSheet = () => {
             trackSheet = trackSheet.map(ts => {
                 return { ...ts, ...{ userId: mobileDevice.userId, mobileDeviceId: mobileDevice.id } }
             });
-            console.log(trackSheet);
-            console.log(mobileDevice);
             setTrackSheet(trackSheet);
         }) ();
-    }, [getMobileDeviceAsync, getTrackSheetAsync, mobileDeviceId]);
+    }, [getMobileDeviceAsync, getTrackSheetAsync, mobileDeviceId, appSettingsData]);
 
     SideNavigationMenu.treeViewRef?.current?.instance.unselectAll();
 

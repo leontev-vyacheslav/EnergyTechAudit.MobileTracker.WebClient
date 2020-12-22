@@ -4,7 +4,7 @@ import './themes/generated/theme.additional.css';
 import './dx-styles.scss';
 
 import React from 'react';
-import  { HashRouter as Router } from 'react-router-dom';
+import { HashRouter as Router } from 'react-router-dom';
 import { NavigationProvider } from './contexts/navigation';
 import { AuthProvider, useAuth } from './contexts/auth';
 import { useScreenSizeClass } from './utils/media-query';
@@ -35,13 +35,13 @@ export default function Main () {
             <AppSettingsProvider>
                 <AuthProvider>
                     <SharedAreaProvider>
-                        <AppDataProvider>
-                            <NavigationProvider>
-                                <div className={ `app ${ screenSizeClass }` }>
-                                    <App/>
-                                </div>
-                            </NavigationProvider>
-                        </AppDataProvider>
+                            <AppDataProvider>
+                                <NavigationProvider>
+                                    <div className={ `app ${ screenSizeClass }` }>
+                                        <App/>
+                                    </div>
+                                </NavigationProvider>
+                            </AppDataProvider>
                     </SharedAreaProvider>
                 </AuthProvider>
             </AppSettingsProvider>
