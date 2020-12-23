@@ -5,9 +5,9 @@ import { useAppData } from '../../../contexts/app-data';
 import TimelineInfo from './timeline-info/timeline-info';
 import AppConstants from '../../../constants/app-constants';
 import { MdMoreVert, MdTimeline, MdTimer, MdTimerOff } from 'react-icons/md';
+import DataGridIconCellValueContainer from '../../../components/data-grid/data-grid-icon-cell-value-container';
 
 import './timeline.scss';
-import DataGridIconCellValueContainer from '../../../components/data-grid/data-grid-icon-cell-value-container';
 
 const Timelines = ({ currentMobileDevice, workDate }) => {
 
@@ -92,13 +92,15 @@ const Timelines = ({ currentMobileDevice, workDate }) => {
                 <Column dataField={ 'id' } dataType={ 'number' } caption={ 'Час' } width={ 60 } alignment={ 'center' }/>
 
                 <Column dataField={ 'beginDate' } dataType={ 'datetime' } hidingPriority={ 1 } caption={ 'Начало периода' } width={ 150 }
-                        cellRender={ (e) => {
-                            return <DataGridIconCellValueContainer
-                                cellDataFormatter={ () => new Date( e.data.beginDate).toLocaleDateString('ru-RU', {  hour: 'numeric',
-                                    minute: 'numeric' }) }
+                        cellRender={ (e) =>
+                            <DataGridIconCellValueContainer
+                                cellDataFormatter={ () => new Date(e.data.beginDate).toLocaleDateString('ru-RU', {
+                                    hour: 'numeric',
+                                    minute: 'numeric'
+                                }) }
                                 iconRenderer={ (iconProps) => <MdTimer { ...iconProps } /> }
                             />
-                        } }
+                        }
                 />
 
                 <Column dataField={ 'endDate' } dataType={ 'datetime' } hidingPriority={ 0 } caption={ 'Конец периода' } width={ 150 }

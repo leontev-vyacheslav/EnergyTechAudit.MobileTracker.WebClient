@@ -314,6 +314,14 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
         buildMarkersOnPolylinePath, buildOutsideMarkers, appSettingsData.isShownBreakInterval, buildBreakIntervals
     ]);
 
+    const onTrackMapLoadHandler = useCallback((googleMap) => {
+        mapInstance.current = googleMap;
+        const delayTimer = setTimeout(() => {
+            showTrack();
+            clearTimeout(delayTimer);
+        }, 150);
+    }, [showTrack]);
+
     useEffect(() => {
         ( async () => {
             let locationRecordsData = await getLocationRecordsByRangeAsync(
@@ -355,13 +363,7 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
                         } }
                     center={ AppConstants.trackMap.defaultCenter }
                     mapContainerStyle={ { height: '90%', width: '100%' } }
-                    onLoad={ (googleMap) => {
-                        mapInstance.current = googleMap;
-                        const delayTimer = setTimeout(() => {
-                            showTrack();
-                            clearTimeout(delayTimer);
-                        }, 250);
-                    } }
+                    onLoad={ onTrackMapLoadHandler }
                     onClick={ () => {
                         if (currentInfoWindow.current !== null) {
                             currentInfoWindow.current.close();

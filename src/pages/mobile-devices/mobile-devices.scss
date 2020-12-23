@@ -1,24 +1,36 @@
 @import "../../themes/variables";
 
 .mobile-devices-group {
-  display: flex;
-  color: $base-darkgrey-text-color;
-  font-weight: bold;
+  display: grid;
+  grid-template-columns: 30px 1fr;
   align-items: center;
+  gap: 10px;
+
   .dx-icon-user {
     margin-right: 10px;
     font-size: 2em;
   }
+
   span {
-    color: rgba(0, 0, 0, .54)
+    color: rgba(0, 0, 0, 0.54)
   }
+}
+
+.mobile-devices-group-line {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  color: $base-darkgrey-text-color;
+  font-weight: bold;
+  align-items: center;
+
 }
 
 .dx-datagrid-rowsview .dx-row-focused.dx-group-row {
   .mobile-devices-group {
-    color: inherit;
+    color: whitesmoke;
+
     span {
-      color: inherit;
+      color: whitesmoke;
     }
   }
 }

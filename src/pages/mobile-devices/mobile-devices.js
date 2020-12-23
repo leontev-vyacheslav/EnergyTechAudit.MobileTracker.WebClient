@@ -76,7 +76,7 @@ const MobileDevice = () => {
                     <Paging defaultPageSize={ 10 }/>
                     <Pager showPageSizeSelector={ true } showInfo={ true }/>
                     <Grouping autoExpandAll={ true } key={ 'userId' }/>
-                    <Column type={ 'buttons' } width={ 40 } cellRender={ () => {
+                    <Column type={ 'buttons' } width={ 50 } cellRender={ () => {
                         const buttonIconProps = { style: { cursor: 'pointer' }, size: 18, color: '#464646' };
                         return (
                             <Button className={ 'time-line-command-button' } onClick={ (e) => {
@@ -88,7 +88,6 @@ const MobileDevice = () => {
                         )
                     } }
                     />
-                    <Column dataField={ 'id' } caption={ 'Ид' } width={ 30 } visible={ false } hidingPriority={ 2 } />
                     <Column
                         dataField={ 'userId' }
                         groupIndex={ 0 }
@@ -98,7 +97,12 @@ const MobileDevice = () => {
                             return (
                                 <div className={ 'mobile-devices-group' }>
                                     <div className={ 'dx-icon dx-icon-user' }/>
-                                    <div><span style={ { marginRight: 10 } }>{ !isXSmall ? 'Пользователь:' : '' }</span>{ groupDataItem.email }</div>
+                                    <div className={ 'mobile-devices-group-line' }>
+                                        <div>
+                                            <span style={ { marginRight: 10 } }>{ !isXSmall ? 'Пользователь:' : '' }</span>
+                                            <span>{ groupDataItem.email }</span>
+                                        </div>
+                                    </div>
                                 </div>
                             );
                         } }
@@ -117,24 +121,25 @@ const MobileDevice = () => {
                                 />
                             } }
                     />
+
                     <Column dataField={ 'os' } caption={ 'ОС' } width={ 120 } allowSorting={ false } hidingPriority={ 2 }
-                            cellRender={ (e) => {
-                                return <DataGridIconCellValueContainer
+                            cellRender={ (e) =>
+                                <DataGridIconCellValueContainer
                                     cellDataFormatter={ () => e.data.os }
                                     iconRenderer={ (iconProps) => {
-                                        return e.data.os.toLowerCase().includes('android') ?  <MdAndroid   { ...iconProps } /> : <SiIos { ...iconProps }/>;
+                                        return e.data.os.toLowerCase().includes('android') ? <MdAndroid   { ...iconProps } /> : <SiIos { ...iconProps }/>;
                                     } }
                                 />
-                            } }
+                            }
                     />
 
                     <Column dataField={ 'registrationDate' } caption={ 'Регистрация' } dataType={ 'datetime' } allowSorting={ false } hidingPriority={ 1 }
-                            cellRender={ (e) => {
-                                return <DataGridIconCellValueContainer
+                            cellRender={ (e) =>
+                                <DataGridIconCellValueContainer
                                     cellDataFormatter={ () => new Date(e.data.registrationDate).toLocaleDateString('ru-RU') }
                                     iconRenderer={ (iconProps) => <RiCalendarCheckFill { ...iconProps } /> }
                                 />
-                            } }
+                            }
                     />
                     <MasterDetail
                         enabled={ true }
@@ -143,6 +148,7 @@ const MobileDevice = () => {
                         } }
                     />
                 </DataGrid>
+
                 { currentMobileDevice && currentTimelineItem !== null ?
                     <TrackMapPopup
                         mobileDevice={ currentMobileDevice }
