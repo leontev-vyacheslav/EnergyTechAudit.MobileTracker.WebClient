@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import DataGrid, { Column, MasterDetail, Scrolling, Selection, Summary, TotalItem } from 'devextreme-react/ui/data-grid';
 import { Button } from 'devextreme-react/ui/button';
-import { MdTimeline } from 'react-icons/md';
 import { useAppData } from '../../../contexts/app-data';
 import TimelineInfo from './timeline-info/timeline-info';
 import AppConstants from '../../../constants/app-constants';
+import { MdMoreVert, MdTimeline, MdTimer, MdTimerOff } from 'react-icons/md';
 
 import './timeline.scss';
+import DataGridIconCellValueContainer from '../../../components/data-grid/data-grid-icon-cell-value-container';
 
 const Timelines = ({ currentMobileDevice, workDate }) => {
 
@@ -79,19 +80,45 @@ const Timelines = ({ currentMobileDevice, workDate }) => {
                         cellRender={ (e) => {
                             const buttonIconProps = { style: { cursor: 'pointer' }, size: 16, color: '#464646' };
                             return (
-                                <React.Fragment>
+                                <>
                                     <Button className={ 'time-line-command-button' } onClick={ () => {
                                         toggleRowDetailByRowKey({ dataGrid: e.component, rowKey: e.row.key, mode: 'info' });
                                     } }>
-                                        <MdTimeline { ...buttonIconProps }/>
+                                        <MdMoreVert { ...buttonIconProps }/>
                                     </Button>
-                                </React.Fragment>
+                                </>
                             )
                         } }/>
                 <Column dataField={ 'id' } dataType={ 'number' } caption={ 'Час' } width={ 60 } alignment={ 'center' }/>
-                <Column dataField={ 'beginDate' } dataType={ 'datetime' } hidingPriority={ 1 } caption={ 'Начало периода' } width={ 150 }/>
-                <Column dataField={ 'endDate' } dataType={ 'datetime' } hidingPriority={ 0 } caption={ 'Конец периода' } width={ 150 }/>
-                <Column dataField={ 'distance' } dataType={ 'number' } caption={ 'Расстояние' } width={ 150 } alignment={ 'left' }/>
+
+                <Column dataField={ 'beginDate' } dataType={ 'datetime' } hidingPriority={ 1 } caption={ 'Начало периода' } width={ 150 }
+                        cellRender={ (e) => {
+                            return <DataGridIconCellValueContainer
+                                cellDataFormatter={ () => new Date( e.data.beginDate).toLocaleDateString('ru-RU', {  hour: 'numeric',
+                                    minute: 'numeric' }) }
+                                iconRenderer={ (iconProps) => <MdTimer { ...iconProps } /> }
+                            />
+                        } }
+                />
+
+                <Column dataField={ 'endDate' } dataType={ 'datetime' } hidingPriority={ 0 } caption={ 'Конец периода' } width={ 150 }
+                        cellRender={ (e) => <DataGridIconCellValueContainer
+                            cellDataFormatter={ () => new Date(e.data.endDate).toLocaleDateString('ru-RU', {
+                                hour: 'numeric',
+                                minute: 'numeric'
+                            }) }
+                            iconRenderer={ (iconProps) => <MdTimerOff { ...iconProps } /> }
+                        /> }
+                />
+
+                <Column dataField={ 'distance' } dataType={ 'number' } caption={ 'Расстояние, км' } width={ 150 } alignment={ 'left' }
+                        cellRender={ (e) =>
+                            <DataGridIconCellValueContainer
+                                cellDataFormatter={ () => ( e.data.distance / 1000 ).toFixed(2) }
+                                iconRenderer={ (iconProps) => <MdTimeline { ...iconProps } /> }
+                            /> }
+                />
+
                 <Summary calculateCustomSummary={ (options) => {
                     if (!currentTimeline) return;
                     if (options.name === 'totalDistance') {

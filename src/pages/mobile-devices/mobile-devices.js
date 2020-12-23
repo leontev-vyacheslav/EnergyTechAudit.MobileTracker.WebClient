@@ -4,14 +4,18 @@ import { useAppData } from '../../contexts/app-data';
 import { useHistory } from 'react-router-dom';
 import Timelines from './timeline/timelines'
 import AppConstants from '../../constants/app-constants'
-import { MdMoreVert } from 'react-icons/md';
 import { Button } from 'devextreme-react/ui/button';
 import TrackMapPopup from './timeline/track-map-popup/track-map-popup';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useScreenSize } from '../../utils/media-query';
+import MobileDeviceContextMenu from './mobile-devices-context-menu/mobile-device-context-menu';
+import DataGridIconCellValueContainer from '../../components/data-grid/data-grid-icon-cell-value-container';
+
+import { RiCalendarCheckFill } from 'react-icons/ri';
+import { MdAndroid, MdMoreVert, MdSmartphone } from 'react-icons/md';
+import { SiIos } from 'react-icons/si';
 
 import './mobile-devices.scss';
-import MobileDeviceContextMenu from './mobile-devices-context-menu/mobile-device-context-menu';
 
 const MobileDevice = () => {
     const dxDataGridRef = useRef(null);
@@ -84,13 +88,7 @@ const MobileDevice = () => {
                         )
                     } }
                     />
-                    <Column
-                        dataField={ 'id' }
-                        caption={ 'Ид' }
-                        width={ 30 }
-                        visible={ false }
-                        hidingPriority={ 2 }
-                    />
+                    <Column dataField={ 'id' } caption={ 'Ид' } width={ 30 } visible={ false } hidingPriority={ 2 } />
                     <Column
                         dataField={ 'userId' }
                         groupIndex={ 0 }
@@ -106,10 +104,38 @@ const MobileDevice = () => {
                         } }
                         visible={ false }
                     />
-                    <Column dataField={ 'deviceUid' } caption={ 'Уид устройства' } width={ 150 } allowSorting={ false } hidingPriority={ 3 }/>
-                    <Column dataField={ 'model' } caption={ 'Модель' } width={ isXSmall ? '100%' : 100 } allowSorting={ false } hidingPriority={ 4 }/>
-                    <Column dataField={ 'os' } caption={ 'ОС' } width={ 100 } allowSorting={ false } hidingPriority={ 2 }/>
-                    <Column dataField={ 'registrationDate' } caption={ 'Регистрация' } dataType={ 'datetime' } allowSorting={ false } hidingPriority={ 1 }/>
+
+                    <Column dataField={ 'model' } caption={ 'Модель' } width={ isXSmall ? '100%' : 100 } allowSorting={ false } hidingPriority={ 4 }
+                            cellRender={ (e) => {
+                                return <DataGridIconCellValueContainer
+                                    cellDataFormatter={ () => {
+                                        return e.data.model;
+                                    } }
+                                    iconRenderer={ (iconProps) => {
+                                        return <MdSmartphone { ...iconProps } />;
+                                    } }
+                                />
+                            } }
+                    />
+                    <Column dataField={ 'os' } caption={ 'ОС' } width={ 120 } allowSorting={ false } hidingPriority={ 2 }
+                            cellRender={ (e) => {
+                                return <DataGridIconCellValueContainer
+                                    cellDataFormatter={ () => e.data.os }
+                                    iconRenderer={ (iconProps) => {
+                                        return e.data.os.toLowerCase().includes('android') ?  <MdAndroid   { ...iconProps } /> : <SiIos { ...iconProps }/>;
+                                    } }
+                                />
+                            } }
+                    />
+
+                    <Column dataField={ 'registrationDate' } caption={ 'Регистрация' } dataType={ 'datetime' } allowSorting={ false } hidingPriority={ 1 }
+                            cellRender={ (e) => {
+                                return <DataGridIconCellValueContainer
+                                    cellDataFormatter={ () => new Date(e.data.registrationDate).toLocaleDateString('ru-RU') }
+                                    iconRenderer={ (iconProps) => <RiCalendarCheckFill { ...iconProps } /> }
+                                />
+                            } }
+                    />
                     <MasterDetail
                         enabled={ true }
                         render={ (e) => {

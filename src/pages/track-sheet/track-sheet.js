@@ -2,17 +2,20 @@ import React, { useEffect, useRef, useState } from 'react';
 import DataGrid, { Column, Grouping, MasterDetail, Pager, Paging, Scrolling } from 'devextreme-react/data-grid';
 import { useAppData } from '../../contexts/app-data';
 import AppConstants from '../../constants/app-constants'
-
-import './track-sheet.scss';
 import SideNavigationMenu from '../../components/side-navigation-menu/side-navigation-menu';
 import { useParams } from 'react-router';
 import { Button } from 'devextreme-react/ui/button';
-import { MdMoreVert } from 'react-icons/md';
 import Timelines from '../mobile-devices/timeline/timelines';
 import  TrackSheetContextMenu from './track-sheet-context-menu'
 import { useScreenSize } from '../../utils/media-query';
 import TrackMapPopup from '../mobile-devices/timeline/track-map-popup/track-map-popup';
 import { useAppSettings } from '../../contexts/app-settings';
+import DataGridIconCellValueContainer from '../../components/data-grid/data-grid-icon-cell-value-container';
+
+import { MdTimeline, RiCalendarEventFill } from 'react-icons/all';
+import { MdMoreVert } from 'react-icons/md';
+
+import './track-sheet.scss';
 
 const TrackSheet = () => {
     const dxDataGridRef = useRef(null);
@@ -79,6 +82,7 @@ const TrackSheet = () => {
                         } }
                         visible={ false }
                     />
+
                     <Column type={ 'buttons' } width={ 50 } cellRender={ () => {
                         const buttonIconProps = { style: { cursor: 'pointer' }, size: 18, color: '#464646' };
                         return (
@@ -93,13 +97,27 @@ const TrackSheet = () => {
                     } }
                     />
 
-                    <Column dataField={ 'id' } caption={ 'День' } width={ 60 } hidingPriority={ 2 }/>
+                    <Column dataField={ 'id' } caption={ 'День' } width={ 60 } hidingPriority={ 2 } visible={ false }/>
 
-                    <Column dataField={ 'date' } caption={ 'Дата' } width={ 100 } dataType={ 'date' } alignment={ 'left' } allowSorting={ false } hidingPriority={ 3 }/>
+                    <Column dataField={ 'date' } caption={ 'Дата' } width={ 150 } dataType={ 'date' } alignment={ 'left' } allowSorting={ false } hidingPriority={ 3 }
+                            cellRender={ (e) => {
+                                return <DataGridIconCellValueContainer
+                                    cellDataFormatter={ () => new Date(e.data.date).toLocaleDateString('ru-RU') }
+                                    iconRenderer={ (iconProps) => <RiCalendarEventFill   { ...iconProps } /> }
+                                />
+                            } }
+                    />
 
-                    <Column dataField={ 'distance' } caption={ 'Расстояние' } width={ 100 } alignment={ 'left' } hidingPriority={ 4 }/>
+                    <Column dataField={ 'distance' } caption={ 'Расстояние, км' } width={ 150 } alignment={ 'left' } hidingPriority={ 4 }
+                            cellRender={ (e) => {
+                                return <DataGridIconCellValueContainer
+                                    cellDataFormatter={ () =>  (e.data.distance / 1000).toFixed(2) }
+                                    iconRenderer={ (iconProps) => <MdTimeline   { ...iconProps } /> }
+                                />
+                            } }
+                    />
 
-                    <Column dataField={ 'samplesNumber' } caption={ 'Отсчеты' } alignment={ 'left' } hidingPriority={ 1 }/>
+                    <Column dataField={ 'samplesNumber' } caption={ 'Отсчеты' } alignment={ 'left' } hidingPriority={ 1 } />
 
                     <MasterDetail
                         enabled={ true }
