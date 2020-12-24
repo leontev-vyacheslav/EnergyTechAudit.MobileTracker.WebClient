@@ -154,9 +154,9 @@ function AppDataProvider (props) {
         [],
     );
 
-    const getTrackSheetAsync = useCallback(async (mobileDeviceId) => {
+    const getTrackSheetAsync = useCallback(async (mobileDeviceId, currentData) => {
             const response = await axiosWithCredentials({
-                    url: `${ routes.host }${ routes.timeline }/${ mobileDeviceId }/track-sheet`,
+                    url: `${ routes.host }${ routes.timeline }/track-sheet?mobileDeviceId=${ mobileDeviceId }&currentDate=${new DateEx(currentData).toLocalISOString()}`,
                     method: HttpConstants.Methods.Get,
                 },
             );

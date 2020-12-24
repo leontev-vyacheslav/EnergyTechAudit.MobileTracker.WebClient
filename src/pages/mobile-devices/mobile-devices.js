@@ -16,6 +16,7 @@ import { MdAndroid, MdMoreVert, MdSmartphone } from 'react-icons/md';
 import { SiIos } from 'react-icons/si';
 
 import './mobile-devices.scss';
+import TrackSheetPopup from '../track-sheet/track-sheet-popup/track-sheet-popup';
 
 const MobileDevice = () => {
     const dxDataGridRef = useRef(null);
@@ -29,6 +30,8 @@ const MobileDevice = () => {
     const [currentMobileDevice, setCurrentMobileDevice] = useState(null);
     const rowContextMenuRef = useRef();
 
+    const [trackSheetPopupTrigger, setTrackSheetPopupTrigger] = useState(false);
+
     const showTrackMap = useCallback( ()=> {
         if (dxDataGridRef.current && dxDataGridRef.current.instance) {
             const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
@@ -38,13 +41,11 @@ const MobileDevice = () => {
         }
     }, [getDailyTimelineItem, mobileDevices]);
 
-    const showCoveredDistance = useCallback(() => {
+    const showTrackSheet = useCallback(() => {
         if (dxDataGridRef.current && dxDataGridRef.current.instance) {
-            const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
-            const mobileDevice = mobileDevices.find(md => md.id === currentRowKey);
-            history.push(`/track-sheet/${ mobileDevice.id }`);
+            setTrackSheetPopupTrigger(true);
         }
-    }, [history, mobileDevices])
+    }, [])
 
     useEffect(() => {
         ( async () => {
@@ -162,8 +163,18 @@ const MobileDevice = () => {
                     <MobileDeviceContextMenu
                         ref={ rowContextMenuRef }
                         onShowTrackMapItemClick={ showTrackMap }
-                        onShowCoveredDistanceItemClick={ showCoveredDistance }/>
+                        onShowCoveredDistanceItemClick={ showTrackSheet }/>
                     : null
+                }
+                { trackSheetPopupTrigger ?
+                    <TrackSheetPopup currentDate={ appSettingsData.workDate } callback={ (result) => {
+                        if(result && result.modalResult === 'OK') {
+                            const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
+                            const mobileDevice = mobileDevices.find(md => md.id === currentRowKey);
+                            history.push(`/track-sheet?mobileDeviceId=${ mobileDevice.id }&currentDate=${result.parametric.currentDate}`);
+                        }
+                        setTrackSheetPopupTrigger(false);
+                    } }/> : null
                 }
             </>
         );

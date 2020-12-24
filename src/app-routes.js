@@ -15,7 +15,7 @@ const routes = [
         component: MobileDevicesPage,
     },
     {
-        path: '/track-sheet/:mobileDeviceId',
+        path: '/track-sheet',
         component: TrackSheetPage,
     },
     {
