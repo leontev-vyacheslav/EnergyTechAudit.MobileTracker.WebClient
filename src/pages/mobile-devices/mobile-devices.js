@@ -10,13 +10,13 @@ import { useAppSettings } from '../../contexts/app-settings';
 import { useScreenSize } from '../../utils/media-query';
 import MobileDeviceContextMenu from './mobile-devices-context-menu/mobile-device-context-menu';
 import DataGridIconCellValueContainer from '../../components/data-grid/data-grid-icon-cell-value-container';
-
 import { RiCalendarCheckFill } from 'react-icons/ri';
 import { MdAndroid, MdMoreVert, MdSmartphone } from 'react-icons/md';
 import { SiIos } from 'react-icons/si';
+import TrackSheetPopup from '../track-sheet/track-sheet-popup/track-sheet-popup';
 
 import './mobile-devices.scss';
-import TrackSheetPopup from '../track-sheet/track-sheet-popup/track-sheet-popup';
+
 import moment from 'moment';
 
 const MobileDevice = () => {
@@ -191,4 +191,3 @@ const MobileDevice = () => {
 };
 
 export default MobileDevice;
-

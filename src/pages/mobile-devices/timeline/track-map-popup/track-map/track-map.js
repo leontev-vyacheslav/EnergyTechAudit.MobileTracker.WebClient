@@ -8,6 +8,8 @@ import { useScreenSize } from '../../../../../utils/media-query';
 import { useAppData } from '../../../../../contexts/app-data';
 import { useAppSettings } from '../../../../../contexts/app-settings';
 import AppConstants from '../../../../../constants/app-constants';
+// eslint-disable-next-line no-unused-vars
+import DataGrid, { Column }  from 'devextreme-react/data-grid';
 import './track-map.scss';
 
 const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => {
