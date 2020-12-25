@@ -3,6 +3,7 @@ import Popup from 'devextreme-react/popup';
 import Form, { SimpleItem } from 'devextreme-react/form';
 import Button from 'devextreme-react/button';
 import { useScreenSize } from '../../../utils/media-query';
+import { DialogConstants } from '../../../constants/dialog-constant';
 
 const TrackSheetPopup = ({ currentDate, callback }) => {
 
@@ -16,7 +17,7 @@ const TrackSheetPopup = ({ currentDate, callback }) => {
                showTitle={ true }
                showCloseButton={ true }
                onHiding={ () => {
-                   callback({ modalResult: 'CLOSE', parametric: null });
+                   callback({ modalResult: DialogConstants.ModalResults.Close, parametric: null });
                } }
                width={ isXSmall || isSmall ? '95%' : 400 }
                height={  200 }
@@ -30,7 +31,7 @@ const TrackSheetPopup = ({ currentDate, callback }) => {
                                        editorOptions={ {
                                            displayFormat: 'monthAndYear',
                                            adaptivityEnabled: true,
-                                           pickerType: ( isXSmall || isSmall ? 'rollers' : 'calendar' ),
+                                           pickerType: 'rollers',
                                            calendarOptions: {
                                                maxZoomLevel: 'year',
                                                minZoomLevel: 'decade',
@@ -51,7 +52,7 @@ const TrackSheetPopup = ({ currentDate, callback }) => {
                                        width={ 95 }
                                        onClick={ () => {
                                            const formData = formRef.current.instance.option('formData');
-                                           callback({ modalResult: 'OK', parametric: formData  });
+                                           callback({ modalResult: DialogConstants.ModalResults.Ok, parametric: formData  });
                                        } }
                                        type={ 'default' }
                                    />
@@ -60,7 +61,7 @@ const TrackSheetPopup = ({ currentDate, callback }) => {
                                        width={ 95 }
                                        text="Отмена" type={ 'normal' }
                                        onClick={ () => {
-                                           callback({ modalResult: 'CANCEL', parametric: null });
+                                           callback({ modalResult: DialogConstants.ModalResults.Cancel, parametric: null });
                                        } }
                                    />
                                </div>

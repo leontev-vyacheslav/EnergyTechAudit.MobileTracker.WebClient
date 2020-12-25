@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import SelectBox from 'devextreme-react/ui/select-box';
-import { MdPerson, MdTimer, MdTimerOff } from 'react-icons/all';
+import { MdPerson, MdTimer, MdTimerOff } from 'react-icons/md';
 import { useScreenSize } from '../../../../../utils/media-query';
 
 import './track-map-header.scss';

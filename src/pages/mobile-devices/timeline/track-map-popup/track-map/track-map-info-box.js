@@ -1,5 +1,5 @@
 import React from 'react';
-import { MdDateRange, MdSmartphone, MdTimer, MdTimerOff } from 'react-icons/all';
+import { MdDateRange, MdSmartphone, MdTimer, MdTimerOff } from 'react-icons/md';
 import './track-map-info-box.scss';
 
 const TrackMapInfoBox = ({ mobileDevice, timelineItem }) => {

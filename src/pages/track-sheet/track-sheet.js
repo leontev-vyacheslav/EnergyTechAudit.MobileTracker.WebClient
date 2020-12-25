@@ -12,8 +12,8 @@ import TrackMapPopup from '../mobile-devices/timeline/track-map-popup/track-map-
 import { useAppSettings } from '../../contexts/app-settings';
 import DataGridIconCellValueContainer from '../../components/data-grid/data-grid-icon-cell-value-container';
 
-import { MdTimeline, RiCalendarEventFill } from 'react-icons/all';
-import { MdMoreVert } from 'react-icons/md';
+import { RiCalendarEventFill } from 'react-icons/ri';
+import { MdTimeline, MdMoreVert } from 'react-icons/md';
 
 import './track-sheet.scss';
 
