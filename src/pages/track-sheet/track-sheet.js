@@ -97,13 +97,9 @@ const TrackSheet = () => {
                                             </div>
                                         </div>
                                         <div className={ 'mobile-devices-group-line' }>
-                                            <span>{ !isXSmall ? 'Всего пройдено за период:' : null } <code style={ {
-                                                borderRadius: 5,
-                                                padding: '3px 12px',
-                                                letterSpacing: 1,
-                                                color: '#f2f2f2',
-                                                backgroundColor: '#ff5722'
-                                            } }>{ ( trackSheet.totalCoveredDistance / 1000 ).toFixed(2) } км</code></span>
+                                            <span>{ !isXSmall ? 'Всего пройдено за период:' : null }
+                                                <code className={ 'badge badge-important' }>{ ( trackSheet.totalCoveredDistance / 1000 ).toFixed(2) } км</code>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

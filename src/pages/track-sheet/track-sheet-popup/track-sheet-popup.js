@@ -11,7 +11,7 @@ const TrackSheetPopup = ({ currentDate, callback }) => {
     const formRef = useRef(null);
 
     return (
-        <Popup className={ 'track-map-popup' } title={ 'Период' }
+        <Popup className={ 'app-popup' } title={ 'Период' }
                dragEnabled={ false }
                visible={ true }
                showTitle={ true }
@@ -24,8 +24,8 @@ const TrackSheetPopup = ({ currentDate, callback }) => {
                contentRender={ () => {
                    return (
                        <>
-                           <div style={ { display: 'grid', height: '100%', gridTemplateRows: '1fr 30px' } }>
-                               <Form ref={ formRef } onFieldDataChanged = { null } >
+                           <div className={ 'popup-form-container' }>
+                               <Form ref={ formRef } >
                                    <SimpleItem
                                        label={ { text: 'Текущий месяц:' } }
                                        editorOptions={ {
@@ -44,25 +44,18 @@ const TrackSheetPopup = ({ currentDate, callback }) => {
                                        value={ currentDate }
                                    />
                                </Form>
-                               <div style={ { display: 'grid', gridTemplateColumns: '1fr 100px 100px', gap: 10 } }>
+                               <div className={ 'popup-form-buttons-row' }>
                                    <div>&nbsp;</div>
-                                   <Button
-                                       style={ { justifySelf: 'right', alignSelf: 'end' } }
-                                       text={ 'Ok' }
-                                       width={ 95 }
+                                   <Button type={ 'default' } text={ 'Ok' } width={ 95 }
                                        onClick={ () => {
                                            const formData = formRef.current.instance.option('formData');
                                            callback({ modalResult: DialogConstants.ModalResults.Ok, parametric: formData  });
                                        } }
-                                       type={ 'default' }
                                    />
-                                   <Button
-                                       style={ { justifySelf: 'right', alignSelf: 'end' } }
-                                       width={ 95 }
-                                       text="Отмена" type={ 'normal' }
-                                       onClick={ () => {
-                                           callback({ modalResult: DialogConstants.ModalResults.Cancel, parametric: null });
-                                       } }
+                                   <Button type={ 'normal' } text="Отмена" width={ 95 }
+                                           onClick={ () => {
+                                               callback({ modalResult: DialogConstants.ModalResults.Cancel, parametric: null });
+                                           } }
                                    />
                                </div>
                            </div>

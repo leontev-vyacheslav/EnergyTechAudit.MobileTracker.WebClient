@@ -17,6 +17,7 @@ import { SiIos } from 'react-icons/si';
 
 import './mobile-devices.scss';
 import TrackSheetPopup from '../track-sheet/track-sheet-popup/track-sheet-popup';
+import moment from 'moment';
 
 const MobileDevice = () => {
     const dxDataGridRef = useRef(null);
@@ -171,7 +172,8 @@ const MobileDevice = () => {
                         if(result && result.modalResult === 'OK') {
                             const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
                             const mobileDevice = mobileDevices.find(md => md.id === currentRowKey);
-                            history.push(`/track-sheet?mobileDeviceId=${ mobileDevice.id }&currentDate=${result.parametric.currentDate}`);
+                            const beginMonthDate = moment(result.parametric.currentDate).startOf('month');
+                            history.push(`/track-sheet?mobileDeviceId=${ mobileDevice.id }&currentDate=${beginMonthDate.toDate().toISOString()}`);
                         }
                         setTrackSheetPopupTrigger(false);
                     } }/> : null

@@ -1,0 +1,28 @@
+.app-popup {
+  .dx-popup-content {
+    padding: 10px;
+  }
+
+  .dx-popup-title.dx-toolbar .dx-toolbar-items-container {
+    height: 46px;
+  }
+
+  .nodata {
+    position: relative;
+    margin: 20px;
+  }
+}
+
+.app-popup {
+  .popup-form-container {
+    display: grid;
+    height: 100%;
+    grid-template-rows: 1fr 30px;
+
+    .popup-form-buttons-row {
+      display: grid;
+      grid-template-columns: 1fr 100px 100px;
+      gap: 10px
+    }
+  }
+}
