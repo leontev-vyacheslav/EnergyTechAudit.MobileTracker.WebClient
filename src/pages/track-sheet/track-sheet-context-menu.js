@@ -1,26 +1,15 @@
 import React, { useMemo } from 'react';
 import ContextMenu from 'devextreme-react/context-menu';
+import ContextMenuItem from '../../components/context-menu-item/context-menu-item';
+import { TrackMapIcon } from '../../utils/app-icons';
 
 const TrackSheetContextMenu = ({ innerRef, onShowTrackMapItemClick }) => {
-
-    function ItemTemplate (e) {
-        return (
-            <>
-                { e.renderItem ? e.renderItem(e) : (
-                    <>
-                        <i style={ { marginRight: 24 } } className={ `dx-icon dx-icon-${ e.icon }` }/>
-                        <span className="dx-menu-item-text">{ e.text }</span>
-                    </>
-                ) }
-            </>
-        );
-    }
 
     const items = useMemo(() => {
         return [
             {
                 text: 'Показать на карте...',
-                icon: 'map',
+                renderItem: () => <TrackMapIcon size={ 18 }/>,
                 onClick: (e) => {
                     e.component.hide();
                     onShowTrackMapItemClick(e);
@@ -31,7 +20,7 @@ const TrackSheetContextMenu = ({ innerRef, onShowTrackMapItemClick }) => {
     return <ContextMenu
         ref={ innerRef }
         closeOnOutsideClick={ true }
-        itemRender={ ItemTemplate }
+        itemRender={ (item) => <ContextMenuItem item={ item } /> }
         showEvent={ 'suppress' }
         items={ items }
         position={ { my: 'top left', at: 'bottom left' } }

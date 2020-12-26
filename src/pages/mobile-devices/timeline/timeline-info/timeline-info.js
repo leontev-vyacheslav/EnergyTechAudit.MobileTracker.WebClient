@@ -4,9 +4,11 @@ import { TimelineInfoHeader } from './timeline-info-header';
 import AppConstants from '../../../../constants/app-constants';
 import { useScreenSize } from '../../../../utils/media-query';
 import { useAppData } from '../../../../contexts/app-data';
+import { AccuracyIcon, BreakIcon, CountdownIcon, EdgePointsIcon, IntervalIcon } from '../../../../utils/app-icons';
 
 import './timeline-info.scss';
-import { AccuracyIcon, BreakIcon, CountdownIcon, EdgePointsIcon, IntervalIcon } from '../../../../utils/app-icons';
+
+
 
 const TimelineInfo = ({ timeline, currentMobileDevice }) => {
 
@@ -16,6 +18,17 @@ const TimelineInfo = ({ timeline, currentMobileDevice }) => {
     const [departure, setDeparture] = useState(null);
     const [destination, setDestination] = useState(null);
     const [timelineInfo, setTimelineInfo] = useState(null);
+
+    const TimelineInfoRow = ({ dataItem }) => {
+        return (
+            <div style={ { display: 'flex', flexDirection: isXSmall || isSmall ? 'column' : 'row' } }>
+                <div style={ { display: 'flex', width: 200, padding: isXSmall || isSmall ? 10 : 'initial' } }>
+                    { ( dataItem.iconRender ? dataItem.iconRender({ size: 18, style: { marginRight: 10 } }) : null ) }
+                    <div>{ dataItem.description }</div>
+                </div>
+                <div style={ { padding: isXSmall || isSmall ? 10 : 'initial' } }>{ dataItem.value }</div>
+            </div> );
+    };
 
     useEffect(() => {
         ( async () => {
@@ -62,16 +75,7 @@ const TimelineInfo = ({ timeline, currentMobileDevice }) => {
         } )();
     }, [getGeocodedAddressAsync, timeline]);
 
-    const TimelineInfoRow = ({ dataItem }) => {
-        return (
-        <div style={ { display: 'flex', flexDirection: isXSmall || isSmall ? 'column' : 'row' } }>
-            <div style={ { display: 'flex', width: 200, padding: isXSmall || isSmall ? 10 : 'initial' } }>
-                { ( dataItem.iconRender ? dataItem.iconRender({ size: 18, style: { marginRight: 10 } }) : null ) }
-                <div>{ dataItem.description }</div>
-            </div>
-            <div style={ { padding: isXSmall || isSmall ? 10 : 'initial' } }>{ dataItem.value }</div>
-        </div> );
-    };
+
 
     return (timelineInfo ?
         (
@@ -80,6 +84,7 @@ const TimelineInfo = ({ timeline, currentMobileDevice }) => {
                 <DataGrid
                     className={ 'timeline-info' }
                     width={ isXSmall || isSmall ? '100%' : '50%' }
+                    height={ '100%' }
                     noDataText={ AppConstants.noDataLongText }
                     dataSource={ timelineInfo }
                     showBorders={ true }

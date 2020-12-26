@@ -32,6 +32,11 @@ export { MdPerson as UserIcon } from 'react-icons/md';
 export { MdLocationOn as LocationIcon } from 'react-icons/md';
 
 export { RiCalendarCheckFill as CurrentDateIcon } from 'react-icons/ri';
+export { RiCalendarCheckFill as WorkDateIcon } from 'react-icons/ri';
+
 export { MdTimeline as DistanceIcon  } from 'react-icons/md';
 
 export { MdAspectRatio as FitToMapIcon } from 'react-icons/md';
+
+export { IoMap as TrackMapIcon } from 'react-icons/io5';
+export { FiRefreshCcw as RefreshIcon } from 'react-icons/fi';

@@ -1,28 +1,16 @@
 import React, { useMemo } from 'react';
 import ContextMenu from 'devextreme-react/context-menu';
 
-import { TimelineIcon } from '../../../utils/app-icons';
+import { TimelineIcon, TrackMapIcon } from '../../../utils/app-icons';
+import ContextMenuItem from '../../../components/context-menu-item/context-menu-item';
 
 const MobileDeviceContextMenu = ({ innerRef, onShowTrackMapItemClick, onShowCoveredDistanceItemClick }) => {
-
-    function ItemTemplate (e) {
-        return (
-            <>
-                { e.renderItem ? e.renderItem(e) : (
-                    <>
-                        <i style={ { marginRight: 24 } } className={ `dx-icon dx-icon-${ e.icon }` }/>
-                        <span className="dx-menu-item-text">{ e.text }</span>
-                    </>
-                ) }
-            </>
-        );
-    }
 
     const items = useMemo(() => {
         return [
             {
                 text: 'Показать на карте...',
-                icon: 'map',
+                renderItem: () => <TrackMapIcon size={ 18 }/>,
                 onClick: (e) => {
                     e.component.hide();
                     onShowTrackMapItemClick(e);
@@ -30,17 +18,7 @@ const MobileDeviceContextMenu = ({ innerRef, onShowTrackMapItemClick, onShowCove
             },
             {
                 text: 'Пройдено за месяц...',
-                icon: 'range',
-                renderItem: (e) => {
-                    return (
-                        <>
-                            <i style={ { marginRight: 24, marginTop: 4 } } className={ 'dx-icon' }>
-                                <TimelineIcon size={ 18 }/>
-                            </i>
-                            <span className="dx-menu-item-text">{ e.text }</span>
-                        </>
-                    )
-                },
+                renderItem: () => <TimelineIcon size={ 18 }/>,
                 onClick: (e) => {
                     e.component.hide();
                     onShowCoveredDistanceItemClick(e);
@@ -51,7 +29,7 @@ const MobileDeviceContextMenu = ({ innerRef, onShowTrackMapItemClick, onShowCove
     return <ContextMenu
         ref={ innerRef }
         closeOnOutsideClick={ true }
-        itemRender={ ItemTemplate }
+        itemRender={ (item) => <ContextMenuItem item={ item } /> }
         showEvent={ 'suppress' }
         items={ items }
         position={ { my: 'top left', at: 'bottom left' } }

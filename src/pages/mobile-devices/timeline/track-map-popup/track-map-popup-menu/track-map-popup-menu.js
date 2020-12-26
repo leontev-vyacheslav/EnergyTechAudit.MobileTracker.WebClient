@@ -1,27 +1,15 @@
 import React from 'react';
 import ContextMenu from 'devextreme-react/context-menu';
-import { FitToMapIcon } from '../../../../../utils/app-icons';
+import { FitToMapIcon, RefreshIcon, WorkDateIcon } from '../../../../../utils/app-icons';
+import ContextMenuItem from '../../../../../components/context-menu-item/context-menu-item';
 
 const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
-
-    function ItemTemplate (e) {
-        return (
-            <>
-                { e.renderItem ? e.renderItem(e) : (
-                    <>
-                        <i style={ { marginRight: 24 } } className={ `dx-icon dx-icon-${ e.icon }` }/>
-                        <span className="dx-menu-item-text">{ e.text }</span>
-                    </>
-                ) }
-            </>
-        );
-    }
 
     const items = [
         {
             name: 'refresh',
             text: 'Обновить',
-            icon: 'refresh',
+            renderItem: () => <RefreshIcon size={ 18 }/>,
             onClick: (e) => {
                 e.component.hide();
                 commands.refreshToken();
@@ -30,16 +18,7 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
         {
             name: 'fitToMap',
             text: 'По размеру',
-            renderItem: (e) => {
-                return (
-                    <>
-                        <i style={ { marginRight: 24, marginTop: 4 } } className={ 'dx-icon' }>
-                            <FitToMapIcon size={ 18 }/>
-                        </i>
-                        <span className="dx-menu-item-text">{ e.text }</span>
-                    </>
-                )
-            },
+            renderItem: () => <FitToMapIcon size={ 18 }/>,
             onClick: (e) => {
                 e.component.hide();
                 commands.fitToMap();
@@ -48,7 +27,7 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
         {
             name: 'workDate',
             text: 'Рабочая дата',
-            icon: 'event',
+            renderItem: () => <WorkDateIcon size={ 18 }/>,
             onClick: (e) => {
                 e.component.hide();
                 commands.showWorkDatePicker();
@@ -56,7 +35,7 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
         } ];
     return <ContextMenu
         ref={ innerRef }
-        itemRender={ ItemTemplate }
+        itemRender={ (item) => <ContextMenuItem item={ item } /> }
         showEvent={ 'suppress' }
         items={ items.filter(i => !initialDate || i.name !== 'workDate' ) }
         position={ { my: 'top right', at: 'bottom right' } }
