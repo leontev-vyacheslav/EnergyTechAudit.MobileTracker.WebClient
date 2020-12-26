@@ -1,0 +1,25 @@
+table.simple-grid  {
+  width: 100%;
+  font-size: 14px;
+  line-height: initial;
+  border-collapse: collapse !important;
+  empty-cells: show;
+  border-spacing: 0;
+  border: 1px Solid #c0c0c0;
+  margin: 10px 0 10px 0;
+}
+
+table.simple-grid tbody td
+{
+  border: 1px solid #c0c0c0;
+  padding: 5px 5px;
+  text-align: left;
+}
+
+table.simple-grid thead th
+{
+  font-weight: bold;
+  border: 1px Solid #c0c0c0;
+  padding: 3px 6px 4px;
+  background-color: #f0f0f0;
+}

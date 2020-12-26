@@ -1,53 +1,13 @@
-.track-map-info-window tr {
-  height: 30px
-}
+@import "src/styles/grids";
 
-.track-map-info-window tr td:first-child {
-  width: 125px
+.track-map-info-window-grid thead tr td  {
+  padding: 5px;
 }
-
-.track-map-info-window tr td:first-child span {
-  background-color: #363640;
-  color: whitesmoke;
-  padding: 6px 10px;
-  border-radius: 2px;
-  display: inline-block;
-}
-
-.track-map-info-window tr td:nth-child(2) {
-  width: 175px
-}
-
-.track-map-info-window tr td:nth-child(2) span {
-  background-color: #d75028;
-  color: black;
-  padding: 6px 10px;
-  border-radius: 2px;
-  display: inline-block;
-}
-
-table.simple-grid  {
-  width: 100%;
-  font-size: 14px;
-  line-height: initial;
-  border-collapse: collapse !important;
-  empty-cells: show;
-  border-spacing: 0px;
-  border: 1px Solid #c0c0c0;
-  margin: 10px 0 10px 0;
-}
-
-table.simple-grid tbody td
-{
-  border: 1px solid #c0c0c0;
-  padding: 5px 5px;
-  text-align: left;
-}
-
-table.simple-grid thead th
-{
-  font-weight: bold;
-  border: 1px Solid #c0c0c0;
-  padding: 3px 6px 4px;
-  background-color: #f0f0f0;
-}
+.track-map-info-window-grid {
+   .track-map-info-window-data-row {
+     display: grid;
+     grid-template-columns: 20px 1fr;
+     gap: 5px;
+     align-items: center;
+   }
+ }
