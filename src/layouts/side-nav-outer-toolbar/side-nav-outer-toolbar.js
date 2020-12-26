@@ -84,7 +84,9 @@ export default function ({ title, children }) {
                 template={ 'menu' }
             >
                 <div className={ 'container' }>
-                    <ScrollView ref={ scrollViewRef } className={ 'layout-body with-footer' }>
+                    <ScrollView ref={ scrollViewRef } className={ 'layout-body with-footer' } height={ () => {
+                        return window.innerHeight - 76;
+                    } }>
                         <div className={ 'content' }>
                             { React.Children.map(children, item => {
                                 return item.type !== Footer && item;
