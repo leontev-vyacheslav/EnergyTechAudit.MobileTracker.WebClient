@@ -10,14 +10,12 @@ import { useAppSettings } from '../../contexts/app-settings';
 import { useScreenSize } from '../../utils/media-query';
 import MobileDeviceContextMenu from './mobile-devices-context-menu/mobile-device-context-menu';
 import DataGridIconCellValueContainer from '../../components/data-grid/data-grid-icon-cell-value-container';
-import { RiCalendarCheckFill } from 'react-icons/ri';
-import { MdAndroid, MdMoreVert, MdSmartphone } from 'react-icons/md';
-import { SiIos } from 'react-icons/si';
+import moment from 'moment';
 import TrackSheetPopup from '../track-sheet/track-sheet-popup/track-sheet-popup';
 
-import './mobile-devices.scss';
+import { AdditionalMenuIcon, AndroidIcon, IosIcon, MobileDeviceIcon, RegistrationDateIcon } from '../../utils/app-icons';
 
-import moment from 'moment';
+import './mobile-devices.scss';
 
 const MobileDevice = () => {
     const dxDataGridRef = useRef(null);
@@ -85,7 +83,7 @@ const MobileDevice = () => {
                                 rowContextMenuRef.current.instance.option('target', e.element);
                                 rowContextMenuRef.current.instance.show();
                             } }>
-                                <MdMoreVert { ...buttonIconProps } />
+                                <AdditionalMenuIcon { ...buttonIconProps } />
                             </Button>
                         )
                     } }
@@ -118,7 +116,7 @@ const MobileDevice = () => {
                                         return e.data.model;
                                     } }
                                     iconRenderer={ (iconProps) => {
-                                        return <MdSmartphone { ...iconProps } />;
+                                        return <MobileDeviceIcon { ...iconProps } />;
                                     } }
                                 />
                             } }
@@ -129,7 +127,7 @@ const MobileDevice = () => {
                                 <DataGridIconCellValueContainer
                                     cellDataFormatter={ () => e.data.os }
                                     iconRenderer={ (iconProps) => {
-                                        return e.data.os.toLowerCase().includes('android') ? <MdAndroid   { ...iconProps } /> : <SiIos { ...iconProps }/>;
+                                        return e.data.os.toLowerCase().includes('android') ? <AndroidIcon   { ...iconProps } /> : <IosIcon { ...iconProps }/>;
                                     } }
                                 />
                             }
@@ -139,7 +137,7 @@ const MobileDevice = () => {
                             cellRender={ (e) =>
                                 <DataGridIconCellValueContainer
                                     cellDataFormatter={ () => new Date(e.data.registrationDate).toLocaleDateString('ru-RU') }
-                                    iconRenderer={ (iconProps) => <RiCalendarCheckFill { ...iconProps } /> }
+                                    iconRenderer={ (iconProps) => <RegistrationDateIcon { ...iconProps } /> }
                                 />
                             }
                     />

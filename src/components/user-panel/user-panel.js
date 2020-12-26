@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
 import ContextMenu, { Position } from 'devextreme-react/context-menu';
 import List from 'devextreme-react/list';
-import { MdPerson } from 'react-icons/md';
 import { useAuth } from '../../contexts/auth';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useSharedArea } from '../../contexts/shared-area';
 import { useNavigation } from '../../contexts/navigation';
+import { UserIcon } from '../../utils/app-icons';
 
 import './user-panel.scss';
 
@@ -37,7 +37,7 @@ export default function ({ menuMode }) {
                     return (
                         <>
                             <i style={ { marginRight: 24, marginTop: 4 } } className={ 'dx-icon' }>
-                                <MdPerson size={ 24 }/>
+                                <UserIcon size={ 24 }/>
                             </i>
                             <span style={ {
                                 width: 150,

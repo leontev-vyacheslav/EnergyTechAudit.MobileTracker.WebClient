@@ -4,11 +4,11 @@ import { Popup } from 'devextreme-react/ui/popup';
 import { ToolbarItem } from 'devextreme-react/popup';
 import { useScreenSize } from '../../../../utils/media-query';
 import { useSharedArea } from '../../../../contexts/shared-area';
-import { MdMoreVert } from 'react-icons/md';
 import { Button } from 'devextreme-react/ui/button';
 import TrackMapPopupMenu from './track-map-popup-menu/track-map-popup-menu'
 
 import './track-map-popup.scss';
+import { AdditionalMenuIcon } from '../../../../utils/app-icons';
 
 const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onHiding }) => {
     const { isXSmall, isSmall } = useScreenSize();
@@ -39,7 +39,7 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onHiding }) =>
                     contextMenuRef.current.instance.option('target', e.element);
                     contextMenuRef.current.instance.show();
                 } } >
-                    <MdMoreVert size={ 18 }/>
+                    <AdditionalMenuIcon size={ 18 }/>
                     <TrackMapPopupMenu
                         ref={ contextMenuRef }
                         initialDate={ initialDate }

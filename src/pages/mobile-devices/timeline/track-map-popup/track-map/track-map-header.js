@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import SelectBox from 'devextreme-react/ui/select-box';
-import { MdPerson, MdTimer, MdTimerOff } from 'react-icons/md';
 import { useScreenSize } from '../../../../../utils/media-query';
-
-import './track-map-header.scss';
 import { useAppData } from '../../../../../contexts/app-data';
 import { useAppSettings } from '../../../../../contexts/app-settings';
+import { BeginDateIcon, EndDateIcon, UserIcon } from '../../../../../utils/app-icons';
+
+import './track-map-header.scss';
 
 const TrackMapHeader = ({ mobileDevice, timelineItem, initialDate, onCurrentTimelineItemChanged }) => {
     const { isXSmall } = useScreenSize();
@@ -44,7 +44,7 @@ const TrackMapHeader = ({ mobileDevice, timelineItem, initialDate, onCurrentTime
     return (
         <div className={ 'track-map-header' }>
             <div className={ 'track-map-header-email' } style={ { display: !isXSmall ? 'flex' : 'none', alignItems: 'center' } }>
-                <MdPerson size={ 26 }/>
+                <UserIcon size={ 24 }/>
                 <div>{ mobileDevice.email }</div>
             </div>
             <div className={ 'track-map-select-box-container' } style={ { width: !isXSmall ? '300px' : '100%' } }>
@@ -67,11 +67,11 @@ const TrackMapHeader = ({ mobileDevice, timelineItem, initialDate, onCurrentTime
                                     <div style={ { display: 'flex', width: 200, fontSize: 14, } }>
                                         <div style={ { display: 'flex', marginRight: 10, flex: 1, alignItems: 'center' } }
                                              className={ 'track-map-info-box-item' }>
-                                            <MdTimer size={ 18 }/>
+                                            <BeginDateIcon size={ 18 }/>
                                             <div style={ { marginLeft: 5 } }>c { timelineItem.beginDate.toLocaleTimeString('ru-RU') }</div>
                                         </div>
                                         <div style={ { display: 'flex', flex: 1, alignItems: 'center' } } className={ 'track-map-info-box-item' }>
-                                            <MdTimerOff size={ 18 }/>
+                                            <EndDateIcon size={ 18 }/>
                                             <div style={ { marginLeft: 5 } }>до { timelineItem.endDate.toLocaleTimeString('ru-RU') }</div>
                                         </div>
                                     </div>

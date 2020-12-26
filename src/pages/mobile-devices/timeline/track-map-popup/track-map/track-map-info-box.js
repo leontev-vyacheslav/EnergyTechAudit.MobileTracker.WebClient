@@ -1,6 +1,7 @@
 import React from 'react';
-import { MdDateRange, MdSmartphone, MdTimer, MdTimerOff } from 'react-icons/md';
+
 import './track-map-info-box.scss';
+import { BeginDateIcon, DateRangeIcon, EndDateIcon, MobileDeviceIcon } from '../../../../../utils/app-icons';
 
 const TrackMapInfoBox = ({ mobileDevice, timelineItem }) => {
 
@@ -11,20 +12,20 @@ const TrackMapInfoBox = ({ mobileDevice, timelineItem }) => {
     return (
         <div className={ 'track-map-info-box' }>
             <div className={ 'track-map-info-box-item' }>
-                <MdSmartphone size={ 18 }/>
+                <MobileDeviceIcon size={ 18 }/>
                 <div>{ mobileDevice.model }</div>
             </div>
             <div className={ 'track-map-info-box-item' }>
-                <MdDateRange size={ 18 }/>
+                <DateRangeIcon size={ 18 }/>
                 <div>{ beginDate.toLocaleDateString('ru-RU') }</div>
             </div>
 
             <div className={ 'track-map-info-box-item' }>
-                <MdTimer size={ 18 }/>
+                <BeginDateIcon size={ 18 }/>
                 <div>c { beginDate.toLocaleTimeString('ru-RU') }</div>
             </div>
             <div className={ 'track-map-info-box-item' }>
-                <MdTimerOff size={ 18 }/>
+                <EndDateIcon size={ 18 }/>
                 <div>до { endDate.toLocaleTimeString('ru-RU') }</div>
             </div>
         </div>

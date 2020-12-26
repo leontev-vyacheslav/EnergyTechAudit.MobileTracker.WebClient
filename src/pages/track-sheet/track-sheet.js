@@ -11,9 +11,7 @@ import { useScreenSize } from '../../utils/media-query';
 import TrackMapPopup from '../mobile-devices/timeline/track-map-popup/track-map-popup';
 import { useAppSettings } from '../../contexts/app-settings';
 import DataGridIconCellValueContainer from '../../components/data-grid/data-grid-icon-cell-value-container';
-
-import { RiCalendarEventFill } from 'react-icons/ri';
-import { MdTimeline, MdMoreVert } from 'react-icons/md';
+import { AdditionalMenuIcon, CurrentDateIcon, DistanceIcon } from '../../utils/app-icons';
 
 import './track-sheet.scss';
 
@@ -115,7 +113,7 @@ const TrackSheet = () => {
                                 rowContextMenuRef.current.instance.option('target', e.element);
                                 rowContextMenuRef.current.instance.show();
                             } }>
-                                <MdMoreVert { ...buttonIconProps } />
+                                <AdditionalMenuIcon { ...buttonIconProps } />
                             </Button>
                         )
                     } }
@@ -127,7 +125,7 @@ const TrackSheet = () => {
                             hidingPriority={ 3 }
                             cellRender={ (e) => <DataGridIconCellValueContainer
                                 cellDataFormatter={ () => new Date(e.data.date).toLocaleDateString('ru-RU') }
-                                iconRenderer={ (iconProps) => <RiCalendarEventFill   { ...iconProps } /> }
+                                iconRenderer={ (iconProps) => <CurrentDateIcon   { ...iconProps } /> }
                             />
                             }
                     />
@@ -135,7 +133,7 @@ const TrackSheet = () => {
                     <Column dataField={ 'distance' } caption={ 'Расстояние, км' } width={ 150 } alignment={ 'left' } hidingPriority={ 4 }
                             cellRender={ (e) => <DataGridIconCellValueContainer
                                 cellDataFormatter={ () => ( e.data.distance / 1000 ).toFixed(2) }
-                                iconRenderer={ (iconProps) => <MdTimeline   { ...iconProps } /> }
+                                iconRenderer={ (iconProps) => <DistanceIcon   { ...iconProps } /> }
                             />
                             }
                     />

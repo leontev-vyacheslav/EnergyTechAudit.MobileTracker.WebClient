@@ -4,8 +4,8 @@ import { Button } from 'devextreme-react/ui/button';
 import { useAppData } from '../../../contexts/app-data';
 import TimelineInfo from './timeline-info/timeline-info';
 import AppConstants from '../../../constants/app-constants';
-import { MdMoreVert, MdTimeline, MdTimer, MdTimerOff } from 'react-icons/md';
 import DataGridIconCellValueContainer from '../../../components/data-grid/data-grid-icon-cell-value-container';
+import { AdditionalMenuIcon, BeginDateIcon, DistanceIcon, EndDateIcon } from '../../../utils/app-icons';
 
 import './timeline.scss';
 
@@ -84,7 +84,7 @@ const Timelines = ({ currentMobileDevice, workDate }) => {
                                     <Button className={ 'time-line-command-button' } onClick={ () => {
                                         toggleRowDetailByRowKey({ dataGrid: e.component, rowKey: e.row.key, mode: 'info' });
                                     } }>
-                                        <MdMoreVert { ...buttonIconProps }/>
+                                        <AdditionalMenuIcon { ...buttonIconProps }/>
                                     </Button>
                                 </>
                             )
@@ -98,7 +98,7 @@ const Timelines = ({ currentMobileDevice, workDate }) => {
                                     hour: 'numeric',
                                     minute: 'numeric'
                                 }) }
-                                iconRenderer={ (iconProps) => <MdTimer { ...iconProps } /> }
+                                iconRenderer={ (iconProps) => <BeginDateIcon { ...iconProps } /> }
                             />
                         }
                 />
@@ -109,7 +109,7 @@ const Timelines = ({ currentMobileDevice, workDate }) => {
                                 hour: 'numeric',
                                 minute: 'numeric'
                             }) }
-                            iconRenderer={ (iconProps) => <MdTimerOff { ...iconProps } /> }
+                            iconRenderer={ (iconProps) => <EndDateIcon { ...iconProps } /> }
                         /> }
                 />
 
@@ -117,7 +117,7 @@ const Timelines = ({ currentMobileDevice, workDate }) => {
                         cellRender={ (e) =>
                             <DataGridIconCellValueContainer
                                 cellDataFormatter={ () => ( e.data.distance / 1000 ).toFixed(2) }
-                                iconRenderer={ (iconProps) => <MdTimeline { ...iconProps } /> }
+                                iconRenderer={ (iconProps) => <DistanceIcon { ...iconProps } /> }
                             /> }
                 />
 

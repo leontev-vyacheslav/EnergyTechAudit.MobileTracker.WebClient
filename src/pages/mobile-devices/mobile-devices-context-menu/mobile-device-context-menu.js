@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
-import { MdTimeline } from 'react-icons/md';
 import ContextMenu from 'devextreme-react/context-menu';
+
+import { TimelineIcon } from '../../../utils/app-icons';
 
 const MobileDeviceContextMenu = ({ innerRef, onShowTrackMapItemClick, onShowCoveredDistanceItemClick }) => {
 
@@ -34,7 +35,7 @@ const MobileDeviceContextMenu = ({ innerRef, onShowTrackMapItemClick, onShowCove
                     return (
                         <>
                             <i style={ { marginRight: 24, marginTop: 4 } } className={ 'dx-icon' }>
-                                <MdTimeline size={ 18 }/>
+                                <TimelineIcon size={ 18 }/>
                             </i>
                             <span className="dx-menu-item-text">{ e.text }</span>
                         </>

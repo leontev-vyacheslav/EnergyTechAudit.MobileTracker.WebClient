@@ -5,10 +5,9 @@ import AppConstants from '../../../../constants/app-constants';
 import { useScreenSize } from '../../../../utils/media-query';
 import { useAppData } from '../../../../contexts/app-data';
 
-import { MdCompareArrows, MdGpsFixed, MdMoreHoriz, MdSettingsEthernet } from 'react-icons/md';
-import { BiHorizontalCenter } from 'react-icons/bi';
 
 import './timeline-info.scss';
+import { AccuracyIcon, BreakIcon, CountdownIcon, EdgePointsIcon, IntervalIcon } from '../../../../utils/app-icons';
 
 const TimelineInfo = ({ timeline, currentMobileDevice }) => {
 
@@ -28,31 +27,31 @@ const TimelineInfo = ({ timeline, currentMobileDevice }) => {
                     {
                         id: 1,
                         description: 'По краевым точкам:',
-                        iconRender: (props) => <MdMoreHoriz { ...props }/>,
+                        iconRender: (props) => <EdgePointsIcon { ...props }/>,
                         value: timeLineLocal.takeAccountOutsidePoints === true ? 'Да' : 'Heт'
                     },
                     {
                         id: 2,
                         description: 'Разрыв:',
-                        iconRender: (props) => <MdCompareArrows { ...props }/>,
+                        iconRender: (props) => <BreakIcon { ...props }/>,
                         value: timeLineLocal.hasGap === true ? 'Да' : 'Нет'
                     },
                     {
                         id: 3,
                         description: 'Точность:',
-                        iconRender: (props) => <BiHorizontalCenter { ...props }/>,
+                        iconRender: (props) => <AccuracyIcon { ...props }/>,
                         value: `${ timeLineLocal.bestAccuracy } м / ${ timeLineLocal.worstAccuracy } м (${ timeline.averageAccuracy } м)`
                     },
                     {
                         id: 4,
                         description: 'Интервал:',
-                        iconRender: (props) => <MdSettingsEthernet  { ...props }/>,
+                        iconRender: (props) => <IntervalIcon  { ...props }/>,
                         value: `${ timeLineLocal.smallestInterval } м / ${ timeLineLocal.largestInterval } м`
                     },
                     {
                         id: 5,
                         description: 'Отсчетов:',
-                        iconRender: (props) => <MdGpsFixed { ...props }/>,
+                        iconRender: (props) => <CountdownIcon { ...props }/>,
                         value: `${ timeLineLocal.valuableAmountLocations } /  ${ timeLineLocal.totalAmountLocations }`
                     },
                 ];
