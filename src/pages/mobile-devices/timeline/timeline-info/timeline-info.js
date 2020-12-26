@@ -5,7 +5,6 @@ import AppConstants from '../../../../constants/app-constants';
 import { useScreenSize } from '../../../../utils/media-query';
 import { useAppData } from '../../../../contexts/app-data';
 
-
 import './timeline-info.scss';
 import { AccuracyIcon, BreakIcon, CountdownIcon, EdgePointsIcon, IntervalIcon } from '../../../../utils/app-icons';
 

@@ -33,3 +33,5 @@ export { MdLocationOn as LocationIcon } from 'react-icons/md';
 
 export { RiCalendarCheckFill as CurrentDateIcon } from 'react-icons/ri';
 export { MdTimeline as DistanceIcon  } from 'react-icons/md';
+
+export { MdAspectRatio as FitToMapIcon } from 'react-icons/md';

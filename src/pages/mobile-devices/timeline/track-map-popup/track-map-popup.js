@@ -43,10 +43,13 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onHiding }) =>
                     <TrackMapPopupMenu
                         ref={ contextMenuRef }
                         initialDate={ initialDate }
-                        onRefreshTokenItemClick={ () => setRefreshToken({ ...{} }) }
-                        onShowWorkDatePickerItemClick={
-                            () => {
-                                showWorkDatePicker();
+                        commands={
+                            {
+                                refreshToken: () => setRefreshToken({ ...{} }),
+                                showWorkDatePicker: () =>  showWorkDatePicker(),
+                                fitToMap: () => {
+                                    TrackMap.fitToMap();
+                                }
                             }
                         }
                     />

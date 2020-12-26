@@ -78,7 +78,6 @@ const TrackMapHeader = ({ mobileDevice, timelineItem, initialDate, onCurrentTime
                                 </>
                             );
                         } }/> ) : null }
-
             </div>
         </div>
     );
