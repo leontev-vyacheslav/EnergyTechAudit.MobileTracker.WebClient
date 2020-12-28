@@ -21,7 +21,7 @@ const ExtendedUserInfoPopup = ({ data,  callback }) => {
                    callback({ modalResult: DialogConstants.ModalResults.Close, parametric: null });
                } }
                width={ isXSmall || isSmall ? '95%' : '30%' }
-               height={ isXSmall || isSmall ? '95%' : '50%' }>
+               height={ isXSmall || isSmall ? '95%' : '60%' }>
             <>
                 <div className={ 'popup-form-container' }>
                     <Form ref={ formRef } formData={ data }>
