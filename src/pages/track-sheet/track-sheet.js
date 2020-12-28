@@ -11,7 +11,7 @@ import { useScreenSize } from '../../utils/media-query';
 import TrackMapPopup from '../mobile-devices/timeline/track-map-popup/track-map-popup';
 import { useAppSettings } from '../../contexts/app-settings';
 import DataGridIconCellValueContainer from '../../components/data-grid/data-grid-icon-cell-value-container';
-import { AdditionalMenuIcon, CurrentDateIcon, DistanceIcon } from '../../utils/app-icons';
+import { AccuracyIcon, AdditionalMenuIcon, CurrentDateIcon, DistanceIcon } from '../../utils/app-icons';
 
 import './track-sheet.scss';
 
@@ -119,26 +119,34 @@ const TrackSheet = () => {
                     } }
                     />
 
-                    <Column dataField={ 'id' } caption={ 'День' } width={ 60 } hidingPriority={ 2 } visible={ false }/>
+                    <Column dataField={ 'id' } caption={ 'День' } width={ 60 } hidingPriority={ 3 } visible={ false }/>
 
-                    <Column dataField={ 'date' } caption={ 'Дата' } width={ 150 } dataType={ 'date' } alignment={ 'left' } allowSorting={ false }
-                            hidingPriority={ 3 }
-                            cellRender={ (e) => <DataGridIconCellValueContainer
-                                cellDataFormatter={ () => new Date(e.data.date).toLocaleDateString('ru-RU') }
-                                iconRenderer={ (iconProps) => <CurrentDateIcon   { ...iconProps } /> }
-                            />
+                    <Column dataField={ 'date' } caption={ 'Дата' } width={ 125 } dataType={ 'date' } alignment={ 'left' } allowSorting={ false }
+                            hidingPriority={ 2 }
+                            cellRender={ (e) =>
+                                <DataGridIconCellValueContainer
+                                    cellDataFormatter={ () => new Date(e.data.date).toLocaleDateString('ru-RU') }
+                                    iconRenderer={ (iconProps) => <CurrentDateIcon   { ...iconProps } /> }
+                                />
                             }
                     />
 
-                    <Column dataField={ 'distance' } caption={ 'Расстояние, км' } width={ 150 } alignment={ 'left' } hidingPriority={ 4 }
+                    <Column dataField={ 'distance' } caption={ 'Расстояние, км' } width={ 125 } alignment={ 'left' } hidingPriority={ 4 }
                             cellRender={ (e) => <DataGridIconCellValueContainer
-                                cellDataFormatter={ () => ( e.data.distance / 1000 ).toFixed(2) }
+                                cellDataFormatter={ () => `${ ( e.data.distance / 1000 ).toFixed(2) } км` }
                                 iconRenderer={ (iconProps) => <DistanceIcon   { ...iconProps } /> }
                             />
                             }
                     />
 
-                    <Column dataField={ 'samplesNumber' } caption={ 'Отсчеты' } alignment={ 'left' } hidingPriority={ 1 }/>
+                    <Column dataField={ 'averageAccuracy' } caption={ 'Средняя точность отсчетов, м' } width={ 125 } alignment={ 'left' } hidingPriority={ 1 }
+                            cellRender={ (e) => <DataGridIconCellValueContainer
+                                    cellDataFormatter={ () => `${ ( e.data.averageAccuracy ).toFixed(2) } м` }
+                                    iconRenderer={ (iconProps) => <AccuracyIcon { ...iconProps } /> }
+                                />
+                            }
+                    />
+                    <Column />
 
                     <MasterDetail
                         enabled={ true }

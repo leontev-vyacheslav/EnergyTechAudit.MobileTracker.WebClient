@@ -17,6 +17,7 @@ function SharedAreaProvider (props) {
     const { signOut } = useAuth();
     const workDatePickerRef = useRef();
 
+
     const signOutWithConfirm = useCallback(() => {
         const confirmSignOutContent = () => {
             return (

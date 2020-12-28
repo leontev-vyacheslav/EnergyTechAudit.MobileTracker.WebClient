@@ -18,7 +18,7 @@ export { MdGpsFixed as CountdownIcon } from 'react-icons/md';
 export { MdMoreHoriz as EdgePointsIcon } from 'react-icons/md';
 
 // mobile-device.js
-export { RiCalendarCheckFill as RegistrationDateIcon } from 'react-icons/ri';
+export { RiCalendarCheckLine as RegistrationDateIcon } from 'react-icons/ri';
 export { MdAndroid as AndroidIcon } from 'react-icons/md';
 export { SiIos as IosIcon } from 'react-icons/si';
 export { MdMoreVert as AdditionalMenuIcon } from 'react-icons/md';
@@ -31,8 +31,8 @@ export { MdTimeline as TimelineIcon  } from 'react-icons/md';
 export { MdPerson as UserIcon } from 'react-icons/md';
 export { MdLocationOn as LocationIcon } from 'react-icons/md';
 
-export { RiCalendarCheckFill as CurrentDateIcon } from 'react-icons/ri';
-export { RiCalendarCheckFill as WorkDateIcon } from 'react-icons/ri';
+export { RiCalendarLine as CurrentDateIcon } from 'react-icons/ri';
+export { RiCalendarEventLine as WorkDateIcon } from 'react-icons/ri';
 
 export { MdTimeline as DistanceIcon  } from 'react-icons/md';
 

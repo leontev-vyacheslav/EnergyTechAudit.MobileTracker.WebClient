@@ -6,8 +6,8 @@
     "@react-google-maps/api": "^2.0.2",
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.2",
-    "@testing-library/user-event": "^12.5.0",
-    "axios": "^0.21.0",
+    "@testing-library/user-event": "^12.6.0",
+    "axios": "^0.21.1",
     "devextreme": "^20.2.4",
     "devextreme-react": "^20.2.4",
     "history": "^5.0.0",
@@ -48,9 +48,9 @@
   "devDependencies": {
     "devextreme-cli": "^1.2.7",
     "devextreme-themebuilder": "^20.2.4",
-    "eslint": "^7.15.0",
-    "eslint-config-prettier": "^7.0.0",
-    "eslint-plugin-prettier": "^3.2.0",
+    "eslint": "^7.16.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-prettier": "^3.3.0",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.2.1"

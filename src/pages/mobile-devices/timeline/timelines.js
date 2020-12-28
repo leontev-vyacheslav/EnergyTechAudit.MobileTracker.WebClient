@@ -91,32 +91,24 @@ const Timelines = ({ currentMobileDevice, workDate }) => {
                         } }/>
                 <Column dataField={ 'id' } dataType={ 'number' } caption={ 'Час' } width={ 60 } alignment={ 'center' }/>
 
-                <Column dataField={ 'beginDate' } dataType={ 'datetime' } hidingPriority={ 1 } caption={ 'Начало периода' } width={ 150 }
+                <Column dataField={ 'beginDate' } dataType={ 'datetime' } hidingPriority={ 1 } caption={ 'Период времени' } width={ 200 }
                         cellRender={ (e) =>
                             <DataGridIconCellValueContainer
-                                cellDataFormatter={ () => new Date(e.data.beginDate).toLocaleDateString('ru-RU', {
-                                    hour: 'numeric',
-                                    minute: 'numeric'
+                                cellDataFormatter={ () => `${ new Date(e.data.beginDate).toLocaleDateString('ru-RU', {
+                                    hour: 'numeric', minute: 'numeric'
                                 }) }
+                                    - ${ new Date(e.data.endDate).toLocaleTimeString('ru-RU', {
+                                    hour: 'numeric', minute: 'numeric'
+                                }) }` }
                                 iconRenderer={ (iconProps) => <BeginDateIcon { ...iconProps } /> }
                             />
                         }
                 />
 
-                <Column dataField={ 'endDate' } dataType={ 'datetime' } hidingPriority={ 0 } caption={ 'Конец периода' } width={ 150 }
-                        cellRender={ (e) => <DataGridIconCellValueContainer
-                            cellDataFormatter={ () => new Date(e.data.endDate).toLocaleDateString('ru-RU', {
-                                hour: 'numeric',
-                                minute: 'numeric'
-                            }) }
-                            iconRenderer={ (iconProps) => <EndDateIcon { ...iconProps } /> }
-                        /> }
-                />
-
                 <Column dataField={ 'distance' } dataType={ 'number' } caption={ 'Расстояние, км' } width={ 150 } alignment={ 'left' }
                         cellRender={ (e) =>
                             <DataGridIconCellValueContainer
-                                cellDataFormatter={ () => ( e.data.distance / 1000 ).toFixed(2) }
+                                cellDataFormatter={ () => `${ ( e.data.distance / 1000 ).toFixed(2) } км` }
                                 iconRenderer={ (iconProps) => <DistanceIcon { ...iconProps } /> }
                             /> }
                 />
@@ -136,7 +128,7 @@ const Timelines = ({ currentMobileDevice, workDate }) => {
                                 }
                             });
                         } else if (options.summaryProcess === 'finalize') {
-                            options.totalValue = Math.round(options.totalValue * 100) / 100
+                            options.totalValue = (options.totalValue / 1000).toFixed(2)
                         }
                     }
                 } }>
@@ -144,7 +136,7 @@ const Timelines = ({ currentMobileDevice, workDate }) => {
                         name={ 'totalDistance' }
                         column={ 'distance' }
                         summaryType={ 'custom' }
-                        displayFormat={ '{0} м' }
+                        displayFormat={ '{0} км' }
                         alignment={ 'left' }
                     />
                 </Summary>
