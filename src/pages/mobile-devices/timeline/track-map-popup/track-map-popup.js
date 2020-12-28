@@ -10,7 +10,7 @@ import TrackMapPopupMenu from './track-map-popup-menu/track-map-popup-menu'
 import './track-map-popup.scss';
 import { AdditionalMenuIcon } from '../../../../utils/app-icons';
 
-const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onHiding }) => {
+const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => {
     const { isXSmall, isSmall } = useScreenSize();
     const [refreshToken, setRefreshToken] = useState({});
     const { showWorkDatePicker } = useSharedArea();
@@ -21,7 +21,7 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onHiding }) =>
                visible={ true }
                showTitle={ true }
                showCloseButton={ true }
-               onHiding={ onHiding }
+               onHiding={ onClose }
                width={ isXSmall || isSmall ? '95%' : '70%' }
                height={ isXSmall || isSmall ? '95%' : '80%' }
                contentRender={ () => {

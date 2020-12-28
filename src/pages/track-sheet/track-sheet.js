@@ -11,7 +11,7 @@ import { useScreenSize } from '../../utils/media-query';
 import TrackMapPopup from '../mobile-devices/timeline/track-map-popup/track-map-popup';
 import { useAppSettings } from '../../contexts/app-settings';
 import DataGridIconCellValueContainer from '../../components/data-grid/data-grid-icon-cell-value-container';
-import { AccuracyIcon, AdditionalMenuIcon, CurrentDateIcon, DistanceIcon } from '../../utils/app-icons';
+import { AccuracyIcon, CurrentDateIcon, DistanceIcon, GridAdditionalMenuIcon } from '../../utils/app-icons';
 
 import './track-sheet.scss';
 
@@ -75,7 +75,7 @@ const TrackSheet = () => {
                           } }
                 >
                     <Scrolling showScrollbar={ 'never' }/>
-                    <Paging defaultPageSize={ 10 }/>
+                    <Paging defaultPageSize={ isXSmall ? 5 : 10 }/>
                     <Pager showPageSizeSelector={ true } showInfo={ true }/>
                     <Grouping autoExpandAll={ true } key={ 'userId' }/>
 
@@ -85,12 +85,12 @@ const TrackSheet = () => {
                         groupCellRender={ () => {
 
                             return (
-                                <div className={ 'mobile-devices-group' }>
+                                <div className={ 'user-grid-group track-sheet-group ' }>
                                     <div className={ 'dx-icon dx-icon-user' }/>
                                     <div style={ { display: 'grid', gap: 5 } }>
                                         <div className={ 'mobile-devices-group-line' }>
                                             <div>
-                                                <span>{ !isXSmall ? 'Пользователь:' : '' }</span>
+                                                <span>{ !isXSmall ? 'Пользователь: ' : '' }</span>
                                                 <span>{ currentMobileDevice.email } / { currentMobileDevice.model }</span>
                                             </div>
                                         </div>
@@ -107,13 +107,12 @@ const TrackSheet = () => {
                     />
 
                     <Column type={ 'buttons' } width={ 50 } cellRender={ () => {
-                        const buttonIconProps = { style: { cursor: 'pointer' }, size: 18, color: '#464646' };
                         return (
                             <Button className={ 'time-line-command-button' } onClick={ (e) => {
                                 rowContextMenuRef.current.instance.option('target', e.element);
                                 rowContextMenuRef.current.instance.show();
                             } }>
-                                <AdditionalMenuIcon { ...buttonIconProps } />
+                                <GridAdditionalMenuIcon  />
                             </Button>
                         )
                     } }

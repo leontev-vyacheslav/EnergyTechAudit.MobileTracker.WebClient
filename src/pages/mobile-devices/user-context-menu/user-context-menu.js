@@ -1,27 +1,19 @@
 import React, { useMemo } from 'react';
 import ContextMenu from 'devextreme-react/context-menu';
 
-import { TimelineIcon, TrackMapIcon } from '../../../utils/app-icons';
+import {  UserIcon } from '../../../utils/app-icons';
 import ContextMenuItem from '../../../components/context-menu-item/context-menu-item';
 
-const MobileDeviceContextMenu = ({ innerRef, commands }) => {
+const UserContextMenu = ({ innerRef, commands }) => {
 
     const items = useMemo(() => {
         return [
             {
-                text: 'Показать на карте...',
-                renderItem: () => <TrackMapIcon size={ 18 }/>,
+                text: 'Сведения о пользователе...',
+                renderItem: () => <UserIcon size={ 18 }/>,
                 onClick: (e) => {
                     e.component.hide();
-                    commands.showTrackMap();
-                }
-            },
-            {
-                text: 'Пройдено за месяц...',
-                renderItem: () => <TimelineIcon size={ 18 }/>,
-                onClick: (e) => {
-                    e.component.hide();
-                    commands.showTrackSheet();
+                    commands.showExtendedUserInfo();
                 }
             }];
     }, [commands]);
@@ -36,7 +28,7 @@ const MobileDeviceContextMenu = ({ innerRef, commands }) => {
     />
 }
 
-export default React.forwardRef((props, ref) => <MobileDeviceContextMenu
+export default React.forwardRef((props, ref) => <UserContextMenu
     innerRef={ ref } { ...props }
 />);
 

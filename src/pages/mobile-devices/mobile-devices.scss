@@ -1,11 +1,7 @@
 @import "../../themes/variables";
 
-.mobile-devices-group {
-  display: grid;
-  grid-template-columns: 30px 1fr;
-  align-items: center;
-  gap: 10px;
-
+.user-grid-group
+{
   .dx-icon-user {
     margin-right: 10px;
     font-size: 2em;
@@ -14,6 +10,20 @@
   span {
     color: rgba(0, 0, 0, 0.54)
   }
+}
+
+.track-sheet-group {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+.mobile-devices-group {
+  display: grid;
+  grid-template-columns: 30px 30px 1fr;
+  align-items: center;
+  gap: 10px;
 }
 
 .mobile-devices-group-line {
@@ -26,7 +36,7 @@
 }
 
 .dx-datagrid-rowsview .dx-row-focused.dx-group-row {
-  .mobile-devices-group {
+  .mobile-devices-group, .track-sheet-group {
     color: whitesmoke;
 
     span {

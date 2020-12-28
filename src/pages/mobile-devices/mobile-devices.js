@@ -8,14 +8,17 @@ import { Button } from 'devextreme-react/ui/button';
 import TrackMapPopup from './timeline/track-map-popup/track-map-popup';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useScreenSize } from '../../utils/media-query';
-import MobileDeviceContextMenu from './mobile-devices-context-menu/mobile-device-context-menu';
 import DataGridIconCellValueContainer from '../../components/data-grid/data-grid-icon-cell-value-container';
 import moment from 'moment';
 import TrackSheetPopup from '../track-sheet/track-sheet-popup/track-sheet-popup';
 
-import { AdditionalMenuIcon, AndroidIcon, IosIcon, MobileDeviceIcon, RegistrationDateIcon } from '../../utils/app-icons';
+import MobileDeviceContextMenu from './mobile-devices-context-menu/mobile-device-context-menu';
+import UserContextMenu from './user-context-menu/user-context-menu';
+
+import {  AndroidIcon, GridAdditionalMenuIcon, IosIcon, MobileDeviceIcon, RegistrationDateIcon } from '../../utils/app-icons';
 
 import './mobile-devices.scss';
+import ExtendedUserInfoPopup from './extended-user-info-popup/extended-user-info-popup';
 
 const MobileDevice = () => {
     const dxDataGridRef = useRef(null);
@@ -28,8 +31,10 @@ const MobileDevice = () => {
     const [currentTimelineItem, setCurrentTimelineItem] = useState(null);
     const [currentMobileDevice, setCurrentMobileDevice] = useState(null);
     const rowContextMenuRef = useRef();
+    const groupRowContextMenuRef = useRef();
 
     const [trackSheetPopupTrigger, setTrackSheetPopupTrigger] = useState(false);
+    const [extendedUserInfoPopupTrigger, setExtendedUserInfoPopupTrigger] = useState(false);
 
     const showTrackMap = useCallback( ()=> {
         if (dxDataGridRef.current && dxDataGridRef.current.instance) {
@@ -45,6 +50,10 @@ const MobileDevice = () => {
             setTrackSheetPopupTrigger(true);
         }
     }, [])
+
+    const showExtendedUserInfo = useCallback( () => {
+        setExtendedUserInfoPopupTrigger(true);
+    }, []);
 
     useEffect(() => {
         ( async () => {
@@ -77,13 +86,12 @@ const MobileDevice = () => {
                     <Pager showPageSizeSelector={ true } showInfo={ true }/>
                     <Grouping autoExpandAll={ true } key={ 'userId' }/>
                     <Column type={ 'buttons' } width={ 50 } cellRender={ () => {
-                        const buttonIconProps = { style: { cursor: 'pointer' }, size: 18, color: '#464646' };
                         return (
                             <Button className={ 'time-line-command-button' } onClick={ (e) => {
                                 rowContextMenuRef.current.instance.option('target', e.element);
                                 rowContextMenuRef.current.instance.show();
                             } }>
-                                <AdditionalMenuIcon { ...buttonIconProps } />
+                                <GridAdditionalMenuIcon  />
                             </Button>
                         )
                     } }
@@ -95,15 +103,23 @@ const MobileDevice = () => {
                             const items = template.data.items === null ? template.data.collapsedItems : template.data.items;
                             const groupDataItem = items[0];
                             return (
-                                <div className={ 'mobile-devices-group' }>
-                                    <div className={ 'dx-icon dx-icon-user' }/>
-                                    <div className={ 'mobile-devices-group-line' }>
-                                        <div>
-                                            <span style={ { marginRight: 10 } }>{ !isXSmall ? 'Пользователь:' : '' }</span>
-                                            <span>{ groupDataItem.email }</span>
+                                <>
+                                    <div className={ 'user-grid-group mobile-devices-group' }>
+                                        <Button className={ 'time-line-command-button' } onClick={ (e) => {
+                                            groupRowContextMenuRef.current.instance.option('target', e.element);
+                                            groupRowContextMenuRef.current.instance.show();
+                                        } }>
+                                            <GridAdditionalMenuIcon  />
+                                        </Button>
+                                        <div className={ 'dx-icon dx-icon-user' }/>
+                                        <div className={ 'mobile-devices-group-line' }>
+                                            <div>
+                                                <span style={ { marginRight: 10 } }>{ !isXSmall ? 'Пользователь:' : '' }</span>
+                                                <span>{ groupDataItem.email }</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </>
                             );
                         } }
                         visible={ false }
@@ -153,16 +169,9 @@ const MobileDevice = () => {
                     <TrackMapPopup
                         mobileDevice={ currentMobileDevice }
                         timelineItem={ currentTimelineItem }
-                        onHiding={ () => {
+                        onClose={ () => {
                             setCurrentTimelineItem(null);
                         } }/>
-                    : null
-                }
-                { currentTimelineItem === null ?
-                    <MobileDeviceContextMenu
-                        ref={ rowContextMenuRef }
-                        onShowTrackMapItemClick={ showTrackMap }
-                        onShowCoveredDistanceItemClick={ showTrackSheet }/>
                     : null
                 }
                 { trackSheetPopupTrigger ?
@@ -176,6 +185,33 @@ const MobileDevice = () => {
                         setTrackSheetPopupTrigger(false);
                     } }/> : null
                 }
+                { extendedUserInfoPopupTrigger
+                    ? <ExtendedUserInfoPopup data={ { firstName: 'Ivan', lastName: 'Ivanov', birthDate: new Date('1975-01-01') } } callback={ (result) => {
+                        if(result && result.modalResult === 'OK') {
+                            console.log(result);
+                        }
+                        setExtendedUserInfoPopupTrigger(false);
+                    }
+                    }/>
+                    : null
+                }
+                <MobileDeviceContextMenu
+                    ref={ rowContextMenuRef }
+                    commands={
+                        {
+                            showTrackMap: showTrackMap,
+                            showTrackSheet: showTrackSheet
+                        }
+                    }
+                />
+                <UserContextMenu
+                    ref={ groupRowContextMenuRef }
+                    commands={
+                        {
+                            showExtendedUserInfo: showExtendedUserInfo
+                        }
+                    }
+                />
             </>
         );
     }

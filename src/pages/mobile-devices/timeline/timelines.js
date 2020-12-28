@@ -5,7 +5,7 @@ import { useAppData } from '../../../contexts/app-data';
 import TimelineInfo from './timeline-info/timeline-info';
 import AppConstants from '../../../constants/app-constants';
 import DataGridIconCellValueContainer from '../../../components/data-grid/data-grid-icon-cell-value-container';
-import { AdditionalMenuIcon, BeginDateIcon, DistanceIcon, EndDateIcon } from '../../../utils/app-icons';
+import { BeginDateIcon, DistanceIcon,  GridAdditionalMenuIcon } from '../../../utils/app-icons';
 
 import './timeline.scss';
 
@@ -78,13 +78,12 @@ const Timelines = ({ currentMobileDevice, workDate }) => {
                 <Column type="selection" width={ 60 }/>
                 <Column type={ 'buttons' } width={ 60 }
                         cellRender={ (e) => {
-                            const buttonIconProps = { style: { cursor: 'pointer' }, size: 16, color: '#464646' };
                             return (
                                 <>
                                     <Button className={ 'time-line-command-button' } onClick={ () => {
                                         toggleRowDetailByRowKey({ dataGrid: e.component, rowKey: e.row.key, mode: 'info' });
                                     } }>
-                                        <AdditionalMenuIcon { ...buttonIconProps }/>
+                                        <GridAdditionalMenuIcon />
                                     </Button>
                                 </>
                             )
