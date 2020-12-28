@@ -168,7 +168,7 @@ const TrackSheet = () => {
                         mobileDevice={ currentMobileDevice }
                         timelineItem={ currentTimelineItem }
                         initialDate={ trackMapCurrentDate }
-                        onHiding={ () => {
+                        onClose={ () => {
                             setCurrentTimelineItem(null);
                         } }/>
                     : null
