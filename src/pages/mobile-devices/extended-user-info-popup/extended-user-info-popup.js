@@ -1,15 +1,24 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Popup from 'devextreme-react/popup';
 import { useScreenSize } from '../../../utils/media-query';
 import Form, { SimpleItem } from 'devextreme-react/form';
 import Button from 'devextreme-react/button';
 import { DialogConstants } from '../../../constants/dialog-constant';
+import { useAppData } from '../../../contexts/app-data';
 
-
-const ExtendedUserInfoPopup = ({ data,  callback }) => {
+const ExtendedUserInfoPopup = ({ userId,  callback }) => {
 
     const { isXSmall, isSmall } = useScreenSize();
     const formRef = useRef(null);
+    const { getExtendedUserInfoAsync, postExtendedUserInfoAsync } = useAppData();
+    const [extendedUserInfo, setExtendedUserInfo] = useState(null);
+
+    useEffect(() => {
+        (async ()=> {
+            const extendedUserInfo = await  getExtendedUserInfoAsync(userId);
+            setExtendedUserInfo(extendedUserInfo);
+        })();
+    }, [getExtendedUserInfoAsync, userId]);
 
     return (
         <Popup className={ 'app-popup track-map-popup' } title={ 'Сведения о пользователе' }
@@ -24,9 +33,15 @@ const ExtendedUserInfoPopup = ({ data,  callback }) => {
                height={ isXSmall || isSmall ? '95%' : '60%' }>
             <>
                 <div className={ 'popup-form-container' }>
-                    <Form ref={ formRef } formData={ data }>
-                        <SimpleItem dataField={ 'firstName' } label={ { location: 'top', showColon: true, text: 'Имя' } } editorType={ 'dxTextBox' }/>
-                        <SimpleItem dataField={ 'lastName' } label={ { location: 'top', showColon: true, text: 'Фамилия' } } editorType={ 'dxTextBox' }/>
+                    <Form ref={ formRef } formData={ extendedUserInfo }>
+                        <SimpleItem dataField={ 'firstName' }
+                                    isRequired={ true }
+                                    label={ { location: 'top', showColon: true, text: 'Имя' } }
+                                    editorType={ 'dxTextBox' }/>
+                        <SimpleItem dataField={ 'lastName' }
+                                    isRequired={ true }
+                                    label={ { location: 'top', showColon: true, text: 'Фамилия' } }
+                                    editorType={ 'dxTextBox' }/>
                         <SimpleItem dataField={ 'birthDate' }
                                     label={ { location: 'top', showColon: true, text: 'Дата рождения' } }
                                     editorType={ 'dxDateBox' } editorOptions=
@@ -35,19 +50,24 @@ const ExtendedUserInfoPopup = ({ data,  callback }) => {
                                             pickerType: 'rollers',
                                         } }
                         />
+                        <SimpleItem dataField={ 'phone' }
+                                    label={ { location: 'top', showColon: true, text: 'Телефон' } }
+                                    helpText="Пример: +1(111)111-1111"
+                                    editorType={ 'dxTextBox' } editorOptions={ { mask: '+8 (000) 000-0000' } }
+                        />
                     </Form>
-
                 <div className={ 'popup-form-buttons-row' }>
                     <div>&nbsp;</div>
                     <Button type={ 'default' } text={ 'Ok' } width={ 95 }
-                            onClick={ () => {
+                            onClick={ async () => {
                                 const formData = formRef.current.instance.option('formData');
-                                callback({ modalResult: DialogConstants.ModalResults.Ok, parametric: formData  });
+                                await postExtendedUserInfoAsync({ ...formData, ...{ id: userId } });
+                                callback({ modalResult: DialogConstants.ModalResults.Ok, data: formData  });
                             } }
                     />
                     <Button type={ 'normal' } text="Отмена" width={ 95 }
                             onClick={ () => {
-                                callback({ modalResult: DialogConstants.ModalResults.Cancel, parametric: null });
+                                callback({ modalResult: DialogConstants.ModalResults.Cancel, data: null });
                             } }
                     />
                 </div>

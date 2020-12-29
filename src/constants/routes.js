@@ -3,6 +3,8 @@ export default {
     mobileDevice: '/api/mobileDevice',
     timeline: '/api/timeline',
     locationRecord: '/api/locationRecord',
+    userManagement: '/api/userManagement',
+
     accountSignIn: '/account/signIn',
     accountSignOut: '/account/signOut',
 };

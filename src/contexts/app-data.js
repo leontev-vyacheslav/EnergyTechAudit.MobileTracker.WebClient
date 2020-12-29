@@ -168,11 +168,35 @@ function AppDataProvider (props) {
         [axiosWithCredentials],
     );
 
+    const getExtendedUserInfoAsync = useCallback(async (userId) => {
+        const response = await axiosWithCredentials({
+            url: `${ routes.host }${ routes.userManagement }/${ userId }`,
+            method: HttpConstants.Methods.Get
+        });
+        if (response && response.status === HttpConstants.StatusCodes.Ok) {
+            return response.data;
+        }
+        return null;
+    }, [axiosWithCredentials]);
+
+    const postExtendedUserInfoAsync = useCallback(async (extendedUserInfo) => {
+        const response = await axiosWithCredentials({
+            url: `${ routes.host }${ routes.userManagement }`,
+            method: HttpConstants.Methods.Post,
+            data: extendedUserInfo
+        });
+        if (response && response.status === HttpConstants.StatusCodes.Ok) {
+            return response.data;
+        }
+        return null;
+    }, [axiosWithCredentials]);
+
     return (
         <AppDataContext.Provider
             value={ {
                 getMobileDeviceAsync, getMobileDevicesAsync,  getTimelinesAsync, getLocationRecordsByRangeAsync,
-                getLocationRecordAsync,  getGeocodedAddressAsync, getGeocodedLocationAsync, getTrackSheetAsync
+                getLocationRecordAsync,  getGeocodedAddressAsync, getGeocodedLocationAsync, getTrackSheetAsync,
+                postExtendedUserInfoAsync, getExtendedUserInfoAsync
             } }
             { ...props }
         />

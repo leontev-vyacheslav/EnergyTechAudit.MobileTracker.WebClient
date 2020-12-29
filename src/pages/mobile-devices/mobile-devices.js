@@ -52,8 +52,13 @@ const MobileDevice = () => {
     }, [])
 
     const showExtendedUserInfo = useCallback( () => {
-        setExtendedUserInfoPopupTrigger(true);
-    }, []);
+        if (dxDataGridRef.current && dxDataGridRef.current.instance) {
+            const currentGroupRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
+            const mobileDevice = mobileDevices.find(md => md.userId === currentGroupRowKey[0]);
+            setCurrentMobileDevice(mobileDevice);
+            setExtendedUserInfoPopupTrigger(true);
+        }
+    }, [mobileDevices]);
 
     useEffect(() => {
         ( async () => {
@@ -185,13 +190,13 @@ const MobileDevice = () => {
                         setTrackSheetPopupTrigger(false);
                     } }/> : null
                 }
-                { extendedUserInfoPopupTrigger
-                    ? <ExtendedUserInfoPopup data={ { firstName: 'Ivan', lastName: 'Ivanov', birthDate: new Date('1975-01-01') } } callback={ (result) => {
+                { currentMobileDevice !== null && extendedUserInfoPopupTrigger
+                    ? <ExtendedUserInfoPopup userId={ currentMobileDevice.userId } callback={ async (result) => {
                         if(result && result.modalResult === 'OK') {
-                            console.log(result);
+                            //
                         }
                         setExtendedUserInfoPopupTrigger(false);
-                    }
+                     }
                     }/>
                     : null
                 }
