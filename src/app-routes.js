@@ -1,5 +1,5 @@
 import { withNavigationWatcher } from './contexts/navigation';
-import { HomePage, MobileDevicesPage, ProfilePage, AboutPage, SettingsPage, SignOutPage, TrackSheetPage } from './pages';
+import { HomePage, MobileDevicesPage, AboutPage, SettingsPage, SignOutPage, TrackSheetPage } from './pages';
 
 const routes = [
     {
@@ -17,10 +17,6 @@ const routes = [
     {
         path: '/track-sheet',
         component: TrackSheetPage,
-    },
-    {
-        path: '/profile',
-        component: ProfilePage,
     },
     {
         path: '/about',

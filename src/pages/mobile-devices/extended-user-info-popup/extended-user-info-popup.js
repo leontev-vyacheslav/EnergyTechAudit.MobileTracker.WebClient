@@ -5,6 +5,7 @@ import Form, { SimpleItem } from 'devextreme-react/form';
 import Button from 'devextreme-react/button';
 import { DialogConstants } from '../../../constants/dialog-constant';
 import { useAppData } from '../../../contexts/app-data';
+import ScrollView from 'devextreme-react/scroll-view';
 
 const ExtendedUserInfoPopup = ({ userId,  callback }) => {
 
@@ -30,32 +31,36 @@ const ExtendedUserInfoPopup = ({ userId,  callback }) => {
                    callback({ modalResult: DialogConstants.ModalResults.Close, parametric: null });
                } }
                width={ isXSmall || isSmall ? '95%' : '30%' }
-               height={ isXSmall || isSmall ? '95%' : '60%' }>
+               height={ isXSmall || isSmall ? '95%' : '45%' }>
             <>
                 <div className={ 'popup-form-container' }>
-                    <Form ref={ formRef } formData={ extendedUserInfo }>
-                        <SimpleItem dataField={ 'firstName' }
-                                    isRequired={ true }
-                                    label={ { location: 'top', showColon: true, text: 'Имя' } }
-                                    editorType={ 'dxTextBox' }/>
-                        <SimpleItem dataField={ 'lastName' }
-                                    isRequired={ true }
-                                    label={ { location: 'top', showColon: true, text: 'Фамилия' } }
-                                    editorType={ 'dxTextBox' }/>
-                        <SimpleItem dataField={ 'birthDate' }
-                                    label={ { location: 'top', showColon: true, text: 'Дата рождения' } }
-                                    editorType={ 'dxDateBox' } editorOptions=
-                                        { {
-                                            type: 'date',
-                                            pickerType: 'rollers',
-                                        } }
-                        />
-                        <SimpleItem dataField={ 'phone' }
-                                    label={ { location: 'top', showColon: true, text: 'Телефон' } }
-                                    helpText="Пример: +1(111)111-1111"
-                                    editorType={ 'dxTextBox' } editorOptions={ { mask: '+8 (000) 000-0000' } }
-                        />
-                    </Form>
+                    <ScrollView>
+                        <div className={ 'dx-card responsive-paddings' }>
+                            <Form ref={ formRef } formData={ extendedUserInfo }>
+                                <SimpleItem dataField={ 'firstName' }
+                                            isRequired={ true }
+                                            label={ { location: 'top', showColon: true, text: 'Имя' } }
+                                            editorType={ 'dxTextBox' }/>
+                                <SimpleItem dataField={ 'lastName' }
+                                            isRequired={ true }
+                                            label={ { location: 'top', showColon: true, text: 'Фамилия' } }
+                                            editorType={ 'dxTextBox' }/>
+                                <SimpleItem dataField={ 'birthDate' }
+                                            label={ { location: 'top', showColon: true, text: 'Дата рождения' } }
+                                            editorType={ 'dxDateBox' } editorOptions=
+                                                { {
+                                                    type: 'date',
+                                                    pickerType: 'rollers',
+                                                } }
+                                />
+                                <SimpleItem dataField={ 'phone' }
+                                            label={ { location: 'top', showColon: true, text: 'Телефон' } }
+                                            helpText="Пример: +7(111)111-1111"
+                                            editorType={ 'dxTextBox' } editorOptions={ { mask: '+8 (000) 000-0000' } }
+                                />
+                            </Form>
+                        </div>
+                    </ScrollView>
                 <div className={ 'popup-form-buttons-row' }>
                     <div>&nbsp;</div>
                     <Button type={ 'default' } text={ 'Ok' } width={ 95 }
