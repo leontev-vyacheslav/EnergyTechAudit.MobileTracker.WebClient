@@ -46,13 +46,13 @@ const TrackSheetPopup = ({ currentDate, callback }) => {
                                </Form>
                                <div className={ 'popup-form-buttons-row' }>
                                    <div>&nbsp;</div>
-                                   <Button type={ 'default' } text={ 'Ok' } width={ 95 }
-                                       onClick={ () => {
-                                           const formData = formRef.current.instance.option('formData');
-                                           callback({ modalResult: DialogConstants.ModalResults.Ok, parametric: formData  });
-                                       } }
+                                   <Button type={ 'default' } text={ DialogConstants.ButtonCaptions.Ok } width={ DialogConstants.ButtonWidths.Normal }
+                                           onClick={ () => {
+                                               const formData = formRef.current.instance.option('formData');
+                                               callback({ modalResult: DialogConstants.ModalResults.Ok, parametric: formData });
+                                           } }
                                    />
-                                   <Button type={ 'normal' } text="Отмена" width={ 95 }
+                                   <Button type={ 'normal' } text={ DialogConstants.ButtonCaptions.Cancel } width={ DialogConstants.ButtonWidths.Normal }
                                            onClick={ () => {
                                                callback({ modalResult: DialogConstants.ModalResults.Cancel, parametric: null });
                                            } }

@@ -7,7 +7,7 @@ import { DialogConstants } from '../../../constants/dialog-constant';
 import { useAppData } from '../../../contexts/app-data';
 import ScrollView from 'devextreme-react/scroll-view';
 
-const ExtendedUserInfoPopup = ({ userId,  callback }) => {
+const ExtendedUserInfoPopup = ({ userId, callback }) => {
 
     const { isXSmall, isSmall } = useScreenSize();
     const formRef = useRef(null);
@@ -15,10 +15,10 @@ const ExtendedUserInfoPopup = ({ userId,  callback }) => {
     const [extendedUserInfo, setExtendedUserInfo] = useState(null);
 
     useEffect(() => {
-        (async ()=> {
-            const extendedUserInfo = await  getExtendedUserInfoAsync(userId);
+        ( async () => {
+            const extendedUserInfo = await getExtendedUserInfoAsync(userId);
             setExtendedUserInfo(extendedUserInfo);
-        })();
+        } )();
     }, [getExtendedUserInfoAsync, userId]);
 
     return (
@@ -30,8 +30,8 @@ const ExtendedUserInfoPopup = ({ userId,  callback }) => {
                onHiding={ () => {
                    callback({ modalResult: DialogConstants.ModalResults.Close, parametric: null });
                } }
-               width={ isXSmall || isSmall ? '95%' : '30%' }
-               height={ isXSmall || isSmall ? '95%' : '45%' }>
+               width={ isXSmall || isSmall ? '95%' : '35%' }
+               height={ isXSmall || isSmall ? '95%' : '65%' }>
             <>
                 <div className={ 'popup-form-container' }>
                     <ScrollView>
@@ -56,26 +56,26 @@ const ExtendedUserInfoPopup = ({ userId,  callback }) => {
                                 <SimpleItem dataField={ 'phone' }
                                             label={ { location: 'top', showColon: true, text: 'Телефон' } }
                                             helpText="Пример: +7(111)111-1111"
-                                            editorType={ 'dxTextBox' } editorOptions={ { mask: '+8 (000) 000-0000' } }
+                                            editorType={ 'dxTextBox' } editorOptions={ { mask: '+7 (000) 000-0000' } }
                                 />
                             </Form>
                         </div>
                     </ScrollView>
-                <div className={ 'popup-form-buttons-row' }>
-                    <div>&nbsp;</div>
-                    <Button type={ 'default' } text={ 'Ok' } width={ 95 }
-                            onClick={ async () => {
-                                const formData = formRef.current.instance.option('formData');
-                                await postExtendedUserInfoAsync({ ...formData, ...{ id: userId } });
-                                callback({ modalResult: DialogConstants.ModalResults.Ok, data: formData  });
-                            } }
-                    />
-                    <Button type={ 'normal' } text="Отмена" width={ 95 }
-                            onClick={ () => {
-                                callback({ modalResult: DialogConstants.ModalResults.Cancel, data: null });
-                            } }
-                    />
-                </div>
+                    <div className={ 'popup-form-buttons-row' }>
+                        <div>&nbsp;</div>
+                        <Button type={ 'default' } text={ DialogConstants.ButtonCaptions.Ok } width={  DialogConstants.ButtonWidths.Normal }
+                                onClick={ async () => {
+                                    const formData = formRef.current.instance.option('formData');
+                                    await postExtendedUserInfoAsync({ ...formData, ...{ id: userId } });
+                                    callback({ modalResult: DialogConstants.ModalResults.Ok, data: formData });
+                                } }
+                        />
+                        <Button type={ 'normal' } text={ DialogConstants.ButtonCaptions.Cancel } width={ DialogConstants.ButtonWidths.Normal  }
+                                onClick={ () => {
+                                    callback({ modalResult: DialogConstants.ModalResults.Cancel, data: null });
+                                } }
+                        />
+                    </div>
                 </div>
             </>
         </Popup>

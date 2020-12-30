@@ -17,9 +17,11 @@
   .popup-form-container {
     display: grid;
     height: 100%;
-    grid-template-rows: 1fr 30px;
+    grid-template-rows: 1fr 40px;
     padding: 5px;
     .popup-form-buttons-row {
+      padding-top: 10px;
+
       display: grid;
       grid-template-columns: 1fr 100px 100px;
       gap: 10px

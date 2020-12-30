@@ -3,5 +3,13 @@ export const DialogConstants = {
         Ok: 'OK',
         Cancel: 'CANCEL',
         Close: 'CLOSE'
+    },
+    ButtonCaptions: {
+        Ok: 'OK',
+        Cancel: 'Отмена',
+        Close: 'Закрыть'
+    },
+    ButtonWidths: {
+        Normal: 95
     }
 };

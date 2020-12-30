@@ -111,6 +111,8 @@ const MobileDevice = () => {
                                 <>
                                     <div className={ 'user-grid-group mobile-devices-group' }>
                                         <Button className={ 'time-line-command-button' } onClick={ (e) => {
+                                            dxDataGridRef.current.instance.option('focusedRowKey', template.key);
+                                            e.event.stopPropagation();
                                             groupRowContextMenuRef.current.instance.option('target', e.element);
                                             groupRowContextMenuRef.current.instance.show();
                                         } }>
