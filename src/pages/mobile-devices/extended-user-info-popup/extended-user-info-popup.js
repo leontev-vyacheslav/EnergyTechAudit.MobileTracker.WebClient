@@ -65,9 +65,10 @@ const ExtendedUserInfoPopup = ({ userId, callback }) => {
                         <div>&nbsp;</div>
                         <Button type={ 'default' } text={ DialogConstants.ButtonCaptions.Ok } width={  DialogConstants.ButtonWidths.Normal }
                                 onClick={ async () => {
-                                    const formData = formRef.current.instance.option('formData');
-                                    await postExtendedUserInfoAsync({ ...formData, ...{ id: userId } });
-                                    callback({ modalResult: DialogConstants.ModalResults.Ok, data: formData });
+                                    let formData = formRef.current.instance.option('formData');
+                                    formData = { ...formData, ...{ id: userId } };
+                                    const responseData = await postExtendedUserInfoAsync(formData);
+                                    callback({ modalResult: DialogConstants.ModalResults.Ok, data: responseData !== null ? formData : null });
                                 } }
                         />
                         <Button type={ 'normal' } text={ DialogConstants.ButtonCaptions.Cancel } width={ DialogConstants.ButtonWidths.Normal  }

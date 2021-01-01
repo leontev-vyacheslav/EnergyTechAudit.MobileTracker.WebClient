@@ -15,7 +15,7 @@ import TrackSheetPopup from '../track-sheet/track-sheet-popup/track-sheet-popup'
 import MobileDeviceContextMenu from './mobile-devices-context-menu/mobile-device-context-menu';
 import UserContextMenu from './user-context-menu/user-context-menu';
 
-import {  AndroidIcon, GridAdditionalMenuIcon, IosIcon, MobileDeviceIcon, RegistrationDateIcon } from '../../utils/app-icons';
+import { AndroidIcon, GridAdditionalMenuIcon, IosIcon, MobileDeviceIcon, RegistrationDateIcon } from '../../utils/app-icons';
 
 import './mobile-devices.scss';
 import ExtendedUserInfoPopup from './extended-user-info-popup/extended-user-info-popup';
@@ -36,7 +36,7 @@ const MobileDevice = () => {
     const [trackSheetPopupTrigger, setTrackSheetPopupTrigger] = useState(false);
     const [extendedUserInfoPopupTrigger, setExtendedUserInfoPopupTrigger] = useState(false);
 
-    const showTrackMap = useCallback( ()=> {
+    const showTrackMap = useCallback(() => {
         if (dxDataGridRef.current && dxDataGridRef.current.instance) {
             const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
             const mobileDevice = mobileDevices.find(md => md.id === currentRowKey);
@@ -51,7 +51,7 @@ const MobileDevice = () => {
         }
     }, [])
 
-    const showExtendedUserInfo = useCallback( () => {
+    const showExtendedUserInfo = useCallback(() => {
         if (dxDataGridRef.current && dxDataGridRef.current.instance) {
             const currentGroupRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
             const mobileDevice = mobileDevices.find(md => md.userId === currentGroupRowKey[0]);
@@ -64,7 +64,6 @@ const MobileDevice = () => {
         ( async () => {
             const mobileDevicesData = await getMobileDevicesAsync() ?? [];
             setMobileDevices(mobileDevicesData);
-            console.log(mobileDevicesData);
         } )();
     }, [getMobileDevicesAsync, appSettingsData]);
 
@@ -84,7 +83,7 @@ const MobileDevice = () => {
                         groupRowContextMenuRef.current.instance.option('target', e.element);
                         groupRowContextMenuRef.current.instance.show();
                     } }>
-                        <GridAdditionalMenuIcon  />
+                        <GridAdditionalMenuIcon/>
                     </Button>
                     <div className={ 'dx-icon dx-icon-user' }/>
                     <div className={ 'mobile-devices-group-line' }>
@@ -127,7 +126,7 @@ const MobileDevice = () => {
                                 rowContextMenuRef.current.instance.option('target', e.element);
                                 rowContextMenuRef.current.instance.show();
                             } }>
-                                <GridAdditionalMenuIcon  />
+                                <GridAdditionalMenuIcon/>
                             </Button>
                         )
                     } }
@@ -191,44 +190,54 @@ const MobileDevice = () => {
                 }
                 { trackSheetPopupTrigger ?
                     <TrackSheetPopup currentDate={ appSettingsData.workDate } callback={ (result) => {
-                        if(result && result.modalResult === 'OK') {
+                        if (result && result.modalResult === 'OK') {
                             const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
                             const mobileDevice = mobileDevices.find(md => md.id === currentRowKey);
                             const beginMonthDate = moment(result.parametric.currentDate).startOf('month');
-                            history.push(`/track-sheet?mobileDeviceId=${ mobileDevice.id }&currentDate=${beginMonthDate.toDate().toISOString()}`);
+                            history.push(`/track-sheet?mobileDeviceId=${ mobileDevice.id }&currentDate=${ beginMonthDate.toDate().toISOString() }`);
                         }
                         setTrackSheetPopupTrigger(false);
                     } }/> : null
                 }
                 { currentMobileDevice !== null && extendedUserInfoPopupTrigger
                     ? <ExtendedUserInfoPopup userId={ currentMobileDevice.userId } callback={ async (result) => {
-                        if(result && result.modalResult === 'OK') {
-                            //
+                        if (result && result.modalResult === 'OK') {
+                            const extendedUserInfo = result.data;
+                            if (extendedUserInfo) {
+                                const updatedMobileDevices = mobileDevices
+                                    .map(m => {
+                                        if (m.userId === extendedUserInfo.id) {
+                                            return { ...m, ...{ extendedUserInfo: extendedUserInfo } }
+                                        }
+                                        return m;
+                                    });
+                                setMobileDevices(updatedMobileDevices);
+                            }
                         }
                         setExtendedUserInfoPopupTrigger(false);
-                     }
+                    }
                     }/>
-                    : null
-                }
-                <MobileDeviceContextMenu
-                    ref={ rowContextMenuRef }
-                    commands={
-                        {
-                            showTrackMap: showTrackMap,
-                            showTrackSheet: showTrackSheet
-                        }
+                        : null
                     }
-                />
-                <UserContextMenu
-                    ref={ groupRowContextMenuRef }
-                    commands={
-                        {
-                            showExtendedUserInfo: showExtendedUserInfo
+                    <MobileDeviceContextMenu
+                        ref={ rowContextMenuRef }
+                        commands={
+                            {
+                                showTrackMap: showTrackMap,
+                                showTrackSheet: showTrackSheet
+                            }
                         }
-                    }
-                />
-            </>
-        );
+                    />
+                    <UserContextMenu
+                        ref={ groupRowContextMenuRef }
+                        commands={
+                            {
+                                showExtendedUserInfo: showExtendedUserInfo
+                            }
+                        }
+                    />
+                    </>
+                );
     }
 
     return (
