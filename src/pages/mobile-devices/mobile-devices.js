@@ -64,8 +64,39 @@ const MobileDevice = () => {
         ( async () => {
             const mobileDevicesData = await getMobileDevicesAsync() ?? [];
             setMobileDevices(mobileDevicesData);
+            console.log(mobileDevicesData);
         } )();
     }, [getMobileDevicesAsync, appSettingsData]);
+
+    const GroupRowContent = ({ groupCell }) => {
+
+        const items = groupCell.data.items === null ? groupCell.data.collapsedItems : groupCell.data.items;
+        const groupDataItem = items[0];
+        const userCaption = !groupDataItem.extendedUserInfo
+            ? groupDataItem.email
+            : `${ groupDataItem.extendedUserInfo.firstName } ${ groupDataItem.extendedUserInfo.lastName }`;
+        return (
+            <>
+                <div className={ 'user-grid-group mobile-devices-group' }>
+                    <Button className={ 'time-line-command-button' } onClick={ (e) => {
+                        dxDataGridRef.current.instance.option('focusedRowKey', groupCell.key);
+                        e.event.stopPropagation();
+                        groupRowContextMenuRef.current.instance.option('target', e.element);
+                        groupRowContextMenuRef.current.instance.show();
+                    } }>
+                        <GridAdditionalMenuIcon  />
+                    </Button>
+                    <div className={ 'dx-icon dx-icon-user' }/>
+                    <div className={ 'mobile-devices-group-line' }>
+                        <div>
+                            <span style={ { marginRight: 10 } }>{ !isXSmall ? 'Пользователь:' : '' }</span>
+                            <span>{ userCaption }</span>
+                        </div>
+                    </div>
+                </div>
+            </>
+        );
+    }
 
     if (!( mobileDevices === null || mobileDevices.length === 0 )) {
         return (
@@ -101,34 +132,11 @@ const MobileDevice = () => {
                         )
                     } }
                     />
+
                     <Column
                         dataField={ 'userId' }
                         groupIndex={ 0 }
-                        groupCellRender={ (template) => {
-                            const items = template.data.items === null ? template.data.collapsedItems : template.data.items;
-                            const groupDataItem = items[0];
-                            return (
-                                <>
-                                    <div className={ 'user-grid-group mobile-devices-group' }>
-                                        <Button className={ 'time-line-command-button' } onClick={ (e) => {
-                                            dxDataGridRef.current.instance.option('focusedRowKey', template.key);
-                                            e.event.stopPropagation();
-                                            groupRowContextMenuRef.current.instance.option('target', e.element);
-                                            groupRowContextMenuRef.current.instance.show();
-                                        } }>
-                                            <GridAdditionalMenuIcon  />
-                                        </Button>
-                                        <div className={ 'dx-icon dx-icon-user' }/>
-                                        <div className={ 'mobile-devices-group-line' }>
-                                            <div>
-                                                <span style={ { marginRight: 10 } }>{ !isXSmall ? 'Пользователь:' : '' }</span>
-                                                <span>{ groupDataItem.email }</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </>
-                            );
-                        } }
+                        groupCellRender={ (groupCell) => <GroupRowContent groupCell={ groupCell }/> }
                         visible={ false }
                     />
 
