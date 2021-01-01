@@ -55,6 +55,31 @@ const TrackSheet = () => {
 
     SideNavigationMenu.treeViewRef?.current?.instance.unselectAll();
 
+    const GroupRowContent = () => {
+        console.log(currentMobileDevice)
+        const userCaption = !currentMobileDevice.extendedUserInfo
+            ? currentMobileDevice.email
+            : `${ currentMobileDevice.extendedUserInfo.firstName } ${ currentMobileDevice.extendedUserInfo.lastName }`;
+        return (
+            <div className={ 'user-grid-group track-sheet-group ' }>
+                <div className={ 'dx-icon dx-icon-user' }/>
+                <div style={ { display: 'grid', gap: 5 } }>
+                    <div className={ 'mobile-devices-group-line' }>
+                        <div>
+                            <span>{ !isXSmall ? 'Пользователь: ' : '' }</span>
+                            <span>{ userCaption } / { currentMobileDevice.model }</span>
+                        </div>
+                    </div>
+                    <div className={ 'mobile-devices-group-line' }>
+                        <span>{ !isXSmall ? 'Всего пройдено за период:' : null }
+                            <code className={ 'badge badge-important' }>{ ( trackSheet.totalCoveredDistance / 1000 ).toFixed(2) } км</code>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     if (currentDate && trackSheet !== null && trackSheet.length !== 0 && currentMobileDevice) {
         return (
             <>
@@ -82,27 +107,7 @@ const TrackSheet = () => {
                     <Column
                         dataField={ 'userId' }
                         groupIndex={ 0 }
-                        groupCellRender={ () => {
-
-                            return (
-                                <div className={ 'user-grid-group track-sheet-group ' }>
-                                    <div className={ 'dx-icon dx-icon-user' }/>
-                                    <div style={ { display: 'grid', gap: 5 } }>
-                                        <div className={ 'mobile-devices-group-line' }>
-                                            <div>
-                                                <span>{ !isXSmall ? 'Пользователь: ' : '' }</span>
-                                                <span>{ currentMobileDevice.email } / { currentMobileDevice.model }</span>
-                                            </div>
-                                        </div>
-                                        <div className={ 'mobile-devices-group-line' }>
-                                            <span>{ !isXSmall ? 'Всего пройдено за период:' : null }
-                                                <code className={ 'badge badge-important' }>{ ( trackSheet.totalCoveredDistance / 1000 ).toFixed(2) } км</code>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        } }
+                        groupCellRender={ () => <GroupRowContent /> }
                         visible={ false }
                     />
 
