@@ -56,7 +56,6 @@ const TrackSheet = () => {
     SideNavigationMenu.treeViewRef?.current?.instance.unselectAll();
 
     const GroupRowContent = () => {
-        console.log(currentMobileDevice)
         const userCaption = !currentMobileDevice.extendedUserInfo
             ? currentMobileDevice.email
             : `${ currentMobileDevice.extendedUserInfo.firstName } ${ currentMobileDevice.extendedUserInfo.lastName }`;

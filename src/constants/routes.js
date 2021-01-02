@@ -4,6 +4,7 @@ export default {
     timeline: '/api/timeline',
     locationRecord: '/api/locationRecord',
     userManagement: '/api/userManagement',
+    organization: '/api/organization',
 
     accountSignIn: '/account/signIn',
     accountSignOut: '/account/signOut',

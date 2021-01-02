@@ -1,9 +1,24 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import App from './App';
+import { AppSettingsProvider } from './contexts/app-settings';
+import { AuthProvider } from './contexts/auth';
+import { SharedAreaProvider } from './contexts/shared-area';
+import { AppDataProvider } from './contexts/app-data';
 
+
+// eslint-disable-next-line no-undef
 test('renders learn react link', () => {
-    const { getByText } = render(<App/>);
-    const linkElement = getByText(/learn react/i);
-    expect(linkElement).toBeInTheDocument();
+
+    const component = render(
+        <AppSettingsProvider>
+            <AuthProvider>
+                <SharedAreaProvider>
+                    <AppDataProvider/>
+                </SharedAreaProvider>
+            </AuthProvider>
+        </AppSettingsProvider>,
+    );
+
+
+    expect(component).toBeDefined();
 });

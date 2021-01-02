@@ -12,6 +12,10 @@ export const navigation = [
             {
                 text: 'Мобильные устройства',
                 path: '/mobile-devices',
+            },
+            {
+                text: 'Организации',
+                path: '/organizations',
             }
         ]
     },

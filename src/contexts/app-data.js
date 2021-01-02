@@ -191,12 +191,23 @@ function AppDataProvider (props) {
         return null;
     }, [axiosWithCredentials]);
 
+    const getOfficesAsync = useCallback(async (organizationId) => {
+        const response = await axiosWithCredentials({
+            url: `${ routes.host }${ routes.organization }/offices` + (organizationId ? `/${organizationId}` :  ''),
+            method: HttpConstants.Methods.Get
+        });
+        if (response && response.status === HttpConstants.StatusCodes.Ok) {
+            return response.data;
+        }
+        return null;
+    }, [axiosWithCredentials])
+
     return (
         <AppDataContext.Provider
             value={ {
                 getMobileDeviceAsync, getMobileDevicesAsync,  getTimelinesAsync, getLocationRecordsByRangeAsync,
                 getLocationRecordAsync,  getGeocodedAddressAsync, getGeocodedLocationAsync, getTrackSheetAsync,
-                postExtendedUserInfoAsync, getExtendedUserInfoAsync
+                postExtendedUserInfoAsync, getExtendedUserInfoAsync, getOfficesAsync
             } }
             { ...props }
         />

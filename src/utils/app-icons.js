@@ -44,4 +44,6 @@ export { MdAspectRatio as FitToMapIcon } from 'react-icons/md';
 export { IoMap as TrackMapIcon } from 'react-icons/io5';
 export { FiRefreshCcw as RefreshIcon } from 'react-icons/fi';
 
+export { BsPeople as OrganizationIcon } from 'react-icons/bs';
+
 export const GridAdditionalMenuIcon = () => <MdMoreVert style={ { cursor: 'pointer' } } size={ 18 } color={ '#464646' }/>;
