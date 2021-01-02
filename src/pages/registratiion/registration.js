@@ -6,9 +6,12 @@ import { useAuth } from '../../contexts/auth';
 const Registration = () => {
     const { user } = useAuth();
     const isConfirm = window.location.hash.includes('confirm-registration');
-    let userVerificationData = null;
+    let userVerificationData = '';
     if (isConfirm) {
-        userVerificationData = atob(location.hash.split('userVerificationData=')[1]) ?? '';
+        const [, encodedEmail] = location.hash.split('userVerificationData=');
+        if(encodedEmail) {
+            userVerificationData = atob(encodedEmail) ?? '';
+        }
     }
     const InnerContent = () => {
         return isConfirm ? (

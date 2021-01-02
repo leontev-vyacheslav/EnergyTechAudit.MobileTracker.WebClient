@@ -10,7 +10,6 @@ import { useAppSettings } from '../../contexts/app-settings';
 
 export default ({ menuToggleEnabled, title, toggleMenu }) => {
     const { appSettingsData } = useAppSettings();
-
     const WorkDateWidget = ({ outerStyle }) => {
         return (
             <div style={ {

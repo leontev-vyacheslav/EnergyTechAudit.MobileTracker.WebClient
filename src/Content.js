@@ -18,10 +18,7 @@ export default function () {
                     <Redirect to={ '/home' }/>
                 </Switch>
                 <Footer>
-                    <div>
-                        { ' ' }
-                        Copyright © { new Date().getFullYear() } { AppConstants.appInfo.companyName }.
-                    </div>
+                    <div> Copyright © { new Date().getFullYear() } { AppConstants.appInfo.companyName }.</div>
                 </Footer>
             </SideNavBarLayout>
         </>
