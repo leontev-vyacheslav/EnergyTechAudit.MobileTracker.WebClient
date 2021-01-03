@@ -5,6 +5,7 @@ import DataGrid, { Column, Grouping, Pager, Paging, Scrolling } from 'devextreme
 import { Button } from 'devextreme-react/ui/button';
 import { AddressIcon, GridAdditionalMenuIcon, OrganizationIcon } from '../../utils/app-icons';
 import DataGridIconCellValueContainer from '../../components/data-grid/data-grid-icon-cell-value-container';
+import PageHeader from '../../components/page-header/page-header';
 
 const Organizations = () => {
     const { getOfficesAsync } = useAppData();
@@ -38,10 +39,9 @@ const Organizations = () => {
     if (!( organizations === null || organizations.length === 0 )) {
         return (
             <>
-                <div style={ { display: 'grid', gridTemplateColumns: '30px 1fr', marginLeft: 20, alignItems: 'center' } }>
-                    <OrganizationIcon size={ 30 } color={ 'rgba(0, 0, 0, 0.87)' } />
-                    <h2 className={ 'content-block' }>Организации</h2>
-                </div>
+                <PageHeader caption={ 'Организации' }>
+                    <OrganizationIcon size={ 30 }  />
+                </PageHeader>
                 <DataGrid ref={ dxDataGridRef }
                           keyExpr={ 'id' }
                           className={ 'mobile-devices dx-card wide-card' }
@@ -101,11 +101,9 @@ const Organizations = () => {
 
     return (
         <>
-            <div style={ { display: 'grid', gridTemplateColumns: '30px 1fr', marginLeft: 20, alignItems: 'center' } }>
-                <OrganizationIcon size={ 30 } color={ 'rgba(0, 0, 0, 0.87)' } />
-                <h2 className={ 'content-block' }>Организации</h2>
-            </div>
-
+            <PageHeader caption={ 'Организации' }>
+                <OrganizationIcon size={ 30 }  />
+            </PageHeader>
             <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
         </>
     );

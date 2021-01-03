@@ -19,6 +19,7 @@ import { AndroidIcon, GridAdditionalMenuIcon, IosIcon, MobileDeviceIcon, Registr
 
 import './mobile-devices.scss';
 import ExtendedUserInfoPopup from './extended-user-info-popup/extended-user-info-popup';
+import PageHeader from '../../components/page-header/page-header';
 
 const MobileDevice = () => {
     const dxDataGridRef = useRef(null);
@@ -100,10 +101,9 @@ const MobileDevice = () => {
     if (!( mobileDevices === null || mobileDevices.length === 0 )) {
         return (
             <>
-                <div style={ { display: 'grid', gridTemplateColumns: '30px 1fr', marginLeft: 20, alignItems: 'center' } }>
-                    <MobileDeviceIcon size={ 30 } color={ 'rgba(0, 0, 0, 0.87)' } />
-                    <h2 className={ 'content-block' }>Мобильные устройства</h2>
-                </div>
+                <PageHeader caption={ 'Мобильные устройства' }>
+                    <MobileDeviceIcon size={ 30 }/>
+                </PageHeader>
                 <DataGrid ref={ dxDataGridRef }
                           keyExpr={ 'id' }
                           className={ 'mobile-devices dx-card wide-card' }
@@ -246,10 +246,9 @@ const MobileDevice = () => {
 
     return (
         <>
-            <div style={ { display: 'grid', gridTemplateColumns: '30px 1fr', marginLeft: 20, alignItems: 'center' } }>
-                <MobileDeviceIcon size={ 30 } color={ 'rgba(0, 0, 0, 0.87)' } />
-                <h2 className={ 'content-block' }>Мобильные устройства</h2>
-            </div>
+            <PageHeader caption={ 'Мобильные устройства' }>
+                <MobileDeviceIcon size={ 30 }/>
+            </PageHeader>
             <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
         </>
     );

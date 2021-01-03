@@ -7,6 +7,7 @@ import { useScreenSize } from '../../utils/media-query';
 
 import './settings.scss';
 import { SettingsIcon } from '../../utils/app-icons';
+import PageHeader from '../../components/page-header/page-header';
 
 export default () => {
     let dxAppSettingsFormRef = useRef(null);
@@ -115,10 +116,10 @@ export default () => {
 
     return (
         <>
-            <div style={ { display: 'grid', gridTemplateColumns: '30px 1fr', marginLeft: 20, alignItems: 'center' } }>
-                <SettingsIcon size={ 30 } color={ 'rgba(0, 0, 0, 0.87)' } />
-                <h2 className={ 'content-block' }>Настройки</h2>
-            </div>
+            <PageHeader caption={ 'Настройки' }>
+                <SettingsIcon size={ 30 }  />
+            </PageHeader>
+
             <div className={ 'content-block' }>
                 <div className={ 'dx-card responsive-paddings' }>
                     <Form

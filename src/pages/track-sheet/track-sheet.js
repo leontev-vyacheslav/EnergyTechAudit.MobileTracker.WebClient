@@ -11,9 +11,10 @@ import { useScreenSize } from '../../utils/media-query';
 import TrackMapPopup from '../mobile-devices/timeline/track-map-popup/track-map-popup';
 import { useAppSettings } from '../../contexts/app-settings';
 import DataGridIconCellValueContainer from '../../components/data-grid/data-grid-icon-cell-value-container';
-import { AccuracyIcon, CurrentDateIcon, DistanceIcon, GridAdditionalMenuIcon } from '../../utils/app-icons';
+import { AccuracyIcon, CurrentDateIcon, DistanceIcon, GridAdditionalMenuIcon, TimelineIcon } from '../../utils/app-icons';
 
 import './track-sheet.scss';
+import PageHeader from '../../components/page-header/page-header';
 
 const TrackSheet = () => {
     function useQuery() {
@@ -82,7 +83,9 @@ const TrackSheet = () => {
     if (currentDate && trackSheet !== null && trackSheet.length !== 0 && currentMobileDevice) {
         return (
             <>
-                <h2 className={ 'content-block' }>Путевой отчет</h2>
+                <PageHeader caption={ 'Путевой отчет' }>
+                    <TimelineIcon size={ 30 }/>
+                </PageHeader>
                 <DataGrid ref={ dxDataGridRef }
                           keyExpr={ 'id' }
                           className={ 'mobile-devices track-sheet dx-card wide-card' }
@@ -183,7 +186,9 @@ const TrackSheet = () => {
 
     return (
         <>
-            <h2 className={ 'content-block' }>Путевой отчет</h2>
+            <PageHeader caption={ 'Путевой отчет' }>
+                <TimelineIcon size={ 30 }/>
+            </PageHeader>
             <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
         </>
     );
