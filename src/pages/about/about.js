@@ -2,10 +2,15 @@ import React from 'react';
 import AppConstants from '../../constants/app-constants';
 
 import './about.scss';
+import { AboutIcon } from '../../utils/app-icons';
 
 export default () => (
     <>
-        <h2 className={ 'content-block' }>О программе</h2>
+
+        <div style={ { display: 'grid', gridTemplateColumns: '30px 1fr', marginLeft: 20, alignItems: 'center' } }>
+            <AboutIcon size={ 30 } color={ 'rgba(0, 0, 0, 0.87)' } />
+            <h2 className={ 'content-block' }>О программе</h2>
+        </div>
         <div className={ 'content-block' }>
             <div className={ 'dx-card responsive-paddings' }>
                 <div className={ 'about-app-info' } style={ { display: 'flex', flexDirection: 'row' } }>

@@ -100,7 +100,10 @@ const MobileDevice = () => {
     if (!( mobileDevices === null || mobileDevices.length === 0 )) {
         return (
             <>
-                <h2 className={ 'content-block' }>Мобильные устройства</h2>
+                <div style={ { display: 'grid', gridTemplateColumns: '30px 1fr', marginLeft: 20, alignItems: 'center' } }>
+                    <MobileDeviceIcon size={ 30 } color={ 'rgba(0, 0, 0, 0.87)' } />
+                    <h2 className={ 'content-block' }>Мобильные устройства</h2>
+                </div>
                 <DataGrid ref={ dxDataGridRef }
                           keyExpr={ 'id' }
                           className={ 'mobile-devices dx-card wide-card' }
@@ -115,12 +118,13 @@ const MobileDevice = () => {
                           onRowExpanding={ (e) => {
                               e.component.collapseAll(-1);
                           } }
+
                 >
                     <Scrolling showScrollbar={ 'never' }/>
                     <Paging defaultPageSize={ 10 }/>
                     <Pager showPageSizeSelector={ true } showInfo={ true }/>
                     <Grouping autoExpandAll={ true } key={ 'userId' }/>
-                    <Column type={ 'buttons' } width={ 50 } cellRender={ () => {
+                    <Column type={ 'buttons' } width={ 45 } cellRender={ () => {
                         return (
                             <Button className={ 'time-line-command-button' } onClick={ (e) => {
                                 rowContextMenuRef.current.instance.option('target', e.element);
@@ -242,7 +246,10 @@ const MobileDevice = () => {
 
     return (
         <>
-            <h2 className={ 'content-block' }>Мобильные устройства</h2>
+            <div style={ { display: 'grid', gridTemplateColumns: '30px 1fr', marginLeft: 20, alignItems: 'center' } }>
+                <MobileDeviceIcon size={ 30 } color={ 'rgba(0, 0, 0, 0.87)' } />
+                <h2 className={ 'content-block' }>Мобильные устройства</h2>
+            </div>
             <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
         </>
     );

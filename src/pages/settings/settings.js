@@ -6,6 +6,7 @@ import notify from 'devextreme/ui/notify';
 import { useScreenSize } from '../../utils/media-query';
 
 import './settings.scss';
+import { SettingsIcon } from '../../utils/app-icons';
 
 export default () => {
     let dxAppSettingsFormRef = useRef(null);
@@ -114,7 +115,10 @@ export default () => {
 
     return (
         <>
-            <h2 className={ 'content-block' }>Настройки</h2>
+            <div style={ { display: 'grid', gridTemplateColumns: '30px 1fr', marginLeft: 20, alignItems: 'center' } }>
+                <SettingsIcon size={ 30 } color={ 'rgba(0, 0, 0, 0.87)' } />
+                <h2 className={ 'content-block' }>Настройки</h2>
+            </div>
             <div className={ 'content-block' }>
                 <div className={ 'dx-card responsive-paddings' }>
                     <Form

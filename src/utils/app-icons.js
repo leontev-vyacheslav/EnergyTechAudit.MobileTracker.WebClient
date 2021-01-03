@@ -25,7 +25,7 @@ export { RiCalendarCheckLine as RegistrationDateIcon } from 'react-icons/ri';
 export { MdAndroid as AndroidIcon } from 'react-icons/md';
 export { SiIos as IosIcon } from 'react-icons/si';
 export { MdMoreVert as AdditionalMenuIcon } from 'react-icons/md';
-export { MdSmartphone as MobileDeviceIcon } from 'react-icons/md';
+export { IoPhonePortraitSharp as MobileDeviceIcon } from 'react-icons/io5';
 
 // mobile-device-context-menu.js
 export { MdTimeline as TimelineIcon  } from 'react-icons/md';
@@ -45,5 +45,10 @@ export { IoMap as TrackMapIcon } from 'react-icons/io5';
 export { FiRefreshCcw as RefreshIcon } from 'react-icons/fi';
 
 export { BsPeople as OrganizationIcon } from 'react-icons/bs';
+export { IoGridOutline as ListsIcon } from 'react-icons/io5';
+export { IoSettingsOutline as SettingsIcon } from 'react-icons/io5';
+export { IoHomeOutline as HomeIcon } from 'react-icons/io5';
+export { IoInformationCircleOutline as AboutIcon } from 'react-icons/io5';
+export { IoExitOutline as ExitIcon } from 'react-icons/io5';
 
 export const GridAdditionalMenuIcon = () => <MdMoreVert style={ { cursor: 'pointer' } } size={ 18 } color={ '#464646' }/>;

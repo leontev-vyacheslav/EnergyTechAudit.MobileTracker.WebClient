@@ -1,11 +1,16 @@
 import React from 'react';
 import AppConstants from '../../constants/app-constants';
 import './home.scss';
+import { HomeIcon } from '../../utils/app-icons';
 
 export default () => {
     return (
         <React.Fragment>
-            <h2 className={ 'content-block' }>Главная</h2>
+            <div style={ { display: 'grid', gridTemplateColumns: '30px 1fr', marginLeft: 20, alignItems: 'center' } }>
+                <HomeIcon size={ 30 } color={ 'rgba(0, 0, 0, 0.87)' } />
+                <h2 className={ 'content-block' }>Главная</h2>
+            </div>
+
             <div className={ 'content-block' }>
                 <div className={ 'dx-card responsive-paddings home-page-content' }>
                     <div className={ 'logos-container' }>

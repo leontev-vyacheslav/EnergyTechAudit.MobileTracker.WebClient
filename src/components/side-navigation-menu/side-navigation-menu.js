@@ -65,6 +65,15 @@ export default function SideNavigationMenu (props) {
 
     SideNavigationMenu.treeViewRef = treeViewRef;
 
+    const TreeViewItemContent = (e) => {
+        return (
+            <>
+                { e.icon ? <i className="dx-icon">{ e.icon() }</i> : null }
+                <span>{ e.text }</span>
+            </>
+        );
+    }
+
     return (
         <div className={ 'dx-swatch-additional side-navigation-menu' } ref={ getWrapperRef }>
             { children }
@@ -74,6 +83,7 @@ export default function SideNavigationMenu (props) {
                     items={ items }
                     keyExpr={ 'path' }
                     selectionMode={ 'single' }
+                    itemRender={ TreeViewItemContent }
                     focusStateEnabled={ true }
                     expandEvent={ 'click' }
                     onItemClick={ event => {
@@ -91,7 +101,6 @@ export default function SideNavigationMenu (props) {
             </div>
         </div>
     );
-
 }
 
 

@@ -77,7 +77,7 @@ export default function ({ title, children }) {
                 closeOnOutsideClick={ onOutsideClick }
                 openedStateMode={ isLarge ? 'shrink' : 'overlap' }
                 revealMode={ isXSmall ? 'slide' : 'expand' }
-                minSize={ isXSmall ? 0 : 60 }
+                minSize={ isXSmall ? 0 : 45 }
                 maxSize={ 250 }
                 shading={ isLarge ? false : true }
                 opened={ menuStatus === MenuStatus.Closed ? false : true }

@@ -38,7 +38,10 @@ const Organizations = () => {
     if (!( organizations === null || organizations.length === 0 )) {
         return (
             <>
-                <h2 className={ 'content-block' }>Организации</h2>
+                <div style={ { display: 'grid', gridTemplateColumns: '30px 1fr', marginLeft: 20, alignItems: 'center' } }>
+                    <OrganizationIcon size={ 30 } color={ 'rgba(0, 0, 0, 0.87)' } />
+                    <h2 className={ 'content-block' }>Организации</h2>
+                </div>
                 <DataGrid ref={ dxDataGridRef }
                           keyExpr={ 'id' }
                           className={ 'mobile-devices dx-card wide-card' }
@@ -98,7 +101,11 @@ const Organizations = () => {
 
     return (
         <>
-            <h2 className={ 'content-block' }>Организации</h2>
+            <div style={ { display: 'grid', gridTemplateColumns: '30px 1fr', marginLeft: 20, alignItems: 'center' } }>
+                <OrganizationIcon size={ 30 } color={ 'rgba(0, 0, 0, 0.87)' } />
+                <h2 className={ 'content-block' }>Организации</h2>
+            </div>
+
             <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
         </>
     );
