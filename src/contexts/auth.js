@@ -22,6 +22,13 @@ function AuthProvider (props) {
         return userAuthData;
     }, []);
 
+    useEffect(() => {
+        ( async function () {
+            const userAuthData = await getUserAuthDataFromStorageAsync();
+            setUser(userAuthData);
+        } )();
+    }, [getUserAuthDataFromStorageAsync]);
+
     const signIn = useCallback(async (email, password) => {
         let userAuthData = null;
         try {
@@ -42,7 +49,7 @@ function AuthProvider (props) {
     }, []);
 
     const signOut = useCallback(async () => {
-        const userAuthData = await getUserAuthDataFromStorageAsync();
+        const userAuthData = getUserAuthDataFromStorageAsync();
         if (userAuthData) {
             try {
                 await axios.post(`${routes.host}${routes.accountSignOut}`, userAuthData, {
@@ -58,13 +65,6 @@ function AuthProvider (props) {
         localStorage.removeItem('@userAuthData');
         setUser(null);
 
-    }, [getUserAuthDataFromStorageAsync]);
-
-    useEffect(() => {
-        ( async function () {
-            const userAuthData = await getUserAuthDataFromStorageAsync();
-            setUser(userAuthData);
-        } )();
     }, [getUserAuthDataFromStorageAsync]);
 
     return (

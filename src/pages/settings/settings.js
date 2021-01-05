@@ -90,7 +90,7 @@ export default () => {
                                         max: 1000,
                                         width: 400
                                     }
-                                },{
+                                }, {
                                     label: {
                                         text: 'Радиус стационарности, (м)',
                                         location: 'top',
@@ -117,17 +117,20 @@ export default () => {
     return (
         <>
             <PageHeader caption={ 'Настройки' }>
-                <SettingsIcon size={ 30 }  />
+                <SettingsIcon size={ 30 }/>
             </PageHeader>
 
             <div className={ 'content-block' }>
                 <div className={ 'dx-card responsive-paddings' }>
+
                     <Form
+                        height={ 450 }
                         colCount={ formOptions.colCount }
                         items={ formOptions.items }
                         formData={ formOptions.formData }
                         ref={ dxAppSettingsFormRef }
                     />
+
                     <Button className={ 'form-success-button' } text={ 'OK' } width={ 125 } type={ 'success' }
                             onClick={ () => {
                                 const formRef = dxAppSettingsFormRef.current;

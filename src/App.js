@@ -11,7 +11,7 @@ import { NavigationProvider } from './contexts/navigation';
 import { AuthProvider, useAuth } from './contexts/auth';
 import { useScreenSizeClass } from './utils/media-query';
 import Content from './Content';
-import NotAuthenticatedContent from './NotAuthenticatedContent';
+import UnauthenticatedContent from './UnauthenticatedContent';
 import { AppSettingsProvider } from './contexts/app-settings';
 import { AppDataProvider } from './contexts/app-data';
 import { SharedAreaProvider } from './contexts/shared-area';
@@ -21,13 +21,13 @@ import { locale, loadMessages } from 'devextreme/localization';
 
 function App () {
     const { user } = useAuth();
-
+    if(user === undefined)
+    {
+        return null;
+    }
     loadMessages(ruMessages);
     locale(navigator.language);
-
-    return user ?
-        <Content/>
-        : <NotAuthenticatedContent/>;
+    return user == null ? <UnauthenticatedContent/> : <Content/>
 }
 
 export default function Main () {
