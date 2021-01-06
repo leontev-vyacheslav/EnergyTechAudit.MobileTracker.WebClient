@@ -5,9 +5,11 @@ import { useAuth } from '../../contexts/auth';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useSharedArea } from '../../contexts/shared-area';
 import { useNavigation } from '../../contexts/navigation';
-import { UserIcon } from '../../utils/app-icons';
+import { ExitIcon, RefreshIcon, UserIcon, WorkDateIcon } from '../../utils/app-icons';
+import ContextMenuItem from '../context-menu-item/context-menu-item';
 
 import './user-panel.scss';
+
 
 export default function ({ menuMode }) {
     const { user } = useAuth();
@@ -15,30 +17,15 @@ export default function ({ menuMode }) {
     const { showWorkDatePicker, signOutWithConfirm } = useSharedArea();
     const { navigationData } = useNavigation();
 
-    function ItemTemplate (e) {
-        return (
-            <>
-                { e.renderItem ? e.renderItem(e) : (
-                    <>
-                        <i style={ { marginRight: 24 } } className={ `dx-icon dx-icon-${ e.icon } ${ menuMode === 'list' ? ' dx-list-item-icon' : '' }` }/>
-                        <span className="dx-menu-item-text">{ e.text }</span>
-                    </>
-                ) }
-            </>
-        );
-    }
-
     const menuItems = useMemo(() => {
-        let items = [
+        const items = [
             {
-                icon: 'user',
                 text: user.email,
-                renderItem: (e) => {
+                suppressText: true,
+                renderItem: (item) => {
                     return (
                         <>
-                            <i style={ { marginRight: 24, marginTop: 4 } } className={ 'dx-icon' }>
-                                <UserIcon size={ 24 }/>
-                            </i>
+                           <UserIcon size={ 24 }/>
                             <span style={ {
                                 width: 150,
                                 textOverflow: 'ellipsis',
@@ -46,21 +33,21 @@ export default function ({ menuMode }) {
                                 overflow: 'hidden',
                                 display: 'inline-block',
                                 verticalAlign: 'middle'
-                            } } className="dx-menu-item-text">{ e.text }</span>
+                            } } className="dx-menu-item-text">{ item.text }</span>
                         </>
                     )
                 }
             },
             {
                 text: 'Рабочая дата',
-                icon: 'event',
+                renderItem: () => <WorkDateIcon size={ 18 }/>,
                 onClick: () => {
                     showWorkDatePicker();
                 }
             },
             {
                 text: 'Выход',
-                icon: 'runner',
+                renderItem: () => <ExitIcon size={ 18 }/>,
                 onClick: () => {
                     signOutWithConfirm();
                 }
@@ -72,7 +59,7 @@ export default function ({ menuMode }) {
         ) {
             items.splice(1, 0, {
                 text: 'Обновить',
-                icon: 'refresh',
+                renderItem: () => <RefreshIcon size={ 18 }/>,
                 onClick: () => {
                     setAppSettingsData({ ...appSettingsData, ...{ workDate: appSettingsData.workDate } });
                 }
@@ -95,7 +82,7 @@ export default function ({ menuMode }) {
             }
             { menuMode === 'context' && (
                 <ContextMenu
-                    itemRender={ ItemTemplate }
+                    itemRender={ (item) => <ContextMenuItem item={ item } /> }
                     items={ menuItems }
                     target={ '.user-button' }
                     showEvent={ 'dxclick' }
@@ -108,7 +95,7 @@ export default function ({ menuMode }) {
             { menuMode === 'list' && (
                 <List
                     className={ 'dx-toolbar-menu-action' }
-                    itemRender={ ItemTemplate }
+                    itemRender={ (item) => <ContextMenuItem item={ item } /> }
                     items={ menuItems }
                 />
             ) }
