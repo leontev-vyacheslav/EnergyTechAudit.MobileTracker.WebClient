@@ -9,7 +9,7 @@ const TrackSheetContextMenu = ({ innerRef, onShowTrackMapItemClick }) => {
         return [
             {
                 text: 'Показать на карте...',
-                renderItem: () => <TrackMapIcon size={ 18 }/>,
+                renderIconItem: () => <TrackMapIcon size={ 18 }/>,
                 onClick: (e) => {
                     e.component.hide();
                     onShowTrackMapItemClick(e);

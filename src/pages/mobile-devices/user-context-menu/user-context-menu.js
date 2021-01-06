@@ -10,7 +10,7 @@ const UserContextMenu = ({ innerRef, commands }) => {
         return [
             {
                 text: 'Сведения о пользователе...',
-                renderItem: () => <UserIcon size={ 18 }/>,
+                renderIconItem: () => <UserIcon size={ 18 }/>,
                 onClick: (e) => {
                     e.component.hide();
                     commands.showExtendedUserInfo();

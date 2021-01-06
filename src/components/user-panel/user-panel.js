@@ -10,7 +10,6 @@ import ContextMenuItem from '../context-menu-item/context-menu-item';
 
 import './user-panel.scss';
 
-
 export default function ({ menuMode }) {
     const { user } = useAuth();
     const { appSettingsData, setAppSettingsData } = useAppSettings();
@@ -21,11 +20,11 @@ export default function ({ menuMode }) {
         const items = [
             {
                 text: user.email,
-                suppressText: true,
-                renderItem: (item) => {
+                renderIconItem: () => <UserIcon size={ 24 }/>,
+                renderTextItem: (item) => {
                     return (
                         <>
-                           <UserIcon size={ 24 }/>
+
                             <span style={ {
                                 width: 150,
                                 textOverflow: 'ellipsis',
@@ -40,14 +39,14 @@ export default function ({ menuMode }) {
             },
             {
                 text: 'Рабочая дата',
-                renderItem: () => <WorkDateIcon size={ 18 }/>,
+                renderIconItem: () => <WorkDateIcon size={ 18 }/>,
                 onClick: () => {
                     showWorkDatePicker();
                 }
             },
             {
                 text: 'Выход',
-                renderItem: () => <ExitIcon size={ 18 }/>,
+                renderIconItem: () => <ExitIcon size={ 18 }/>,
                 onClick: () => {
                     signOutWithConfirm();
                 }
@@ -59,7 +58,7 @@ export default function ({ menuMode }) {
         ) {
             items.splice(1, 0, {
                 text: 'Обновить',
-                renderItem: () => <RefreshIcon size={ 18 }/>,
+                renderIconItem: () => <RefreshIcon size={ 18 }/>,
                 onClick: () => {
                     setAppSettingsData({ ...appSettingsData, ...{ workDate: appSettingsData.workDate } });
                 }

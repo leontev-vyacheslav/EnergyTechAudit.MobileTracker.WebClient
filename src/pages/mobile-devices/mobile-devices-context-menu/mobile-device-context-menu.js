@@ -10,7 +10,7 @@ const MobileDeviceContextMenu = ({ innerRef, commands }) => {
         return [
             {
                 text: 'Показать на карте...',
-                renderItem: () => <TrackMapIcon size={ 18 }/>,
+                renderIconItem: () => <TrackMapIcon size={ 18 }/>,
                 onClick: (e) => {
                     e.component.hide();
                     commands.showTrackMap();
@@ -18,7 +18,7 @@ const MobileDeviceContextMenu = ({ innerRef, commands }) => {
             },
             {
                 text: 'Пройдено за месяц...',
-                renderItem: () => <TimelineIcon size={ 18 }/>,
+                renderIconItem: () => <TimelineIcon size={ 18 }/>,
                 onClick: (e) => {
                     e.component.hide();
                     commands.showTrackSheet();

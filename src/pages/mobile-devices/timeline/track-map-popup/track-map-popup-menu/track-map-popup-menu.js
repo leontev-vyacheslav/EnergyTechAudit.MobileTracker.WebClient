@@ -9,7 +9,7 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
         {
             name: 'refresh',
             text: 'Обновить',
-            renderItem: () => <RefreshIcon size={ 18 }/>,
+            renderIconItem: () => <RefreshIcon size={ 18 }/>,
             onClick: (e) => {
                 e.component.hide();
                 commands.refreshToken();
@@ -18,7 +18,7 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
         {
             name: 'fitToMap',
             text: 'По размеру',
-            renderItem: () => <FitToMapIcon size={ 18 }/>,
+            renderIconItem: () => <FitToMapIcon size={ 18 }/>,
             onClick: (e) => {
                 e.component.hide();
                 commands.fitToMap();
@@ -27,7 +27,7 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
         {
             name: 'workDate',
             text: 'Рабочая дата',
-            renderItem: () => <WorkDateIcon size={ 18 }/>,
+            renderIconItem: () => <WorkDateIcon size={ 18 }/>,
             onClick: (e) => {
                 e.component.hide();
                 commands.showWorkDatePicker();
