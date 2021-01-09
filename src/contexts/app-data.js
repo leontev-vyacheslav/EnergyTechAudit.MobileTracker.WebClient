@@ -8,6 +8,7 @@ import { DateEx } from '../utils/DateEx';
 import Moment from 'moment';
 import { useAppSettings } from './app-settings';
 import AppConstants from '../constants/app-constants';
+import notify from 'devextreme/ui/notify';
 
 function AppDataProvider (props) {
     const { appSettingsData } = useAppSettings();
@@ -28,7 +29,7 @@ function AppDataProvider (props) {
                     response = await axios.request(config);
                 } catch (error) {
                     response = error.response;
-                    console.log(error);
+                    notify('В процессе выполнения запроса или получения данных от сервера произошла ошибка', 'error', 10000);
                 } finally {
                     hideLoader();
                 }
@@ -202,12 +203,23 @@ function AppDataProvider (props) {
         return null;
     }, [axiosWithCredentials])
 
+    const getOrganizationsAsync = useCallback(async () => {
+        const response = await axiosWithCredentials({
+            url: `${ routes.host }${ routes.organization }/organizations`,
+            method: HttpConstants.Methods.Get
+        });
+        if (response && response.status === HttpConstants.StatusCodes.Ok) {
+            return response.data;
+        }
+        return null;
+    }, [axiosWithCredentials])
+
     return (
         <AppDataContext.Provider
             value={ {
                 getMobileDeviceAsync, getMobileDevicesAsync,  getTimelinesAsync, getLocationRecordsByRangeAsync,
                 getLocationRecordAsync,  getGeocodedAddressAsync, getGeocodedLocationAsync, getTrackSheetAsync,
-                postExtendedUserInfoAsync, getExtendedUserInfoAsync, getOfficesAsync
+                postExtendedUserInfoAsync, getExtendedUserInfoAsync, getOrganizationsAsync, getOfficesAsync
             } }
             { ...props }
         />

@@ -6,35 +6,49 @@ import Button from 'devextreme-react/button';
 import { DialogConstants } from '../../../constants/dialog-constant';
 import { useAppData } from '../../../contexts/app-data';
 import ScrollView from 'devextreme-react/scroll-view';
-import DataSource from 'devextreme/data/data_source';
 
 const ExtendedUserInfoPopup = ({ userId, callback }) => {
 
     const { isXSmall, isSmall } = useScreenSize();
     const formRef = useRef(null);
-    const { getExtendedUserInfoAsync, postExtendedUserInfoAsync, getOfficesAsync  } = useAppData();
+    const { getExtendedUserInfoAsync, postExtendedUserInfoAsync, getOrganizationsAsync, getOfficesAsync  } = useAppData();
+
     const [extendedUserInfo, setExtendedUserInfo] = useState(null);
     const [offices, setOffices] = useState(null);
+    const [organizations, setOrganizations] = useState(null);
+    const [currentOrganization, setCurrentOrganization] = useState(null);
 
     useEffect(() => {
         ( async () => {
-            const extendedUserInfo = await getExtendedUserInfoAsync(userId);
+            let extendedUserInfo = await getExtendedUserInfoAsync(userId);
+            extendedUserInfo = extendedUserInfo !== null ? { ...extendedUserInfo, ...{ organizationId: extendedUserInfo.office?.organizationId } } : null;
+            const organizationId = extendedUserInfo !== null ? extendedUserInfo.office?.organizationId : null;
 
-            const offices = await getOfficesAsync();
+            const organizations = await getOrganizationsAsync();
+            const offices = await  getOfficesAsync(organizationId);
 
-            const dataSource = new DataSource({
-                store: {
-                    data: offices,
-                    type: 'array',
-                    key: 'id'
-                },
-                group: 'organizationShortName'
-            });
-
-            setOffices(dataSource);
+            setOrganizations(organizations);
             setExtendedUserInfo(extendedUserInfo);
+
+            if(extendedUserInfo && extendedUserInfo.officeId){
+                setOffices(offices);
+            }
         } )();
-    }, [getExtendedUserInfoAsync, getOfficesAsync, userId]);
+    }, [getExtendedUserInfoAsync, getOfficesAsync, getOrganizationsAsync, userId]);
+
+    useEffect( () => {
+        (async () => {
+            if(currentOrganization) {
+                const  offices = await  getOfficesAsync(currentOrganization);
+                setOffices(offices);
+            } else {
+                setOffices([]);
+                setExtendedUserInfo(previous => {
+                    return { ...previous, ...{ officeId: null } }
+                });
+            }
+        })();
+    }, [currentOrganization, getOfficesAsync]);
 
     return (
         <Popup className={ 'app-popup track-map-popup' } title={ 'Сведения о пользователе' }
@@ -52,17 +66,28 @@ const ExtendedUserInfoPopup = ({ userId, callback }) => {
                     <ScrollView>
                         <div className={ 'dx-card responsive-paddings' }>
                             <Form ref={ formRef } formData={ extendedUserInfo }>
-
+                                <SimpleItem dataField={ 'organizationId' }
+                                            label={ { location: 'top', showColon: true, text: 'Организация' } }
+                                            editorType={ 'dxSelectBox' }
+                                            editorOptions=
+                                                { {
+                                                    dataSource: organizations,
+                                                    showClearButton: true,
+                                                    valueExpr: 'id',
+                                                    displayExpr: 'shortName',
+                                                    onValueChanged: (e) => {
+                                                        setCurrentOrganization(e.value);
+                                                    }
+                                                } }
+                                            />
                                 <SimpleItem dataField={ 'officeId' }
-                                            isRequired={ true }
-                                            label={ { location: 'top', showColon: true, text: 'Офис организации' } }
+                                            label={ { location: 'top', showColon: true, text: 'Офис' } }
                                             editorType={ 'dxSelectBox' }
                                             editorOptions=
                                                 { {
                                                     dataSource: offices,
-                                                    grouped: true,
                                                     valueExpr: 'id',
-                                                    displayExpr: 'address'
+                                                    displayExpr: 'address',
                                                 } }
                                              />
 
