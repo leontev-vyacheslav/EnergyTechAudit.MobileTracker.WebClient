@@ -1,7 +1,7 @@
 import React from 'react';
 import AppConstants from '../../constants/app-constants';
 import './home.scss';
-import { HomeIcon } from '../../utils/app-icons';
+import { HomeIcon } from '../../constants/app-icons';
 import PageHeader from '../../components/page-header/page-header';
 
 export default () => {

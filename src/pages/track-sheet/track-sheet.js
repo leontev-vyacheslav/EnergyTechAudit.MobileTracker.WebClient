@@ -10,8 +10,8 @@ import TrackSheetContextMenu from './track-sheet-context-menu'
 import { useScreenSize } from '../../utils/media-query';
 import TrackMapPopup from '../mobile-devices/timeline/track-map-popup/track-map-popup';
 import { useAppSettings } from '../../contexts/app-settings';
-import DataGridIconCellValueContainer from '../../components/data-grid/data-grid-icon-cell-value-container';
-import { AccuracyIcon, CurrentDateIcon, DistanceIcon, GridAdditionalMenuIcon, TimelineIcon } from '../../utils/app-icons';
+import DataGridIconCellValueContainer from '../../components/data-grid-utils/data-grid-icon-cell-value-container';
+import { AccuracyIcon, CurrentDateIcon, DistanceIcon, GridAdditionalMenuIcon, TimelineIcon } from '../../constants/app-icons';
 
 import './track-sheet.scss';
 import PageHeader from '../../components/page-header/page-header';

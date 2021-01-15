@@ -5,7 +5,7 @@ import { useAuth } from '../../contexts/auth';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useSharedArea } from '../../contexts/shared-area';
 import { useNavigation } from '../../contexts/navigation';
-import { ExitIcon, RefreshIcon, UserIcon, WorkDateIcon } from '../../utils/app-icons';
+import { ExitIcon, RefreshIcon, UserIcon, WorkDateIcon } from '../../constants/app-icons';
 import ContextMenuItem from '../context-menu-item/context-menu-item';
 
 import './user-panel.scss';

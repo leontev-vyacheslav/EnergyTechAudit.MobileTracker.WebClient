@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext, useContext, useCallback } from 'react';
 
-import routes from '../constants/routes';
-import { HttpConstants } from '../constants/http-constants';
+import routes from '../constants/app-api-routes';
+import { HttpConstants } from '../constants/app-http-constants';
 import * as axios from 'axios';
 
 function AuthProvider (props) {

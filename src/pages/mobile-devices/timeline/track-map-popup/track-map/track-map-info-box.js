@@ -1,7 +1,7 @@
 import React from 'react';
 
 import './track-map-info-box.scss';
-import { BeginDateIcon, DateRangeIcon, EndDateIcon, MobileDeviceIcon } from '../../../../../utils/app-icons';
+import { BeginDateIcon, DateRangeIcon, EndDateIcon, MobileDeviceIcon } from '../../../../../constants/app-icons';
 
 const TrackMapInfoBox = ({ mobileDevice, timelineItem }) => {
 

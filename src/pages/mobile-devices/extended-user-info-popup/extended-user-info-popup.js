@@ -3,7 +3,7 @@ import Popup from 'devextreme-react/popup';
 import { useScreenSize } from '../../../utils/media-query';
 import Form, { SimpleItem } from 'devextreme-react/form';
 import Button from 'devextreme-react/button';
-import { DialogConstants } from '../../../constants/dialog-constant';
+import { DialogConstants } from '../../../constants/app-dialog-constant';
 import { useAppData } from '../../../contexts/app-data';
 import ScrollView from 'devextreme-react/scroll-view';
 

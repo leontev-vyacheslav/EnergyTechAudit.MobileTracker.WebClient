@@ -3,7 +3,7 @@ import SelectBox from 'devextreme-react/ui/select-box';
 import { useScreenSize } from '../../../../../utils/media-query';
 import { useAppData } from '../../../../../contexts/app-data';
 import { useAppSettings } from '../../../../../contexts/app-settings';
-import { BeginDateIcon, EndDateIcon, UserIcon } from '../../../../../utils/app-icons';
+import { BeginDateIcon, EndDateIcon, UserIcon } from '../../../../../constants/app-icons';
 
 import './track-map-header.scss';
 

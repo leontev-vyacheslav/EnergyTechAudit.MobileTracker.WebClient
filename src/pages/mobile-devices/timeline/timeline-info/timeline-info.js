@@ -4,7 +4,7 @@ import { TimelineInfoHeader } from './timeline-info-header';
 import AppConstants from '../../../../constants/app-constants';
 import { useScreenSize } from '../../../../utils/media-query';
 import { useAppData } from '../../../../contexts/app-data';
-import { AccuracyIcon, BreakIcon, CountdownIcon, EdgePointsIcon, IntervalIcon } from '../../../../utils/app-icons';
+import { AccuracyIcon, BreakIcon, CountdownIcon, EdgePointsIcon, IntervalIcon } from '../../../../constants/app-icons';
 
 import './timeline-info.scss';
 

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import ContextMenu from 'devextreme-react/context-menu';
 
-import {  UserIcon } from '../../../utils/app-icons';
+import {  UserIcon } from '../../../constants/app-icons';
 import ContextMenuItem from '../../../components/context-menu-item/context-menu-item';
 
 const UserContextMenu = ({ innerRef, commands }) => {

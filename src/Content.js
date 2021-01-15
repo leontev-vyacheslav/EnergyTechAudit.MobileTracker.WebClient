@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import routes from './app-routes';
+import routes from './constants/app-routes';
 import { SideNavOuterToolbar as SideNavBarLayout } from './layouts';
 import { Footer } from './components';
 import AppConstants from './constants/app-constants';

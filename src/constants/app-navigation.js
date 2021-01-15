@@ -1,4 +1,4 @@
-import { AboutIcon, ExitIcon, HomeIcon, ListsIcon, MobileDeviceIcon, OrganizationIcon, SettingsIcon, WorkDateIcon } from './utils/app-icons';
+import { AboutIcon, ExitIcon, HomeIcon, ListsIcon, MobileDeviceIcon, OrganizationIcon, SettingsIcon, WorkDateIcon } from './app-icons';
 import React from 'react';
 
 export const navigation = [

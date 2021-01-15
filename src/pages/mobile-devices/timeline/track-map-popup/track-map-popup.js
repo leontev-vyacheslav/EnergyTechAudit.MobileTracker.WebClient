@@ -6,7 +6,7 @@ import { useScreenSize } from '../../../../utils/media-query';
 import { useSharedArea } from '../../../../contexts/shared-area';
 import { Button } from 'devextreme-react/ui/button';
 import TrackMapPopupMenu from './track-map-popup-menu/track-map-popup-menu'
-import { AdditionalMenuIcon } from '../../../../utils/app-icons';
+import { AdditionalMenuIcon } from '../../../../constants/app-icons';
 
 import './track-map-popup.scss';
 

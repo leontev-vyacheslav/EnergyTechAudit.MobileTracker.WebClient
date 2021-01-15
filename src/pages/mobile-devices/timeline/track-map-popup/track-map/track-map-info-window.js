@@ -2,7 +2,7 @@ import React from 'react';
 import AppConstants from '../../../../../constants/app-constants';
 import { useScreenSize } from '../../../../../utils/media-query';
 
-import { AccuracyIcon, ActivityIcon, AddressIcon, BatteryIcon, ChargingLevelIcon, SpeedIcon, TimeIcon } from '../../../../../utils/app-icons'
+import { AccuracyIcon, ActivityIcon, AddressIcon, BatteryIcon, ChargingLevelIcon, SpeedIcon, TimeIcon } from '../../../../../constants/app-icons'
 
 import './track-map-info-window.scss'
 

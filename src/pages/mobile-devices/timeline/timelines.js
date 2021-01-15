@@ -4,8 +4,8 @@ import { Button } from 'devextreme-react/ui/button';
 import { useAppData } from '../../../contexts/app-data';
 import TimelineInfo from './timeline-info/timeline-info';
 import AppConstants from '../../../constants/app-constants';
-import DataGridIconCellValueContainer from '../../../components/data-grid/data-grid-icon-cell-value-container';
-import { BeginDateIcon, DistanceIcon,  GridAdditionalMenuIcon } from '../../../utils/app-icons';
+import DataGridIconCellValueContainer from '../../../components/data-grid-utils/data-grid-icon-cell-value-container';
+import { BeginDateIcon, DistanceIcon,  GridAdditionalMenuIcon } from '../../../constants/app-icons';
 
 import './timeline.scss';
 

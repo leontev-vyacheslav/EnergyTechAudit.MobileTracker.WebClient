@@ -1,9 +1,9 @@
 import React, { createContext, useCallback, useContext } from 'react';
-import routes from '../constants/routes';
+import routes from '../constants/app-api-routes';
 import { useAuth } from './auth';
 import { useSharedArea } from './shared-area';
 import * as axios from 'axios';
-import { HttpConstants } from '../constants/http-constants';
+import { HttpConstants } from '../constants/app-http-constants';
 import { DateEx } from '../utils/DateEx';
 import Moment from 'moment';
 import { useAppSettings } from './app-settings';

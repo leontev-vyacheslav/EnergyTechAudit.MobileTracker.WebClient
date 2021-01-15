@@ -1,6 +1,6 @@
 import React from 'react';
 import ContextMenu from 'devextreme-react/context-menu';
-import { FitToMapIcon, RefreshIcon, WorkDateIcon } from '../../../../../utils/app-icons';
+import { FitToMapIcon, RefreshIcon, WorkDateIcon } from '../../../../../constants/app-icons';
 import ContextMenuItem from '../../../../../components/context-menu-item/context-menu-item';
 
 const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {

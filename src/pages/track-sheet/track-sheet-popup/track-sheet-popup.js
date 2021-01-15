@@ -3,7 +3,7 @@ import Popup from 'devextreme-react/popup';
 import Form, { SimpleItem } from 'devextreme-react/form';
 import Button from 'devextreme-react/button';
 import { useScreenSize } from '../../../utils/media-query';
-import { DialogConstants } from '../../../constants/dialog-constant';
+import { DialogConstants } from '../../../constants/app-dialog-constant';
 
 const TrackSheetPopup = ({ currentDate, callback }) => {
 

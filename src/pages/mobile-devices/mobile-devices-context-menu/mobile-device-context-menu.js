@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import ContextMenu from 'devextreme-react/context-menu';
 
-import { TimelineIcon, TrackMapIcon } from '../../../utils/app-icons';
+import { TimelineIcon, TrackMapIcon } from '../../../constants/app-icons';
 import ContextMenuItem from '../../../components/context-menu-item/context-menu-item';
 
 const MobileDeviceContextMenu = ({ innerRef, commands }) => {

@@ -6,7 +6,7 @@ import notify from 'devextreme/ui/notify';
 import { useScreenSize } from '../../utils/media-query';
 
 import './settings.scss';
-import { SettingsIcon } from '../../utils/app-icons';
+import { SettingsIcon } from '../../constants/app-icons';
 import PageHeader from '../../components/page-header/page-header';
 
 export default () => {

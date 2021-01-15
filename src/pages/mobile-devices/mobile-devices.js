@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import DataGrid, { Column, Grouping, MasterDetail, Pager, Paging, Scrolling } from 'devextreme-react/data-grid';
+import DataGrid, { Column, Grouping, MasterDetail, Pager, Paging, Scrolling, SearchPanel } from 'devextreme-react/data-grid';
 import { useAppData } from '../../contexts/app-data';
 import { useHistory } from 'react-router-dom';
 import Timelines from './timeline/timelines'
@@ -8,14 +8,14 @@ import { Button } from 'devextreme-react/ui/button';
 import TrackMapPopup from './timeline/track-map-popup/track-map-popup';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useScreenSize } from '../../utils/media-query';
-import DataGridIconCellValueContainer from '../../components/data-grid/data-grid-icon-cell-value-container';
+import DataGridIconCellValueContainer from '../../components/data-grid-utils/data-grid-icon-cell-value-container';
 import moment from 'moment';
 import TrackSheetPopup from '../track-sheet/track-sheet-popup/track-sheet-popup';
 
 import MobileDeviceContextMenu from './mobile-devices-context-menu/mobile-device-context-menu';
 import UserContextMenu from './user-context-menu/user-context-menu';
 
-import { AndroidIcon, GridAdditionalMenuIcon, IosIcon, MobileDeviceIcon, RegistrationDateIcon } from '../../utils/app-icons';
+import { AndroidIcon, GridAdditionalMenuIcon, IosIcon, MobileDeviceIcon, RegistrationDateIcon } from '../../constants/app-icons';
 
 import './mobile-devices.scss';
 import ExtendedUserInfoPopup from './extended-user-info-popup/extended-user-info-popup';
@@ -106,7 +106,7 @@ const MobileDevice = () => {
                 </PageHeader>
                 <DataGrid ref={ dxDataGridRef }
                           keyExpr={ 'id' }
-                          className={ 'mobile-devices dx-card wide-card' }
+                          className={ 'app-grid mobile-devices dx-card wide-card' }
                           noDataText={ AppConstants.noDataLongText }
                           dataSource={ mobileDevices }
                           showBorders={ false }
@@ -120,6 +120,10 @@ const MobileDevice = () => {
                           } }
 
                 >
+                    <SearchPanel
+                        visible={ true }
+                        searchVisibleColumnsOnly={ true }
+                    />
                     <Scrolling showScrollbar={ 'never' }/>
                     <Paging defaultPageSize={ 10 }/>
                     <Pager showPageSizeSelector={ true } showInfo={ true }/>

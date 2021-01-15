@@ -16,8 +16,7 @@ const AppConstants = {
         baseDarkgreyTextColor: '#464646'
     },
 
-    fullTimeFormat: { hour: '2-digit', minute: '2-digit', second: '2-digit' },
-    shortTimeFormat: { hour: '2-digit', minute: '2-digit' },
+
     motionActivityTypeDictionary: [
         { id: 1, code: 'still', description: 'В покое' },
         { id: 2, code: 'walking', description: 'Прогулка' },

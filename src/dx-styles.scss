@@ -5,7 +5,13 @@
   height: 100%;
   width: 100%;
 }
+.app-grid .dx-toolbar .dx-toolbar-items-container {
+  height: 45px;
+}
 
+.app-grid .dx-datagrid-search-panel {
+  width: 250px !important;
+}
 .app .content {
   line-height: 1.5;
 

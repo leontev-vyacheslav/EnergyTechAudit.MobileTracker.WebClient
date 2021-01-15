@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useCallback, useMemo } from 'react';
 import TreeView from 'devextreme-react/tree-view';
 import * as events from 'devextreme/events';
-import { navigation } from '../../app-navigation';
+import { navigation } from '../../constants/app-navigation';
 import { useNavigation } from '../../contexts/navigation';
 import { useScreenSize } from '../../utils/media-query';
 import { useSharedArea } from '../../contexts/shared-area';

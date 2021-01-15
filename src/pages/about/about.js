@@ -2,7 +2,7 @@ import React from 'react';
 import AppConstants from '../../constants/app-constants';
 
 import './about.scss';
-import { AboutIcon } from '../../utils/app-icons';
+import { AboutIcon } from '../../constants/app-icons';
 import PageHeader from '../../components/page-header/page-header';
 
 export default () => (

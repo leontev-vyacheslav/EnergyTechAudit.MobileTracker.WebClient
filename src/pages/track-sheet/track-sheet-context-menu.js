@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import ContextMenu from 'devextreme-react/context-menu';
 import ContextMenuItem from '../../components/context-menu-item/context-menu-item';
-import { TrackMapIcon } from '../../utils/app-icons';
+import { TrackMapIcon } from '../../constants/app-icons';
 
 const TrackSheetContextMenu = ({ innerRef, onShowTrackMapItemClick }) => {
 

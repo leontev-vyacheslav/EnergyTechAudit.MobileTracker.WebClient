@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import AppConstants from '../../constants/app-constants';
 import { useAppData } from '../../contexts/app-data';
-import DataGrid, { Column, Grouping, Pager, Paging, Scrolling } from 'devextreme-react/data-grid';
+import DataGrid, { Column, Grouping, Pager, Paging, Scrolling, SearchPanel } from 'devextreme-react/data-grid';
 import { Button } from 'devextreme-react/ui/button';
-import { AddressIcon, GridAdditionalMenuIcon, OrganizationIcon } from '../../utils/app-icons';
-import DataGridIconCellValueContainer from '../../components/data-grid/data-grid-icon-cell-value-container';
+import { AddressIcon, GridAdditionalMenuIcon, OrganizationIcon } from '../../constants/app-icons';
+import DataGridIconCellValueContainer from '../../components/data-grid-utils/data-grid-icon-cell-value-container';
 import PageHeader from '../../components/page-header/page-header';
 
 const Organizations = () => {
@@ -44,7 +44,7 @@ const Organizations = () => {
                 </PageHeader>
                 <DataGrid ref={ dxDataGridRef }
                           keyExpr={ 'id' }
-                          className={ 'mobile-devices dx-card wide-card' }
+                          className={ 'app-grid mobile-devices dx-card wide-card' }
                           noDataText={ AppConstants.noDataLongText }
                           dataSource={ organizations }
                           showBorders={ false }
@@ -56,7 +56,20 @@ const Organizations = () => {
                           onRowExpanding={ (e) => {
                               e.component.collapseAll(-1);
                           } }
-                >
+                          onToolbarPreparing={ (e) => {
+                              e.toolbarOptions.items.unshift(
+                                  {
+                                      location: 'before',
+                                      widget: 'dxButton',
+                                      options: {
+                                          icon: 'add',
+                                          onClick: null
+                                      }
+                                  }
+                              );
+                          } }>
+
+                    <SearchPanel visible={ true } searchVisibleColumnsOnly={ true }/>
                     <Scrolling showScrollbar={ 'never' }/>
                     <Paging defaultPageSize={ 10 }/>
                     <Pager showPageSizeSelector={ true } showInfo={ true }/>
