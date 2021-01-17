@@ -51,6 +51,7 @@ const ExtendedUserInfoPopup = ({ userId, callback }) => {
     }, [currentOrganization, getOfficesAsync]);
 
     return (
+        // TODO: style track-map-popup!!!
         <Popup className={ 'app-popup track-map-popup' } title={ 'Сведения о пользователе' }
                dragEnabled={ false }
                visible={ true }

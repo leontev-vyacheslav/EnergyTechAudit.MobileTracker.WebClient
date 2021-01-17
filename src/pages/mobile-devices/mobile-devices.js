@@ -81,8 +81,10 @@ const MobileDevice = () => {
                     <Button className={ 'time-line-command-button' } onClick={ (e) => {
                         dxDataGridRef.current.instance.option('focusedRowKey', groupCell.key);
                         e.event.stopPropagation();
-                        groupRowContextMenuRef.current.instance.option('target', e.element);
-                        groupRowContextMenuRef.current.instance.show();
+                        if(groupRowContextMenuRef && groupRowContextMenuRef.current) {
+                            groupRowContextMenuRef.current.instance.option('target', e.element);
+                            groupRowContextMenuRef.current.instance.show();
+                        }
                     } }>
                         <GridAdditionalMenuIcon/>
                     </Button>
@@ -120,19 +122,19 @@ const MobileDevice = () => {
                           } }
 
                 >
-                    <SearchPanel
-                        visible={ true }
-                        searchVisibleColumnsOnly={ true }
-                    />
+                    <SearchPanel visible={ true } searchVisibleColumnsOnly={ false }/>
                     <Scrolling showScrollbar={ 'never' }/>
                     <Paging defaultPageSize={ 10 }/>
                     <Pager showPageSizeSelector={ true } showInfo={ true }/>
                     <Grouping autoExpandAll={ true } key={ 'userId' }/>
+
                     <Column type={ 'buttons' } width={ 45 } cellRender={ () => {
                         return (
                             <Button className={ 'time-line-command-button' } onClick={ (e) => {
-                                rowContextMenuRef.current.instance.option('target', e.element);
-                                rowContextMenuRef.current.instance.show();
+                                if(rowContextMenuRef && rowContextMenuRef.current) {
+                                    rowContextMenuRef.current.instance.option('target', e.element);
+                                    rowContextMenuRef.current.instance.show();
+                                }
                             } }>
                                 <GridAdditionalMenuIcon/>
                             </Button>
@@ -146,6 +148,9 @@ const MobileDevice = () => {
                         groupCellRender={ (groupCell) => <GroupRowContent groupCell={ groupCell }/> }
                         visible={ false }
                     />
+
+                    <Column dataField={ 'extendedUserInfo.firstName' } visible={ false } />
+                    <Column dataField={ 'extendedUserInfo.lastName' } visible={ false } />
 
                     <Column dataField={ 'model' } caption={ 'Модель' } width={ isXSmall ? '100%' : 100 } allowSorting={ false } hidingPriority={ 4 }
                             cellRender={ (e) => {
@@ -179,6 +184,7 @@ const MobileDevice = () => {
                                 />
                             }
                     />
+
                     <MasterDetail
                         enabled={ true }
                         render={ (e) => {

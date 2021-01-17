@@ -45,10 +45,17 @@ export { IoMap as TrackMapIcon } from 'react-icons/io5';
 export { FiRefreshCcw as RefreshIcon } from 'react-icons/fi';
 
 export { BsPeople as OrganizationIcon } from 'react-icons/bs';
+export { AiOutlineUsergroupAdd as AddOrganizationIcon } from 'react-icons/ai';
+export { AiOutlineUsergroupDelete as DeleteOrganizationIcon } from 'react-icons/ai';
 export { IoGridOutline as ListsIcon } from 'react-icons/io5';
 export { IoSettingsOutline as SettingsIcon } from 'react-icons/io5';
 export { IoHomeOutline as HomeIcon } from 'react-icons/io5';
 export { IoInformationCircleOutline as AboutIcon } from 'react-icons/io5';
 export { IoExitOutline as ExitIcon } from 'react-icons/io5';
+export { CgRemoveR as DeleteIcon } from 'react-icons/cg';
+export { CgAddR as AddIcon } from 'react-icons/cg';
+export { IoWarningOutline as WarningOutlineIcon } from 'react-icons/io5';
+export { IoWarning as WarningIcon } from 'react-icons/io5';
+
 
 export const GridAdditionalMenuIcon = () => <MdMoreVert style={ { cursor: 'pointer' } } size={ 18 } color={ '#464646' }/>;

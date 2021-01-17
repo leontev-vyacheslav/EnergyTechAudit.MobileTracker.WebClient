@@ -83,5 +83,10 @@ html, body {
 }
 
 .dx-overlay-content.dx-popup-normal {
-  min-width: 250px !important;
+  min-width: 300px !important;
+}
+
+.dx-dialog .dx-overlay-content.dx-popup-normal {
+  min-width: 300px !important;
+  max-width: 450px
 }

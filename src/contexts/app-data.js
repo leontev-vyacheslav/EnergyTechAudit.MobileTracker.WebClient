@@ -214,12 +214,35 @@ function AppDataProvider (props) {
         return null;
     }, [axiosWithCredentials])
 
+    const deleteOrganizationAsync = useCallback(async (organizationId) => {
+        const response = await axiosWithCredentials({
+            url: `${ routes.host }${ routes.organization }/${ organizationId }`,
+            method: HttpConstants.Methods.Delete
+        });
+        if (response && response.status === HttpConstants.StatusCodes.Ok) {
+            return response.data;
+        }
+        return null;
+    }, [axiosWithCredentials])
+
+    const deleteOfficeAsync = useCallback(async (officeId) => {
+        const response = await axiosWithCredentials({
+            url: `${ routes.host }${ routes.organization }/offices/${ officeId }`,
+            method: HttpConstants.Methods.Delete
+        });
+        if (response && response.status === HttpConstants.StatusCodes.Ok) {
+            return response.data;
+        }
+        return null;
+    }, [axiosWithCredentials])
+
     return (
         <AppDataContext.Provider
             value={ {
                 getMobileDeviceAsync, getMobileDevicesAsync,  getTimelinesAsync, getLocationRecordsByRangeAsync,
                 getLocationRecordAsync,  getGeocodedAddressAsync, getGeocodedLocationAsync, getTrackSheetAsync,
-                postExtendedUserInfoAsync, getExtendedUserInfoAsync, getOrganizationsAsync, getOfficesAsync
+                postExtendedUserInfoAsync, getExtendedUserInfoAsync, getOrganizationsAsync, getOfficesAsync,
+                deleteOrganizationAsync, deleteOfficeAsync
             } }
             { ...props }
         />
