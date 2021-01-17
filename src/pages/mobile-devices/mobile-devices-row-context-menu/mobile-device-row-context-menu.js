@@ -4,7 +4,7 @@ import ContextMenu from 'devextreme-react/context-menu';
 import { TimelineIcon, TrackMapIcon } from '../../../constants/app-icons';
 import ContextMenuItem from '../../../components/context-menu-item/context-menu-item';
 
-const MobileDeviceContextMenu = ({ innerRef, commands }) => {
+const MobileDeviceRowContextMenu = ({ innerRef, commands }) => {
 
     const items = useMemo(() => {
         return [
@@ -36,7 +36,7 @@ const MobileDeviceContextMenu = ({ innerRef, commands }) => {
     />
 }
 
-export default React.forwardRef((props, ref) => <MobileDeviceContextMenu
+export default React.forwardRef((props, ref) => <MobileDeviceRowContextMenu
     innerRef={ ref } { ...props }
 />);
 

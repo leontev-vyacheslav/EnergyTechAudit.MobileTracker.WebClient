@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import ContextMenu from 'devextreme-react/context-menu';
 
-import { AddOrganizationIcon } from '../../../constants/app-icons';
+import { AddOrganizationIcon, RefreshIcon } from '../../../constants/app-icons';
 import ContextMenuItem from '../../../components/context-menu-item/context-menu-item';
 
 const OrganizationMainContextMenu = ({ innerRef, commands }) => {
@@ -15,6 +15,16 @@ const OrganizationMainContextMenu = ({ innerRef, commands }) => {
                     e.component.hide();
                     if(commands.addOrganization) {
                         commands.addOrganization();
+                    }
+                }
+            },
+            {
+                text: 'Обновить...',
+                renderIconItem: () => <RefreshIcon size={ 18 }/>,
+                onClick: (e) => {
+                    e.component.hide();
+                    if(commands.refresh) {
+                        commands.refresh();
                     }
                 }
             }];

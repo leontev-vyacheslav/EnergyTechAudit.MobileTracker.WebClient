@@ -1,19 +1,21 @@
 import React, { useMemo } from 'react';
 import ContextMenu from 'devextreme-react/context-menu';
 
-import {  UserIcon } from '../../../constants/app-icons';
+import {  RefreshIcon } from '../../../constants/app-icons';
 import ContextMenuItem from '../../../components/context-menu-item/context-menu-item';
 
-const UserContextMenu = ({ innerRef, commands }) => {
+const MobileDevicesMainContextMenu = ({ innerRef, commands }) => {
 
     const items = useMemo(() => {
         return [
             {
-                text: 'Сведения о пользователе...',
-                renderIconItem: () => <UserIcon size={ 18 }/>,
+                text: 'Обновить...',
+                renderIconItem: () => <RefreshIcon size={ 18 }/>,
                 onClick: (e) => {
                     e.component.hide();
-                    commands.showExtendedUserInfo();
+                    if(commands.refresh) {
+                        commands.refresh();
+                    }
                 }
             }];
     }, [commands]);
@@ -28,7 +30,7 @@ const UserContextMenu = ({ innerRef, commands }) => {
     />
 }
 
-export default React.forwardRef((props, ref) => <UserContextMenu
+export default React.forwardRef((props, ref) => <MobileDevicesMainContextMenu
     innerRef={ ref } { ...props }
 />);
 

@@ -12,14 +12,16 @@ import DataGridIconCellValueContainer from '../../components/data-grid-utils/dat
 import moment from 'moment';
 import TrackSheetPopup from '../track-sheet/track-sheet-popup/track-sheet-popup';
 
-import MobileDeviceContextMenu from './mobile-devices-context-menu/mobile-device-context-menu';
-import UserContextMenu from './user-context-menu/user-context-menu';
+import MobileDeviceRowContextMenu from './mobile-devices-row-context-menu/mobile-device-row-context-menu';
+import MobileDevicesGroupRowContextMenu from './mobile-devices-group-row-context-menu/mobile-devices-group-row-context-menu';
 
 import { AndroidIcon, GridAdditionalMenuIcon, IosIcon, MobileDeviceIcon, RegistrationDateIcon } from '../../constants/app-icons';
 
 import './mobile-devices.scss';
 import ExtendedUserInfoPopup from './extended-user-info-popup/extended-user-info-popup';
 import PageHeader from '../../components/page-header/page-header';
+import MobileDevicesMainContextMenu from './mobile-devices-main-context-menu/mobile-devices-main-context-menu';
+import { Template } from 'devextreme-react/core/template';
 
 const MobileDevice = () => {
     const dxDataGridRef = useRef(null);
@@ -31,8 +33,9 @@ const MobileDevice = () => {
     const [mobileDevices, setMobileDevices] = useState(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState(null);
     const [currentMobileDevice, setCurrentMobileDevice] = useState(null);
-    const rowContextMenuRef = useRef();
+    const mainContextMenuRef = useRef();
     const groupRowContextMenuRef = useRef();
+    const rowContextMenuRef = useRef();
 
     const [trackSheetPopupTrigger, setTrackSheetPopupTrigger] = useState(false);
     const [extendedUserInfoPopupTrigger, setExtendedUserInfoPopupTrigger] = useState(false);
@@ -61,12 +64,44 @@ const MobileDevice = () => {
         }
     }, [mobileDevices]);
 
+    const refresh =  useCallback(async () => {
+        const mobileDevicesData = await getMobileDevicesAsync() ?? [];
+        setMobileDevices(mobileDevicesData);
+    }, [getMobileDevicesAsync]);
+
     useEffect(() => {
         ( async () => {
             const mobileDevicesData = await getMobileDevicesAsync() ?? [];
             setMobileDevices(mobileDevicesData);
         } )();
     }, [getMobileDevicesAsync, appSettingsData]);
+
+    const onDataGridToolbarPreparing = useCallback((e) => {
+        if (e?.toolbarOptions) {
+            e.toolbarOptions.items.forEach(i => {
+                i.location = 'before';
+            });
+            e.toolbarOptions.items.unshift(
+                {
+                    location: 'before',
+                    template: 'DataGridToolbarButtonTemplate'
+                }
+            );
+        }
+    }, []);
+
+    const DataGridToolbarButton = () => {
+        return (
+            <Button className={ 'time-line-command-button' } onClick={ (e) => {
+                if (mainContextMenuRef && mainContextMenuRef.current) {
+                    mainContextMenuRef.current.instance.option('target', e.element);
+                    mainContextMenuRef.current.instance.show();
+                }
+            } }>
+                <GridAdditionalMenuIcon/>
+            </Button>
+        );
+    }
 
     const GroupRowContent = ({ groupCell }) => {
 
@@ -103,7 +138,7 @@ const MobileDevice = () => {
     if (!( mobileDevices === null || mobileDevices.length === 0 )) {
         return (
             <>
-                <PageHeader caption={ 'Мобильные устройства' }>
+                <PageHeader caption={ !isXSmall ? 'Мобильные устройства' : 'Устройства' }>
                     <MobileDeviceIcon size={ 30 }/>
                 </PageHeader>
                 <DataGrid ref={ dxDataGridRef }
@@ -113,10 +148,11 @@ const MobileDevice = () => {
                           dataSource={ mobileDevices }
                           showBorders={ false }
                           focusedRowEnabled={ true }
-                          showColumnHeaders={ true }
+                          showColumnHeaders={ !isXSmall }
                           defaultFocusedRowIndex={ 0 }
                           columnAutoWidth={ true }
                           columnHidingEnabled={ true }
+                          onToolbarPreparing={ onDataGridToolbarPreparing }
                           onRowExpanding={ (e) => {
                               e.component.collapseAll(-1);
                           } }
@@ -127,7 +163,7 @@ const MobileDevice = () => {
                     <Paging defaultPageSize={ 10 }/>
                     <Pager showPageSizeSelector={ true } showInfo={ true }/>
                     <Grouping autoExpandAll={ true } key={ 'userId' }/>
-
+                    <Template name={ 'DataGridToolbarButtonTemplate' } render={ DataGridToolbarButton }/>
                     <Column type={ 'buttons' } width={ 45 } cellRender={ () => {
                         return (
                             <Button className={ 'time-line-command-button' } onClick={ (e) => {
@@ -233,7 +269,22 @@ const MobileDevice = () => {
                     }/>
                         : null
                     }
-                    <MobileDeviceContextMenu
+                <MobileDevicesMainContextMenu
+                    ref={ mainContextMenuRef }
+                    commands={
+                        {
+                            refresh: refresh
+                        }
+                    }/>
+                <MobileDevicesGroupRowContextMenu
+                    ref={ groupRowContextMenuRef }
+                    commands={
+                        {
+                            showExtendedUserInfo: showExtendedUserInfo
+                        }
+                    }
+                />
+                    <MobileDeviceRowContextMenu
                         ref={ rowContextMenuRef }
                         commands={
                             {
@@ -242,14 +293,7 @@ const MobileDevice = () => {
                             }
                         }
                     />
-                    <UserContextMenu
-                        ref={ groupRowContextMenuRef }
-                        commands={
-                            {
-                                showExtendedUserInfo: showExtendedUserInfo
-                            }
-                        }
-                    />
+
                     </>
                 );
     }

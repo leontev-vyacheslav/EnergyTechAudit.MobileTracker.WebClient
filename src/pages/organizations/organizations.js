@@ -3,7 +3,7 @@ import AppConstants from '../../constants/app-constants';
 import { useAppData } from '../../contexts/app-data';
 import DataGrid, { Column, Grouping, Pager, Paging, Scrolling, SearchPanel } from 'devextreme-react/data-grid';
 import { Button } from 'devextreme-react/ui/button';
-import { AddressIcon, GridAdditionalMenuIcon, OrganizationIcon, WarningIcon } from '../../constants/app-icons';
+import { AddressIcon, GridAdditionalMenuIcon, OrganizationIcon } from '../../constants/app-icons';
 import DataGridIconCellValueContainer from '../../components/data-grid-utils/data-grid-icon-cell-value-container';
 import PageHeader from '../../components/page-header/page-header';
 import OrganizationMainContextMenu from './organization-main-context-menu/organization-main-context-menu';
@@ -12,10 +12,12 @@ import OrganizationRowContextMenu from './organization-row-context-menu/organiza
 import { Template } from 'devextreme-react/core/template';
 import OrganizationPopup from './organization-popup/organization-popup';
 import showConfirmDialog from '../../utils/confirm';
+import { useScreenSize } from '../../utils/media-query';
 
 const Organizations = () => {
     const { getOrganizationOfficesAsync, deleteOrganizationAsync, deleteOfficeAsync } = useAppData();
 
+    const { isXSmall } = useScreenSize();
     const [organizations, setOrganizations] = useState(null);
     const [organizationPopupTrigger, setOrganizationPopupTrigger] = useState(false);
 
@@ -33,6 +35,10 @@ const Organizations = () => {
 
     const onDataGridToolbarPreparing = useCallback((e) => {
         if (e?.toolbarOptions) {
+            e.toolbarOptions.items.forEach(i => {
+                i.location = 'before';
+            })
+
             e.toolbarOptions.items.unshift(
                 {
                     location: 'before',
@@ -46,17 +52,17 @@ const Organizations = () => {
         setOrganizationPopupTrigger(true);
     }, [])
 
+    const refresh = useCallback(async () => {
+        const organizationOffices = await getOrganizationOfficesAsync();
+        setOrganizations(organizationOffices);
+    }, [getOrganizationOfficesAsync])
+
     const deleteOrganizationByIdAsync = useCallback(async () => {
         showConfirmDialog({
             title: 'Предупреждение',
-            contentRender: () => {
-                return (
-                    <div style={ { display: 'flex', alignItems: 'center' } }>
-                        <WarningIcon size={ 36 } style={ { color: '#ff5722' } }/>
-                        <span style={ { marginLeft: 10 } }>Действительно хотите <b>удалить</b> организацию!</span>
-                    </div>
-                );
-            }, callback: async () => {
+            appIconName: 'WarningIcon',
+            textRender: () => <>Действительно хотите <b>удалить</b> организацию!</>,
+            callback: async () => {
                 if (dxDataGridRef.current && dxDataGridRef.current.instance) {
                     const currentGroupRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
 
@@ -70,17 +76,11 @@ const Organizations = () => {
     }, [deleteOrganizationAsync, organizations]);
 
     const deleteOfficeByIdAsync = useCallback(async () => {
-
         showConfirmDialog({
             title: 'Предупреждение',
-            contentRender: () => {
-                return (
-                    <div style={ { display: 'flex', alignItems: 'center' } }>
-                        <WarningIcon size={ 36 } style={ { color: '#ff5722' } }/>
-                        <span style={ { marginLeft: 10 } }>Действительно хотите <b>удалить</b> офис!</span>
-                    </div>
-                );
-            }, callback: async () => {
+            appIconName: 'WarningIcon',
+            textRender: () => <>Действительно хотите <b>удалить</b> офис!</>,
+            callback: async () => {
                 if (dxDataGridRef.current && dxDataGridRef.current.instance) {
                     const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
                     const organization = organizations.find(md => md.id === currentRowKey);
@@ -147,7 +147,7 @@ const Organizations = () => {
                           dataSource={ organizations }
                           showBorders={ false }
                           focusedRowEnabled={ true }
-                          showColumnHeaders={ true }
+                          showColumnHeaders={ !isXSmall }
                           defaultFocusedRowIndex={ 0 }
                           columnAutoWidth={ true }
                           columnHidingEnabled={ true }
@@ -225,7 +225,8 @@ const Organizations = () => {
                     ref={ mainContextMenuRef }
                     commands={
                         {
-                            addOrganization: addOrganization
+                            addOrganization: addOrganization,
+                            refresh: refresh
                         }
                     }/>
 
