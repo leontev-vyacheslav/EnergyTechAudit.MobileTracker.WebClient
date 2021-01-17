@@ -9,7 +9,7 @@ import PageHeader from '../../components/page-header/page-header';
 import OrganizationMainContextMenu from './organization-main-context-menu/organization-main-context-menu';
 import OrganizationGroupRowContextMenu from './organization-group-row-context-menu/organization-group-row-context-menu';
 import OrganizationRowContextMenu from './organization-row-context-menu/organization-row-context-menu';
-import { Template } from 'devextreme-react';
+import { Template } from 'devextreme-react/core/template';
 import OrganizationPopup from './organization-popup/organization-popup';
 import showConfirmDialog from '../../utils/confirm';
 
