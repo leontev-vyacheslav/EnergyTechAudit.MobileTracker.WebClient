@@ -14,7 +14,7 @@ import OrganizationPopup from './organization-popup/organization-popup';
 import showConfirmDialog from '../../utils/confirm';
 
 const Organizations = () => {
-    const { getOfficesAsync, deleteOrganizationAsync, deleteOfficeAsync } = useAppData();
+    const { getOrganizationOfficesAsync, deleteOrganizationAsync, deleteOfficeAsync } = useAppData();
 
     const [organizations, setOrganizations] = useState(null);
     const [organizationPopupTrigger, setOrganizationPopupTrigger] = useState(false);
@@ -26,10 +26,10 @@ const Organizations = () => {
 
     useEffect(() => {
         ( async () => {
-            const organizations = await getOfficesAsync();
-            setOrganizations(organizations);
+            const organizationOffices = await getOrganizationOfficesAsync();
+            setOrganizations(organizationOffices);
         } )();
-    }, [getOfficesAsync]);
+    }, [getOrganizationOfficesAsync]);
 
     const onDataGridToolbarPreparing = useCallback((e) => {
         if (e?.toolbarOptions) {

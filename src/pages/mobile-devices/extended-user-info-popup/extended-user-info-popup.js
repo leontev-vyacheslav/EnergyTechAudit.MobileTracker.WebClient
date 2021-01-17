@@ -11,7 +11,7 @@ const ExtendedUserInfoPopup = ({ userId, callback }) => {
 
     const { isXSmall, isSmall } = useScreenSize();
     const formRef = useRef(null);
-    const { getExtendedUserInfoAsync, postExtendedUserInfoAsync, getOrganizationsAsync, getOfficesAsync  } = useAppData();
+    const { getExtendedUserInfoAsync, postExtendedUserInfoAsync, getOrganizationsAsync, getOrganizationOfficesAsync  } = useAppData();
 
     const [extendedUserInfo, setExtendedUserInfo] = useState(null);
     const [offices, setOffices] = useState(null);
@@ -25,7 +25,9 @@ const ExtendedUserInfoPopup = ({ userId, callback }) => {
             const organizationId = extendedUserInfo !== null ? extendedUserInfo.office?.organizationId : null;
 
             const organizations = await getOrganizationsAsync();
-            const offices = await  getOfficesAsync(organizationId);
+
+            const organizationOffices = await getOrganizationOfficesAsync(organizationId);
+            const offices = organizationOffices.map (org => org.office);
 
             setOrganizations(organizations);
             setExtendedUserInfo(extendedUserInfo);
@@ -34,12 +36,14 @@ const ExtendedUserInfoPopup = ({ userId, callback }) => {
                 setOffices(offices);
             }
         } )();
-    }, [getExtendedUserInfoAsync, getOfficesAsync, getOrganizationsAsync, userId]);
+    }, [getExtendedUserInfoAsync, getOrganizationOfficesAsync, getOrganizationsAsync, userId]);
 
     useEffect( () => {
         (async () => {
             if(currentOrganization) {
-                const  offices = await  getOfficesAsync(currentOrganization);
+                const organizationOffices = await getOrganizationOfficesAsync(currentOrganization);
+                const offices = organizationOffices.map (org => org.office);
+
                 setOffices(offices);
             } else {
                 setOffices([]);
@@ -48,7 +52,7 @@ const ExtendedUserInfoPopup = ({ userId, callback }) => {
                 });
             }
         })();
-    }, [currentOrganization, getOfficesAsync]);
+    }, [currentOrganization, getOrganizationOfficesAsync]);
 
     return (
         // TODO: style track-map-popup!!!
