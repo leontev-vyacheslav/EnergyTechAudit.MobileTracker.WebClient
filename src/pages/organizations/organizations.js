@@ -13,7 +13,6 @@ import { Template } from 'devextreme-react/core/template';
 import OrganizationPopup from './organization-popup/organization-popup';
 import showConfirmDialog from '../../utils/confirm';
 
-
 const Organizations = () => {
     const { getOfficesAsync, deleteOrganizationAsync, deleteOfficeAsync } = useAppData();
 
