@@ -1,45 +1,36 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Popup from 'devextreme-react/popup';
 import { DialogConstants } from '../../../constants/app-dialog-constant';
-import { useScreenSize } from '../../../utils/media-query';
 import ScrollView from 'devextreme-react/scroll-view';
 import Form, { SimpleItem } from 'devextreme-react/form';
 import Button from 'devextreme-react/button';
-
-import './organization-popup.scss'
 import { useAppData } from '../../../contexts/app-data';
+import { useScreenSize } from '../../../utils/media-query';
 
-const OrganizationPopup = ({ editMode, organization, callback }) => {
+const OfficePopup = ({ editMode, organization, callback }) => {
 
-    const { getOrganizationOfficesAsync, postOrganizationAsync } = useAppData();
     const { isXSmall, isSmall } = useScreenSize();
-    const [currentOrganization, setCurrentOrganization] = useState(null);
+    const { getOfficeAsync, postOfficeAsync } = useAppData();
+
+    const [currentOffice, setCurrentOffice] = useState(null);
+
+    useEffect(() => {
+        ( async () => {
+            if (editMode && organization) {
+                const office = await getOfficeAsync(organization.office.id);
+                setCurrentOffice(office);
+            } else {
+                setCurrentOffice({
+                    address: null
+                })
+            }
+        } )()
+    }, [editMode, getOfficeAsync, organization]);
 
     const formRef = useRef(null);
 
-    useEffect(() => {
-        (async () => {
-            // eslint-disable-next-line no-debugger
-            debugger;
-            if(editMode === true && organization) {
-                const organizationOffices = await getOrganizationOfficesAsync(organization.organizationId);
-                const organizationOffice = organizationOffices.find(org => !!org);
-                setCurrentOrganization({
-                    id: organizationOffice.organizationId,
-                    description: organizationOffice.description,
-                    shortName: organizationOffice.shortName,
-                });
-            } else {
-                setCurrentOrganization({
-                    shortName: null,
-                    description: null
-                })
-            }
-        })()
-    }, [editMode, getOrganizationOfficesAsync, organization])
-
     return (
-        <Popup className={ 'app-popup track-map-popup' } title={ 'Организация' }
+        <Popup className={ 'app-popup track-map-popup' } title={ 'Офис' }
                dragEnabled={ false }
                visible={ true }
                showTitle={ true }
@@ -53,18 +44,12 @@ const OrganizationPopup = ({ editMode, organization, callback }) => {
                 <div className={ 'popup-form-container' }>
                     <ScrollView>
                         <div className={ 'dx-card responsive-paddings' }>
-                            <Form className={ 'organization-popup-form' } ref={ formRef } formData={ currentOrganization }>
-
-                                <SimpleItem dataField={ 'description' }
-                                            isRequired={ true }
-                                            label={ { location: 'top', showColon: true, text: 'Полное наименование ' } }
-                                            editorType={ 'dxTextBox' }/>
-
-                                <SimpleItem dataField={ 'shortName' }
-                                            isRequired={ true }
-                                            label={ { location: 'top', showColon: true, text: 'Сокращенное наименование ' } }
-                                            editorType={ 'dxTextBox' }/>
-
+                            <Form className={ 'organization-popup-form' } ref={ formRef } formData={ currentOffice }>
+                                <SimpleItem
+                                    dataField={ 'address' }
+                                    isRequired={ true }
+                                    label={ { location: 'top', showColon: true, text: 'Адрес' } }
+                                    editorType={ 'dxTextBox' }/>
                             </Form>
                         </div>
                     </ScrollView>
@@ -73,7 +58,7 @@ const OrganizationPopup = ({ editMode, organization, callback }) => {
                         <Button type={ 'default' } text={ DialogConstants.ButtonCaptions.Ok } width={  DialogConstants.ButtonWidths.Normal }
                                 onClick={ async () => {
                                     let formData = formRef.current.instance.option('formData');
-                                    const responseData = await postOrganizationAsync(formData);
+                                    const responseData = await postOfficeAsync(formData);
                                     callback({ modalResult: DialogConstants.ModalResults.Ok, data: responseData !== null ? formData : null });
                                 } }
                         />
@@ -89,4 +74,4 @@ const OrganizationPopup = ({ editMode, organization, callback }) => {
     );
 }
 
-export default OrganizationPopup;
+export default OfficePopup;

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import ContextMenu from 'devextreme-react/context-menu';
-import { AddIcon, DeleteIcon, EditIcon, OfficeIcon } from '../../../constants/app-icons';
+import { DeleteIcon, EditIcon, OfficeIcon } from '../../../constants/app-icons';
 import ContextMenuItem from '../../../components/context-menu-item/context-menu-item';
 
 const OrganizationGroupRowContextMenu = ({ innerRef, commands }) => {
@@ -8,7 +8,17 @@ const OrganizationGroupRowContextMenu = ({ innerRef, commands }) => {
     const items = useMemo(() => {
         return [
             {
-                text: 'Изменить...',
+                text: 'Добавить офис...',
+                renderIconItem: () => <OfficeIcon size={ 18 }/>,
+                onClick: async (e) => {
+                    e.component.hide();
+                    if (commands.addOffice) {
+                        await commands.addOffice();
+                    }
+                }
+            },
+            {
+                text: 'Редактировать...',
                 renderIconItem: () => <EditIcon size={ 18 }/>,
                 onClick: async (e) => {
                     e.component.hide();
@@ -26,17 +36,7 @@ const OrganizationGroupRowContextMenu = ({ innerRef, commands }) => {
                         await commands.deleteOrganization();
                     }
                 }
-            },
-            {
-                text: 'Добавить офис...',
-                renderIconItem: () => <OfficeIcon size={ 18 }/>,
-                onClick: async (e) => {
-                    e.component.hide();
-                    if (commands.addOffice) {
-                        await commands.addOffice();
-                    }
-                }
-            },];
+            }];
     }, [commands]);
 
     return <ContextMenu

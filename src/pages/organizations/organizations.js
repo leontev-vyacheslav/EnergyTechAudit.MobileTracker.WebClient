@@ -13,6 +13,7 @@ import { Template } from 'devextreme-react/core/template';
 import OrganizationPopup from './organization-popup/organization-popup';
 import showConfirmDialog from '../../utils/confirm';
 import { useScreenSize } from '../../utils/media-query';
+import OfficePopup from './office-popup/office-popup';
 
 const Organizations = () => {
     const { getOrganizationOfficesAsync, deleteOrganizationAsync, deleteOfficeAsync } = useAppData();
@@ -20,55 +21,43 @@ const Organizations = () => {
     const { isXSmall } = useScreenSize();
     const [organizations, setOrganizations] = useState(null);
     const [organizationPopupTrigger, setOrganizationPopupTrigger] = useState(false);
+    const [officePopupTrigger, setOfficePopupTrigger] = useState(false);
     const [currentOrganization, setCurrentOrganization] = useState(null);
+
+    const editMode = useRef(false);
 
     const dxDataGridRef = useRef(null);
     const mainContextMenuRef = useRef();
     const groupRowContextMenuRef = useRef();
     const rowContextMenuRef = useRef();
 
-    useEffect(() => {
-        ( async () => {
-            const organizationOffices = await getOrganizationOfficesAsync();
-            setOrganizations(organizationOffices);
-        } )();
-    }, [getOrganizationOfficesAsync]);
-
-    const onDataGridToolbarPreparing = useCallback((e) => {
-        if (e?.toolbarOptions) {
-            e.toolbarOptions.items.forEach(i => {
-                i.location = 'before';
-            })
-
-            e.toolbarOptions.items.unshift(
-                {
-                    location: 'before',
-                    template: 'DataGridToolbarButtonTemplate'
-                }
-            );
-        }
-    }, []);
-
-    const addOrganization = useCallback(() => {
-        setCurrentOrganization(null);
-        setOrganizationPopupTrigger(true);
-    }, [])
-
-    const editOrganization = useCallback(() => {
-        if (dxDataGridRef.current && dxDataGridRef.current.instance) {
-            // eslint-disable-next-line no-debugger
-            debugger;
-            const currentGroupRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
-            const organization = organizations.find(org => org.organizationId === currentGroupRowKey[0]);
-            setCurrentOrganization(organization);
-            setOrganizationPopupTrigger(true);
-        }
-    }, [organizations])
-
     const refreshAsync = useCallback(async () => {
         const organizationOffices = await getOrganizationOfficesAsync();
         setOrganizations(organizationOffices);
-    }, [getOrganizationOfficesAsync])
+    }, [getOrganizationOfficesAsync]);
+
+    useEffect(() => {
+        ( async () => {
+            await refreshAsync();
+        } )();
+    }, [getOrganizationOfficesAsync, refreshAsync]);
+
+    const addOrganization = useCallback(() => {
+        editMode.current = false;
+        setCurrentOrganization(null);
+        setOrganizationPopupTrigger(true);
+    }, []);
+
+    const editOrganization = useCallback(() => {
+        if (dxDataGridRef.current && dxDataGridRef.current.instance) {
+            const currentGroupRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
+            const organization = organizations.find(org => org.organizationId === currentGroupRowKey[0]);
+            setCurrentOrganization(organization);
+
+            editMode.current = true;
+            setOrganizationPopupTrigger(true);
+        }
+    }, [organizations]);
 
     const deleteOrganizationByIdAsync = useCallback(async () => {
         showConfirmDialog({
@@ -81,12 +70,35 @@ const Organizations = () => {
 
                     const organization = organizations.find(md => md.organizationId === currentGroupRowKey[0]);
                     if (organization) {
-                        await deleteOrganizationAsync(organization.organizationId)
+                        await deleteOrganizationAsync(organization.organizationId);
+                        await refreshAsync();
                     }
                 }
             }
         });
-    }, [deleteOrganizationAsync, organizations]);
+    }, [deleteOrganizationAsync, organizations, refreshAsync]);
+
+    const addOffice = useCallback(() => {
+        if (dxDataGridRef.current && dxDataGridRef.current.instance) {
+            const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
+            const organization = organizations.find(org => org.id === currentRowKey);
+            setCurrentOrganization(organization);
+
+            editMode.current = false;
+            setOfficePopupTrigger(true);
+        }
+    }, [organizations])
+
+    const editOffice = useCallback(() => {
+        if (dxDataGridRef.current && dxDataGridRef.current.instance) {
+            const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
+            const organization = organizations.find(org => org.id === currentRowKey);
+            setCurrentOrganization(organization);
+
+            editMode.current = true;
+            setOfficePopupTrigger(true);
+        }
+    }, [organizations])
 
     const deleteOfficeByIdAsync = useCallback(async () => {
         showConfirmDialog({
@@ -104,6 +116,21 @@ const Organizations = () => {
             }
         });
     }, [deleteOfficeAsync, organizations]);
+
+    const onDataGridToolbarPreparing = useCallback((e) => {
+        if (e?.toolbarOptions) {
+            e.toolbarOptions.items.forEach(i => {
+                i.location = 'before';
+            })
+
+            e.toolbarOptions.items.unshift(
+                {
+                    location: 'before',
+                    template: 'DataGridToolbarButtonTemplate'
+                }
+            );
+        }
+    }, []);
 
     const GroupRowContent = ({ groupCell }) => {
         const items = groupCell.data.items === null ? groupCell.data.collapsedItems : groupCell.data.items;
@@ -213,33 +240,49 @@ const Organizations = () => {
                     <Column dataField={ 'office.address' } caption={ 'Адрес' } width={ '100%' } allowSorting={ false } hidingPriority={ 4 }
                             cellRender={ (e) => {
                                 return e.data.office ?
-                                    <DataGridIconCellValueContainer rowStyle={ { gridTemplateColumns: '25px 1fr' } }
-                                                                    cellDataFormatter={ () => {
-                                                                        return e.data.office.address;
-                                                                    } }
-                                                                    iconRenderer={ (iconProps) => {
-                                                                        return <AddressIcon { ...iconProps } />;
-                                                                    } }
+                                    <DataGridIconCellValueContainer
+                                        rowStyle={ { gridTemplateColumns: '25px 1fr' } }
+                                        cellDataFormatter={ () => {
+                                            return e.data.office.address;
+                                        } }
+                                        iconRenderer={ (iconProps) => {
+                                            return <AddressIcon { ...iconProps } />;
+                                        } }
                                     />
                                     : null
                             } }
                     />
                 </DataGrid>
 
-                { organizationPopupTrigger ? <OrganizationPopup organizationId={ currentOrganization?.organizationId } callback={ async (result) => {
-
-                    if (result && result.modalResult === 'OK') {
-                        await refreshAsync();
+                { organizationPopupTrigger ? <OrganizationPopup
+                    editMode={ editMode.current }
+                    organization={ currentOrganization }
+                    callback={ async (result) => {
+                        if (result && result.modalResult === 'OK') {
+                            await refreshAsync();
+                        }
+                        setOrganizationPopupTrigger(false);
                     }
-                    setOrganizationPopupTrigger(false);
-                } }/> : null }
-
+                 }/> : null }
+                { officePopupTrigger
+                    ? <OfficePopup
+                        editMode={ editMode.current }
+                        organization={ currentOrganization }
+                        callback={ async (result) => {
+                            if (result && result.modalResult === 'OK') {
+                                await refreshAsync();
+                            }
+                            setOfficePopupTrigger(false);
+                        } }
+                    />
+                    : null
+                }
                 <OrganizationMainContextMenu
                     ref={ mainContextMenuRef }
                     commands={
                         {
                             addOrganization: addOrganization,
-                            refresh: refreshAsync
+                            refreshAsync: refreshAsync
                         }
                     }/>
 
@@ -247,7 +290,7 @@ const Organizations = () => {
                     ref={ groupRowContextMenuRef }
                     commands={
                         {
-                            addOffice: null,
+                            addOffice: addOffice,
                             editOrganization: editOrganization,
                             deleteOrganization: deleteOrganizationByIdAsync
                         }
@@ -257,6 +300,7 @@ const Organizations = () => {
                     ref={ rowContextMenuRef }
                     commands={
                         {
+                            editOffice: editOffice,
                             deleteOffice: deleteOfficeByIdAsync
                         }
                     }/>

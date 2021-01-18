@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import ContextMenu from 'devextreme-react/context-menu';
-import { DeleteIcon } from '../../../constants/app-icons';
+import { DeleteIcon, EditIcon } from '../../../constants/app-icons';
 import ContextMenuItem from '../../../components/context-menu-item/context-menu-item';
 
 const OrganizationRowContextMenu = ({ innerRef, commands }) => {
@@ -8,7 +8,17 @@ const OrganizationRowContextMenu = ({ innerRef, commands }) => {
     const items = useMemo(() => {
         return [
             {
-                text: 'Удалить офис...',
+                text: 'Редактировать...',
+                renderIconItem: () => <EditIcon size={ 18 }/>,
+                onClick: async (e) => {
+                    e.component.hide();
+                    if (commands.editOffice) {
+                        await commands.editOffice();
+                    }
+                }
+            },
+            {
+                text: 'Удалить...',
                 renderIconItem: () => <DeleteIcon size={ 18 }/>,
                 onClick: async (e) => {
                     e.component.hide();

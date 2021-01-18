@@ -194,7 +194,7 @@ function AppDataProvider (props) {
 
     const getOrganizationOfficesAsync = useCallback(async (organizationId) => {
         const response = await axiosWithCredentials({
-            url: `${ routes.host }${ routes.organization }/offices` + (organizationId ? `/${organizationId}` :  ''),
+            url: `${ routes.host }${ routes.organization }/organization-offices` + (organizationId ? `/${organizationId}` :  ''),
             method: HttpConstants.Methods.Get
         });
         if (response && response.status === HttpConstants.StatusCodes.Ok) {
@@ -248,13 +248,36 @@ function AppDataProvider (props) {
         return null;
     }, [axiosWithCredentials]);
 
+    const getOfficeAsync = useCallback(async (officeId) => {
+        const response = await axiosWithCredentials({
+            url: `${ routes.host }${ routes.organization }/offices/${ officeId }`,
+            method: HttpConstants.Methods.Get
+        });
+        if (response && response.status === HttpConstants.StatusCodes.Ok) {
+            return response.data;
+        }
+        return null;
+    }, [axiosWithCredentials]);
+
+    const postOfficeAsync = useCallback(async (office) => {
+        const response = await axiosWithCredentials({
+            url: `${ routes.host }${ routes.organization }/offices`,
+            method: HttpConstants.Methods.Post,
+            data: office
+        });
+        if (response && response.status === HttpConstants.StatusCodes.Ok) {
+            return response.data;
+        }
+        return null;
+    }, [axiosWithCredentials]);
+
     return (
         <AppDataContext.Provider
             value={ {
                 getMobileDeviceAsync, getMobileDevicesAsync,  getTimelinesAsync, getLocationRecordsByRangeAsync,
                 getLocationRecordAsync,  getGeocodedAddressAsync, getGeocodedLocationAsync, getTrackSheetAsync,
                 postExtendedUserInfoAsync, getExtendedUserInfoAsync, getOrganizationsAsync, getOrganizationOfficesAsync,
-                deleteOrganizationAsync, deleteOfficeAsync, postOrganizationAsync
+                deleteOrganizationAsync, deleteOfficeAsync, postOrganizationAsync, getOfficeAsync, postOfficeAsync
             } }
             { ...props }
         />
