@@ -64,17 +64,14 @@ const MobileDevice = () => {
         }
     }, [mobileDevices]);
 
-    const refresh =  useCallback(async () => {
+    const getDataAsync =  useCallback(async () => {
         const mobileDevicesData = await getMobileDevicesAsync() ?? [];
         setMobileDevices(mobileDevicesData);
     }, [getMobileDevicesAsync]);
 
     useEffect(() => {
-        ( async () => {
-            const mobileDevicesData = await getMobileDevicesAsync() ?? [];
-            setMobileDevices(mobileDevicesData);
-        } )();
-    }, [getMobileDevicesAsync, appSettingsData]);
+        ( async () => await getDataAsync() )();
+    }, [getDataAsync]);
 
     const onDataGridToolbarPreparing = useCallback((e) => {
         if (e?.toolbarOptions) {
@@ -273,7 +270,7 @@ const MobileDevice = () => {
                     ref={ mainContextMenuRef }
                     commands={
                         {
-                            refresh: refresh
+                            refresh: getDataAsync
                         }
                     }/>
                 <MobileDevicesGroupRowContextMenu

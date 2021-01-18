@@ -13,6 +13,7 @@ export { IoMdBatteryCharging as ChargingLevelIcon } from 'react-icons/io';
 export { IoBatteryChargingOutline as BatteryIcon } from 'react-icons/io5';
 export { IoSpeedometerOutline as SpeedIcon } from 'react-icons/io5';
 export { BsBuilding as AddressIcon } from 'react-icons/bs';
+export { BsBuilding as OfficeIcon } from 'react-icons/bs';
 
 // time-line-info.js
 export { MdCompareArrows as BreakIcon } from 'react-icons/md';
@@ -52,8 +53,11 @@ export { IoSettingsOutline as SettingsIcon } from 'react-icons/io5';
 export { IoHomeOutline as HomeIcon } from 'react-icons/io5';
 export { IoInformationCircleOutline as AboutIcon } from 'react-icons/io5';
 export { IoExitOutline as ExitIcon } from 'react-icons/io5';
+
 export { CgRemoveR as DeleteIcon } from 'react-icons/cg';
 export { CgAddR as AddIcon } from 'react-icons/cg';
+export { BiEdit as EditIcon } from 'react-icons/bi';
+
 export { IoWarningOutline as WarningOutlineIcon } from 'react-icons/io5';
 export { IoWarning as WarningIcon } from 'react-icons/io5';
 

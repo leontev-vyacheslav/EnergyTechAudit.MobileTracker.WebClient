@@ -21,10 +21,10 @@ const OrganizationMainContextMenu = ({ innerRef, commands }) => {
             {
                 text: 'Обновить...',
                 renderIconItem: () => <RefreshIcon size={ 18 }/>,
-                onClick: (e) => {
+                onClick: async (e) => {
                     e.component.hide();
-                    if(commands.refresh) {
-                        commands.refresh();
+                    if(commands.refreshAsync) {
+                        await commands.refreshAsync();
                     }
                 }
             }];

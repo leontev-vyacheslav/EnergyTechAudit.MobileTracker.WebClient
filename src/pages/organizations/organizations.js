@@ -20,6 +20,7 @@ const Organizations = () => {
     const { isXSmall } = useScreenSize();
     const [organizations, setOrganizations] = useState(null);
     const [organizationPopupTrigger, setOrganizationPopupTrigger] = useState(false);
+    const [currentOrganization, setCurrentOrganization] = useState(null);
 
     const dxDataGridRef = useRef(null);
     const mainContextMenuRef = useRef();
@@ -49,10 +50,22 @@ const Organizations = () => {
     }, []);
 
     const addOrganization = useCallback(() => {
+        setCurrentOrganization(null);
         setOrganizationPopupTrigger(true);
     }, [])
 
-    const refresh = useCallback(async () => {
+    const editOrganization = useCallback(() => {
+        if (dxDataGridRef.current && dxDataGridRef.current.instance) {
+            // eslint-disable-next-line no-debugger
+            debugger;
+            const currentGroupRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
+            const organization = organizations.find(org => org.organizationId === currentGroupRowKey[0]);
+            setCurrentOrganization(organization);
+            setOrganizationPopupTrigger(true);
+        }
+    }, [organizations])
+
+    const refreshAsync = useCallback(async () => {
         const organizationOffices = await getOrganizationOfficesAsync();
         setOrganizations(organizationOffices);
     }, [getOrganizationOfficesAsync])
@@ -213,10 +226,10 @@ const Organizations = () => {
                     />
                 </DataGrid>
 
-                { organizationPopupTrigger ? <OrganizationPopup organizationId={ null } callback={ async (result) => {
+                { organizationPopupTrigger ? <OrganizationPopup organizationId={ currentOrganization?.organizationId } callback={ async (result) => {
 
                     if (result && result.modalResult === 'OK') {
-                        //
+                        await refreshAsync();
                     }
                     setOrganizationPopupTrigger(false);
                 } }/> : null }
@@ -226,7 +239,7 @@ const Organizations = () => {
                     commands={
                         {
                             addOrganization: addOrganization,
-                            refresh: refresh
+                            refresh: refreshAsync
                         }
                     }/>
 
@@ -234,6 +247,8 @@ const Organizations = () => {
                     ref={ groupRowContextMenuRef }
                     commands={
                         {
+                            addOffice: null,
+                            editOrganization: editOrganization,
                             deleteOrganization: deleteOrganizationByIdAsync
                         }
                     }/>

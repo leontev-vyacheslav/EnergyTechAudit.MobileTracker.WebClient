@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import ContextMenu from 'devextreme-react/context-menu';
-import { AddIcon, DeleteIcon } from '../../../constants/app-icons';
+import { AddIcon, DeleteIcon, EditIcon, OfficeIcon } from '../../../constants/app-icons';
 import ContextMenuItem from '../../../components/context-menu-item/context-menu-item';
 
 const OrganizationGroupRowContextMenu = ({ innerRef, commands }) => {
@@ -8,17 +8,17 @@ const OrganizationGroupRowContextMenu = ({ innerRef, commands }) => {
     const items = useMemo(() => {
         return [
             {
-                text: 'Добавить офис...',
-                renderIconItem: () => <AddIcon size={ 18 }/>,
+                text: 'Изменить...',
+                renderIconItem: () => <EditIcon size={ 18 }/>,
                 onClick: async (e) => {
                     e.component.hide();
-                    if (commands.addOffice) {
-                        await commands.addOffice();
+                    if (commands.editOrganization) {
+                        await commands.editOrganization();
                     }
                 }
             },
             {
-                text: 'Удалить организацию...',
+                text: 'Удалить...',
                 renderIconItem: () => <DeleteIcon size={ 18 }/>,
                 onClick: async (e) => {
                     e.component.hide();
@@ -26,7 +26,17 @@ const OrganizationGroupRowContextMenu = ({ innerRef, commands }) => {
                         await commands.deleteOrganization();
                     }
                 }
-            }];
+            },
+            {
+                text: 'Добавить офис...',
+                renderIconItem: () => <OfficeIcon size={ 18 }/>,
+                onClick: async (e) => {
+                    e.component.hide();
+                    if (commands.addOffice) {
+                        await commands.addOffice();
+                    }
+                }
+            },];
     }, [commands]);
 
     return <ContextMenu
