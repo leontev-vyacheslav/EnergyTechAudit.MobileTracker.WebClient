@@ -297,7 +297,7 @@ const MobileDevice = () => {
 
     return (
         <>
-            <PageHeader caption={ 'Мобильные устройства' }>
+            <PageHeader caption={ !isXSmall ? 'Мобильные устройства' : 'Устройства' }>
                 <MobileDeviceIcon size={ 30 }/>
             </PageHeader>
             <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>

@@ -44,7 +44,7 @@ const TrackMapHeader = ({ mobileDevice, timelineItem, initialDate, onCurrentTime
     return (
         <div className={ 'track-map-header' }>
             <div className={ 'track-map-header-email' } style={ { display: !isXSmall ? 'flex' : 'none', alignItems: 'center' } }>
-                <UserIcon size={ 24 }/>
+                <UserIcon size={ 22 }/>
                 <div>{ mobileDevice.email }</div>
             </div>
             <div className={ 'track-map-select-box-container' } style={ { width: !isXSmall ? '300px' : '100%' } }>

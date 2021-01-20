@@ -3,7 +3,7 @@ import ContextMenu, { Position } from 'devextreme-react/context-menu';
 import List from 'devextreme-react/list';
 import { useAuth } from '../../contexts/auth';
 import { useSharedArea } from '../../contexts/shared-area';
-import { ExitIcon, UserIcon, WorkDateIcon } from '../../constants/app-icons';
+import { AdditionalMenuIcon, ExitIcon, UserIcon, WorkDateIcon } from '../../constants/app-icons';
 import ContextMenuItem from '../context-menu-item/context-menu-item';
 
 import './user-panel.scss';
@@ -16,7 +16,7 @@ export default function ({ menuMode }) {
         return [
             {
                 text: user.email,
-                renderIconItem: () => <UserIcon size={ 24 }/>,
+                renderIconItem: () => <UserIcon size={ 22 }/>,
                 renderTextItem: (item) => {
                     return (
                         <>
@@ -54,7 +54,7 @@ export default function ({ menuMode }) {
             { menuMode === 'context' && (
                     <div className={ 'user-info' }>
                         <div className={ 'image-container' }>
-                            <div className={ 'dx-icon dx-icon-overflow' }/>
+                            <AdditionalMenuIcon size={ 22 }/>
                         </div>
                     </div>
                 )

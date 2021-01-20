@@ -7,7 +7,7 @@ export function TimelineInfoHeader ({ currentMobileDevice, departure, destinatio
 
     return <>
         <div className={ 'timeline-info-user' }>
-            <UserIcon size={ 24 }/>
+            <UserIcon size={ 22 }/>
             <div>{!isXSmall ? 'Пользователь: ' : ''}{ currentMobileDevice.email } / { currentMobileDevice.model }</div>
         </div>
         { destination !== null ?

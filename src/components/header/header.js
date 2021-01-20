@@ -7,9 +7,11 @@ import { ReactComponent as Eta24LogoSvg } from '../../assets/Core.Common.Preload
 
 import './header.scss';
 import { useAppSettings } from '../../contexts/app-settings';
+import { MenuIcon } from '../../constants/app-icons';
 
 export default ({ menuToggleEnabled, title, toggleMenu }) => {
     const { appSettingsData } = useAppSettings();
+
     const WorkDateWidget = ({ outerStyle }) => {
         return (
             <div style={ {
@@ -27,11 +29,14 @@ export default ({ menuToggleEnabled, title, toggleMenu }) => {
             </div>
         ) ;
     };
+
     return (
         <header className={ 'header-component' }>
             <Toolbar className={ 'header-toolbar' }>
                 <Item visible={ menuToggleEnabled } location={ 'before' } widget={ 'dxButton' } cssClass={ 'menu-button' }>
-                    <Button icon="menu" stylingMode="text" onClick={ toggleMenu }/>
+                    <Button icon={ 'none' } onClick={ toggleMenu }>
+                        <MenuIcon size={ 30 }/>
+                    </Button>
                 </Item>
                 <Item
                     location={ 'before' }

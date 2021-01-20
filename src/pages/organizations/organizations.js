@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import AppConstants from '../../constants/app-constants';
+import AppConstants  from '../../constants/app-constants';
 import { useAppData } from '../../contexts/app-data';
 import DataGrid, { Column, Grouping, Pager, Paging, Scrolling, SearchPanel } from 'devextreme-react/data-grid';
 import { Button } from 'devextreme-react/ui/button';
@@ -42,6 +42,8 @@ const Organizations = () => {
         } )();
     }, [getOrganizationOfficesAsync, refreshAsync]);
 
+
+
     const addOrganization = useCallback(() => {
         editMode.current = false;
         setCurrentOrganization(null);
@@ -80,8 +82,8 @@ const Organizations = () => {
 
     const addOffice = useCallback(() => {
         if (dxDataGridRef.current && dxDataGridRef.current.instance) {
-            const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
-            const organization = organizations.find(org => org.id === currentRowKey);
+            const currentGroupRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
+            const organization = organizations.find(org => org.organizationId === currentGroupRowKey[0]);
             setCurrentOrganization(organization);
 
             editMode.current = false;
