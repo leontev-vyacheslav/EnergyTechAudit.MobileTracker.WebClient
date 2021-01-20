@@ -34,6 +34,7 @@ const OfficePopup = ({ editMode, organization, callback }) => {
                     ...{ address: place.formatted_address },
                     ...{
                         place: {
+                            id: 0,
                             latitude: place.geometry.location.lat(),
                             longitude: place.geometry.location.lng(),
                         }
@@ -46,18 +47,20 @@ const OfficePopup = ({ editMode, organization, callback }) => {
     }, [mapIsLoaded]);
 
     useEffect(() => {
-        if(!mapIsLoaded) {
-            if (!window.google || !window.google.maps || !window.google.maps.places) {
-                const scriptElement = document.createElement('script');
-                scriptElement.src = `${ AppConstants.trackMap.mapApiUrl }?key=${ AppConstants.trackMap.apiKey }&libraries=${ AppConstants.trackMap.libraries.join(',') }`;
-                scriptElement.async = true;
-                window.document.body.appendChild(scriptElement);
-                scriptElement.addEventListener('load', () => {
-                    setMapIsLoaded(true);
-                });
-            }
+        if (!window.google || !window.google.maps || !window.google.maps.places) {
+            const scriptElement = document.createElement('script');
+            scriptElement.src = `${ AppConstants.trackMap.mapApiUrl }?key=${ AppConstants.trackMap.apiKey }&libraries=${ AppConstants.trackMap.libraries.join(',') }`;
+            scriptElement.async = true;
+            window.document.body.appendChild(scriptElement);
+            scriptElement.addEventListener('load', () => {
+                setMapIsLoaded(true);
+            });
         }
-    }, [mapIsLoaded]);
+        else {
+            setMapIsLoaded(true);
+        }
+
+    }, []);
 
     useEffect(() => {
         ( async () => {
@@ -68,9 +71,9 @@ const OfficePopup = ({ editMode, organization, callback }) => {
                 } else {
                     setCurrentOffice({
                         organizationId: organization.organizationId,
-                        organizationShortName: organization.shortName,
+                        organizationShortName: organization.description,
                         address: null,
-                        placeId: null
+                        placeId: 0
                     })
                 }
             }
@@ -128,6 +131,8 @@ const OfficePopup = ({ editMode, organization, callback }) => {
                         <Button type={ 'default' } text={ DialogConstants.ButtonCaptions.Ok } width={ DialogConstants.ButtonWidths.Normal }
                                 onClick={ async () => {
                                     let formData = formRef.current.instance.option('formData');
+                                    // eslint-disable-next-line no-debugger
+                                    console.log(formData);
                                     const responseData = await postOfficeAsync(formData);
                                     callback({ modalResult: DialogConstants.ModalResults.Ok, data: responseData !== null ? formData : null });
                                 } }
