@@ -42,8 +42,6 @@ const Organizations = () => {
         } )();
     }, [getOrganizationOfficesAsync, refreshAsync]);
 
-
-
     const addOrganization = useCallback(() => {
         editMode.current = false;
         setCurrentOrganization(null);
@@ -113,11 +111,12 @@ const Organizations = () => {
                     const organization = organizations.find(md => md.id === currentRowKey);
                     if (organization) {
                         await deleteOfficeAsync(organization.office.id);
+                        await refreshAsync();
                     }
                 }
             }
         });
-    }, [deleteOfficeAsync, organizations]);
+    }, [deleteOfficeAsync, organizations, refreshAsync]);
 
     const onDataGridToolbarPreparing = useCallback((e) => {
         if (e?.toolbarOptions) {

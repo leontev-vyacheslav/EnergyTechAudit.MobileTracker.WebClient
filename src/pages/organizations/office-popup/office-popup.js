@@ -19,6 +19,27 @@ const OfficePopup = ({ editMode, organization, callback }) => {
     const [currentOffice, setCurrentOffice] = useState(null);
     const [mapIsLoaded, setMapIsLoaded] = useState(false);
 
+    useEffect(() => {
+        ( async () => {
+            if (organization) {
+                if (editMode) {
+                    // eslint-disable-next-line no-debugger
+                    debugger;
+                    let office = await getOfficeAsync(organization.office.id);
+                    office = { ...office, ...{ organizationDescription: organization.description } };
+                    setCurrentOffice(office);
+                } else {
+                    setCurrentOffice({
+                        organizationId: organization.organizationId,
+                        organizationDescription: organization.description,
+                        address: null,
+                        placeId: 0
+                    })
+                }
+            }
+        } )()
+    }, [editMode, getOfficeAsync, organization]);
+
     const  onPlaceChangedHandler = useCallback(() => {
         if(mapIsLoaded && formRef.current) {
             const editor = formRef.current.instance.getEditor('address');
@@ -34,7 +55,7 @@ const OfficePopup = ({ editMode, organization, callback }) => {
                     ...{ address: place.formatted_address },
                     ...{
                         place: {
-                            id: 0,
+                            id: formData.place ? formData.place.id : 0,
                             latitude: place.geometry.location.lat(),
                             longitude: place.geometry.location.lng(),
                         }
@@ -62,23 +83,7 @@ const OfficePopup = ({ editMode, organization, callback }) => {
 
     }, []);
 
-    useEffect(() => {
-        ( async () => {
-            if (organization) {
-                if (editMode) {
-                    const office = await getOfficeAsync(organization.office.id);
-                    setCurrentOffice(office);
-                } else {
-                    setCurrentOffice({
-                        organizationId: organization.organizationId,
-                        organizationShortName: organization.description,
-                        address: null,
-                        placeId: 0
-                    })
-                }
-            }
-        } )()
-    }, [editMode, getOfficeAsync, organization]);
+
 
     return (
         <Popup className={ 'app-popup track-map-popup' } title={ 'Офис' }
@@ -97,7 +102,7 @@ const OfficePopup = ({ editMode, organization, callback }) => {
                         <div className={ 'dx-card responsive-paddings' }>
                             <Form className={ 'organization-popup-form' } ref={ formRef } formData={ currentOffice }>
                                 <SimpleItem
-                                    dataField={ 'organizationShortName' }
+                                    dataField={ 'organizationDescription' }
                                     label={ { location: 'top', showColon: true, text: 'Наименование организации' } }
                                     editorType={ 'dxTextBox' }
                                     editorOptions={
@@ -131,8 +136,6 @@ const OfficePopup = ({ editMode, organization, callback }) => {
                         <Button type={ 'default' } text={ DialogConstants.ButtonCaptions.Ok } width={ DialogConstants.ButtonWidths.Normal }
                                 onClick={ async () => {
                                     let formData = formRef.current.instance.option('formData');
-                                    // eslint-disable-next-line no-debugger
-                                    console.log(formData);
                                     const responseData = await postOfficeAsync(formData);
                                     callback({ modalResult: DialogConstants.ModalResults.Ok, data: responseData !== null ? formData : null });
                                 } }
