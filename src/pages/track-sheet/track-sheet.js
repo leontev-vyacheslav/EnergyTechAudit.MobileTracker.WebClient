@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
-import DataGrid, { Column, Grouping, MasterDetail, Pager, Paging, Scrolling } from 'devextreme-react/data-grid';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import DataGrid, { Column, Grouping, MasterDetail, Pager, Paging, Scrolling, SearchPanel } from 'devextreme-react/data-grid';
+import { Template } from 'devextreme-react/core/template';
+import { Button } from 'devextreme-react/ui/button';
 import { useAppData } from '../../contexts/app-data';
 import AppConstants from '../../constants/app-constants'
 import SideNavigationMenu from '../../components/side-navigation-menu/side-navigation-menu';
 import { useLocation } from 'react-router';
-import { Button } from 'devextreme-react/ui/button';
 import Timelines from '../mobile-devices/timeline/timelines';
 import TrackSheetContextMenu from './track-sheet-context-menu'
 import { useScreenSize } from '../../utils/media-query';
@@ -12,9 +13,11 @@ import TrackMapPopup from '../mobile-devices/timeline/track-map-popup/track-map-
 import { useAppSettings } from '../../contexts/app-settings';
 import DataGridIconCellValueContainer from '../../components/data-grid-utils/data-grid-icon-cell-value-container';
 import { AccuracyIcon, CurrentDateIcon, DistanceIcon, GridAdditionalMenuIcon, TimelineIcon } from '../../constants/app-icons';
+import PageHeader from '../../components/page-header/page-header';
+
+import TrackSheetMainContextMenu from './track-sheet-main-context-menu/track-sheet-main-context-menu'
 
 import './track-sheet.scss';
-import PageHeader from '../../components/page-header/page-header';
 
 const TrackSheet = () => {
     function useQuery() {
@@ -25,34 +28,54 @@ const TrackSheet = () => {
 
     const dxDataGridRef = useRef(null);
     const { isXSmall } = useScreenSize();
-    const { appSettingsData, getDailyTimelineItem } = useAppSettings();
+    const { getDailyTimelineItem } = useAppSettings();
     const { getMobileDeviceAsync, getTrackSheetAsync } = useAppData();
     const [trackSheet, setTrackSheet] = useState(null);
     const [currentMobileDevice, setCurrentMobileDevice] = useState(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState(null);
 
     const [trackMapCurrentDate, setTrackMapCurrentDate] = useState(null);
+    const mainContextMenuRef = useRef();
     const rowContextMenuRef = useRef();
 
     const [currentMobileDeviceId] = useState(query.get('mobileDeviceId'));
     const [currentDate] = useState(query.get('currentDate'));
 
+    const refreshAsync = useCallback(async () => {
+        if (currentDate) {
+            const mobileDevice = await getMobileDeviceAsync(currentMobileDeviceId);
+            setCurrentMobileDevice(mobileDevice);
+
+            let trackSheet = await getTrackSheetAsync(currentMobileDeviceId, currentDate);
+            if (trackSheet && trackSheet.dailyCoveredDistances) {
+                trackSheet.dailyCoveredDistances = trackSheet.dailyCoveredDistances.map(ts => {
+                    return { ...ts, ...{ userId: mobileDevice.userId, mobileDeviceId: mobileDevice.id } }
+                });
+                setTrackSheet(trackSheet);
+            }
+        }
+    }, [currentDate, currentMobileDeviceId, getMobileDeviceAsync, getTrackSheetAsync]);
+
     useEffect(() => {
         ( async () => {
-            if (currentDate) {
-                const mobileDevice = await getMobileDeviceAsync(currentMobileDeviceId);
-                setCurrentMobileDevice(mobileDevice);
-
-                let trackSheet = await getTrackSheetAsync(currentMobileDeviceId, currentDate);
-                if (trackSheet && trackSheet.dailyCoveredDistances) {
-                    trackSheet.dailyCoveredDistances = trackSheet.dailyCoveredDistances.map(ts => {
-                        return { ...ts, ...{ userId: mobileDevice.userId, mobileDeviceId: mobileDevice.id } }
-                    });
-                    setTrackSheet(trackSheet);
-                }
-            }
+            await refreshAsync();
         } )();
-    }, [getMobileDeviceAsync, getTrackSheetAsync, currentMobileDeviceId, appSettingsData, currentDate]);
+    }, [refreshAsync]);
+
+    const onDataGridToolbarPreparing = useCallback((e) => {
+        if (e?.toolbarOptions) {
+            e.toolbarOptions.items.forEach(i => {
+                i.location = 'before';
+            })
+
+            e.toolbarOptions.items.unshift(
+                {
+                    location: 'before',
+                    template: 'DataGridToolbarButtonTemplate'
+                }
+            );
+        }
+    }, []);
 
     SideNavigationMenu.treeViewRef?.current?.instance.unselectAll();
 
@@ -80,6 +103,19 @@ const TrackSheet = () => {
         );
     }
 
+    const DataGridToolbarButton = () => {
+        return (
+            <Button className={ 'time-line-command-button' } onClick={ (e) => {
+                if (mainContextMenuRef && mainContextMenuRef.current) {
+                    mainContextMenuRef.current.instance.option('target', e.element);
+                    mainContextMenuRef.current.instance.show();
+                }
+            } }>
+                <GridAdditionalMenuIcon/>
+            </Button>
+        );
+    }
+
     if (currentDate && trackSheet !== null && trackSheet.length !== 0 && currentMobileDevice) {
         return (
             <>
@@ -88,19 +124,23 @@ const TrackSheet = () => {
                 </PageHeader>
                 <DataGrid ref={ dxDataGridRef }
                           keyExpr={ 'id' }
-                          className={ 'mobile-devices track-sheet dx-card wide-card' }
+                          className={ 'app-grid mobile-devices track-sheet dx-card wide-card' }
                           noDataText={ AppConstants.noDataLongText }
                           dataSource={ trackSheet?.dailyCoveredDistances ?? [] }
                           showBorders={ false }
                           focusedRowEnabled={ true }
-                          showColumnHeaders={ true }
+                          showColumnHeaders={ !isXSmall }
                           defaultFocusedRowIndex={ 0 }
                           columnAutoWidth={ true }
                           columnHidingEnabled={ true }
+                          onToolbarPreparing={ onDataGridToolbarPreparing }
                           onRowExpanding={ (e) => {
                               e.component.collapseAll(-1);
                           } }
                 >
+                    <Template name={ 'DataGridToolbarButtonTemplate' } render={ DataGridToolbarButton }/>
+                    <SearchPanel visible={ true } searchVisibleColumnsOnly={ false }/>
+
                     <Scrolling showScrollbar={ 'never' }/>
                     <Paging defaultPageSize={ isXSmall ? 5 : 10 }/>
                     <Pager showPageSizeSelector={ true } showInfo={ true }/>
@@ -170,6 +210,14 @@ const TrackSheet = () => {
                         setCurrentTimelineItem(getDailyTimelineItem(currentDailyCoveredDistanceItem.date));
                     }
                 } }/>
+                <TrackSheetMainContextMenu
+                    ref={ mainContextMenuRef }
+                    commands={
+                        {
+                            refreshAsync: refreshAsync
+                        }
+                    }/>
+
                 { currentMobileDevice && currentTimelineItem !== null ?
                     <TrackMapPopup
                         mobileDevice={ currentMobileDevice }

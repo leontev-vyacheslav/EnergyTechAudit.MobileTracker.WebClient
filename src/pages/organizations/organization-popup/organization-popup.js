@@ -19,8 +19,6 @@ const OrganizationPopup = ({ editMode, organization, callback }) => {
 
     useEffect(() => {
         (async () => {
-            // eslint-disable-next-line no-debugger
-            debugger;
             if(editMode === true && organization) {
                 const organizationOffices = await getOrganizationOfficesAsync(organization.organizationId);
                 const organizationOffice = organizationOffices.find(org => !!org);
@@ -47,8 +45,8 @@ const OrganizationPopup = ({ editMode, organization, callback }) => {
                onHiding={ () => {
                    callback({ modalResult: DialogConstants.ModalResults.Close, parametric: null });
                } }
-               width={ isXSmall || isSmall ? '95%' : '35%' }
-               height={ isXSmall || isSmall ? '95%' : '45%' }>
+               width={ isXSmall || isSmall ? '95%' : '40%' }
+               height={ isXSmall || isSmall ? '95%' : '450' }>
             <>
                 <div className={ 'popup-form-container' }>
                     <ScrollView>
@@ -58,12 +56,20 @@ const OrganizationPopup = ({ editMode, organization, callback }) => {
                                 <SimpleItem dataField={ 'description' }
                                             isRequired={ true }
                                             label={ { location: 'top', showColon: true, text: 'Полное наименование ' } }
-                                            editorType={ 'dxTextBox' }/>
+                                            editorType={ 'dxTextBox' }
+                                            editorOptions={ {
+                                                showClearButton: true
+                                            } }
+                                            />
 
                                 <SimpleItem dataField={ 'shortName' }
                                             isRequired={ true }
                                             label={ { location: 'top', showColon: true, text: 'Сокращенное наименование ' } }
-                                            editorType={ 'dxTextBox' }/>
+                                            editorType={ 'dxTextBox' }
+                                            editorOptions={ {
+                                                showClearButton: true
+                                            } }
+                                />
 
                             </Form>
                         </div>

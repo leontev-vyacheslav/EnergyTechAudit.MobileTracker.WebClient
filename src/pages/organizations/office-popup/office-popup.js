@@ -23,8 +23,6 @@ const OfficePopup = ({ editMode, organization, callback }) => {
         ( async () => {
             if (organization) {
                 if (editMode) {
-                    // eslint-disable-next-line no-debugger
-                    debugger;
                     let office = await getOfficeAsync(organization.office.id);
                     office = { ...office, ...{ organizationDescription: organization.description } };
                     setCurrentOffice(office);
@@ -39,6 +37,21 @@ const OfficePopup = ({ editMode, organization, callback }) => {
             }
         } )()
     }, [editMode, getOfficeAsync, organization]);
+
+    useEffect(() => {
+        if (!window.google || !window.google.maps || !window.google.maps.places) {
+            const scriptElement = document.createElement('script');
+            scriptElement.src = `${ AppConstants.trackMap.mapApiUrl }?key=${ AppConstants.trackMap.apiKey }&libraries=${ AppConstants.trackMap.libraries.join(',') }`;
+            scriptElement.async = true;
+            window.document.body.appendChild(scriptElement);
+            scriptElement.addEventListener('load', () => {
+                setMapIsLoaded(true);
+            });
+        }
+        else {
+            setMapIsLoaded(true);
+        }
+    }, []);
 
     const  onPlaceChangedHandler = useCallback(() => {
         if(mapIsLoaded && formRef.current) {
@@ -67,24 +80,6 @@ const OfficePopup = ({ editMode, organization, callback }) => {
         }
     }, [mapIsLoaded]);
 
-    useEffect(() => {
-        if (!window.google || !window.google.maps || !window.google.maps.places) {
-            const scriptElement = document.createElement('script');
-            scriptElement.src = `${ AppConstants.trackMap.mapApiUrl }?key=${ AppConstants.trackMap.apiKey }&libraries=${ AppConstants.trackMap.libraries.join(',') }`;
-            scriptElement.async = true;
-            window.document.body.appendChild(scriptElement);
-            scriptElement.addEventListener('load', () => {
-                setMapIsLoaded(true);
-            });
-        }
-        else {
-            setMapIsLoaded(true);
-        }
-
-    }, []);
-
-
-
     return (
         <Popup className={ 'app-popup track-map-popup' } title={ 'Офис' }
                dragEnabled={ false }
@@ -94,8 +89,8 @@ const OfficePopup = ({ editMode, organization, callback }) => {
                onHiding={ () => {
                    callback({ modalResult: DialogConstants.ModalResults.Close, parametric: null });
                } }
-               width={ isXSmall || isSmall ? '95%' : '35%' }
-               height={ isXSmall || isSmall ? '95%' : '45%' }>
+               width={ isXSmall || isSmall ? '95%' : '40%' }
+               height={ isXSmall || isSmall ? '95%' : '450' }>
             <>
                 <div className={ 'popup-form-container' }>
                     <ScrollView>
@@ -117,6 +112,7 @@ const OfficePopup = ({ editMode, organization, callback }) => {
                                     label={ { location: 'top', showColon: true, text: 'Адрес' } }
                                     editorType={ 'dxTextBox' }
                                     editorOptions={ {
+                                        showClearButton: true,
                                         onFocusIn: (e) => {
                                             if (mapIsLoaded && !autocompleteRef.current) {
                                                 const input = e.element.querySelector('input');
