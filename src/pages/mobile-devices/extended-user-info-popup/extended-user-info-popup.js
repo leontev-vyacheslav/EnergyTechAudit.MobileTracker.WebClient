@@ -64,8 +64,8 @@ const ExtendedUserInfoPopup = ({ userId, callback }) => {
                onHiding={ () => {
                    callback({ modalResult: DialogConstants.ModalResults.Close, parametric: null });
                } }
-               width={ isXSmall || isSmall ? '95%' : '35%' }
-               height={ isXSmall || isSmall ? '95%' : '65%' }>
+               width={ isXSmall || isSmall ? '95%' : '40%' }
+               height={ isXSmall || isSmall ? '95%' : '450' }>
             <>
                 <div className={ 'popup-form-container' }>
                     <ScrollView>
