@@ -1,16 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import Popup from 'devextreme-react/ui/popup';
 import { DialogConstants } from '../../../constants/app-dialog-constant';
 import ScrollView from 'devextreme-react/scroll-view';
 import Form, { SimpleItem } from 'devextreme-react/form';
 import Button from 'devextreme-react/button';
 import { useAppData } from '../../../contexts/app-data';
-import { useScreenSize } from '../../../utils/media-query';
 import AppConstants from '../../../constants/app-constants';
+import AppModalPopup from '../../../components/app-modal-popup/app-modal-popup';
 
 const OfficePopup = ({ editMode, organization, callback }) => {
 
-    const { isXSmall, isSmall } = useScreenSize();
     const { getOfficeAsync, postOfficeAsync } = useAppData();
 
     const autocompleteRef = useRef(null);
@@ -81,70 +79,59 @@ const OfficePopup = ({ editMode, organization, callback }) => {
     }, [mapIsLoaded]);
 
     return (
-        <Popup className={ 'app-popup track-map-popup' } title={ 'Офис' }
-               dragEnabled={ false }
-               visible={ true }
-               showTitle={ true }
-               showCloseButton={ true }
-               onHiding={ () => {
-                   callback({ modalResult: DialogConstants.ModalResults.Close, parametric: null });
-               } }
-               width={ isXSmall || isSmall ? '95%' : '40%' }
-               height={ isXSmall || isSmall ? '95%' : '450' }>
-            <>
-                <div className={ 'popup-form-container' }>
-                    <ScrollView>
-                        <div className={ 'dx-card responsive-paddings' }>
-                            <Form className={ 'organization-popup-form' } ref={ formRef } formData={ currentOffice }>
-                                <SimpleItem
-                                    dataField={ 'organizationDescription' }
-                                    label={ { location: 'top', showColon: true, text: 'Наименование организации' } }
-                                    editorType={ 'dxTextBox' }
-                                    editorOptions={
-                                        {
-                                            readOnly: true
+        <AppModalPopup title={ 'Офис' } onClose={ callback }>
+            <div className={ 'popup-form-container' }>
+                <ScrollView>
+                    <div className={ 'dx-card responsive-paddings' }>
+                        <Form className={ 'organization-popup-form' } ref={ formRef } formData={ currentOffice }>
+                            <SimpleItem
+                                dataField={ 'organizationDescription' }
+                                label={ { location: 'top', showColon: true, text: 'Наименование организации' } }
+                                editorType={ 'dxTextBox' }
+                                editorOptions={
+                                    {
+                                        readOnly: true
+                                    }
+                                }
+                            />
+                            <SimpleItem
+                                dataField={ 'address' }
+                                isRequired={ true }
+                                label={ { location: 'top', showColon: true, text: 'Адрес' } }
+                                editorType={ 'dxTextBox' }
+                                editorOptions={ {
+                                    showClearButton: true,
+                                    onFocusIn: (e) => {
+                                        if (mapIsLoaded && !autocompleteRef.current) {
+                                            const input = e.element.querySelector('input');
+                                            autocompleteRef.current = new window.google.maps.places.Autocomplete(input, {
+                                                types: ['geocode']
+                                            });
+                                            autocompleteRef.current.addListener('place_changed', onPlaceChangedHandler);
                                         }
                                     }
-                                />
-                                <SimpleItem
-                                    dataField={ 'address' }
-                                    isRequired={ true }
-                                    label={ { location: 'top', showColon: true, text: 'Адрес' } }
-                                    editorType={ 'dxTextBox' }
-                                    editorOptions={ {
-                                        showClearButton: true,
-                                        onFocusIn: (e) => {
-                                            if (mapIsLoaded && !autocompleteRef.current) {
-                                                const input = e.element.querySelector('input');
-                                                autocompleteRef.current = new window.google.maps.places.Autocomplete(input, {
-                                                    types: ['geocode']
-                                                });
-                                                autocompleteRef.current.addListener('place_changed',  onPlaceChangedHandler);
-                                            }
-                                        }
-                                    } }
-                                />
-                            </Form>
-                        </div>
-                    </ScrollView>
-                    <div className={ 'popup-form-buttons-row' }>
-                        <div>&nbsp;</div>
-                        <Button type={ 'default' } text={ DialogConstants.ButtonCaptions.Ok } width={ DialogConstants.ButtonWidths.Normal }
-                                onClick={ async () => {
-                                    let formData = formRef.current.instance.option('formData');
-                                    const responseData = await postOfficeAsync(formData);
-                                    callback({ modalResult: DialogConstants.ModalResults.Ok, data: responseData !== null ? formData : null });
                                 } }
-                        />
-                        <Button type={ 'normal' } text={ DialogConstants.ButtonCaptions.Cancel } width={ DialogConstants.ButtonWidths.Normal }
-                                onClick={ () => {
-                                    callback({ modalResult: DialogConstants.ModalResults.Cancel, data: null });
-                                } }
-                        />
+                            />
+                        </Form>
                     </div>
+                </ScrollView>
+                <div className={ 'popup-form-buttons-row' }>
+                    <div>&nbsp;</div>
+                    <Button type={ 'default' } text={ DialogConstants.ButtonCaptions.Ok } width={ DialogConstants.ButtonWidths.Normal }
+                            onClick={ async () => {
+                                let formData = formRef.current.instance.option('formData');
+                                const responseData = await postOfficeAsync(formData);
+                                callback({ modalResult: DialogConstants.ModalResults.Ok, data: responseData !== null ? formData : null });
+                            } }
+                    />
+                    <Button type={ 'normal' } text={ DialogConstants.ButtonCaptions.Cancel } width={ DialogConstants.ButtonWidths.Normal }
+                            onClick={ () => {
+                                callback({ modalResult: DialogConstants.ModalResults.Cancel, data: null });
+                            } }
+                    />
                 </div>
-            </>
-        </Popup>
+            </div>
+        </AppModalPopup>
     );
 }
 

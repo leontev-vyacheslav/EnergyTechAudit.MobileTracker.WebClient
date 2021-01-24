@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import SelectBox from 'devextreme-react/ui/select-box';
+import SelectBox from 'devextreme-react/select-box';
 import { useScreenSize } from '../../../../../utils/media-query';
 import { useAppData } from '../../../../../contexts/app-data';
 import { useAppSettings } from '../../../../../contexts/app-settings';

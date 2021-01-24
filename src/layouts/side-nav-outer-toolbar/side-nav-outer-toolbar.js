@@ -3,10 +3,11 @@ import ScrollView from 'devextreme-react/scroll-view';
 import React, { useState, useCallback, useRef } from 'react';
 import { useHistory } from 'react-router';
 import { Header, SideNavigationMenu, Footer } from '../../components';
-import './side-nav-outer-toolbar.scss';
 import { useScreenSize } from '../../utils/media-query';
 import { useMenuPatch } from '../../utils/patches';
 import { Template } from 'devextreme-react/core/template';
+
+import './side-nav-outer-toolbar.scss';
 
 export default function ({ title, children }) {
     const scrollViewRef = useRef();

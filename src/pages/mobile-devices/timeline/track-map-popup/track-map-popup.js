@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react';
 import TrackMap from './track-map/track-map';
-import { Popup } from 'devextreme-react/ui/popup';
+import { Popup } from 'devextreme-react/popup';
 import { ToolbarItem } from 'devextreme-react/popup';
 import { useScreenSize } from '../../../../utils/media-query';
 import { useSharedArea } from '../../../../contexts/shared-area';
-import { Button } from 'devextreme-react/ui/button';
+import { Button } from 'devextreme-react/button';
 import TrackMapPopupMenu from './track-map-popup-menu/track-map-popup-menu'
 import { AdditionalMenuIcon } from '../../../../constants/app-icons';
 

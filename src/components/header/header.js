@@ -3,7 +3,7 @@ import Toolbar, { Item } from 'devextreme-react/toolbar';
 import Button from 'devextreme-react/button';
 import UserPanel from '../user-panel/user-panel';
 import { Template } from 'devextreme-react/core/template';
-import { ReactComponent as Eta24LogoSvg } from '../../assets/Core.Common.PreloaderLogo.Medium.SpringDepression.svg';
+import { ReactComponent as AppLogo } from '../../assets/app-logo.svg';
 
 import './header.scss';
 import { useAppSettings } from '../../contexts/app-settings';
@@ -46,7 +46,7 @@ export default ({ menuToggleEnabled, title, toggleMenu }) => {
                     render={ () => {
                         return (
                             <div className={ 'header-title-logo-container' }>
-                                <Eta24LogoSvg width={ 60 }/>
+                                <AppLogo width={ 60 }/>
                                 <div>{ title }</div>
                             </div>
                         );

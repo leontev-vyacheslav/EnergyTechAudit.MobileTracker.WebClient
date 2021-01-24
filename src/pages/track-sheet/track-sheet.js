@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import DataGrid, { Column, Grouping, MasterDetail, Pager, Paging, Scrolling, SearchPanel } from 'devextreme-react/data-grid';
 import { Template } from 'devextreme-react/core/template';
-import { Button } from 'devextreme-react/ui/button';
+import { Button } from 'devextreme-react/button';
 import { useAppData } from '../../contexts/app-data';
 import AppConstants from '../../constants/app-constants'
 import SideNavigationMenu from '../../components/side-navigation-menu/side-navigation-menu';

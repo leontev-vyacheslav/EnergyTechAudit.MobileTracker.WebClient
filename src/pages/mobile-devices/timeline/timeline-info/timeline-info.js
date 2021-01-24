@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import DataGrid, { Column, Scrolling } from 'devextreme-react/ui/data-grid';
+import DataGrid, { Column, Scrolling } from 'devextreme-react/data-grid';
 import { TimelineInfoHeader } from './timeline-info-header';
 import AppConstants from '../../../../constants/app-constants';
 import { useScreenSize } from '../../../../utils/media-query';

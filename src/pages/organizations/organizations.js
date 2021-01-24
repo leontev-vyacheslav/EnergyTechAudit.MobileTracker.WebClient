@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import AppConstants  from '../../constants/app-constants';
 import { useAppData } from '../../contexts/app-data';
 import DataGrid, { Column, Grouping, Pager, Paging, Scrolling, SearchPanel } from 'devextreme-react/data-grid';
-import { Button } from 'devextreme-react/ui/button';
+import { Button } from 'devextreme-react/button';
 import { AddressIcon, GridAdditionalMenuIcon, OrganizationIcon } from '../../constants/app-icons';
 import DataGridIconCellValueContainer from '../../components/data-grid-utils/data-grid-icon-cell-value-container';
 import PageHeader from '../../components/page-header/page-header';

@@ -58,10 +58,7 @@ export { IoExitOutline as ExitIcon } from 'react-icons/io5';
 export { CgRemoveR as DeleteIcon } from 'react-icons/cg';
 export { CgAddR as AddIcon } from 'react-icons/cg';
 export { BiEdit as EditIcon } from 'react-icons/bi';
-
 export { IoWarning as WarningIcon } from 'react-icons/io5';
-
-
 
 import { MdMoreVert } from 'react-icons/all';
 export const GridAdditionalMenuIcon = () => <MdMoreVert style={ { cursor: 'pointer' } } size={ 18 } color={ '#464646' }/>;

@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@react-google-maps/api": "^2.0.2",
-    "@testing-library/jest-dom": "^5.11.6",
-    "@testing-library/react": "^11.2.2",
-    "@testing-library/user-event": "^12.6.0",
+    "@react-google-maps/api": "^2.1.0",
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/react": "^11.2.3",
+    "@testing-library/user-event": "^12.6.2",
     "axios": "^0.21.1",
-    "devextreme": "^20.2.4",
-    "devextreme-react": "^20.2.4",
+    "devextreme": "^20.2.5",
+    "devextreme-react": "^20.2.5",
     "history": "^5.0.0",
     "moment": "^2.29.1",
     "node-sass": "^4.11.0",
@@ -46,12 +46,12 @@
     ]
   },
   "devDependencies": {
-    "devextreme-cli": "^1.2.7",
-    "devextreme-themebuilder": "^20.2.4",
-    "eslint": "^7.16.0",
-    "eslint-config-prettier": "^7.1.0",
-    "eslint-plugin-prettier": "^3.3.0",
-    "eslint-plugin-react": "^7.21.5",
+    "devextreme-cli": "^1.2.8",
+    "devextreme-themebuilder": "^20.2.5",
+    "eslint": "^7.18.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.2.1"
   }

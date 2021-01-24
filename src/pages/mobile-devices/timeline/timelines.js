@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import DataGrid, { Column, MasterDetail, Scrolling, Selection, Summary, TotalItem } from 'devextreme-react/ui/data-grid';
-import { Button } from 'devextreme-react/ui/button';
+import DataGrid, { Column, MasterDetail, Scrolling, Selection, Summary, TotalItem } from 'devextreme-react/data-grid';
+import { Button } from 'devextreme-react/button';
 import { useAppData } from '../../../contexts/app-data';
 import TimelineInfo from './timeline-info/timeline-info';
 import AppConstants from '../../../constants/app-constants';

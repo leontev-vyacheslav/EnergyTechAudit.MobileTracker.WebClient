@@ -4,7 +4,7 @@ import { useAppData } from '../../contexts/app-data';
 import { useHistory } from 'react-router-dom';
 import Timelines from './timeline/timelines'
 import AppConstants from '../../constants/app-constants'
-import { Button } from 'devextreme-react/ui/button';
+import { Button } from 'devextreme-react/button';
 import TrackMapPopup from './timeline/track-map-popup/track-map-popup';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useScreenSize } from '../../utils/media-query';

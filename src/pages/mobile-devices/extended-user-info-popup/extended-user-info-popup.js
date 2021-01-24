@@ -1,15 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Popup from 'devextreme-react/popup';
-import { useScreenSize } from '../../../utils/media-query';
 import Form, { SimpleItem } from 'devextreme-react/form';
 import Button from 'devextreme-react/button';
 import { DialogConstants } from '../../../constants/app-dialog-constant';
 import { useAppData } from '../../../contexts/app-data';
 import ScrollView from 'devextreme-react/scroll-view';
+import AppModalPopup from '../../../components/app-modal-popup/app-modal-popup';
 
 const ExtendedUserInfoPopup = ({ userId, callback }) => {
-
-    const { isXSmall, isSmall } = useScreenSize();
     const formRef = useRef(null);
     const { getExtendedUserInfoAsync, postExtendedUserInfoAsync, getOrganizationsAsync, getOrganizationOfficesAsync  } = useAppData();
 
@@ -55,19 +52,8 @@ const ExtendedUserInfoPopup = ({ userId, callback }) => {
     }, [currentOrganization, getOrganizationOfficesAsync]);
 
     return (
-        // TODO: style track-map-popup!!!
-        <Popup className={ 'app-popup track-map-popup' } title={ 'Сведения о пользователе' }
-               dragEnabled={ false }
-               visible={ true }
-               showTitle={ true }
-               showCloseButton={ true }
-               onHiding={ () => {
-                   callback({ modalResult: DialogConstants.ModalResults.Close, parametric: null });
-               } }
-               width={ isXSmall || isSmall ? '95%' : '40%' }
-               height={ isXSmall || isSmall ? '95%' : '450' }>
-            <>
-                <div className={ 'popup-form-container' }>
+        <AppModalPopup title={ 'Сведения о пользователе' } onClose={ callback }>
+            <div className={ 'popup-form-container' }>
                     <ScrollView>
                         <div className={ 'dx-card responsive-paddings' }>
                             <Form ref={ formRef } formData={ extendedUserInfo }>
@@ -95,7 +81,6 @@ const ExtendedUserInfoPopup = ({ userId, callback }) => {
                                                     displayExpr: 'address',
                                                 } }
                                              />
-
                                 <SimpleItem dataField={ 'firstName' }
                                             isRequired={ true }
                                             label={ { location: 'top', showColon: true, text: 'Имя' } }
@@ -137,8 +122,7 @@ const ExtendedUserInfoPopup = ({ userId, callback }) => {
                         />
                     </div>
                 </div>
-            </>
-        </Popup>
+        </AppModalPopup>
     );
 };
 

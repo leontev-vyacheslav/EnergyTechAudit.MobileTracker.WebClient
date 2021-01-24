@@ -4,10 +4,10 @@ import Button from 'devextreme-react/button'
 import { useAppSettings } from '../../contexts/app-settings';
 import notify from 'devextreme/ui/notify';
 import { useScreenSize } from '../../utils/media-query';
-
-import './settings.scss';
 import { SettingsIcon } from '../../constants/app-icons';
 import PageHeader from '../../components/page-header/page-header';
+
+import './settings.scss';
 
 export default () => {
     let dxAppSettingsFormRef = useRef(null);

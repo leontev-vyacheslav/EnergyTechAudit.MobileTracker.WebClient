@@ -1,5 +1,5 @@
 import React from 'react';
-import { ReactComponent as ProgressGear } from '../../assets/Core.Common.ProgressGears.svg';
+import { ReactComponent as ProgressGear } from '../../assets/progress-gears.svg';
 import LoadPanel from 'devextreme-react/load-panel';
 import './loader.scss';
 
