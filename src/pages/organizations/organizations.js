@@ -33,6 +33,8 @@ const Organizations = () => {
 
     const refreshAsync = useCallback(async () => {
         const organizationOffices = await getOrganizationOfficesAsync();
+        console.log(organizationOffices);
+
         setOrganizations(organizationOffices);
     }, [getOrganizationOfficesAsync]);
 

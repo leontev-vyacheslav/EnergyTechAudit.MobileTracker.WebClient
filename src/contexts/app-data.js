@@ -271,13 +271,26 @@ function AppDataProvider (props) {
         return null;
     }, [axiosWithCredentials]);
 
+    const deleteScheduleItemAsync = useCallback(async (scheduleItemId) => {
+        const response = await axiosWithCredentials({
+            url: `${ routes.host }${ routes.organization }/schedule-items/${ scheduleItemId }`,
+            method: HttpConstants.Methods.Delete
+        });
+        if (response && response.status === HttpConstants.StatusCodes.Ok) {
+            return response.data;
+        }
+        return null;
+    }, [axiosWithCredentials]);
+
     return (
         <AppDataContext.Provider
             value={ {
                 getMobileDeviceAsync, getMobileDevicesAsync,  getTimelinesAsync, getLocationRecordsByRangeAsync,
                 getLocationRecordAsync,  getGeocodedAddressAsync, getGeocodedLocationAsync, getTrackSheetAsync,
-                postExtendedUserInfoAsync, getExtendedUserInfoAsync, getOrganizationsAsync, getOrganizationOfficesAsync,
-                deleteOrganizationAsync, deleteOfficeAsync, postOrganizationAsync, getOfficeAsync, postOfficeAsync
+                postExtendedUserInfoAsync, getExtendedUserInfoAsync,
+
+                getOrganizationsAsync, getOrganizationOfficesAsync, deleteOrganizationAsync, deleteOfficeAsync,
+                postOrganizationAsync, getOfficeAsync, postOfficeAsync, deleteScheduleItemAsync
             } }
             { ...props }
         />

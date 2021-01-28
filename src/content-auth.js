@@ -12,7 +12,6 @@ const ContentAuth = () => {
     return (
         <>
             <SideNavBarLayout title={ AppConstants.appInfo.title }>
-
                 <Switch>
                     <Suspense fallback={ <Loader/> }>
                         { routes.map(({ path, component }) => (
