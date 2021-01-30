@@ -11,7 +11,7 @@ import { NavigationProvider } from './contexts/navigation';
 import { AuthProvider, useAuth } from './contexts/auth';
 import { useScreenSizeClass } from './utils/media-query';
 import ContentAuth from './content-auth';
-import UnauthenticatedContent from './content-non-auth';
+import ContentNonAuth from './content-non-auth';
 import { AppSettingsProvider } from './contexts/app-settings';
 import { AppDataProvider } from './contexts/app-data';
 import { SharedAreaProvider } from './contexts/shared-area';
@@ -21,31 +21,33 @@ import { locale, loadMessages } from 'devextreme/localization';
 
 function App () {
     const { user } = useAuth();
+
     if (user === undefined) {
         return null;
     }
     loadMessages(ruMessages);
-    locale(navigator.language);
-    return user == null ? <UnauthenticatedContent/> : <ContentAuth/>
+    locale('ru-RU');
+    return user == null ? <ContentNonAuth/> : <ContentAuth/>
 }
 
 export default function Main () {
     const screenSizeClass = useScreenSizeClass();
     return (
-        <AppSettingsProvider>
-            <AuthProvider>
-                <SharedAreaProvider>
-                    <AppDataProvider>
-                        <Router>
+        <Router>
+            <AppSettingsProvider>
+                <AuthProvider>
+                    <SharedAreaProvider>
+                        <AppDataProvider>
+
                             <NavigationProvider>
                                 <div className={ `app ${ screenSizeClass }` }>
                                     <App/>
                                 </div>
                             </NavigationProvider>
-                        </Router>
-                    </AppDataProvider>
-                </SharedAreaProvider>
-            </AuthProvider>
-        </AppSettingsProvider>
+                        </AppDataProvider>
+                    </SharedAreaProvider>
+                </AuthProvider>
+            </AppSettingsProvider>
+        </Router>
     );
 }

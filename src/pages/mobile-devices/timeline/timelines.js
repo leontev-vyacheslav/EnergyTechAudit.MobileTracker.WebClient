@@ -44,7 +44,7 @@ const Timelines = ({ currentMobileDevice, workDate }) => {
     if (!( currentTimeline === null || currentTimeline.length === 0 )) {
         return (
             <DataGrid
-                className={ 'timeline dx-card wide-card' }
+                className={ 'app-grid compact timeline dx-card wide-card' }
                 width={ '100%' }
                 keyExpr={ 'id' }
                 focusedRowEnabled={ true }
@@ -80,7 +80,7 @@ const Timelines = ({ currentMobileDevice, workDate }) => {
                         cellRender={ (e) => {
                             return (
                                 <>
-                                    <Button className={ 'time-line-command-button' } onClick={ () => {
+                                    <Button className={ 'app-command-button app-command-button-small' } onClick={ () => {
                                         toggleRowDetailByRowKey({ dataGrid: e.component, rowKey: e.row.key, mode: 'info' });
                                     } }>
                                         <GridAdditionalMenuIcon />

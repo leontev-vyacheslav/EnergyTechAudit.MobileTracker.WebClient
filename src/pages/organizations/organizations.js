@@ -33,8 +33,6 @@ const Organizations = () => {
 
     const refreshAsync = useCallback(async () => {
         const organizationOffices = await getOrganizationOfficesAsync();
-        console.log(organizationOffices);
-
         setOrganizations(organizationOffices);
     }, [getOrganizationOfficesAsync]);
 
@@ -141,7 +139,7 @@ const Organizations = () => {
         return (
             <>
                 <div className={ 'user-grid-group mobile-devices-group' }>
-                    <Button className={ 'time-line-command-button' } onClick={ (e) => {
+                    <Button className={ 'app-command-button app-command-button-small' } onClick={ (e) => {
                         dxDataGridRef.current.instance.option('focusedRowKey', groupCell.key);
                         e.event.stopPropagation();
                         if (groupRowContextMenuRef && groupRowContextMenuRef.current) {
@@ -166,7 +164,7 @@ const Organizations = () => {
 
     const DataGridToolbarButton = () => {
         return (
-            <Button className={ 'time-line-command-button' } onClick={ (e) => {
+            <Button className={ 'app-command-button app-command-button-small' } onClick={ (e) => {
                 if (mainContextMenuRef && mainContextMenuRef.current) {
                     mainContextMenuRef.current.instance.option('target', e.element);
                     mainContextMenuRef.current.instance.show();
@@ -218,7 +216,7 @@ const Organizations = () => {
 
                     <Column type={ 'buttons' } width={ 50 } cellRender={ (e) => {
                         return e.data.office ?
-                            <Button className={ 'time-line-command-button' } onClick={ (e) => {
+                            <Button className={ 'app-command-button app-command-button-small' } onClick={ (e) => {
                                 if (rowContextMenuRef && rowContextMenuRef.current) {
                                     rowContextMenuRef.current.instance.option('target', e.element);
                                     rowContextMenuRef.current.instance.show();

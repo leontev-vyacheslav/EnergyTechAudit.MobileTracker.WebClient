@@ -11,7 +11,7 @@ const OrganizationsPage = lazy(() => import('../pages/organizations/organization
 
 const routes = [
     {
-        path: '/home',
+        path: ['/home', '/'],
         component: HomePage,
     },
     {

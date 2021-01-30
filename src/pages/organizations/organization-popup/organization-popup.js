@@ -5,6 +5,7 @@ import Form, { GroupItem, SimpleItem, Tab, TabbedItem } from 'devextreme-react/f
 import Button from 'devextreme-react/button';
 import { useAppData } from '../../../contexts/app-data';
 import AppModalPopup from '../../../components/app-modal-popup/app-modal-popup';
+import Moment from 'moment';
 
 import './organization-popup.scss'
 import { AddIcon, DeleteIcon } from '../../../constants/app-icons';
@@ -23,8 +24,10 @@ const OrganizationPopup = ({ editMode, organization, callback }) => {
 
                 const scheduleItems = {};
                 organizationOffice.scheduleItems.forEach((si, i) => {
-                    scheduleItems[`scheduleItems${i}`] = si;
-                } );
+                    si.periodBegin = Moment(si.periodBegin, 'HH:mm:ss').toDate();
+                    si.periodEnd = Moment(si.periodEnd, 'HH:mm:ss').toDate();
+                    scheduleItems[`scheduleItem${ i }`] = si;
+                });
                 const currentOrganization = {
                     id: organizationOffice.organizationId,
                     description: organizationOffice.description,
@@ -32,12 +35,11 @@ const OrganizationPopup = ({ editMode, organization, callback }) => {
                     scheduleItems: scheduleItems
                 };
                 setCurrentOrganization(currentOrganization);
-                console.log(currentOrganization);
             } else {
                 setCurrentOrganization({
                     shortName: null,
                     description: null,
-                    scheduleItems: { }
+                    scheduleItems: {}
                 })
             }
         } )()
@@ -51,28 +53,25 @@ const OrganizationPopup = ({ editMode, organization, callback }) => {
 
         const scheduleItem = {
             scheduleTypeId: 2,
-            enabled: true,
-            periodBegin: periodBegin.toLocaleTimeString('ru-RU',),
-            periodEnd: periodEnd.toLocaleTimeString('ru-RU'),
+            periodBegin: periodBegin,
+            periodEnd: periodEnd,
         };
+
         const scheduleItems = currentOrganization.scheduleItems;
-
         scheduleItems[`scheduleItem${ count }`] = scheduleItem;
-
         setCurrentOrganization({ ...currentOrganization, ...{ scheduleItems: scheduleItems } });
-        console.log(currentOrganization);
     }, [currentOrganization]);
 
     const removeSchedule = useCallback(async (index) => {
             const scheduleItems = currentOrganization.scheduleItems;
-            const scheduleItem = scheduleItems[`scheduleItems${ index }`];
+            const scheduleItem = scheduleItems[`scheduleItem${ index }`];
             if (scheduleItem) {
-                delete scheduleItems[`scheduleItems${ index }`];
+                delete scheduleItems[`scheduleItem${ index }`];
 
-                Object.keys(scheduleItems).forEach( (fieldName, i) => {
+                Object.keys(scheduleItems).forEach((fieldName, i) => {
 
-                    if (fieldName !== `scheduleItems${ i }`) {
-                        Object.defineProperty(scheduleItems, `scheduleItems${ i }`,
+                    if (fieldName !== `scheduleItem${ i }`) {
+                        Object.defineProperty(scheduleItems, `scheduleItem${ i }`,
                             Object.getOwnPropertyDescriptor(scheduleItems, fieldName));
 
                         delete scheduleItems[fieldName];
@@ -97,100 +96,108 @@ const OrganizationPopup = ({ editMode, organization, callback }) => {
         <AppModalPopup title={ 'Организация' } onClose={ callback }>
             <div className={ 'popup-form-container' }>
                 <ScrollView>
-                    <div className={ 'dx-card responsive-paddings' }>
-                        <Form className={ 'organization-popup-form' } ref={ formRef } formData={ currentOrganization }>
-                            <TabbedItem>
-                                <Tab title={ 'Основные' }>
-                                    <SimpleItem dataField={ 'description' }
-                                                isRequired={ true }
-                                                label={ { location: 'top', showColon: true, text: 'Полное наименование ' } }
-                                                editorType={ 'dxTextBox' }
-                                                editorOptions={ {
-                                                    showClearButton: true
-                                                } }
-                                    />
-
-                                    <SimpleItem dataField={ 'shortName' }
-                                                isRequired={ true }
-                                                label={ { location: 'top', showColon: true, text: 'Сокращенное наименование ' } }
-                                                editorType={ 'dxTextBox' }
-                                                editorOptions={ {
-                                                    showClearButton: true
-                                                } }
-                                    />
-                                </Tab>
-                                <Tab title={ 'Расписание' }>
-                                    { Object.keys(currentOrganization.scheduleItems).map ((fieldName, i) => {
-                                       return (
-                                           <GroupItem key={ i } caption={ `Элемент расписания № ${i + 1}` }>
-                                                <SimpleItem
-                                                    dataField={ `scheduleItems.${ fieldName }.scheduleTypeId` }
-                                                    label={ { location: 'top', showColon: true, text: 'Тип' } }
-                                                    editorType={ 'dxSelectBox' }
-                                                    editorOptions=
-                                                        { {
-                                                            dataSource: scheduleTypes,
-                                                            valueExpr: 'id',
-                                                            displayExpr: 'description',
-                                                        } }
-                                                />
-                                               <SimpleItem
-                                                   dataField={ `scheduleItems.${ fieldName }.periodBegin` }
-                                                   label={ { location: 'top', showColon: true, text: 'Начало периода' } }
-                                                   editorType={ 'dxDateBox' } editorOptions=
-                                                       { {
-                                                           type: 'time',
-                                                           pickerType: 'rollers',
-                                                       } }
-                                               />
-                                               <SimpleItem
-                                                   dataField={ `scheduleItems.${ fieldName }.periodEnd` }
-                                                   label={ { location: 'top', showColon: true, text: 'Конец периода' } }
-                                                   editorType={ 'dxDateBox' } editorOptions=
-                                                       { {
-                                                           type: 'time',
-                                                           pickerType: 'rollers',
-                                                       } }
-                                               />
-
-                                               <SimpleItem render={ () => {
-                                                   return (
-                                                       <div style={ { width: '100%', textAlign: 'right' } }>
-                                                           <Button text={ 'Удалить' }
-                                                                   onClick={ removeSchedule.bind(this, i) }>
-                                                               <DeleteIcon className={ 'dx-icon' } size={ 18 } />
-                                                               <span className="dx-button-text">Удалить</span>
-                                                           </Button>
-                                                       </div>
-                                                   );
-                                               } } />
+                    <Form className={ 'organization-popup-form responsive-paddings' } ref={ formRef } formData={ currentOrganization }>
+                        <TabbedItem>
+                            <Tab title={ 'Основные' }>
+                                <SimpleItem
+                                    dataField={ 'description' }
+                                    isRequired={ true }
+                                    label={ { location: 'top', showColon: true, text: 'Полное наименование ' } }
+                                    editorType={ 'dxTextBox' }
+                                    editorOptions={ {
+                                        showClearButton: true
+                                    } }
+                                />
+                                <SimpleItem
+                                    dataField={ 'shortName' }
+                                    isRequired={ true }
+                                    label={ { location: 'top', showColon: true, text: 'Сокращенное наименование ' } }
+                                    editorType={ 'dxTextBox' }
+                                    editorOptions={ {
+                                        showClearButton: true
+                                    } }
+                                />
+                            </Tab>
+                            <Tab title={ 'Расписание' }>
+                                { Object.keys(currentOrganization.scheduleItems).map((fieldName, i) => {
+                                    return (
+                                        <GroupItem key={ i } caption={ `Элемент расписания № ${ i + 1 }` }>
+                                            <SimpleItem
+                                                dataField={ `scheduleItems.${ fieldName }.scheduleTypeId` }
+                                                label={ { location: 'top', showColon: true, text: 'Тип' } }
+                                                editorType={ 'dxSelectBox' }
+                                                editorOptions=
+                                                    { {
+                                                        dataSource: scheduleTypes,
+                                                        valueExpr: 'id',
+                                                        displayExpr: 'description',
+                                                    } }
+                                            />
+                                            <SimpleItem
+                                                dataField={ `scheduleItems.${ fieldName }.periodBegin` }
+                                                label={ { location: 'top', showColon: true, text: 'Начало периода' } }
+                                                editorType={ 'dxDateBox' } editorOptions=
+                                                    { {
+                                                        type: 'time',
+                                                        pickerType: 'rollers',
+                                                    } }
+                                            />
+                                            <SimpleItem
+                                                dataField={ `scheduleItems.${ fieldName }.periodEnd` }
+                                                label={ { location: 'top', showColon: true, text: 'Конец периода' } }
+                                                editorType={ 'dxDateBox' } editorOptions=
+                                                    { {
+                                                        type: 'time',
+                                                        pickerType: 'rollers',
+                                                    } }
+                                            />
+                                            <SimpleItem render={ () => {
+                                                return (
+                                                    <div style={ { width: '100%', textAlign: 'right' } }>
+                                                        <Button  text={ 'Удалить' }
+                                                                onClick={ removeSchedule.bind(this, i) }>
+                                                            <DeleteIcon className={ 'dx-icon' } size={ 18 }/>
+                                                            <span className="dx-button-text">Удалить</span>
+                                                        </Button>
+                                                    </div>
+                                                );
+                                            } }/>
                                         </GroupItem>
-                                       );
-                                    })}
-                                    <SimpleItem render={ () => {
-                                        return (
-                                            <div style={ { width: '100%', textAlign: 'left' } }>
-                                                <Button text={ 'Добавить' } onClick={ addSchedule }>
-                                                    <AddIcon className={ 'dx-icon' } size={ 18 } />
-                                                    <span className="dx-button-text">Добавить</span>
-                                                </Button>
-                                            </div>
-                                        );
-                                    } } />
+                                    );
+                                }) }
+                                <SimpleItem render={ () => {
+                                    return (
+                                        <div style={ { width: '100%', textAlign: 'left' } }>
+                                            <Button text={ 'Добавить' } onClick={ addSchedule }>
+                                                <AddIcon className={ 'dx-icon' } size={ 18 }/>
+                                                <span className="dx-button-text">Добавить</span>
+                                            </Button>
+                                        </div>
+                                    );
+                                } }/>
 
-                                </Tab>
-                            </TabbedItem>
-                        </Form>
-                    </div>
+                            </Tab>
+                        </TabbedItem>
+                    </Form>
                 </ScrollView>
                 <div className={ 'popup-form-buttons-row' }>
                     <div>&nbsp;</div>
                     <Button type={ 'default' } text={ DialogConstants.ButtonCaptions.Ok } width={ DialogConstants.ButtonWidths.Normal }
                             onClick={ async () => {
-                                let formData = formRef.current.instance.option('formData');
+                                const formData = formRef.current.instance.option('formData');
 
                                 formData.scheduleItems = Object.keys(formData.scheduleItems).map(s => {
-                                    return formData.scheduleItems[s];
+                                    const scheduleItem = formData.scheduleItems[s];
+                                    return {
+                                        ...scheduleItem, ...{
+                                            periodBegin: scheduleItem.periodBegin instanceof Date
+                                                ? scheduleItem.periodBegin.toLocaleTimeString('ru-RU')
+                                                : scheduleItem.periodBegin,
+                                            periodEnd: scheduleItem.periodEnd instanceof Date
+                                                ? scheduleItem.periodEnd.toLocaleTimeString('ru-RU')
+                                                : scheduleItem.periodEnd
+                                        }
+                                    };
                                 });
                                 const responseData = await postOrganizationAsync(formData);
                                 callback({ modalResult: DialogConstants.ModalResults.Ok, data: responseData !== null ? formData : null });

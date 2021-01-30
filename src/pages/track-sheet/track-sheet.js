@@ -105,7 +105,7 @@ const TrackSheet = () => {
 
     const DataGridToolbarButton = () => {
         return (
-            <Button className={ 'time-line-command-button' } onClick={ (e) => {
+            <Button className={ 'app-command-button app-command-button-small' } onClick={ (e) => {
                 if (mainContextMenuRef && mainContextMenuRef.current) {
                     mainContextMenuRef.current.instance.option('target', e.element);
                     mainContextMenuRef.current.instance.show();
@@ -155,7 +155,7 @@ const TrackSheet = () => {
 
                     <Column type={ 'buttons' } width={ 50 } cellRender={ () => {
                         return (
-                            <Button className={ 'time-line-command-button' } onClick={ (e) => {
+                            <Button className={ 'app-command-button app-command-button-small' } onClick={ (e) => {
                                 rowContextMenuRef.current.instance.option('target', e.element);
                                 rowContextMenuRef.current.instance.show();
                             } }>

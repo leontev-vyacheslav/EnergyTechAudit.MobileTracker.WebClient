@@ -45,14 +45,13 @@ const OfficePopup = ({ editMode, organization, callback }) => {
             scriptElement.addEventListener('load', () => {
                 setMapIsLoaded(true);
             });
-        }
-        else {
+        } else {
             setMapIsLoaded(true);
         }
     }, []);
 
-    const  onPlaceChangedHandler = useCallback(() => {
-        if(mapIsLoaded && formRef.current) {
+    const onPlaceChangedHandler = useCallback(() => {
+        if (mapIsLoaded && formRef.current) {
             const editor = formRef.current.instance.getEditor('address');
             const input = editor.element().querySelector('input');
 
@@ -82,38 +81,36 @@ const OfficePopup = ({ editMode, organization, callback }) => {
         <AppModalPopup title={ 'Офис' } onClose={ callback }>
             <div className={ 'popup-form-container' }>
                 <ScrollView>
-                    <div className={ 'dx-card responsive-paddings' }>
-                        <Form className={ 'organization-popup-form' } ref={ formRef } formData={ currentOffice }>
-                            <SimpleItem
-                                dataField={ 'organizationDescription' }
-                                label={ { location: 'top', showColon: true, text: 'Наименование организации' } }
-                                editorType={ 'dxTextBox' }
-                                editorOptions={
-                                    {
-                                        readOnly: true
+                    <Form className={ 'organization-popup-form responsive-paddings' } ref={ formRef } formData={ currentOffice }>
+                        <SimpleItem
+                            dataField={ 'organizationDescription' }
+                            label={ { location: 'top', showColon: true, text: 'Наименование организации' } }
+                            editorType={ 'dxTextBox' }
+                            editorOptions={
+                                {
+                                    readOnly: true
+                                }
+                            }
+                        />
+                        <SimpleItem
+                            dataField={ 'address' }
+                            isRequired={ true }
+                            label={ { location: 'top', showColon: true, text: 'Адрес' } }
+                            editorType={ 'dxTextBox' }
+                            editorOptions={ {
+                                showClearButton: true,
+                                onFocusIn: (e) => {
+                                    if (mapIsLoaded && !autocompleteRef.current) {
+                                        const input = e.element.querySelector('input');
+                                        autocompleteRef.current = new window.google.maps.places.Autocomplete(input, {
+                                            types: ['geocode']
+                                        });
+                                        autocompleteRef.current.addListener('place_changed', onPlaceChangedHandler);
                                     }
                                 }
-                            />
-                            <SimpleItem
-                                dataField={ 'address' }
-                                isRequired={ true }
-                                label={ { location: 'top', showColon: true, text: 'Адрес' } }
-                                editorType={ 'dxTextBox' }
-                                editorOptions={ {
-                                    showClearButton: true,
-                                    onFocusIn: (e) => {
-                                        if (mapIsLoaded && !autocompleteRef.current) {
-                                            const input = e.element.querySelector('input');
-                                            autocompleteRef.current = new window.google.maps.places.Autocomplete(input, {
-                                                types: ['geocode']
-                                            });
-                                            autocompleteRef.current.addListener('place_changed', onPlaceChangedHandler);
-                                        }
-                                    }
-                                } }
-                            />
-                        </Form>
-                    </div>
+                            } }
+                        />
+                    </Form>
                 </ScrollView>
                 <div className={ 'popup-form-buttons-row' }>
                     <div>&nbsp;</div>

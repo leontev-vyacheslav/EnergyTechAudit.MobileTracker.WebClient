@@ -89,7 +89,7 @@ const MobileDevice = () => {
 
     const DataGridToolbarButton = () => {
         return (
-            <Button className={ 'time-line-command-button' } onClick={ (e) => {
+            <Button className={ 'app-command-button app-command-button-small' } onClick={ (e) => {
                 if (mainContextMenuRef && mainContextMenuRef.current) {
                     mainContextMenuRef.current.instance.option('target', e.element);
                     mainContextMenuRef.current.instance.show();
@@ -110,7 +110,7 @@ const MobileDevice = () => {
         return (
             <>
                 <div className={ 'user-grid-group mobile-devices-group' }>
-                    <Button className={ 'time-line-command-button' } onClick={ (e) => {
+                    <Button className={ 'app-command-button app-command-button-small' } onClick={ (e) => {
                         dxDataGridRef.current.instance.option('focusedRowKey', groupCell.key);
                         e.event.stopPropagation();
                         if(groupRowContextMenuRef && groupRowContextMenuRef.current) {
@@ -163,7 +163,7 @@ const MobileDevice = () => {
                     <Template name={ 'DataGridToolbarButtonTemplate' } render={ DataGridToolbarButton }/>
                     <Column type={ 'buttons' } width={ 45 } cellRender={ () => {
                         return (
-                            <Button className={ 'time-line-command-button' } onClick={ (e) => {
+                            <Button className={ 'app-command-button app-command-button-small' } onClick={ (e) => {
                                 if(rowContextMenuRef && rowContextMenuRef.current) {
                                     rowContextMenuRef.current.instance.option('target', e.element);
                                     rowContextMenuRef.current.instance.show();
@@ -203,7 +203,7 @@ const MobileDevice = () => {
                                 <DataGridIconCellValueContainer
                                     cellDataFormatter={ () => e.data.os }
                                     iconRenderer={ (iconProps) => {
-                                        return e.data.os.toLowerCase().includes('android') ? <AndroidIcon   { ...iconProps } /> : <IosIcon { ...iconProps }/>;
+                                        return e.data.os.toLowerCase().includes('android') ? <AndroidIcon    { ...iconProps } /> : <IosIcon { ...iconProps }/>;
                                     } }
                                 />
                             }

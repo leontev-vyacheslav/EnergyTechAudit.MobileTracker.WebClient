@@ -3,36 +3,3 @@
 .dx-link.dx-icon-map.dx-link-icon {
   color: $base-accent !important;
 }
-.timeline {
-  .dx-command-select {
-    padding-left: 4px !important;
-  }
-}
-
-.timeline .dx-datagrid .dx-row > td {
-  padding-top: 8px;
-  padding-bottom: 7px;
-  font-size: 13px;
-  line-height: 18px;
-}
-
-.timeline .time-line-command-button, .mobile-devices .time-line-command-button {
-  border-radius: 50%;
-  box-shadow: 0 0 transparent;
-  width: 30px;
-  height: 30px;
-  min-height: 30px;
-  min-width: 30px;
-}
-
-.timeline .dx-row-focused .time-line-command-button, .mobile-devices .dx-row-focused .time-line-command-button {
-  background-color: inherit;
-  border-radius: 50%;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
-}
-
-.time-line-command-button .dx-button-content {
-  padding: 6px 6px 6px 6px;
-}
-
-

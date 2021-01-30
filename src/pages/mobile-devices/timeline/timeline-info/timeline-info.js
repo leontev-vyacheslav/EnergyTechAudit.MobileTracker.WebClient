@@ -75,14 +75,12 @@ const TimelineInfo = ({ timeline, currentMobileDevice }) => {
         } )();
     }, [getGeocodedAddressAsync, timeline]);
 
-
-
     return (timelineInfo ?
         (
-            <>
+            <div className={ 'timeline-info-container' }>
                 <TimelineInfoHeader currentMobileDevice={ currentMobileDevice } departure={ departure } destination={ destination }/>
                 <DataGrid
-                    className={ 'timeline-info' }
+                    className={ 'app-grid timeline-info' }
                     width={ isXSmall || isSmall ? '100%' : '50%' }
                     height={ '100%' }
                     noDataText={ AppConstants.noDataLongText }
@@ -98,7 +96,7 @@ const TimelineInfo = ({ timeline, currentMobileDevice }) => {
                         }
                     } }/>
                 </DataGrid>
-            </> )
+            </div> )
         : <span style={ { position: 'relative', lineHeight: 30, height: 30 } } className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span> );
 };
 

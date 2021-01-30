@@ -1,5 +1,6 @@
 @import "../../../../themes/variables";
 
+
 .timeline-info .dx-datagrid .dx-row > td {
   padding-top: 5px;
   padding-bottom: 5px;
@@ -50,4 +51,8 @@
       }
     }
   }
+}
+
+.timeline-info-container svg {
+  color: #464646 !important;
 }
