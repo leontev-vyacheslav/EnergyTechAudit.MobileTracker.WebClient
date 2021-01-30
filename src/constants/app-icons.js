@@ -61,4 +61,4 @@ export { BiEdit as EditIcon } from 'react-icons/bi';
 export { IoWarning as WarningIcon } from 'react-icons/io5';
 
 import { MdMoreVert } from 'react-icons/md';
-export const GridAdditionalMenuIcon = () => <MdMoreVert style={ { cursor: 'pointer' } } size={ 18 } color={ '#464646' }/>;
+export const GridAdditionalMenuIcon = () => <MdMoreVert style={ { cursor: 'pointer' } } size={ 18 }/>;
