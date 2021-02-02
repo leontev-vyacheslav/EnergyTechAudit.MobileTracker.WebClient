@@ -5,16 +5,21 @@ import Form, { GroupItem, SimpleItem, Tab, TabbedItem } from 'devextreme-react/f
 import Button from 'devextreme-react/button';
 import { useAppData } from '../../../contexts/app-data';
 import AppModalPopup from '../../../components/app-modal-popup/app-modal-popup';
+import { ToolbarItem } from 'devextreme-react/popup';
 import Moment from 'moment';
+import { AdditionalMenuIcon, OrganizationIcon, ScheduleIcon } from '../../../constants/app-icons';
+import IconTab from '../../../components/tab-utils/icon-tab';
+import  OrganizationPopupMenu from './organization-popup-menu/organization-popup-menu'
 
 import './organization-popup.scss'
-import { AddIcon, DeleteIcon } from '../../../constants/app-icons';
 
 const OrganizationPopup = ({ editMode, organization, callback }) => {
     const { getOrganizationOfficesAsync, postOrganizationAsync, deleteScheduleItemAsync } = useAppData();
     const [currentOrganization, setCurrentOrganization] = useState(null);
 
     const formRef = useRef(null);
+    const contextMenuRef = useRef(null);
+    const headerToolbarItemRef = useRef(null);
 
     useEffect(() => {
         ( async () => {
@@ -97,8 +102,15 @@ const OrganizationPopup = ({ editMode, organization, callback }) => {
             <div className={ 'popup-form-container' }>
                 <ScrollView>
                     <Form className={ 'organization-popup-form responsive-paddings' } ref={ formRef } formData={ currentOrganization }>
-                        <TabbedItem>
-                            <Tab title={ 'Основные' }>
+                        <TabbedItem tabPanelOptions={ {
+                            onSelectionChanged: (e) => {
+                                const selectedIndex = e.component.option('selectedIndex');
+                                if (headerToolbarItemRef && headerToolbarItemRef.current) {
+                                    headerToolbarItemRef.current.instance.option('visible', selectedIndex === 1)
+                                }
+                            }
+                        } }>
+                            <Tab title={ 'Основные' } tabRender={ (tab) => <IconTab tab={ tab }><OrganizationIcon size={ 18 }/></IconTab> }>
                                 <SimpleItem
                                     dataField={ 'description' }
                                     isRequired={ true }
@@ -118,10 +130,10 @@ const OrganizationPopup = ({ editMode, organization, callback }) => {
                                     } }
                                 />
                             </Tab>
-                            <Tab title={ 'Расписание' }>
+                            <Tab title={ 'Расписание' } tabRender={ (tab) => <IconTab tab={ tab }><ScheduleIcon size={ 18 }/></IconTab> }>
                                 { Object.keys(currentOrganization.scheduleItems).map((fieldName, i) => {
                                     return (
-                                        <GroupItem key={ i } caption={ `Элемент расписания № ${ i + 1 }` }>
+                                        <GroupItem key={ i } caption={ `Элемент расписания № ${ i + 1 }` } >
                                             <SimpleItem
                                                 dataField={ `scheduleItems.${ fieldName }.scheduleTypeId` }
                                                 label={ { location: 'top', showColon: true, text: 'Тип' } }
@@ -156,7 +168,7 @@ const OrganizationPopup = ({ editMode, organization, callback }) => {
                                                     <div style={ { width: '100%', textAlign: 'right' } }>
                                                         <Button  text={ 'Удалить' }
                                                                 onClick={ removeSchedule.bind(this, i) }>
-                                                            <DeleteIcon className={ 'dx-icon' } size={ 18 }/>
+                                                            <ScheduleIcon className={ 'dx-icon' } size={ 18 }/>
                                                             <span className="dx-button-text">Удалить</span>
                                                         </Button>
                                                     </div>
@@ -165,17 +177,6 @@ const OrganizationPopup = ({ editMode, organization, callback }) => {
                                         </GroupItem>
                                     );
                                 }) }
-                                <SimpleItem render={ () => {
-                                    return (
-                                        <div style={ { width: '100%', textAlign: 'left' } }>
-                                            <Button text={ 'Добавить' } onClick={ addSchedule }>
-                                                <AddIcon className={ 'dx-icon' } size={ 18 }/>
-                                                <span className="dx-button-text">Добавить</span>
-                                            </Button>
-                                        </div>
-                                    );
-                                } }/>
-
                             </Tab>
                         </TabbedItem>
                     </Form>
@@ -210,6 +211,24 @@ const OrganizationPopup = ({ editMode, organization, callback }) => {
                     />
                 </div>
             </div>
+            <ToolbarItem location={ 'after' }>
+                <Button className={ 'app-popup-header-menu-button' } onClick={ (e) => {
+                    if(contextMenuRef && contextMenuRef.current) {
+                        contextMenuRef.current.instance.option('target', e.element);
+                        contextMenuRef.current.instance.show();
+                    }
+                } } >
+                    <AdditionalMenuIcon size={ 18 }/>
+                    <OrganizationPopupMenu
+                        ref={ contextMenuRef }
+                        commands={
+                            {
+                                addSchedule: addSchedule
+                            }
+                        }
+                    />
+                </Button>
+            </ToolbarItem>
         </AppModalPopup>
     ) : null;
 }

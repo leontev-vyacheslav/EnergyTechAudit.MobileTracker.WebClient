@@ -38,6 +38,7 @@ export { MdLocationOn as LocationIcon } from 'react-icons/md';
 
 export { RiCalendarLine as CurrentDateIcon } from 'react-icons/ri';
 export { RiCalendarEventLine as WorkDateIcon } from 'react-icons/ri';
+export { RiCalendarTodoLine as ScheduleIcon } from 'react-icons/ri';
 
 export { MdTimeline as DistanceIcon  } from 'react-icons/md';
 

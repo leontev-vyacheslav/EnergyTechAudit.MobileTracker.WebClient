@@ -8,15 +8,13 @@ import { Button } from 'devextreme-react/button';
 import TrackMapPopupMenu from './track-map-popup-menu/track-map-popup-menu'
 import { AdditionalMenuIcon } from '../../../../constants/app-icons';
 
-import './track-map-popup.scss';
-
 const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => {
     const { isXSmall, isSmall } = useScreenSize();
     const [refreshToken, setRefreshToken] = useState({});
     const { showWorkDatePicker } = useSharedArea();
     const contextMenuRef = useRef();
     return (
-        <Popup className={ 'app-popup track-map-popup' } title={ 'Карта маршрута' }
+        <Popup className={ 'app-popup' } title={ 'Карта маршрута' }
                dragEnabled={ false }
                visible={ true }
                showTitle={ true }
@@ -35,7 +33,7 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => 
                    );
                } }>
             <ToolbarItem location={ 'after' }>
-                <Button className={ 'track-map-popup-menu-button' } onClick={ (e) => {
+                <Button className={ 'app-popup-header-menu-button' } onClick={ (e) => {
                     contextMenuRef.current.instance.option('target', e.element);
                     contextMenuRef.current.instance.show();
                 } } >
