@@ -26,6 +26,7 @@ const Registration = () => {
             </div>
         );
     }
+
     return user ? (
             <>
                 <h2 className={ 'content-block' }>Регистрация пользователя</h2>

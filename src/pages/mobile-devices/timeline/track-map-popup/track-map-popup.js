@@ -14,7 +14,7 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => 
     const { showWorkDatePicker } = useSharedArea();
     const contextMenuRef = useRef();
     return (
-        <Popup className={ 'app-popup' } title={ 'Карта маршрута' }
+        <Popup className={ 'app-popup track-map-popup' } title={ 'Карта маршрута' }
                dragEnabled={ false }
                visible={ true }
                showTitle={ true }
