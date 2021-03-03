@@ -1,4 +1,4 @@
-import geocluster from 'geocluster';
+import geocluster from '../../../../../../components/geocluster';
 import { getBoundsByMarkers } from './track-map-utils'
 import AppConstants from '../../../../../../constants/app-constants';
 
