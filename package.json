@@ -10,6 +10,7 @@
     "axios": "^0.21.1",
     "devextreme": "^20.2.5",
     "devextreme-react": "^20.2.5",
+    "geocluster": "^0.1.1",
     "history": "^5.0.0",
     "moment": "^2.29.1",
     "node-sass": "^4.11.0",

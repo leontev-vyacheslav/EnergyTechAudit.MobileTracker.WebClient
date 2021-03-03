@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect,  useRef, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import TrackMapInfoWindow from './track-map-info-window';
@@ -8,19 +8,27 @@ import { useScreenSize } from '../../../../../utils/media-query';
 import { useAppData } from '../../../../../contexts/app-data';
 import { useAppSettings } from '../../../../../contexts/app-settings';
 import AppConstants from '../../../../../constants/app-constants';
-
 import './track-map.scss';
+import { useSharedArea } from '../../../../../contexts/shared-area';
+import { showStationaryClusters } from './utils/track-map-stationary-zone-builder';
+import { buildInfoWindow, centerMapByInfoWindow, fitMapBoundsByLocations, getBoundsByMarkers } from './utils/track-map-utils'
 
 const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => {
-    const { appSettingsData, getDailyTimelineItem } = useAppSettings();
     const { isXSmall, isSmall } = useScreenSize();
-
+    const { showLoader, hideLoader } = useSharedArea();
+    const { appSettingsData, getDailyTimelineItem } = useAppSettings();
     const { getLocationRecordsByRangeAsync, getLocationRecordAsync, getGeocodedAddressAsync } = useAppData();
 
     const [trackLocationRecordList, setTrackLocationRecordList] = useState(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState({ ...timelineItem });
 
     const prevWorkDate = useRef(!initialDate ? appSettingsData.workDate : initialDate);
+    const mapInstance = useRef(null);
+    const trackPath = useRef(null);
+    const currentMarkers = useRef([]);
+    const currentBreakIntervals = useRef([]);
+    const currentInfoWindow = useRef(null);
+    const stationaryClusters = useRef([]);
 
     useEffect(() => {
         if (!initialDate) {
@@ -32,60 +40,22 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
         }
     }, [appSettingsData.workDate, getDailyTimelineItem, initialDate])
 
-    const mapInstance = useRef(null);
-    const trackPath = useRef(null);
-    const currentMarkers = useRef([]);
-    const currentBreakIntervals = useRef([]);
-    const currentInfoWindow = useRef(null);
-    const currentBoundBox = useRef(null);
-    const currentStationaryCircle = useRef(null);
-
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: AppConstants.trackMap.apiKey,
         libraries: AppConstants.trackMap.libraries
     });
 
-    const getBoundsByMarkers = useCallback((locationList) => {
-        const boundBox = new window.google.maps.LatLngBounds();
-        for (let i = 0; i < locationList.length; i++) {
-            boundBox.extend({
-                lat: locationList[i].latitude,
-                lng: locationList[i].longitude
-            });
-        }
-        currentBoundBox.current = boundBox;
-        return boundBox;
-    }, []);
-
-    const fitMapBoundsByLocations = useCallback((map, locationList) => {
-
+    const fitMap = useCallback((locationList) => {
         if (currentInfoWindow.current) {
-            const currentZoom = mapInstance.current.getZoom();
-            if (currentZoom <= AppConstants.trackMap.defaultZoom) {
-                mapInstance.current.setZoom(AppConstants.trackMap.defaultZoom);
-            }
-            mapInstance.current.setCenter(currentInfoWindow.current.getPosition());
+            centerMapByInfoWindow(mapInstance.current, currentInfoWindow.current);
             return;
         }
-        if (currentStationaryCircle.current) {
-            map.setCenter(currentStationaryCircle.current.getCenter());
-            mapInstance.current.fitBounds(currentStationaryCircle.current.getBounds());
-            return;
-        }
-        if (locationList && locationList.length > 0) {
-            const boundBox = getBoundsByMarkers(locationList);
-            if (boundBox) {
-                map.setCenter(boundBox.getCenter());
-                map.fitBounds(boundBox);
-            }
-        }
-    }, [getBoundsByMarkers]);
+        fitMapBoundsByLocations(mapInstance.current, locationList);
+    }, []);
 
     const showInfoWindowAsync = useCallback(async trackLocationRecord => {
         if (mapInstance.current) {
-
             const locationRecord = await getLocationRecordAsync(trackLocationRecord.id);
-
             if (!locationRecord) return;
 
             if (currentInfoWindow.current !== null) {
@@ -99,25 +69,7 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
                     { locationRecord: locationRecord, address: address }
                 )
             );
-            currentInfoWindow.current = new window.google.maps.InfoWindow({
-                position: {
-                    lat: locationRecord.latitude,
-                    lng: locationRecord.longitude
-                },
-                content: content,
-            });
-            currentInfoWindow.current.addListener('closeclick', () => {
-                currentInfoWindow.current = null;
-            });
-            mapInstance.current.setCenter({
-                lat: locationRecord.latitude,
-                lng: locationRecord.longitude
-            });
-            const currentZoom = mapInstance.current.getZoom();
-            if (currentZoom <= AppConstants.trackMap.defaultZoom) {
-                mapInstance.current.setZoom(AppConstants.trackMap.defaultZoom);
-            }
-            currentInfoWindow.current.open(mapInstance.current);
+            currentInfoWindow.current = buildInfoWindow(mapInstance.current, content, locationRecord);
         }
     }, [getGeocodedAddressAsync, getLocationRecordAsync]);
 
@@ -126,6 +78,12 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
             trackPath.current.setMap(null);
             trackPath.current = null;
         }
+
+        stationaryClusters.current.forEach(sc => {
+            sc.setMap(null);
+            sc = null;
+        });
+        stationaryClusters.current = [];
 
         currentMarkers.current.forEach(m => {
             m.setMap(null);
@@ -137,15 +95,13 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
             bi.setMap(null);
             bi = null;
         });
+        currentBreakIntervals.current = [];
 
-        if (currentStationaryCircle.current) {
-            currentStationaryCircle.current.setMap(null);
-            currentStationaryCircle.current = null;
-        }
         if (currentInfoWindow.current) {
             currentInfoWindow.current.setMap(null);
             currentInfoWindow.current = null;
         }
+
     }, []);
 
     const buildMarker = useCallback((locationRecord, mode, order) => {
@@ -248,20 +204,6 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
                 k = 2
             }
         }
-        if (diagonalDistance <= appSettingsData.stationaryRadius) {
-            diagonalDistance = diagonalDistance > 100 ? diagonalDistance : 100;
-            currentStationaryCircle.current = new window.google.maps.Circle({
-                strokeColor: AppConstants.trackMap.stationaryCircleColor,
-                strokeOpacity: AppConstants.trackMap.stationaryCircleStrokeOpacity,
-                strokeWeight: AppConstants.trackMap.stationaryCircleStrokeWeight,
-                fillColor: AppConstants.trackMap.stationaryCircleColor,
-                fillOpacity: AppConstants.trackMap.stationaryCircleFillOpacity,
-                center: boundBox.getCenter(),
-                radius: ( 3 * diagonalDistance ) / 5
-            });
-            currentStationaryCircle.current.setMap(mapInstance.current);
-            mapInstance.current.fitBounds(currentStationaryCircle.current.getBounds());
-        }
 
         let p = 1;
         if (trackLocationRecordList.length <= 10) {
@@ -271,7 +213,7 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
         } else if (trackLocationRecordList.length <= 500) {
             p = 10 * k; // 10 %
         } else if (trackLocationRecordList.length <= 2500) {
-            p = 20 * k; // 5 %
+            p = 20 * k; // 5 %a
         } else if (( trackLocationRecordList.length <= 12500 )) {
             p = 40 * k // 1 %
         } else {
@@ -283,11 +225,10 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
             .forEach((locationRecord, i) => {
                 buildMarker(locationRecord, 'track', i + 1);
             });
-    }, [appSettingsData.stationaryRadius, buildMarker, getBoundsByMarkers, trackLocationRecordList]);
+    }, [buildMarker, trackLocationRecordList]);
 
     const showTrack = useCallback(() => {
-        initOverlays();
-        fitMapBoundsByLocations(mapInstance.current, trackLocationRecordList);
+        fitMap(trackLocationRecordList);
         if (trackPath.current === null && trackLocationRecordList && trackLocationRecordList.length > 0) {
 
             trackPath.current = new window.google.maps.Polyline({
@@ -309,9 +250,8 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
                 buildBreakIntervals();
             }
         }
-    },
-        [
-        initOverlays, fitMapBoundsByLocations, trackLocationRecordList,
+    }, [
+         fitMap, trackLocationRecordList,
         buildMarkersOnPolylinePath, buildOutsideMarkers, appSettingsData.isShownBreakInterval, buildBreakIntervals
     ]);
 
@@ -334,15 +274,38 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
         } )()
     }, [getLocationRecordsByRangeAsync, mobileDevice.id, currentTimelineItem, appSettingsData.minimalAccuracy, refreshToken]);
 
+    /*const heatMapData = trackLocationRecordList.map(locationRecord => new window.google.maps.LatLng({
+                lat: locationRecord.latitude,
+                lng: locationRecord.longitude
+            }));
+
+            const heatmap = new window.google.maps.visualization.HeatmapLayer({
+                data: heatMapData,
+                radius: 10,
+                maxIntensity: 10,
+                dissipating: true,
+            });
+            heatmap.setMap(mapInstance.current);*/
+
     useEffect(() => {
         if (mapInstance.current) {
+            initOverlays();
             showTrack();
+            if (appSettingsData.isShowStationaryZone) {
+                try {
+                    showLoader();
+                    stationaryClusters.current = showStationaryClusters(mapInstance.current, trackLocationRecordList);
+
+                } finally {
+                    hideLoader();
+                }
+            }
         }
-    }, [trackLocationRecordList, showTrack]);
+    }, [hideLoader, initOverlays, appSettingsData.isShowStationaryZone, showLoader, showTrack, trackLocationRecordList]);
 
     TrackMap.fitToMap = function () {
         if(mapInstance && trackLocationRecordList) {
-            fitMapBoundsByLocations(mapInstance.current, trackLocationRecordList);
+            fitMap(trackLocationRecordList);
         }
     };
 
@@ -378,7 +341,7 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
                         }
                     } }
                     onRightClick={ () => {
-                        fitMapBoundsByLocations(mapInstance.current, trackLocationRecordList);
+                        fitMap(trackLocationRecordList);
                     } }
                 >
                     { isXSmall ? null :

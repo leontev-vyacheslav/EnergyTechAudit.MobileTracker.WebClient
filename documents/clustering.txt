@@ -1,0 +1,2 @@
+https://github.com/harthur/clustering
+// https://stackoverflow.com/questions/12291459/google-maps-heatmap-layer-point-radius

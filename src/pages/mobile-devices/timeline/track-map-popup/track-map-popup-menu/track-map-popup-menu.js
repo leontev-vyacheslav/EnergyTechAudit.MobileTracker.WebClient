@@ -1,9 +1,11 @@
 import React from 'react';
 import ContextMenu from 'devextreme-react/context-menu';
-import { FitToMapIcon, RefreshIcon, WorkDateIcon } from '../../../../../constants/app-icons';
+import { FitToMapIcon, RefreshIcon, WorkDateIcon, StationaryZoneOn, StationaryZoneOff } from '../../../../../constants/app-icons';
 import ContextMenuItem from '../../../../../components/context-menu-item/context-menu-item';
+import { useAppSettings } from '../../../../../contexts/app-settings';
 
 const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
+    const { appSettingsData, setAppSettingsData } = useAppSettings();
 
     const items = [
         {
@@ -14,6 +16,14 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
                 e.component.hide();
                 commands.refreshToken();
             },
+        },{
+            name: 'workDate',
+            text: 'Рабочая дата',
+            renderIconItem: () => <WorkDateIcon size={ 18 }/>,
+            onClick: (e) => {
+                e.component.hide();
+                commands.showWorkDatePicker();
+            }
         },
         {
             name: 'fitToMap',
@@ -24,15 +34,20 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
                 commands.fitToMap();
             },
         },
+
         {
-            name: 'workDate',
-            text: 'Рабочая дата',
-            renderIconItem: () => <WorkDateIcon size={ 18 }/>,
+            name: 'showStationaryZones',
+            text: appSettingsData.isShowStationaryZone ? 'Скрывать зоны' : 'Показывать зоны',
+            renderIconItem: () => (appSettingsData.isShowStationaryZone ? <StationaryZoneOff size={ 18 }/> : <StationaryZoneOn size={ 18 }/> ) ,
             onClick: (e) => {
                 e.component.hide();
-                commands.showWorkDatePicker();
+
+                setTimeout(() => {
+                    setAppSettingsData(previous => ( { ...previous, isShowStationaryZone: !previous.isShowStationaryZone } ));
+                }, 50);
             }
-        } ];
+        },
+    ];
     return <ContextMenu
         ref={ innerRef }
         itemRender={ (item) => <ContextMenuItem item={ item } /> }

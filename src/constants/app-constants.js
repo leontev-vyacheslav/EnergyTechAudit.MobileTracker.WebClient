@@ -31,7 +31,7 @@ const AppConstants = {
         apiKey: 'AIzaSyBLE0ThOFO5aYYVrsDP8AIJUAVDCiTPiLQ',
         geocodeApiUrl: 'https://maps.googleapis.com/maps/api/geocode/json',
         mapApiUrl: 'https://maps.googleapis.com/maps/api/js',
-        libraries: ['geometry', 'places'],
+        libraries: ['geometry', 'places', 'visualization'],
         defaultZoom: 15,
         defaultTheme: [{ featureType: 'all', stylers: [{ saturation: 2.5 }, { gamma: 0.25 }] }],
         defaultCenter: { lng: 49.156374, lat: 55.796685 },
@@ -42,7 +42,7 @@ const AppConstants = {
 
         breakIntervalPathStrokeWeight: 8,
         breakIntervalPathStrokeOpacity: 0.8,
-        breakIntervalPathStrokeColor: '#2c394c',
+        breakIntervalPathStrokeColor: '#a52525',
 
         markerScale: 2.5,
         markerFillOpacity: 1,

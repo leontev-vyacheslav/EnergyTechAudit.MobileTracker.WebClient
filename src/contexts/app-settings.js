@@ -13,6 +13,7 @@ function AppSettingsProvider (props) {
         isShownBreakInterval: true,
         minimalAccuracy: 100,
         stationaryRadius: 100,
+        isShowStationaryZone: false
     };
 
     const initialAppSettingsDataJson =
@@ -38,6 +39,10 @@ function AppSettingsProvider (props) {
     }
     else {
         initialAppSettingsData = { ...initialAppSettingsData, ...{ workDate: new Date(initialAppSettingsData.workDate) } };
+    }
+
+    if(!initialAppSettingsData.isShowStationaryZone)  {
+        initialAppSettingsData = { ...initialAppSettingsData, ...{ isShowStationaryZone: false } };
     }
 
     const [appSettingsData, setAppSettingsData] = useState(initialAppSettingsData);

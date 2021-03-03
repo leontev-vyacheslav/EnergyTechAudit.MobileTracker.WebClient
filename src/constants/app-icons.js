@@ -61,5 +61,12 @@ export { CgAddR as AddIcon } from 'react-icons/cg';
 export { BiEdit as EditIcon } from 'react-icons/bi';
 export { IoWarning as WarningIcon } from 'react-icons/io5';
 
+export { RiRoadMapFill as StationaryZoneOn } from 'react-icons/ri';
+export { RiRoadMapLine as StationaryZoneOff } from 'react-icons/ri';
+
+export { BsBoxArrowInLeft as  WorkDateBackwardIcon } from 'react-icons/bs';
+export { BsBoxArrowInRight as WorkDateForwardIcon } from 'react-icons/bs';
+export { BsCheckBox as WorkDateTodayIcon } from 'react-icons/bs';
+
 import { MdMoreVert } from 'react-icons/md';
 export const GridAdditionalMenuIcon = () => <MdMoreVert style={ { cursor: 'pointer' } } size={ 18 }/>;
