@@ -1,7 +1,7 @@
 import React from 'react';
 import ContextMenu from 'devextreme-react/context-menu';
 import { ScheduleIcon } from '../../../../constants/app-icons';
-import ContextMenuItem from '../../../../components/context-menu-item/context-menu-item';
+import ContextMenuItem from '../../../context-menu-item/context-menu-item';
 
 const OrganizationPopupMenu = ({ innerRef,  commands }) => {
 

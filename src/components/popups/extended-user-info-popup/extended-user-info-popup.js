@@ -4,7 +4,7 @@ import Button from 'devextreme-react/button';
 import { DialogConstants } from '../../../constants/app-dialog-constant';
 import { useAppData } from '../../../contexts/app-data';
 import ScrollView from 'devextreme-react/scroll-view';
-import AppModalPopup from '../../../components/app-modal-popup/app-modal-popup';
+import AppModalPopup from '../app-modal-popup/app-modal-popup';
 
 const ExtendedUserInfoPopup = ({ userId, callback }) => {
     const formRef = useRef(null);

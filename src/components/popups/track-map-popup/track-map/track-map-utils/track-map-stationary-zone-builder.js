@@ -1,6 +1,6 @@
-import geocluster from '../../../../../../components/geocluster';
+import geocluster from '../../../../geocluster';
 import { getBoundsByMarkers } from './track-map-utils'
-import AppConstants from '../../../../../../constants/app-constants';
+import AppConstants from '../../../../../constants/app-constants';
 
 export const stationaryClusterCircleDefaultProps = {
     strokeColor: AppConstants.trackMap.stationaryCircleColor,
@@ -13,7 +13,7 @@ export const stationaryClusterCircleDefaultProps = {
 export const showStationaryClusters = (currentMapInstance, trackLocationRecordList) => {
 
     const geoClusterData = trackLocationRecordList
-        .filter(locationRecord => locationRecord.speed < 4)
+        .filter(locationRecord => locationRecord.speed < 3)
         .map(locationRecord => [locationRecord.latitude, locationRecord.longitude]);
 
     const stationaryClusters = [];

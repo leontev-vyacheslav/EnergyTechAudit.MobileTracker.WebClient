@@ -1,8 +1,8 @@
 import React from 'react';
 import ContextMenu from 'devextreme-react/context-menu';
-import { FitToMapIcon, RefreshIcon, WorkDateIcon, StationaryZoneOn, StationaryZoneOff } from '../../../../../constants/app-icons';
-import ContextMenuItem from '../../../../../components/context-menu-item/context-menu-item';
-import { useAppSettings } from '../../../../../contexts/app-settings';
+import { FitToMapIcon, RefreshIcon, WorkDateIcon, StationaryZoneOn, StationaryZoneOff } from '../../../../constants/app-icons';
+import ContextMenuItem from '../../../context-menu-item/context-menu-item';
+import { useAppSettings } from '../../../../contexts/app-settings';
 
 const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
     const { appSettingsData, setAppSettingsData } = useAppSettings();
@@ -34,16 +34,15 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
                 commands.fitToMap();
             },
         },
-
         {
             name: 'showStationaryZones',
             text: appSettingsData.isShowStationaryZone ? 'Скрывать зоны' : 'Показывать зоны',
             renderIconItem: () => (appSettingsData.isShowStationaryZone ? <StationaryZoneOff size={ 18 }/> : <StationaryZoneOn size={ 18 }/> ) ,
             onClick: (e) => {
                 e.component.hide();
-
-                setTimeout(() => {
+                const delayTimer =  setTimeout(() => {
                     setAppSettingsData(previous => ( { ...previous, isShowStationaryZone: !previous.isShowStationaryZone } ));
+                    clearTimeout(delayTimer);
                 }, 50);
             }
         },

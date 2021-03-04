@@ -2,12 +2,12 @@ import React, { useState, useRef } from 'react';
 import TrackMap from './track-map/track-map';
 import { Popup } from 'devextreme-react/popup';
 import { ToolbarItem } from 'devextreme-react/popup';
-import { useScreenSize } from '../../../../utils/media-query';
-import { useSharedArea } from '../../../../contexts/shared-area';
+import { useScreenSize } from '../../../utils/media-query';
+import { useSharedArea } from '../../../contexts/shared-area';
 import { Button } from 'devextreme-react/button';
 import TrackMapPopupMenu from './track-map-popup-menu/track-map-popup-menu'
-import { AdditionalMenuIcon, WorkDateBackwardIcon, WorkDateForwardIcon, WorkDateTodayIcon } from '../../../../constants/app-icons';
-import { useAppSettings } from '../../../../contexts/app-settings';
+import { AdditionalMenuIcon, WorkDateBackwardIcon, WorkDateForwardIcon, WorkDateTodayIcon } from '../../../constants/app-icons';
+import { useAppSettings } from '../../../contexts/app-settings';
 import Moment from 'moment';
 
 const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => {
@@ -52,6 +52,7 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => 
                 <Button className={ 'app-popup-header-menu-button' } hint='Назад' onClick={ () => {
                 setAppSettingsData(previous => {
                     const workDate = Moment(previous.workDate).add(-1, 'days').toDate();
+                    workDate.setHours(0, 0, 0,0);
                     return { ...previous, workDate: workDate };
                 });
             } }>
@@ -60,6 +61,7 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => 
                 <Button className={ 'app-popup-header-menu-button' } hint='Вперед' onClick={ () => {
                     setAppSettingsData(previous => {
                         const workDate = Moment(previous.workDate).add(+1, 'days').toDate();
+                        workDate.setHours(0, 0, 0,0);
                         return { ...previous, workDate: workDate };
                     });
                 } }>

@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import Timelines from './timeline/timelines'
 import AppConstants from '../../constants/app-constants'
 import { Button } from 'devextreme-react/button';
-import TrackMapPopup from './timeline/track-map-popup/track-map-popup';
+import TrackMapPopup from '../../components/popups/track-map-popup/track-map-popup';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useScreenSize } from '../../utils/media-query';
 import DataGridIconCellValueContainer from '../../components/data-grid-utils/data-grid-icon-cell-value-container';
@@ -18,7 +18,7 @@ import MobileDevicesGroupRowContextMenu from './mobile-devices-group-row-context
 import { AndroidIcon, GridAdditionalMenuIcon, IosIcon, MobileDeviceIcon, RegistrationDateIcon } from '../../constants/app-icons';
 
 import './mobile-devices.scss';
-import ExtendedUserInfoPopup from './extended-user-info-popup/extended-user-info-popup';
+import ExtendedUserInfoPopup from '../../components/popups/extended-user-info-popup/extended-user-info-popup';
 import PageHeader from '../../components/page-header/page-header';
 import MobileDevicesMainContextMenu from './mobile-devices-main-context-menu/mobile-devices-main-context-menu';
 import { Template } from 'devextreme-react/core/template';

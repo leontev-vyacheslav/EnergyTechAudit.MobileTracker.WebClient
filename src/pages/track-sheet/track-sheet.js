@@ -9,7 +9,7 @@ import { useLocation } from 'react-router';
 import Timelines from '../mobile-devices/timeline/timelines';
 import TrackSheetContextMenu from './track-sheet-context-menu'
 import { useScreenSize } from '../../utils/media-query';
-import TrackMapPopup from '../mobile-devices/timeline/track-map-popup/track-map-popup';
+import TrackMapPopup from '../../components/popups/track-map-popup/track-map-popup';
 import { useAppSettings } from '../../contexts/app-settings';
 import DataGridIconCellValueContainer from '../../components/data-grid-utils/data-grid-icon-cell-value-container';
 import { AccuracyIcon, CurrentDateIcon, DistanceIcon, GridAdditionalMenuIcon, TimelineIcon } from '../../constants/app-icons';

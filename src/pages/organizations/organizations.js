@@ -10,10 +10,10 @@ import OrganizationMainContextMenu from './organization-main-context-menu/organi
 import OrganizationGroupRowContextMenu from './organization-group-row-context-menu/organization-group-row-context-menu';
 import OrganizationRowContextMenu from './organization-row-context-menu/organization-row-context-menu';
 import { Template } from 'devextreme-react/core/template';
-import OrganizationPopup from './organization-popup/organization-popup';
+import OrganizationPopup from '../../components/popups/organization-popup/organization-popup';
 import showConfirmDialog from '../../utils/confirm';
 import { useScreenSize } from '../../utils/media-query';
-import OfficePopup from './office-popup/office-popup';
+import OfficePopup from '../../components/popups/office-popup/office-popup';
 
 const Organizations = () => {
     const { getOrganizationOfficesAsync, deleteOrganizationAsync, deleteOfficeAsync } = useAppData();

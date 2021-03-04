@@ -1,7 +1,7 @@
 import React from 'react';
 import Popup from 'devextreme-react/popup';
-import { useScreenSize } from '../../utils/media-query';
-import { DialogConstants } from '../../constants/app-dialog-constant';
+import { useScreenSize } from '../../../utils/media-query';
+import { DialogConstants } from '../../../constants/app-dialog-constant';
 
 const AppModalPopup = ({ title,  children, onClose }) => {
     const { isXSmall, isSmall } = useScreenSize();

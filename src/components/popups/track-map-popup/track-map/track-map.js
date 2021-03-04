@@ -1,17 +1,24 @@
 import React, { useCallback, useEffect,  useRef, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
-import TrackMapInfoWindow from './track-map-info-window';
-import TrackMapInfoBox from './track-map-info-box';
-import TrackMapHeader from './track-map-header';
-import { useScreenSize } from '../../../../../utils/media-query';
-import { useAppData } from '../../../../../contexts/app-data';
-import { useAppSettings } from '../../../../../contexts/app-settings';
-import AppConstants from '../../../../../constants/app-constants';
+import TrackMapInfoWindow from './track-map-info-window/track-map-info-window';
+import TrackMapInfoBox from './track-map-info-box/track-map-info-box';
+import TrackMapHeader from './track-map-header/track-map-header';
+import { useScreenSize } from '../../../../utils/media-query';
+import { useAppData } from '../../../../contexts/app-data';
+import { useAppSettings } from '../../../../contexts/app-settings';
+import AppConstants from '../../../../constants/app-constants';
 import './track-map.scss';
-import { useSharedArea } from '../../../../../contexts/shared-area';
-import { showStationaryClusters } from './utils/track-map-stationary-zone-builder';
-import { buildInfoWindow, centerMapByInfoWindow, fitMapBoundsByLocations, getBoundsByMarkers } from './utils/track-map-utils'
+import { useSharedArea } from '../../../../contexts/shared-area';
+import { showStationaryClusters } from './track-map-utils/track-map-stationary-zone-builder';
+import {
+    centerMapByInfoWindow,
+    fitMapBoundsByLocations,
+    getBoundsByMarkers,
+    getBreakIntervals,
+    getInfoWindow,
+    getMarker
+} from './track-map-utils/track-map-utils'
 
 const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => {
     const { isXSmall, isSmall } = useScreenSize();
@@ -69,7 +76,7 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
                     { locationRecord: locationRecord, address: address }
                 )
             );
-            currentInfoWindow.current = buildInfoWindow(mapInstance.current, content, locationRecord);
+            currentInfoWindow.current = getInfoWindow(mapInstance.current, content, locationRecord);
         }
     }, [getGeocodedAddressAsync, getLocationRecordAsync]);
 
@@ -104,34 +111,10 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
 
     }, []);
 
-    const buildMarker = useCallback((locationRecord, mode, order) => {
-        const marker = new window.google.maps.Marker(
-            {
-                position: {
-                    lat: locationRecord.latitude,
-                    lng: locationRecord.longitude
-                },
-                label: mode === 'track' ? {
-                    text: `${ order }`,
-                    fontSize: AppConstants.trackMap.markerLabelFontSize,
-                    color: AppConstants.trackMap.markerLabelColor,
-                    fontWeight: AppConstants.trackMap.markerLabelFontWeight
-                } : null,
-                icon: {
-                    labelOrigin: { x: -3, y: -1 },
-                    path: window.google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-                    scale: AppConstants.trackMap.markerScale,
-                    fillOpacity: AppConstants.trackMap.markerFillOpacity,
-                    strokeWeight: AppConstants.trackMap.markerStrokeWeight,
-                    fillColor: AppConstants.trackMap.markerFillColor,
-                    strokeColor: AppConstants.trackMap.markerStrokeColor,
-                    rotation: locationRecord.heading
-                }
-            });
-        marker.addListener('click', async () => {
+    const buildMarker = useCallback((locationRecord, order) => {
+        const marker = getMarker(mapInstance.current, locationRecord, order, async () => {
             await showInfoWindowAsync(locationRecord);
         });
-        marker.setMap(mapInstance.current);
         currentMarkers.current.push(marker);
     }, [showInfoWindowAsync]);
 
@@ -161,32 +144,6 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
         });
         currentMarkers.current.push(lastMarker);
     }, [trackLocationRecordList, showInfoWindowAsync]);
-
-    const buildBreakIntervals = useCallback(() => {
-        for (let i = 0; i < trackLocationRecordList.length - 1; i++) {
-
-            const currentLocation = new window.google.maps.LatLng({
-                lat: trackLocationRecordList[i].latitude,
-                lng: trackLocationRecordList[i].longitude
-            }), nextLocation = new window.google.maps.LatLng({
-                lat: trackLocationRecordList[i + 1].latitude,
-                lng: trackLocationRecordList[i + 1].longitude
-            });
-
-            const distance = window.google.maps.geometry.spherical.computeDistanceBetween(currentLocation, nextLocation);
-            if (distance >= appSettingsData.breakInterval) {
-                const breakIntervalPath = new window.google.maps.Polyline({
-                    path: [currentLocation, nextLocation],
-                    geodesic: true,
-                    strokeColor: AppConstants.trackMap.breakIntervalPathStrokeColor,
-                    strokeOpacity: AppConstants.trackMap.breakIntervalPathStrokeOpacity,
-                    strokeWeight: AppConstants.trackMap.polylineTrackPathStrokeWeight,
-                });
-                breakIntervalPath.setMap(mapInstance.current);
-                currentBreakIntervals.current.push(breakIntervalPath);
-            }
-        }
-    }, [appSettingsData.breakInterval, trackLocationRecordList]);
 
     const buildMarkersOnPolylinePath = useCallback(() => {
         let k = 1;
@@ -223,7 +180,7 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
             .filter((_, i) => i % p === 0)
             .concat(trackLocationRecordList.length > 0 ? trackLocationRecordList[trackLocationRecordList.length - 1] : [])
             .forEach((locationRecord, i) => {
-                buildMarker(locationRecord, 'track', i + 1);
+                buildMarker(locationRecord, i + 1);
             });
     }, [buildMarker, trackLocationRecordList]);
 
@@ -247,13 +204,10 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
             buildMarkersOnPolylinePath();
             buildOutsideMarkers();
             if (appSettingsData.isShownBreakInterval) {
-                buildBreakIntervals();
+                currentBreakIntervals.current = getBreakIntervals(mapInstance.current, trackLocationRecordList, appSettingsData.breakInterval);
             }
         }
-    }, [
-         fitMap, trackLocationRecordList,
-        buildMarkersOnPolylinePath, buildOutsideMarkers, appSettingsData.isShownBreakInterval, buildBreakIntervals
-    ]);
+    }, [fitMap, trackLocationRecordList, buildMarkersOnPolylinePath, buildOutsideMarkers, appSettingsData.isShownBreakInterval, appSettingsData.breakInterval]);
 
     const onTrackMapLoadHandler = useCallback((googleMap) => {
         mapInstance.current = googleMap;
@@ -273,19 +227,6 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
             setTrackLocationRecordList(locationRecordsData);
         } )()
     }, [getLocationRecordsByRangeAsync, mobileDevice.id, currentTimelineItem, appSettingsData.minimalAccuracy, refreshToken]);
-
-    /*const heatMapData = trackLocationRecordList.map(locationRecord => new window.google.maps.LatLng({
-                lat: locationRecord.latitude,
-                lng: locationRecord.longitude
-            }));
-
-            const heatmap = new window.google.maps.visualization.HeatmapLayer({
-                data: heatMapData,
-                radius: 10,
-                maxIntensity: 10,
-                dissipating: true,
-            });
-            heatmap.setMap(mapInstance.current);*/
 
     useEffect(() => {
         if (mapInstance.current) {

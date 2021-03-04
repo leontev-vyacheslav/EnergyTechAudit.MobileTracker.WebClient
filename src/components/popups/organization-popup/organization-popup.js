@@ -4,11 +4,11 @@ import ScrollView from 'devextreme-react/scroll-view';
 import Form, { GroupItem, SimpleItem, Tab, TabbedItem } from 'devextreme-react/form';
 import Button from 'devextreme-react/button';
 import { useAppData } from '../../../contexts/app-data';
-import AppModalPopup from '../../../components/app-modal-popup/app-modal-popup';
+import AppModalPopup from '../app-modal-popup/app-modal-popup';
 import { ToolbarItem } from 'devextreme-react/popup';
 import Moment from 'moment';
 import { AdditionalMenuIcon, OrganizationIcon, ScheduleIcon } from '../../../constants/app-icons';
-import IconTab from '../../../components/tab-utils/icon-tab';
+import IconTab from '../../tab-utils/icon-tab';
 import  OrganizationPopupMenu from './organization-popup-menu/organization-popup-menu'
 
 import './organization-popup.scss'

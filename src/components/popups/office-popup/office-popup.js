@@ -5,7 +5,7 @@ import Form, { SimpleItem } from 'devextreme-react/form';
 import Button from 'devextreme-react/button';
 import { useAppData } from '../../../contexts/app-data';
 import AppConstants from '../../../constants/app-constants';
-import AppModalPopup from '../../../components/app-modal-popup/app-modal-popup';
+import AppModalPopup from '../app-modal-popup/app-modal-popup';
 
 const OfficePopup = ({ editMode, organization, callback }) => {
 
