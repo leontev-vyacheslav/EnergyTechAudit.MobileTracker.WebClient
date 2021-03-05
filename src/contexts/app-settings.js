@@ -9,11 +9,16 @@ function AppSettingsProvider (props) {
     const coreInitialAppSettingsData = {
         workDate: new Date(new Date().setHours(0, 0, 0, 0)),
         duringWorkingDay: true,
+
         breakInterval: 1000,
         isShownBreakInterval: true,
         minimalAccuracy: 100,
-        stationaryRadius: 100,
-        isShowStationaryZone: false
+        isShowStationaryZone: false,
+
+        stationaryZoneBias: 1.25,
+        stationaryZoneMinRadius: 100,
+        stationaryZoneMinElementCount: 5,
+        stationaryZoneMinCriteriaSpeed: 3
     };
 
     const initialAppSettingsDataJson =
@@ -31,18 +36,27 @@ function AppSettingsProvider (props) {
     if(!initialAppSettingsData.minimalAccuracy)  {
         initialAppSettingsData = { ...initialAppSettingsData, ...{ minimalAccuracy: 100 } };
     }
-    if(!initialAppSettingsData.stationaryRadius)  {
-        initialAppSettingsData = { ...initialAppSettingsData, ...{ stationaryRadius: 100 } };
-    }
     if(!initialAppSettingsData.workDate)  {
         initialAppSettingsData = { ...initialAppSettingsData, ...{ workDate: new Date(new Date().setHours(0, 0, 0, 0)) } };
     }
     else {
         initialAppSettingsData = { ...initialAppSettingsData, ...{ workDate: new Date(initialAppSettingsData.workDate) } };
     }
-
     if(!initialAppSettingsData.isShowStationaryZone)  {
         initialAppSettingsData = { ...initialAppSettingsData, ...{ isShowStationaryZone: false } };
+    }
+
+    if(!initialAppSettingsData.stationaryZoneBias)  {
+        initialAppSettingsData = { ...initialAppSettingsData, ...{ stationaryZoneBias: 1.25 } };
+    }
+    if(!initialAppSettingsData.stationaryZoneMinRadius)  {
+        initialAppSettingsData = { ...initialAppSettingsData, ...{ stationaryZoneMinRadius: 100 } };
+    }
+    if(!initialAppSettingsData.stationaryZoneMinElementCount)  {
+        initialAppSettingsData = { ...initialAppSettingsData, ...{ stationaryZoneMinElementCount: 10 } };
+    }
+    if(!initialAppSettingsData.stationaryZoneMinCriteriaSpeed)  {
+        initialAppSettingsData = { ...initialAppSettingsData, ...{ stationaryZoneMinCriteriaSpeed: 2 } };
     }
 
     const [appSettingsData, setAppSettingsData] = useState(initialAppSettingsData);

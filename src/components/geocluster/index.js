@@ -1,34 +1,34 @@
 // degrees to radians polyfill
 if (typeof(Number.prototype.toRad) === 'undefined') Number.prototype.toRad = function(){ return this * Math.PI / 180; };
 
-function geocluster(elements, bias){
-    if (!(this instanceof geocluster)) return new geocluster(elements, bias);
+function Geocluster(elements, bias){
+    if (!(this instanceof Geocluster)) return new Geocluster(elements, bias);
     return this._cluster(elements, bias);
 }
 
 // geodetic distance approximation
-geocluster.prototype._dist = function(lat1, lon1, lat2, lon2) {
+Geocluster.prototype._dist = function(lat1, lon1, lat2, lon2) {
     const dlat = ( lat2 - lat1 ).toRad();
     const dlon = ( lon2 - lon1 ).toRad();
     const a = ( Math.sin(dlat / 2) * Math.sin(dlat / 2) + Math.sin(dlon / 2) * Math.sin(dlon / 2) * Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) );
     return (Math.round(((2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))) * 6371)*100)/100);
 };
 
-geocluster.prototype._centroid = function(set) {
-    return set.reduce(function(s, e){
-        return [(s[0]+e[0]),(s[1]+e[1])];
-    }, [0,0]).map(function(e){
-        return (e/set.length);
+Geocluster.prototype._centroid = function(set) {
+    return set.reduce(function (s, e) {
+        return [( s[0] + e[0] ), ( s[1] + e[1] )];
+    }, [0, 0]).map(function (e) {
+        return ( e / set.length );
     });
 }
 
-geocluster.prototype._clean = function(data) {
+Geocluster.prototype._clean = function(data) {
     return data.map(function(cluster){
         return [cluster.centroid, cluster.elements];
     });
 };
 
-geocluster.prototype._cluster = function(elements, bias) {
+Geocluster.prototype._cluster = function(elements, bias) {
 
     const self = this;
 
@@ -75,7 +75,7 @@ geocluster.prototype._cluster = function(elements, bias) {
         let cluster_changed = false;
 
         // iterate over elements
-        elements.forEach(function(e, ei){
+        elements.forEach(function(e) {
 
             let closest_dist = Infinity;
             let closest_cluster = null;
@@ -139,4 +139,4 @@ geocluster.prototype._cluster = function(elements, bias) {
     return cluster_map;
 };
 
-module.exports = geocluster;
+module.exports = Geocluster;
