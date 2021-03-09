@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import ContextMenu from 'devextreme-react/context-menu';
 import { FitToMapIcon, RefreshIcon, WorkDateIcon, StationaryZoneOn, StationaryZoneOff } from '../../../../constants/app-icons';
 import ContextMenuItem from '../../../context-menu-item/context-menu-item';
@@ -7,7 +7,7 @@ import { useAppSettings } from '../../../../contexts/app-settings';
 const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
     const { appSettingsData, setAppSettingsData } = useAppSettings();
 
-    const items = [
+    const items = useMemo(() => [
         {
             name: 'refresh',
             text: 'Обновить',
@@ -46,7 +46,8 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
                 }, 50);
             }
         },
-    ];
+    ], [ commands, setAppSettingsData, appSettingsData.isShowStationaryZone]);
+
     return <ContextMenu
         ref={ innerRef }
         itemRender={ (item) => <ContextMenuItem item={ item } /> }

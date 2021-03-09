@@ -15,10 +15,11 @@ function AppSettingsProvider (props) {
         minimalAccuracy: 100,
         isShowStationaryZone: false,
 
-        stationaryZoneBias: 1.25,
-        stationaryZoneMinRadius: 100,
-        stationaryZoneMinElementCount: 5,
-        stationaryZoneMinCriteriaSpeed: 3
+        stationaryZoneRadius: 100,
+        stationaryZoneElementCount: 10,
+        stationaryZoneCriteriaSpeed: 2,
+        useStationaryZoneCriteriaAccuracy: false,
+        stationaryZoneCriteriaAccuracy: 25,
     };
 
     const initialAppSettingsDataJson =
@@ -46,19 +47,21 @@ function AppSettingsProvider (props) {
         initialAppSettingsData = { ...initialAppSettingsData, ...{ isShowStationaryZone: false } };
     }
 
-    if(!initialAppSettingsData.stationaryZoneBias)  {
-        initialAppSettingsData = { ...initialAppSettingsData, ...{ stationaryZoneBias: 1.25 } };
+    if(!initialAppSettingsData.stationaryZoneRadius)  {
+        initialAppSettingsData = { ...initialAppSettingsData, ...{ stationaryZoneRadius: 100 } };
     }
-    if(!initialAppSettingsData.stationaryZoneMinRadius)  {
-        initialAppSettingsData = { ...initialAppSettingsData, ...{ stationaryZoneMinRadius: 100 } };
+    if(!initialAppSettingsData.stationaryZoneElementCount)  {
+        initialAppSettingsData = { ...initialAppSettingsData, ...{ stationaryZoneElementCount: 10 } };
     }
-    if(!initialAppSettingsData.stationaryZoneMinElementCount)  {
-        initialAppSettingsData = { ...initialAppSettingsData, ...{ stationaryZoneMinElementCount: 10 } };
+    if(!initialAppSettingsData.stationaryZoneCriteriaSpeed)  {
+        initialAppSettingsData = { ...initialAppSettingsData, ...{ stationaryZoneCriteriaSpeed: 2 } };
     }
-    if(!initialAppSettingsData.stationaryZoneMinCriteriaSpeed)  {
-        initialAppSettingsData = { ...initialAppSettingsData, ...{ stationaryZoneMinCriteriaSpeed: 2 } };
+    if(!initialAppSettingsData.stationaryZoneCriteriaAccuracy)  {
+        initialAppSettingsData = { ...initialAppSettingsData, ...{ stationaryZoneCriteriaAccuracy: 25 } };
     }
-
+    if(!initialAppSettingsData.useStationaryZoneCriteriaAccuracy)  {
+        initialAppSettingsData = { ...initialAppSettingsData, ...{ useStationaryZoneCriteriaAccuracy: false } };
+    }
     const [appSettingsData, setAppSettingsData] = useState(initialAppSettingsData);
 
     useEffect(() => {

@@ -8,10 +8,11 @@ import { useScreenSize } from '../../../../utils/media-query';
 import { useAppData } from '../../../../contexts/app-data';
 import { useAppSettings } from '../../../../contexts/app-settings';
 import AppConstants from '../../../../constants/app-constants';
-import './track-map.scss';
 import { useSharedArea } from '../../../../contexts/shared-area';
 import { useTrackMapStationaryZonesContext } from '../track-map-contexts/track-map-stationary-zones-context';
 import { useTrackMapUtilsContext } from '../track-map-contexts/track-map-utils-context';
+
+import './track-map.scss';
 
 const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => {
     const { isXSmall, isSmall } = useScreenSize();
@@ -37,19 +38,12 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
     const currentMarkers = useRef([]);
     const currentBreakIntervals = useRef([]);
     const currentInfoWindow = useRef(null);
-    const stationaryClusters = useRef([]);
 
     const initOverlays = useCallback(() => {
         if (trackPath.current !== null) {
             trackPath.current.setMap(null);
             trackPath.current = null;
         }
-
-        stationaryClusters.current.forEach(sc => {
-            sc.setMap(null);
-            sc = null;
-        });
-        stationaryClusters.current = [];
 
         currentMarkers.current.forEach(m => {
             m.setMap(null);
@@ -237,7 +231,7 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
             if (appSettingsData.isShowStationaryZone) {
                 try {
                     showLoader();
-                    stationaryClusters.current = showStationaryZoneClusters(mapInstance.current, trackLocationRecordList);
+                    showStationaryZoneClusters(mapInstance.current, trackLocationRecordList);
 
                 } finally {
                     hideLoader();

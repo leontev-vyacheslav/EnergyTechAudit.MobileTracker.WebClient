@@ -8,6 +8,7 @@ import { SettingsIcon } from '../../constants/app-icons';
 import PageHeader from '../../components/page-header/page-header';
 
 import './settings.scss';
+
 export default () => {
     let dxAppSettingsFormRef = useRef(null);
     const { appSettingsData, setAppSettingsData } = useAppSettings();
@@ -34,7 +35,6 @@ export default () => {
                                 ref={ dxAppSettingsFormRef }
                             >
                                 <TabbedItem>
-                                    {/*  */}
                                     <Tab title={ 'Основные' }>
                                         <SimpleItem
                                             dataField={ 'workDate' }
@@ -51,7 +51,6 @@ export default () => {
                                             editorType={ 'dxCheckBox' }
                                         />
                                     </Tab>
-                                    {/* */}
                                     <Tab title={ 'Карты' }>
                                         <SimpleItem
                                             dataField={ 'isShownBreakInterval' }
@@ -80,14 +79,55 @@ export default () => {
                                                 width: 400
                                             } }
                                         />
+
+                                    </Tab>
+                                    <Tab title={ 'Кластеры' } >
                                         <SimpleItem
-                                            dataField={ 'stationaryRadius' }
-                                            label={ { location: 'top', showColon: true, text: 'Радиус стационарности, (м)' } }
+                                            dataField={ 'stationaryZoneRadius' }
+                                            label={ { location: 'top', showColon: true, text: 'Радиус кластера, (м)' } }
                                             editorType={ 'dxNumberBox' }
                                             editorOptions={ {
                                                 type: 'integer',
                                                 min: 50,
-                                                max: 500,
+                                                max: 200,
+                                                width: 400
+                                            } }
+                                        />
+                                        <SimpleItem
+                                            dataField={ 'stationaryZoneElementCount' }
+                                            label={ { location: 'top', showColon: true, text: 'Порог числа локаций' } }
+                                            editorType={ 'dxNumberBox' }
+                                            editorOptions={ {
+                                                type: 'integer',
+                                                min: 5,
+                                                max: 25,
+                                                width: 400
+                                            } }
+                                        />
+                                        <SimpleItem
+                                            dataField={ 'stationaryZoneCriteriaSpeed' }
+                                            label={ { location: 'top', showColon: true, text: 'Префильтр скорости, (м/с)' } }
+                                            editorType={ 'dxNumberBox' }
+                                            editorOptions={ {
+                                                type: 'integer',
+                                                min: 1,
+                                                max: 3,
+                                                width: 400
+                                            } }
+                                        />
+                                        <SimpleItem
+                                            dataField={ 'useStationaryZoneCriteriaAccuracy' }
+                                            label={ { location: 'top', showColon: true, text: 'Использовать префильтр точности' } }
+                                            editorType={ 'dxCheckBox' }
+                                        />
+                                        <SimpleItem
+                                            dataField={ 'stationaryZoneCriteriaAccuracy' }
+                                            label={ { location: 'top', showColon: true, text: 'Префильтр точночти, (м)' } }
+                                            editorType={ 'dxNumberBox' }
+                                            editorOptions={ {
+                                                type: 'integer',
+                                                min: 3,
+                                                max: 100,
                                                 width: 400
                                             } }
                                         />

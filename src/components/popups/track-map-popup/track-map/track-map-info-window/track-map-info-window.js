@@ -8,9 +8,10 @@ import './track-map-info-window.scss'
 
 const TrackMapInfoWindow = ({ locationRecord, address }) => {
     const { isXSmall, isSmall } = useScreenSize();
+
     const activityTypeDescription = AppConstants.motionActivityTypeDictionary.find(activity => activity.id === locationRecord.motionActivityTypeId);
 
-    const dataSheet = [
+    let dataSheet = [
         {
             id: 1,
             iconRender: (props) => <TimeIcon { ...props }/>,
@@ -34,20 +35,22 @@ const TrackMapInfoWindow = ({ locationRecord, address }) => {
             iconRender: (props) => <SpeedIcon { ...props }/>,
             description: 'Скорость:',
             value: locationRecord.speed < 0 ? '-' : `${ Math.floor(locationRecord.speed * 3.6 * 100) / 100 } км/ч`
-        },
-        {
-            id: 5,
-            iconRender: (props) => <ChargingLevelIcon { ...props }/>,
-            description: 'Уровень заряда:',
-            value: `${ Math.floor(locationRecord.batteryLevel * 100 * 100) / 100 } %`
-        },
-        {
-            id: 6,
-            iconRender: (props) => <BatteryIcon { ...props }/>,
-            description: 'На зарядке:',
-            value: locationRecord.isCharging ? 'Да' : 'Нет'
         }
     ];
+
+    dataSheet = locationRecord.batteryLevel !== null ? [...dataSheet, ...[{
+        id: 5,
+        iconRender: (props) => <ChargingLevelIcon { ...props }/>,
+        description: 'Уровень заряда:',
+        value: `${ Math.floor(locationRecord.batteryLevel * 100 * 100) / 100 } %`
+    }]] : dataSheet;
+
+    dataSheet = locationRecord.isCharging !== null ? [...dataSheet, ...[{
+        id: 6,
+        iconRender: (props) => <BatteryIcon { ...props }/>,
+        description: 'На зарядке:',
+        value: locationRecord.isCharging ? 'Да' : 'Нет'
+    }]] : dataSheet;
 
     return (
         <table className={ 'simple-grid track-map-info-window-grid' } style={ isXSmall ? { fontSize: 10 } : ( isSmall ? { fontSize: 11 } : {} ) }>

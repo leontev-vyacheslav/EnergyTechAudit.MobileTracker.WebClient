@@ -24,7 +24,8 @@ const AppConstants = {
         { id: 4, code: 'running', description: 'Бег' },
         { id: 5, code: 'on_bicycle', description: 'Велосипед' },
         { id: 6, code: 'in_vehicle', description: 'Транспортное средство' },
-        { id: 7, code: 'unknown', description: 'Неизвестен' }
+        { id: 7, code: 'unknown', description: 'Неизвестен' },
+        { id: 8, code: 'stationary', description: 'Псевдостационарность' },
     ],
 
     trackMap:{

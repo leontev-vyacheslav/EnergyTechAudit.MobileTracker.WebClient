@@ -32,12 +32,12 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => 
                    return (
                        <TrackMapUtilsProvider>
                            <TrackMapStationaryZonesProvider>
-                               <TrackMap
-                                   mobileDevice={ mobileDevice }
-                                   timelineItem={ timelineItem }
-                                   initialDate={ initialDate }
-                                   refreshToken={ refreshToken }
-                               />
+                                   <TrackMap
+                                       mobileDevice={ mobileDevice }
+                                       timelineItem={ timelineItem }
+                                       initialDate={ initialDate }
+                                       refreshToken={ refreshToken }
+                                   />
                            </TrackMapStationaryZonesProvider>
                        </TrackMapUtilsProvider>
                    );
