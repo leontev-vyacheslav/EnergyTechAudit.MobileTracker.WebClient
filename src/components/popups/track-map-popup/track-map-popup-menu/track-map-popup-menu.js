@@ -40,13 +40,13 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
             renderIconItem: () => (appSettingsData.isShowStationaryZone ? <StationaryZoneOff size={ 18 }/> : <StationaryZoneOn size={ 18 }/> ) ,
             onClick: (e) => {
                 e.component.hide();
-                const delayTimer =  setTimeout(() => {
-                    setAppSettingsData(previous => ( { ...previous, isShowStationaryZone: !previous.isShowStationaryZone } ));
+                const delayTimer = setTimeout(() => {
+                    setAppSettingsData({ ...appSettingsData, isShowStationaryZone: !appSettingsData.isShowStationaryZone });
                     clearTimeout(delayTimer);
                 }, 50);
             }
         },
-    ], [ commands, setAppSettingsData, appSettingsData.isShowStationaryZone]);
+    ], [appSettingsData, commands, setAppSettingsData]);
 
     return <ContextMenu
         ref={ innerRef }

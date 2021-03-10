@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useMemo, useRef } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import AppConstants from '../../../../constants/app-constants';
 import { DBSCAN } from 'density-clustering';
 import { useAppSettings } from '../../../../contexts/app-settings';
@@ -6,6 +6,7 @@ import { useTrackMapUtilsContext } from './track-map-utils-context';
 import ReactDOMServer from 'react-dom/server';
 import TrackMapInfoWindow from '../track-map/track-map-info-window/track-map-info-window';
 import { useAppData } from '../../../../contexts/app-data';
+import { AccuracyIcon, ActivityIcon, CountdownIcon, SpeedIcon } from '../../../../constants/app-icons';
 
 const TrackMapStationaryZonesContext = createContext({});
 const useTrackMapStationaryZonesContext = () => useContext(TrackMapStationaryZonesContext);
@@ -36,12 +37,12 @@ class SphericalCalculator {
 
 function TrackMapStationaryZonesProvider (props) {
 
+    const { getBoundsByMarkers, getInfoWindow } = useTrackMapUtilsContext();
+    const { getGeocodedAddressAsync } = useAppData();
+    const { appSettingsData } = useAppSettings();
+
     const currentClusterInfoWindow = useRef(null);
     const currentsStationaryClusters = useRef([]);
-
-    const { getGeocodedAddressAsync } = useAppData();
-    const { getBoundsByMarkers, getInfoWindow } = useTrackMapUtilsContext();
-    const { appSettingsData } = useAppSettings();
 
     const stationaryClusterCircleDefaultProps = useMemo(() => {
         return ( {
@@ -67,6 +68,71 @@ function TrackMapStationaryZonesProvider (props) {
             currentClusterInfoWindow.current = null;
         }
     }, []);
+
+    const showInfoWindowAsync = useCallback(async (mapInstance, circle) => {
+
+        if (currentClusterInfoWindow.current) {
+            currentClusterInfoWindow.current.setMap(null);
+            currentClusterInfoWindow.current = null;
+        }
+
+        const cluster = circle.cluster;
+
+        const locationRecordInfo = {
+            latitude: cluster.centroid.lat(),
+            longitude: cluster.centroid.lng(),
+            motionActivityTypeId: 8,
+            isCharging: null,
+            speed: cluster.elements
+                .map((element) => element[2].speed)
+                .reduce((acc, curr) => acc + curr, 0) / cluster.elements.length,
+
+            accuracy: Math.floor((cluster.elements
+                .map((element) => element[2].accuracy)
+                .reduce((acc, curr) => acc + curr, 0) / cluster.elements.length) * 10 ) / 10 ,
+
+            batteryLevel: null,
+        };
+
+        const address = await getGeocodedAddressAsync(locationRecordInfo);
+
+        let dataSheet = [
+            {
+                id: 1,
+                iconRender: (props) => <CountdownIcon { ...props }/>,
+                description: 'Отсчетов:',
+                value: `${cluster.elements.length}`
+            },
+            {
+                id: 2,
+                iconRender: (props) => <AccuracyIcon { ...props }/>,
+                description: 'Средняя точность:',
+                value: `${locationRecordInfo.accuracy} м`
+            },
+            {
+                id: 3,
+                iconRender: (props) => <ActivityIcon { ...props }/>,
+                description: 'Активность:',
+                value: 'В зоне стационарности'
+            },
+            {
+                id: 4,
+                iconRender: (props) => <SpeedIcon { ...props }/>,
+                description: 'Средняя скорость:',
+                value: locationRecordInfo.speed < 0 ? '-' : `${ Math.floor(locationRecordInfo.speed * 3.6 * 100) / 100 } км/ч`
+            }
+        ];
+
+        const content = ReactDOMServer.renderToString(
+            React.createElement(
+                TrackMapInfoWindow,
+                { locationRecord: locationRecordInfo, address: address,  externalDatasheet: dataSheet }
+            )
+        );
+
+        currentClusterInfoWindow.current = getInfoWindow(mapInstance, locationRecordInfo, content);
+
+    }, [getGeocodedAddressAsync, getInfoWindow]);
 
     const showStationaryZoneClusters = useCallback((mapInstance, locationList) => {
 
@@ -125,46 +191,19 @@ function TrackMapStationaryZonesProvider (props) {
 
             circle.setMap(mapInstance);
 
-            circle.addListener('click', async ()=> {
-
-                if (currentClusterInfoWindow.current) {
-                    currentClusterInfoWindow.current.setMap(null);
-                    currentClusterInfoWindow.current = null;
-                }
-
-                const cluster = circle.cluster;
-                const locationRecord = {
-                    latitude: cluster.centroid.lat(),
-                    longitude: cluster.centroid.lng(),
-                    motionActivityTypeId: 8,
-                    isCharging: null,
-                    speed: cluster.elements
-                        .map((element) => element[2].speed)
-                        .reduce((prev, curr) => prev + curr, 0) / cluster.elements.length,
-
-
-                    accuracy: Math.floor((cluster.elements
-                        .map((element) => element[2].accuracy)
-                        .reduce((prev, curr) => prev + curr, 0) / cluster.elements.length) * 10 ) / 10 ,
-
-                    batteryLevel: null,
-                };
-                const address = await getGeocodedAddressAsync(locationRecord);
-
-                const content = ReactDOMServer.renderToString(
-                    React.createElement(
-                        TrackMapInfoWindow,
-                        { locationRecord: locationRecord, address: address }
-                    )
-                );
-
-                currentClusterInfoWindow.current = getInfoWindow(mapInstance, locationRecord, content);
-
-                console.log(cluster);
+            circle.addListener('click', async () => {
+                await showInfoWindowAsync(mapInstance, circle);
             });
+
             currentsStationaryClusters.current.push(circle);
         });
-    }, [clearOverlays, appSettingsData, getBoundsByMarkers, stationaryClusterCircleDefaultProps, getGeocodedAddressAsync, getInfoWindow]);
+    }, [clearOverlays, appSettingsData, getBoundsByMarkers, stationaryClusterCircleDefaultProps, showInfoWindowAsync]);
+
+    useEffect(() => {
+        if (!appSettingsData.isShowStationaryZone) {
+            clearOverlays();
+        }
+    }, [appSettingsData.isShowStationaryZone, clearOverlays]);
 
     return (
         <TrackMapStationaryZonesContext.Provider

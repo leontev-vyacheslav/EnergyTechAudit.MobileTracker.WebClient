@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import AppConstants from '../../../../../constants/app-constants';
 import { useScreenSize } from '../../../../../utils/media-query';
 
@@ -6,51 +6,51 @@ import { AccuracyIcon, ActivityIcon, AddressIcon, BatteryIcon, ChargingLevelIcon
 
 import './track-map-info-window.scss'
 
-const TrackMapInfoWindow = ({ locationRecord, address }) => {
+const TrackMapInfoWindow = ({ locationRecord, address, externalDatasheet }) => {
     const { isXSmall, isSmall } = useScreenSize();
 
     const activityTypeDescription = AppConstants.motionActivityTypeDictionary.find(activity => activity.id === locationRecord.motionActivityTypeId);
 
-    let dataSheet = [
-        {
-            id: 1,
-            iconRender: (props) => <TimeIcon { ...props }/>,
-            description: 'Время:',
-            value: new Date(locationRecord.mobileDeviceDateTime).toLocaleString('ru-RU')
-        },
-        {
-            id: 2,
-            iconRender: (props) => <AccuracyIcon { ...props }/>,
-            description: 'Точность:',
-            value: `${locationRecord.accuracy} м`
-        },
-        {
-            id: 3,
-            iconRender: (props) => <ActivityIcon { ...props }/>,
-            description: 'Активность:',
-            value: activityTypeDescription ? activityTypeDescription.description : locationRecord.motionActivityTypeId
-        },
-        {
-            id: 4,
-            iconRender: (props) => <SpeedIcon { ...props }/>,
-            description: 'Скорость:',
-            value: locationRecord.speed < 0 ? '-' : `${ Math.floor(locationRecord.speed * 3.6 * 100) / 100 } км/ч`
-        }
-    ];
-
-    dataSheet = locationRecord.batteryLevel !== null ? [...dataSheet, ...[{
-        id: 5,
-        iconRender: (props) => <ChargingLevelIcon { ...props }/>,
-        description: 'Уровень заряда:',
-        value: `${ Math.floor(locationRecord.batteryLevel * 100 * 100) / 100 } %`
-    }]] : dataSheet;
-
-    dataSheet = locationRecord.isCharging !== null ? [...dataSheet, ...[{
-        id: 6,
-        iconRender: (props) => <BatteryIcon { ...props }/>,
-        description: 'На зарядке:',
-        value: locationRecord.isCharging ? 'Да' : 'Нет'
-    }]] : dataSheet;
+    const dataSheet = useMemo(() => {
+        return externalDatasheet ?? [
+            {
+                id: 1,
+                iconRender: (props) => <TimeIcon { ...props }/>,
+                description: 'Время:',
+                value: new Date(locationRecord.mobileDeviceDateTime).toLocaleString('ru-RU')
+            },
+            {
+                id: 2,
+                iconRender: (props) => <AccuracyIcon { ...props }/>,
+                description: 'Точность:',
+                value: `${ locationRecord.accuracy } м`
+            },
+            {
+                id: 3,
+                iconRender: (props) => <ActivityIcon { ...props }/>,
+                description: 'Активность:',
+                value: activityTypeDescription ? activityTypeDescription.description : locationRecord.motionActivityTypeId
+            },
+            {
+                id: 4,
+                iconRender: (props) => <SpeedIcon { ...props }/>,
+                description: 'Скорость:',
+                value: locationRecord.speed < 0 ? '-' : `${ Math.floor(locationRecord.speed * 3.6 * 100) / 100 } км/ч`
+            },
+            {
+                id: 5,
+                iconRender: (props) => <ChargingLevelIcon { ...props }/>,
+                description: 'Уровень заряда:',
+                value: `${ Math.floor(locationRecord.batteryLevel * 100 * 100) / 100 } %`
+            },
+            {
+                id: 6,
+                iconRender: (props) => <BatteryIcon { ...props }/>,
+                description: 'На зарядке:',
+                value: locationRecord.isCharging ? 'Да' : 'Нет'
+            }
+        ];
+    }, [activityTypeDescription, externalDatasheet, locationRecord.accuracy, locationRecord.batteryLevel, locationRecord.isCharging, locationRecord.mobileDeviceDateTime, locationRecord.motionActivityTypeId, locationRecord.speed]);
 
     return (
         <table className={ 'simple-grid track-map-info-window-grid' } style={ isXSmall ? { fontSize: 10 } : ( isSmall ? { fontSize: 11 } : {} ) }>
