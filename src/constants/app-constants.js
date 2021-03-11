@@ -56,7 +56,7 @@ const AppConstants = {
         markerLabelFontWeight: '600',
 
         stationaryCircleColor: '#2c394c',
-        stationaryCircleStrokeOpacity:  0.8,
+        stationaryCircleStrokeOpacity:  0.6,
         stationaryCircleStrokeWeight: 1,
         stationaryCircleFillOpacity: 0.4
     }

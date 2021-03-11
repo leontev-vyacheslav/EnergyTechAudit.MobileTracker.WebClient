@@ -6,7 +6,7 @@ import { useTrackMapUtilsContext } from './track-map-utils-context';
 import ReactDOMServer from 'react-dom/server';
 import TrackMapInfoWindow from '../track-map/track-map-info-window/track-map-info-window';
 import { useAppData } from '../../../../contexts/app-data';
-import { AccuracyIcon, ActivityIcon, CountdownIcon, SpeedIcon } from '../../../../constants/app-icons';
+import { AccuracyIcon, ActivityIcon, CountdownIcon, RadiusIcon, SpeedIcon } from '../../../../constants/app-icons';
 
 const TrackMapStationaryZonesContext = createContext({});
 const useTrackMapStationaryZonesContext = () => useContext(TrackMapStationaryZonesContext);
@@ -104,6 +104,12 @@ function TrackMapStationaryZonesProvider (props) {
                 value: `${cluster.elements.length}`
             },
             {
+                id: 1,
+                iconRender: (props) => <RadiusIcon { ...props }/>,
+                description: 'Радиус центроида:',
+                value: `${Math.floor(cluster.centroidRadius * 10  ) / 10} м`
+            },
+            {
                 id: 2,
                 iconRender: (props) => <AccuracyIcon { ...props }/>,
                 description: 'Средняя точность:',
@@ -174,19 +180,19 @@ function TrackMapStationaryZonesProvider (props) {
                 centroid.getSouthWest()
             );
 
-            const radius = diagonalDistance / 2 < stationaryZoneRadius ? stationaryZoneRadius : diagonalDistance / 2;
+            const radius = diagonalDistance / 2;
 
             const circleProps = {
                 ...{
                     radius: radius, center: centroidCenter,
                 }, ...stationaryClusterCircleDefaultProps
             };
-
             const circle = new window.google.maps.Circle(circleProps);
 
             circle.cluster = {
                 elements: geoCluster,
-                centroid: centroidCenter
+                centroid: centroidCenter,
+                centroidRadius: diagonalDistance / 2
             };
 
             circle.setMap(mapInstance);

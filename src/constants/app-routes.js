@@ -1,11 +1,9 @@
 import { lazy } from 'react';
 
 import { withNavigationWatcher } from '../contexts/navigation';
-import { HomePage, MobileDevicesPage, TrackSheetPage } from '../pages';
-
+import { HomePage, MobileDevicesPage, TrackSheetPage, SettingsPage } from '../pages';
 
 const AboutPage = lazy(() => import('../pages/about/about'));
-const SettingsPage = lazy(() => import('../pages/settings/settings'));
 const SignOutPage = lazy(() => import('../pages/sign-out/sign-out'));
 const OrganizationsPage = lazy(() => import('../pages/organizations/organizations'));
 

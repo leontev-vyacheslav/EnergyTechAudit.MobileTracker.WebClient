@@ -26,8 +26,8 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => 
                showTitle={ true }
                showCloseButton={ true }
                onHiding={ onClose }
-               width={ isXSmall || isSmall ? '95%' : '70%' }
-               height={ isXSmall || isSmall ? '95%' : '80%' }
+               width={ isXSmall || isSmall ? '95%' : '80%' }
+               height={ isXSmall || isSmall ? '95%' : '90%' }
                contentRender={ () => {
                    return (
                        <TrackMapUtilsProvider>

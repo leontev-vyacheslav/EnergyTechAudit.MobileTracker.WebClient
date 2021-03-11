@@ -13,7 +13,9 @@ function AppSettingsProvider (props) {
         breakInterval: 1000,
         isShownBreakInterval: true,
         minimalAccuracy: 100,
+
         isShowStationaryZone: false,
+        isShowTrackMapSettings: false,
 
         stationaryZoneRadius: 100,
         stationaryZoneElementCount: 10,
@@ -46,7 +48,9 @@ function AppSettingsProvider (props) {
     if(!initialAppSettingsData.isShowStationaryZone)  {
         initialAppSettingsData = { ...initialAppSettingsData, ...{ isShowStationaryZone: false } };
     }
-
+    if(!initialAppSettingsData.isShowTrackMapSettings)  {
+        initialAppSettingsData = { ...initialAppSettingsData, ...{ isShowTrackMapSettings: false } };
+    }
     if(!initialAppSettingsData.stationaryZoneRadius)  {
         initialAppSettingsData = { ...initialAppSettingsData, ...{ stationaryZoneRadius: 100 } };
     }
