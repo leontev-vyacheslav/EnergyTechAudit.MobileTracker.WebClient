@@ -16,6 +16,7 @@ function AppSettingsProvider (props) {
 
         isShowStationaryZone: false,
         isShowTrackMapSettings: false,
+        isShowTrackMapZones: false,
 
         stationaryZoneRadius: 100,
         stationaryZoneElementCount: 10,
@@ -47,6 +48,9 @@ function AppSettingsProvider (props) {
     }
     if(!initialAppSettingsData.isShowStationaryZone)  {
         initialAppSettingsData = { ...initialAppSettingsData, ...{ isShowStationaryZone: false } };
+    }
+    if(!initialAppSettingsData.isShowTrackMapZones)  {
+        initialAppSettingsData = { ...initialAppSettingsData, ...{ isShowTrackMapZones: false } };
     }
     if(!initialAppSettingsData.isShowTrackMapSettings)  {
         initialAppSettingsData = { ...initialAppSettingsData, ...{ isShowTrackMapSettings: false } };

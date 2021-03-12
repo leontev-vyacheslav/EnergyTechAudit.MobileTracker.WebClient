@@ -7,7 +7,7 @@ import {
     StationaryZoneOn,
     StationaryZoneOff,
     TrackMapSettingsOffIcon,
-    TrackMapSettingsOnIcon
+    TrackMapSettingsOnIcon, TrackMapZoneOffIcon, TrackMapZoneOnIcon
 } from '../../../../constants/app-icons';
 import ContextMenuItem from '../../../context-menu-item/context-menu-item';
 import { useAppSettings } from '../../../../contexts/app-settings';
@@ -61,18 +61,32 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
         items = !isXSmall ? [...items,
              {
                 name: 'showTrackMapSettings',
-                text: appSettingsData.isShowTrackMapSettings ? 'Закрыть настройки' : 'Показать настройки',
+                text: appSettingsData.isShowTrackMapSettings ? 'Скрыть настройки' : 'Показать настройки',
                 renderIconItem: () => ( appSettingsData.isShowTrackMapSettings ? <TrackMapSettingsOffIcon size={ 18 }/> :
                     <TrackMapSettingsOnIcon size={ 18 }/> ),
                 onClick: (e) => {
                     e.component.hide();
                     const delayTimer = setTimeout(() => {
-                        setAppSettingsData({ ...appSettingsData, isShowTrackMapSettings: !appSettingsData.isShowTrackMapSettings });
+                        setAppSettingsData({ ...appSettingsData, isShowTrackMapZones: false, isShowTrackMapSettings: !appSettingsData.isShowTrackMapSettings });
+                        clearTimeout(delayTimer);
+                    }, 50);
+                }
+            },
+            {
+                name: 'showTrackMapZones',
+                text: appSettingsData.isShowTrackMapZones ? 'Скрыть список зон' : 'Показать список зон',
+                renderIconItem: () => ( appSettingsData.isShowTrackMapZones ? <TrackMapZoneOffIcon size={ 18 }/> :
+                    <TrackMapZoneOnIcon size={ 18 }/> ),
+                onClick: (e) => {
+                    e.component.hide();
+                    const delayTimer = setTimeout(() => {
+                        setAppSettingsData({ ...appSettingsData, isShowTrackMapSettings: false, isShowTrackMapZones: !appSettingsData.isShowTrackMapZones });
                         clearTimeout(delayTimer);
                     }, 50);
                 }
             }
         ] : items;
+
 
         return items;
     }, [appSettingsData, commands, isXSmall, setAppSettingsData]);

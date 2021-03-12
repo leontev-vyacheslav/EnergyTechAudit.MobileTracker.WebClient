@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import AppConstants from '../../../../constants/app-constants';
 import { DBSCAN } from 'density-clustering';
 import { useAppSettings } from '../../../../contexts/app-settings';
@@ -7,35 +7,13 @@ import ReactDOMServer from 'react-dom/server';
 import TrackMapInfoWindow from '../track-map/track-map-info-window/track-map-info-window';
 import { useAppData } from '../../../../contexts/app-data';
 import { AccuracyIcon, ActivityIcon, CountdownIcon, RadiusIcon, SpeedIcon } from '../../../../constants/app-icons';
+import { SphericalCalculator } from '../../../../utils/spherical';
 
 const TrackMapStationaryZonesContext = createContext({});
 const useTrackMapStationaryZonesContext = () => useContext(TrackMapStationaryZonesContext);
 
-class SphericalCalculator {
-
-    static toRad(value) {
-        return (value * Math.PI) / 180;
-    }
-
-    static computeDistanceBetween(lat1, lon1, lat2, lon2) {
-        const dLat = this.toRad(lat2 - lat1);
-        const dLon = this.toRad(lon2 - lon1);
-
-        const latRad1 = this.toRad(lat1);
-        const latRad2 = this.toRad(lat2);
-
-        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
-            + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(latRad1) * Math.cos(latRad2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return 6371000 * c;
-    }
-
-    static computeDistanceBetween2(p1, p2) {
-        return SphericalCalculator.computeDistanceBetween(p1[0], p1[1], p2[0], p2[1]);
-    }
-}
-
 function TrackMapStationaryZonesProvider (props) {
+    const [stationaryClusterList, setStationaryClusterList] = useState([]);
 
     const { getBoundsByMarkers, getInfoWindow } = useTrackMapUtilsContext();
     const { getGeocodedAddressAsync } = useAppData();
@@ -69,7 +47,7 @@ function TrackMapStationaryZonesProvider (props) {
         }
     }, []);
 
-    const showInfoWindowAsync = useCallback(async (mapInstance, circle) => {
+    const showInfoWindowAsync = useCallback(async (circle) => {
 
         if (currentClusterInfoWindow.current) {
             currentClusterInfoWindow.current.setMap(null);
@@ -136,7 +114,7 @@ function TrackMapStationaryZonesProvider (props) {
             )
         );
 
-        currentClusterInfoWindow.current = getInfoWindow(mapInstance, locationRecordInfo, content);
+        currentClusterInfoWindow.current = getInfoWindow(circle.getMap(), locationRecordInfo, content);
 
     }, [getGeocodedAddressAsync, getInfoWindow]);
 
@@ -198,11 +176,14 @@ function TrackMapStationaryZonesProvider (props) {
             circle.setMap(mapInstance);
 
             circle.addListener('click', async () => {
-                await showInfoWindowAsync(mapInstance, circle);
+                await showInfoWindowAsync(circle);
             });
 
             currentsStationaryClusters.current.push(circle);
         });
+
+        setStationaryClusterList(currentsStationaryClusters.current);
+
     }, [clearOverlays, appSettingsData, getBoundsByMarkers, stationaryClusterCircleDefaultProps, showInfoWindowAsync]);
 
     useEffect(() => {
@@ -214,7 +195,10 @@ function TrackMapStationaryZonesProvider (props) {
     return (
         <TrackMapStationaryZonesContext.Provider
             value={ {
-                showStationaryZoneClusters
+                showStationaryZoneClusters,
+                showInfoWindowAsync,
+                stationaryClusterList,
+                setStationaryClusterList
             } }
             { ...props }
         />

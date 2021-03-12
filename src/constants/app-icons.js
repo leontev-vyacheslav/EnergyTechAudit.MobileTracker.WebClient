@@ -70,7 +70,10 @@ export { RiRoadMapLine as StationaryZoneOff } from 'react-icons/ri';
 export { BsBoxArrowInLeft as  WorkDateBackwardIcon } from 'react-icons/bs';
 export { BsBoxArrowInRight as WorkDateForwardIcon } from 'react-icons/bs';
 export { BsCheckBox as WorkDateTodayIcon } from 'react-icons/bs';
-export { BiCircle as RadiusIcon } from 'react-icons/bi';
+export { RiLogoutCircleLine as RadiusIcon } from 'react-icons/ri';
+
+export  { IoIosList as TrackMapZoneOffIcon } from 'react-icons/io';
+export  { IoIosListBox as TrackMapZoneOnIcon } from 'react-icons/io';
 
 import { MdMoreVert } from 'react-icons/md';
 export const GridAdditionalMenuIcon = () => <MdMoreVert style={ { cursor: 'pointer' } } size={ 18 }/>;

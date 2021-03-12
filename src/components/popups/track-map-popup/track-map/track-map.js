@@ -14,13 +14,14 @@ import { useTrackMapUtilsContext } from '../track-map-contexts/track-map-utils-c
 import SettingsForm from '../../../../pages/settings/settings-form';
 
 import './track-map.scss';
+import TrackMapStationaryZonesList from '../track-map-stationary-zones-list/track-map-stationary-zones-list';
 
 const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => {
     const { isXSmall, isSmall } = useScreenSize();
     const { showLoader, hideLoader } = useSharedArea();
     const { appSettingsData, getDailyTimelineItem } = useAppSettings();
     const { getLocationRecordsByRangeAsync, getLocationRecordAsync, getGeocodedAddressAsync } = useAppData();
-    const { showStationaryZoneClusters } = useTrackMapStationaryZonesContext();
+    const { showStationaryZoneClusters, setStationaryClusterList } = useTrackMapStationaryZonesContext();
     const {
         centerMapByInfoWindow,
         fitMapBoundsByLocations,
@@ -237,9 +238,12 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
                 } finally {
                     hideLoader();
                 }
+            } else {
+                setStationaryClusterList([]);
             }
         }
-    }, [hideLoader, initOverlays, appSettingsData.isShowStationaryZone, showLoader, showTrack, trackLocationRecordList, showStationaryZoneClusters]);
+    }, [hideLoader, initOverlays, appSettingsData.isShowStationaryZone, showLoader, showTrack,
+        trackLocationRecordList, showStationaryZoneClusters, setStationaryClusterList]);
 
     TrackMap.fitToMap = function () {
         if(mapInstance && trackLocationRecordList) {
@@ -262,7 +266,7 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
                             } }
                         />
                     </div>
-                    <div style={ { gridRow: '2/3', gridColumn: appSettingsData.isShowTrackMapSettings ? '1/2': '1/3' } }>
+                    <div style={ { gridRow: '2/3', gridColumn: appSettingsData.isShowTrackMapSettings || appSettingsData.isShowTrackMapZones  ? '1/2': '1/3' } }>
                         <GoogleMap
                             zoom={ AppConstants.trackMap.defaultZoom }
                             mapTypeId={ window.google.maps.MapTypeId.ROADMAP }
@@ -291,7 +295,13 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
                             }
                         </GoogleMap>
                     </div>
-                    { !isXSmall && appSettingsData.isShowTrackMapSettings ?
+                    { !isXSmall && appSettingsData.isShowTrackMapZones &&  !appSettingsData.isShowTrackMapSettings ?
+                        <div className={ 'dx-card responsive-paddings' }>
+                            <TrackMapStationaryZonesList  />
+                        </div>
+                        : null
+                    }
+                    { !isXSmall && appSettingsData.isShowTrackMapSettings && !appSettingsData.isShowTrackMapZones ?
                         <div className={ 'dx-card responsive-paddings' }>
                             <SettingsForm style={ { width: '100%' } } mode={ 'TrackMap' }/>
                         </div>

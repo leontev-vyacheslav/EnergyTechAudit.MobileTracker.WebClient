@@ -1,3 +1,4 @@
+@import "./themes/variables";
 .app {
   @import "./themes/generated/variables.base.scss";
   background-color: darken($base-bg, 5.00);
@@ -69,6 +70,35 @@ html, body {
 
 * {
   box-sizing: border-box;
+}
+
+.app-list {
+  .dx-list-item-content {
+    padding: 5px;
+  }
+
+  .dx-list-item-selected svg {
+    color: $base-accent;
+  }
+
+  .dx-empty-message {
+    color: $base-accent;
+    font-size: 16px;
+    text-align: center;
+    padding: 16px;
+  }
+
+  .dx-list-item.dx-list-item-selected {
+    color: $base-accent;
+  }
+
+  .dx-list-item.dx-state-hover .dx-radiobutton-icon::before {
+    border-color: initial !important;
+  }
+
+  .dx-radiobutton-icon-checked::before {
+    color: $base-accent;
+  }
 }
 
 .dx-popup-title .dx-toolbar-items-container {
