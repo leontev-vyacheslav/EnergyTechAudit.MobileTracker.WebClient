@@ -8,9 +8,6 @@ module.exports = {
   'plugins': ['react', 'react-hooks', 'prettier'],
   'extends': [
     'prettier',
-    'prettier/flowtype',
-    'prettier/react',
-    'prettier/standard',
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:prettier/recommended',
@@ -25,7 +22,7 @@ module.exports = {
   },
   'settings': {
     'react': {
-      'version': '16.13.1'
+      'version': '17.0.1'
     }
   },
   'rules': {

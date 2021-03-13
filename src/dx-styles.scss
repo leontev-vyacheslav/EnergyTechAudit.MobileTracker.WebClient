@@ -133,7 +133,7 @@ html, body {
     .dx-row svg {
       color: #464646;
     }
-    .dx-row-focused svg {
+    tr.dx-row-focused:not(.dx-master-detail-row) td  svg {
       color: #ffffff;
     }
     svg {
