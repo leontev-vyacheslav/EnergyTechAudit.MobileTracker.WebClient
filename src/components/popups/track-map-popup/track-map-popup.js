@@ -74,7 +74,7 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => 
                     <WorkDateForwardIcon size={ 18 }/>
                 </Button>
 
-                <Button className={ 'app-popup-header-menu-button' } onClick={ (e) => {
+                <Button className={ 'app-popup-header-menu-button' } hint='Меню' onClick={ (e) => {
                     contextMenuRef.current.instance.option('target', e.element);
                     contextMenuRef.current.instance.show();
                 } }>

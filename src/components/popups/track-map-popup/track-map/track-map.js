@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect,  useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import TrackMapInfoWindow from './track-map-info-window/track-map-info-window';
@@ -11,10 +11,11 @@ import AppConstants from '../../../../constants/app-constants';
 import { useSharedArea } from '../../../../contexts/shared-area';
 import { useTrackMapStationaryZonesContext } from '../track-map-contexts/track-map-stationary-zones-context';
 import { useTrackMapUtilsContext } from '../track-map-contexts/track-map-utils-context';
-import SettingsForm from '../../../../pages/settings/settings-form';
+import TrackMapStationaryZonesList from '../track-map-panels/track-map-stationary-zones-panel/track-map-stationary-zones-panel';
+import TrackMapSettingsForm from '../track-map-panels/track-map-settings-panel/track-map-settings-panel';
 
 import './track-map.scss';
-import TrackMapStationaryZonesList from '../track-map-stationary-zones-list/track-map-stationary-zones-list';
+
 
 const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => {
     const { isXSmall, isSmall } = useScreenSize();
@@ -105,7 +106,7 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
                     { locationRecord: locationRecord, address: address }
                 )
             );
-            currentInfoWindow.current = getInfoWindow(mapInstance.current, locationRecord, content );
+            currentInfoWindow.current = getInfoWindow(mapInstance.current, locationRecord, content);
         }
     }, [getGeocodedAddressAsync, getInfoWindow, getLocationRecordAsync]);
 
@@ -246,69 +247,68 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
         trackLocationRecordList, showStationaryZoneClusters, setStationaryClusterList]);
 
     TrackMap.fitToMap = function () {
-        if(mapInstance && trackLocationRecordList) {
+        if (mapInstance && trackLocationRecordList) {
             fitMap(trackLocationRecordList);
         }
     };
 
     return ( isLoaded && trackLocationRecordList !== null ?
-            <>
-                <div style={ { display: 'grid', width: '100%', height: '100%', gridTemplateRows: '40px 1fr', gridTemplateColumns: '2fr 1fr' } }>
-                    <div style={ { gridRow: '1/2', gridColumn: '1/3' } }>
-                        <TrackMapHeader
-                            mobileDevice={ mobileDevice }
-                            timelineItem={ currentTimelineItem }
-                            initialDate={ initialDate }
-                            onCurrentTimelineItemChanged={ (currentTimelineItem) => {
-                                if (currentTimelineItem) {
-                                    setCurrentTimelineItem(currentTimelineItem);
-                                }
-                            } }
-                        />
-                    </div>
-                    <div style={ { gridRow: '2/3', gridColumn: appSettingsData.isShowTrackMapSettings || appSettingsData.isShowTrackMapZones  ? '1/2': '1/3' } }>
-                        <GoogleMap
-                            zoom={ AppConstants.trackMap.defaultZoom }
-                            mapTypeId={ window.google.maps.MapTypeId.ROADMAP }
-                            options={
-                                {
-                                    mapTypeControl: !( isXSmall || isSmall ),
-                                    scaleControl: !isXSmall,
-                                    zoomControl: !( isXSmall || isSmall ),
-                                    styles: AppConstants.trackMap.defaultTheme
-                                } }
-                            center={ AppConstants.trackMap.defaultCenter }
-                            mapContainerStyle={ { width: '100%', height: '100%' } }
-                            onLoad={ onTrackMapLoadHandler }
-                            onClick={ () => {
-                                if (currentInfoWindow.current !== null) {
-                                    currentInfoWindow.current.close();
-                                    currentInfoWindow.current = null;
-                                }
-                            } }
-                            onRightClick={ () => {
-                                fitMap(trackLocationRecordList);
-                            } }
-                        >
-                            { isXSmall ? null :
-                                <TrackMapInfoBox mobileDevice={ mobileDevice } timelineItem={ currentTimelineItem }/>
+
+            <div className={ 'track-map-container' }>
+                <div className={ 'track-map-container-header' }>
+                    <TrackMapHeader
+                        mobileDevice={ mobileDevice }
+                        timelineItem={ currentTimelineItem }
+                        initialDate={ initialDate }
+                        onCurrentTimelineItemChanged={ (currentTimelineItem) => {
+                            if (currentTimelineItem) {
+                                setCurrentTimelineItem(currentTimelineItem);
                             }
-                        </GoogleMap>
-                    </div>
-                    { !isXSmall && appSettingsData.isShowTrackMapZones &&  !appSettingsData.isShowTrackMapSettings ?
-                        <div className={ 'dx-card responsive-paddings' }>
-                            <TrackMapStationaryZonesList  />
-                        </div>
-                        : null
-                    }
-                    { !isXSmall && appSettingsData.isShowTrackMapSettings && !appSettingsData.isShowTrackMapZones ?
-                        <div className={ 'dx-card responsive-paddings' }>
-                            <SettingsForm style={ { width: '100%' } } mode={ 'TrackMap' }/>
-                        </div>
-                        : null
-                    }
+                        } }
+                    />
                 </div>
-            </>
+                <div className={ `track-map-container-body${ appSettingsData.isShowTrackMapSettings || appSettingsData.isShowTrackMapZones ? ' track-map-container-body-split' : '' }` }>
+                    <GoogleMap
+                        zoom={ AppConstants.trackMap.defaultZoom }
+                        mapTypeId={ window.google.maps.MapTypeId.ROADMAP }
+                        options={
+                            {
+                                mapTypeControl: !( isXSmall || isSmall ),
+                                scaleControl: !isXSmall,
+                                zoomControl: !( isXSmall || isSmall ),
+                                styles: AppConstants.trackMap.defaultTheme
+                            } }
+                        center={ AppConstants.trackMap.defaultCenter }
+                        mapContainerStyle={ { width: '100%', height: '100%' } }
+                        onLoad={ onTrackMapLoadHandler }
+                        onClick={ () => {
+                            if (currentInfoWindow.current !== null) {
+                                currentInfoWindow.current.close();
+                                currentInfoWindow.current = null;
+                            }
+                        } }
+                        onRightClick={ () => {
+                            fitMap(trackLocationRecordList);
+                        } }
+                    >
+                        { isXSmall ? null :
+                            <TrackMapInfoBox mobileDevice={ mobileDevice } timelineItem={ currentTimelineItem }/>
+                        }
+                    </GoogleMap>
+                </div>
+                { !isXSmall && appSettingsData.isShowTrackMapZones && !appSettingsData.isShowTrackMapSettings ?
+                    <div className={ 'dx-card responsive-paddings' }>
+                        <TrackMapStationaryZonesList/>
+                    </div>
+                    : null
+                }
+                { !isXSmall && appSettingsData.isShowTrackMapSettings && !appSettingsData.isShowTrackMapZones ?
+                    <div className={ 'dx-card responsive-paddings' }>
+                       <TrackMapSettingsForm />
+                    </div>
+                    : null
+                }
+            </div>
             :
             <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
     );

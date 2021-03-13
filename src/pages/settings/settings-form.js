@@ -8,7 +8,7 @@ import { useScreenSize } from '../../utils/media-query';
 
 import './settings.scss';
 
-const SettingsForm = ({ style, mode = '' }) => {
+const SettingsForm = ({ style }) => {
 
     const dxAppSettingsFormRef = useRef(null);
     const { appSettingsData, setAppSettingsData } = useAppSettings();
@@ -25,7 +25,7 @@ const SettingsForm = ({ style, mode = '' }) => {
                 ref={ dxAppSettingsFormRef }
             >
                 <TabbedItem>
-                    <Tab title={ 'Основные' } >
+                    <Tab title={ 'Основные' }>
                         <SimpleItem
                             dataField={ 'workDate' }
                             label={ { location: 'top', showColon: true, text: 'Рабочая дата' } }
@@ -135,12 +135,6 @@ const SettingsForm = ({ style, mode = '' }) => {
                                     );
                                 }
                             } }/>
-                    { mode === 'TrackMap' ?
-                        <Button className={ 'form-button' } text={ 'Закрыть' } width={ 125 } type={ 'normal' } onClick={ () => {
-                            setAppSettingsData({ ...appSettingsData, isShowTrackMapSettings: false });
-                        } }/>
-                        : null
-                    }
                 </GroupItem>
             </Form>
         </ScrollView>

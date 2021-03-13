@@ -1,13 +1,13 @@
 import React from 'react';
-import { CountdownIcon, RadiusIcon, StationaryZoneOff } from '../../../../constants/app-icons';
-import './track-map-stationary-zones-list-item-content.scss';
+import { CountdownIcon, RadiusIcon, StationaryZoneOff } from '../../../../../constants/app-icons';
+import './track-map-stationary-zones-list-item.scss';
 
-const TrackMapStationaryZonesListItemContent = ({ circle, index }) => {
+const TrackMapStationaryZonesListItem = ({ circle, index }) => {
 
     return (
         <div className={ 'track-map-stationary-zones-list-item' }>
             <div>
-                <StationaryZoneOff size={ 28 }/>
+                <StationaryZoneOff size={ 24 }/>
             </div>
             <div >
                 <span>{ `Зона стационарности ${ index + 1 }` }</span>
@@ -27,4 +27,4 @@ const TrackMapStationaryZonesListItemContent = ({ circle, index }) => {
         </div>
     );
 }
-export default TrackMapStationaryZonesListItemContent;
+export default TrackMapStationaryZonesListItem;

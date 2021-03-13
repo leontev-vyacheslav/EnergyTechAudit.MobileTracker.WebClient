@@ -75,5 +75,7 @@ export { RiLogoutCircleLine as RadiusIcon } from 'react-icons/ri';
 export  { IoIosList as TrackMapZoneOffIcon } from 'react-icons/io';
 export  { IoIosListBox as TrackMapZoneOnIcon } from 'react-icons/io';
 
+export { IoCloseOutline as CloseIcon } from 'react-icons/io5'
+
 import { MdMoreVert } from 'react-icons/md';
 export const GridAdditionalMenuIcon = () => <MdMoreVert style={ { cursor: 'pointer' } } size={ 18 }/>;
