@@ -8,17 +8,18 @@ import TrackMapInfoWindow from '../track-map/track-map-info-window/track-map-inf
 import { useAppData } from '../../../../contexts/app-data';
 import { AccuracyIcon, ActivityIcon, CountdownIcon, RadiusIcon, SpeedIcon } from '../../../../constants/app-icons';
 import { SphericalCalculator } from '../../../../utils/spherical';
+import { useTrackMapSettingsContext } from '../track-map-settings-context';
 
 const TrackMapStationaryZonesContext = createContext({});
 const useTrackMapStationaryZonesContext = () => useContext(TrackMapStationaryZonesContext);
 
 function TrackMapStationaryZonesProvider (props) {
-    const [stationaryClusterList, setStationaryClusterList] = useState([]);
 
+    const [stationaryClusterList, setStationaryClusterList] = useState([]);
     const { getBoundsByMarkers, getInfoWindow } = useTrackMapUtilsContext();
     const { getGeocodedAddressAsync } = useAppData();
     const { appSettingsData } = useAppSettings();
-
+    const { isShowStationaryZone } = useTrackMapSettingsContext();
     const currentClusterInfoWindow = useRef(null);
     const currentsStationaryClusters = useRef([]);
 
@@ -187,10 +188,10 @@ function TrackMapStationaryZonesProvider (props) {
     }, [clearOverlays, appSettingsData, getBoundsByMarkers, stationaryClusterCircleDefaultProps, showInfoWindowAsync]);
 
     useEffect(() => {
-        if (!appSettingsData.isShowStationaryZone) {
+        if (!isShowStationaryZone) {
             clearOverlays();
         }
-    }, [appSettingsData.isShowStationaryZone, clearOverlays]);
+    }, [isShowStationaryZone, clearOverlays]);
 
     return (
         <TrackMapStationaryZonesContext.Provider

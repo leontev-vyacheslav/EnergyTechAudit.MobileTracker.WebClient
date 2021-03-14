@@ -13,11 +13,6 @@ function AppSettingsProvider (props) {
         breakInterval: 1000,
         isShownBreakInterval: true,
         minimalAccuracy: 100,
-
-        isShowStationaryZone: false,
-        isShowTrackMapSettings: false,
-        isShowTrackMapZones: false,
-
         stationaryZoneRadius: 100,
         stationaryZoneElementCount: 10,
         stationaryZoneCriteriaSpeed: 2,
@@ -45,15 +40,6 @@ function AppSettingsProvider (props) {
     }
     else {
         initialAppSettingsData = { ...initialAppSettingsData, ...{ workDate: new Date(initialAppSettingsData.workDate) } };
-    }
-    if(!initialAppSettingsData.isShowStationaryZone)  {
-        initialAppSettingsData = { ...initialAppSettingsData, ...{ isShowStationaryZone: false } };
-    }
-    if(!initialAppSettingsData.isShowTrackMapZones)  {
-        initialAppSettingsData = { ...initialAppSettingsData, ...{ isShowTrackMapZones: false } };
-    }
-    if(!initialAppSettingsData.isShowTrackMapSettings)  {
-        initialAppSettingsData = { ...initialAppSettingsData, ...{ isShowTrackMapSettings: false } };
     }
     if(!initialAppSettingsData.stationaryZoneRadius)  {
         initialAppSettingsData = { ...initialAppSettingsData, ...{ stationaryZoneRadius: 100 } };

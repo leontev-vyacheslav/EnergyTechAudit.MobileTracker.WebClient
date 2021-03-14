@@ -15,7 +15,7 @@ import TrackMapStationaryZonesList from '../track-map-panels/track-map-stationar
 import TrackMapSettingsForm from '../track-map-panels/track-map-settings-panel/track-map-settings-panel';
 
 import './track-map.scss';
-
+import { useTrackMapSettingsContext } from '../track-map-settings-context';
 
 const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => {
     const { isXSmall, isSmall } = useScreenSize();
@@ -23,6 +23,9 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
     const { appSettingsData, getDailyTimelineItem } = useAppSettings();
     const { getLocationRecordsByRangeAsync, getLocationRecordAsync, getGeocodedAddressAsync } = useAppData();
     const { showStationaryZoneClusters, setStationaryClusterList } = useTrackMapStationaryZonesContext();
+
+    const { isShowTrackMapSettings, isShowTrackMapZones, isShowStationaryZone } = useTrackMapSettingsContext();
+
     const {
         centerMapByInfoWindow,
         fitMapBoundsByLocations,
@@ -231,7 +234,7 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
         if (mapInstance.current) {
             initOverlays();
             showTrack();
-            if (appSettingsData.isShowStationaryZone) {
+            if (isShowStationaryZone) {
                 try {
                     showLoader();
                     showStationaryZoneClusters(mapInstance.current, trackLocationRecordList);
@@ -243,7 +246,7 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
                 setStationaryClusterList([]);
             }
         }
-    }, [hideLoader, initOverlays, appSettingsData.isShowStationaryZone, showLoader, showTrack,
+    }, [hideLoader, initOverlays, isShowStationaryZone, showLoader, showTrack,
         trackLocationRecordList, showStationaryZoneClusters, setStationaryClusterList]);
 
     TrackMap.fitToMap = function () {
@@ -267,7 +270,7 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
                         } }
                     />
                 </div>
-                <div className={ `track-map-container-body${ appSettingsData.isShowTrackMapSettings || appSettingsData.isShowTrackMapZones ? ' track-map-container-body-split' : '' }` }>
+                <div className={ `track-map-container-body${ isShowTrackMapSettings || isShowTrackMapZones ? ' track-map-container-body-split' : '' }` }>
                     <GoogleMap
                         zoom={ AppConstants.trackMap.defaultZoom }
                         mapTypeId={ window.google.maps.MapTypeId.ROADMAP }
@@ -296,13 +299,13 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
                         }
                     </GoogleMap>
                 </div>
-                { !isXSmall && appSettingsData.isShowTrackMapZones && !appSettingsData.isShowTrackMapSettings ?
+                { !isXSmall && isShowTrackMapZones && !isShowTrackMapSettings ?
                     <div className={ 'dx-card responsive-paddings' }>
                         <TrackMapStationaryZonesList/>
                     </div>
                     : null
                 }
-                { !isXSmall && appSettingsData.isShowTrackMapSettings && !appSettingsData.isShowTrackMapZones ?
+                { !isXSmall && isShowTrackMapSettings && !isShowTrackMapZones ?
                     <div className={ 'dx-card responsive-paddings' }>
                        <TrackMapSettingsForm />
                     </div>
