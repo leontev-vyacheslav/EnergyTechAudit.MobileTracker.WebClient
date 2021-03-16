@@ -10,6 +10,7 @@ function TrackMapSettingsProvider (props) {
         isShowStationaryZone: false,
         isShowTrackMapSettings: false,
         isShowTrackMapZones: false,
+        isShowTrackMapTimeline: false,
     };
 
     const initialTrackMapSettingsDataJson =
@@ -27,25 +28,32 @@ function TrackMapSettingsProvider (props) {
     if(!initialTrackMapSettingsData.isShowTrackMapSettings)  {
         initialTrackMapSettingsData = { ...initialTrackMapSettingsData, ...{ isShowTrackMapSettings: false } };
     }
+    if(!initialTrackMapSettingsData.isShowTrackMapTimeline)  {
+        initialTrackMapSettingsData = { ...initialTrackMapSettingsData, ...{ isShowTrackMapTimeline: false } };
+    }
 
     const [isShowTrackMapSettings, setIsShowTrackMapSettings] = useState(initialTrackMapSettingsData.isShowTrackMapSettings);
     const [isShowTrackMapZones, setIsShowTrackMapZones] = useState(initialTrackMapSettingsData.isShowTrackMapZones);
     const [isShowStationaryZone, setIsShowStationaryZone] = useState(initialTrackMapSettingsData.isShowStationaryZone);
+    const [isShowTrackMapTimeline, setIsShowTrackMapTimeline] = useState(initialTrackMapSettingsData.isShowTrackMapTimeline);
 
     useEffect(() => {
         localStorage.setItem('trackMapSettingsData', JSON.stringify({
             isShowTrackMapSettings: isShowTrackMapSettings,
             isShowTrackMapZones: isShowTrackMapZones,
-            isShowStationaryZone: isShowStationaryZone
+            isShowStationaryZone: isShowStationaryZone,
+            isShowTrackMapTimeline: isShowTrackMapTimeline
         }));
-    }, [isShowStationaryZone, isShowTrackMapSettings, isShowTrackMapZones]);
+    }, [isShowStationaryZone, isShowTrackMapSettings, isShowTrackMapTimeline, isShowTrackMapZones]);
 
     return (
         <TrackMapSettingsContext.Provider value={ {
             isShowTrackMapSettings, setIsShowTrackMapSettings,
             isShowTrackMapZones, setIsShowTrackMapZones,
-            isShowStationaryZone, setIsShowStationaryZone
+            isShowStationaryZone, setIsShowStationaryZone,
+            isShowTrackMapTimeline, setIsShowTrackMapTimeline
         } } { ...props }/>
+
     );
 }
 

@@ -4,21 +4,22 @@ import {
     FitToMapIcon,
     RefreshIcon,
     WorkDateIcon,
-    StationaryZoneOn,
-    StationaryZoneOff,
+    StationaryZoneOnIcon,
+    StationaryZoneOffIcon,
     TrackMapSettingsOffIcon,
-    TrackMapSettingsOnIcon, TrackMapZoneOffIcon, TrackMapZoneOnIcon
+    TrackMapSettingsOnIcon, TrackMapZoneOffIcon, TrackMapZoneOnIcon,  TimelineOnIcon, TimelineOffIcon
 } from '../../../../constants/app-icons';
 import ContextMenuItem from '../../../context-menu-item/context-menu-item';
 import { useScreenSize } from '../../../../utils/media-query';
-import { useTrackMapSettingsContext } from '../track-map-settings-context';
+import { useTrackMapSettingsContext } from '../track-map-contexts/track-map-settings-context';
 
 const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
 
     const {
         isShowTrackMapSettings, setIsShowTrackMapSettings,
         isShowTrackMapZones, setIsShowTrackMapZones,
-        isShowStationaryZone, setIsShowStationaryZone
+        isShowStationaryZone, setIsShowStationaryZone,
+        isShowTrackMapTimeline, setIsShowTrackMapTimeline
     } = useTrackMapSettingsContext();
 
 
@@ -32,7 +33,7 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
                 renderIconItem: () => <RefreshIcon size={ 18 }/>,
                 onClick: (e) => {
                     e.component.hide();
-                    commands.refreshToken();
+                    commands.refresh();
                 },
             }, {
                 name: 'workDate',
@@ -55,13 +56,14 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
             {
                 name: 'showStationaryZones',
                 text: isShowStationaryZone ? 'Скрывать зоны' : 'Показывать зоны',
-                renderIconItem: () => ( isShowStationaryZone ? <StationaryZoneOff size={ 18 }/> : <StationaryZoneOn size={ 18 }/> ),
+                renderIconItem: () => ( isShowStationaryZone ? <StationaryZoneOffIcon size={ 18 }/> : <StationaryZoneOnIcon size={ 18 }/> ),
                 onClick: (e) => {
                     e.component.hide();
-                    const delayTimer = setTimeout(() => {
+                    setIsShowStationaryZone(prev => !prev );
+                    /*const delayTimer = setTimeout(() => {
                         setIsShowStationaryZone(prev => !prev );
                         clearTimeout(delayTimer);
-                    }, 50);
+                    }, 50);*/
                 }
             }
         ];
@@ -73,11 +75,9 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
                     <TrackMapSettingsOnIcon size={ 18 }/> ),
                 onClick: (e) => {
                     e.component.hide();
-                    const delayTimer = setTimeout(() => {
-                        setIsShowTrackMapZones(false);
-                        setIsShowTrackMapSettings(prev => !prev);
-                        clearTimeout(delayTimer);
-                    }, 50);
+                    setIsShowTrackMapZones(false);
+                    setIsShowTrackMapTimeline(false);
+                    setIsShowTrackMapSettings(prev => !prev);
                 }
             },
             {
@@ -87,18 +87,29 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
                     <TrackMapZoneOnIcon size={ 18 }/> ),
                 onClick: (e) => {
                     e.component.hide();
-                    const delayTimer = setTimeout(() => {
-                        setIsShowTrackMapSettings(false);
-                        setIsShowTrackMapZones(prev => !prev);
-                        clearTimeout(delayTimer);
-                    }, 50);
+                    setIsShowTrackMapSettings(false);
+                    setIsShowTrackMapTimeline(false);
+                    setIsShowTrackMapZones(prev => !prev);
+                }
+            },
+            {
+                name: 'showTrackMapTimeline',
+                text: isShowTrackMapTimeline ? 'Скрыть хронологию' : 'Показать хронологию',
+                renderIconItem: () => ( isShowTrackMapTimeline ? <TimelineOffIcon size={ 18 }/> :
+                    <TimelineOnIcon size={ 18 }/> ),
+                onClick: (e) => {
+                    e.component.hide();
+                    setIsShowTrackMapSettings(false);
+                    setIsShowTrackMapZones(false);
+                    setIsShowTrackMapTimeline(prev => !prev);
                 }
             }
         ] : items;
 
 
         return items;
-    }, [commands, isXSmall, isShowStationaryZone, isShowTrackMapSettings, isShowTrackMapZones,  setIsShowStationaryZone, setIsShowTrackMapSettings, setIsShowTrackMapZones]);
+    }, [isShowStationaryZone, isXSmall, isShowTrackMapSettings, isShowTrackMapZones, isShowTrackMapTimeline, commands,
+        setIsShowStationaryZone, setIsShowTrackMapZones, setIsShowTrackMapTimeline, setIsShowTrackMapSettings]);
 
     return <ContextMenu
         ref={ innerRef }

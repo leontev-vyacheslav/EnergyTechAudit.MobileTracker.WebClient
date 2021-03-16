@@ -1,14 +1,14 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import AppConstants from '../../../../constants/app-constants';
 import { DBSCAN } from 'density-clustering';
-import { useAppSettings } from '../../../../contexts/app-settings';
-import { useTrackMapUtilsContext } from './track-map-utils-context';
 import ReactDOMServer from 'react-dom/server';
-import TrackMapInfoWindow from '../track-map/track-map-info-window/track-map-info-window';
-import { useAppData } from '../../../../contexts/app-data';
+import TrackMapInfoWindow from '../track-map-components/track-map-info-window/track-map-info-window';
 import { AccuracyIcon, ActivityIcon, CountdownIcon, RadiusIcon, SpeedIcon } from '../../../../constants/app-icons';
 import { SphericalCalculator } from '../../../../utils/spherical';
-import { useTrackMapSettingsContext } from '../track-map-settings-context';
+import { useTrackMapSettingsContext } from './track-map-settings-context';
+import { useAppSettings } from '../../../../contexts/app-settings';
+import { useTrackMapUtilsContext } from './track-map-utils-context';
+import { useAppData } from '../../../../contexts/app-data';
 
 const TrackMapStationaryZonesContext = createContext({});
 const useTrackMapStationaryZonesContext = () => useContext(TrackMapStationaryZonesContext);
@@ -16,6 +16,8 @@ const useTrackMapStationaryZonesContext = () => useContext(TrackMapStationaryZon
 function TrackMapStationaryZonesProvider (props) {
 
     const [stationaryClusterList, setStationaryClusterList] = useState([]);
+    const [currentStationaryCluster, setCurrentStationaryCluster] = useState(null);
+
     const { getBoundsByMarkers, getInfoWindow } = useTrackMapUtilsContext();
     const { getGeocodedAddressAsync } = useAppData();
     const { appSettingsData } = useAppSettings();
@@ -143,6 +145,7 @@ function TrackMapStationaryZonesProvider (props) {
         const clustersIndexes = dbscan.run(geoClusterData, stationaryZoneRadius, stationaryZoneElementCount, SphericalCalculator.computeDistanceBetween2);
         const geoClusters = clustersIndexes.map((clusterIndexes) => clusterIndexes.map((pointId) => geoClusterData[pointId]));
 
+        let index = 0;
         geoClusters.forEach( geoCluster => {
             const centroid = getBoundsByMarkers(geoCluster.map(element => {
                 const [, , { latitude, longitude }] = element;
@@ -171,13 +174,15 @@ function TrackMapStationaryZonesProvider (props) {
             circle.cluster = {
                 elements: geoCluster,
                 centroid: centroidCenter,
-                centroidRadius: diagonalDistance / 2
+                centroidRadius: diagonalDistance / 2,
+                index: index++,
             };
 
             circle.setMap(mapInstance);
 
             circle.addListener('click', async () => {
                 await showInfoWindowAsync(circle);
+                setCurrentStationaryCluster(circle);
             });
 
             currentsStationaryClusters.current.push(circle);
@@ -199,7 +204,9 @@ function TrackMapStationaryZonesProvider (props) {
                 showStationaryZoneClusters,
                 showInfoWindowAsync,
                 stationaryClusterList,
-                setStationaryClusterList
+                setStationaryClusterList,
+                currentStationaryCluster,
+                setCurrentStationaryCluster
             } }
             { ...props }
         />

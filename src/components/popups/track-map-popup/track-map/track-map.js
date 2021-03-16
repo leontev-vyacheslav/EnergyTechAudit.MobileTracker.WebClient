@@ -1,31 +1,31 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
-import TrackMapInfoWindow from './track-map-info-window/track-map-info-window';
-import TrackMapInfoBox from './track-map-info-box/track-map-info-box';
-import TrackMapHeader from './track-map-header/track-map-header';
+import TrackMapInfoWindow from '../track-map-components/track-map-info-window/track-map-info-window';
+import TrackMapInfoBox from '../track-map-components/track-map-info-box/track-map-info-box';
+import TrackMapHeader from '../track-map-components/track-map-header/track-map-header';
+import AppConstants from '../../../../constants/app-constants';
+import TrackMapStationaryZonesList from '../track-map-panels/track-map-stationary-zones-panel/track-map-stationary-zones-panel';
+import TrackMapSettingsForm from '../track-map-panels/track-map-settings-panel/track-map-settings-panel';
+import TrackMapTimelinePanel from '../track-map-panels/track-map-timeline-panel/track-map-timeline-panel';
+import { useTrackMapSettingsContext } from '../track-map-contexts/track-map-settings-context';
 import { useScreenSize } from '../../../../utils/media-query';
 import { useAppData } from '../../../../contexts/app-data';
 import { useAppSettings } from '../../../../contexts/app-settings';
-import AppConstants from '../../../../constants/app-constants';
-import { useSharedArea } from '../../../../contexts/shared-area';
 import { useTrackMapStationaryZonesContext } from '../track-map-contexts/track-map-stationary-zones-context';
 import { useTrackMapUtilsContext } from '../track-map-contexts/track-map-utils-context';
-import TrackMapStationaryZonesList from '../track-map-panels/track-map-stationary-zones-panel/track-map-stationary-zones-panel';
-import TrackMapSettingsForm from '../track-map-panels/track-map-settings-panel/track-map-settings-panel';
+import { useTrackMapTimelineContext } from '../track-map-contexts/track-map-timeline-context';
 
 import './track-map.scss';
-import { useTrackMapSettingsContext } from '../track-map-settings-context';
 
-const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => {
+
+const TrackMap = ({ mobileDevice }) => {
     const { isXSmall, isSmall } = useScreenSize();
-    const { showLoader, hideLoader } = useSharedArea();
-    const { appSettingsData, getDailyTimelineItem } = useAppSettings();
+    const { appSettingsData } = useAppSettings();
     const { getLocationRecordsByRangeAsync, getLocationRecordAsync, getGeocodedAddressAsync } = useAppData();
     const { showStationaryZoneClusters, setStationaryClusterList } = useTrackMapStationaryZonesContext();
-
-    const { isShowTrackMapSettings, isShowTrackMapZones, isShowStationaryZone } = useTrackMapSettingsContext();
-
+    const { isShowTrackMapSettings, isShowTrackMapZones, isShowStationaryZone, isShowTrackMapTimeline } = useTrackMapSettingsContext();
+    const  { currentTimelineItem } = useTrackMapTimelineContext();
     const {
         centerMapByInfoWindow,
         fitMapBoundsByLocations,
@@ -36,9 +36,6 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
     } = useTrackMapUtilsContext()
 
     const [trackLocationRecordList, setTrackLocationRecordList] = useState(null);
-    const [currentTimelineItem, setCurrentTimelineItem] = useState({ ...timelineItem });
-
-    const prevWorkDate = useRef(!initialDate ? appSettingsData.workDate : initialDate);
     const mapInstance = useRef(null);
     const trackPath = useRef(null);
     const currentMarkers = useRef([]);
@@ -69,16 +66,6 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
         }
 
     }, []);
-
-    useEffect(() => {
-        if (!initialDate) {
-            if (prevWorkDate.current !== appSettingsData.workDate) {
-                setCurrentTimelineItem(getDailyTimelineItem());
-            } else {
-                setCurrentTimelineItem(getDailyTimelineItem(initialDate));
-            }
-        }
-    }, [appSettingsData.workDate, getDailyTimelineItem, initialDate])
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: AppConstants.trackMap.apiKey,
@@ -215,39 +202,37 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
         mapInstance.current = googleMap;
         const delayTimer = setTimeout(() => {
             showTrack();
+            if (isShowStationaryZone) {
+                showStationaryZoneClusters(mapInstance.current, trackLocationRecordList);
+            }
             clearTimeout(delayTimer);
         }, 150);
-    }, [showTrack]);
-
-    useEffect(() => {
-        ( async () => {
-            let locationRecordsData = await getLocationRecordsByRangeAsync(
-                mobileDevice.id,
-                currentTimelineItem.beginDate,
-                currentTimelineItem.endDate
-            ) ?? [];
-            setTrackLocationRecordList(locationRecordsData);
-        } )()
-    }, [getLocationRecordsByRangeAsync, mobileDevice.id, currentTimelineItem, appSettingsData.minimalAccuracy, refreshToken]);
+    }, [isShowStationaryZone, showStationaryZoneClusters, showTrack, trackLocationRecordList]);
 
     useEffect(() => {
         if (mapInstance.current) {
             initOverlays();
             showTrack();
             if (isShowStationaryZone) {
-                try {
-                    showLoader();
-                    showStationaryZoneClusters(mapInstance.current, trackLocationRecordList);
-
-                } finally {
-                    hideLoader();
-                }
+                showStationaryZoneClusters(mapInstance.current, trackLocationRecordList);
             } else {
                 setStationaryClusterList([]);
             }
         }
-    }, [hideLoader, initOverlays, isShowStationaryZone, showLoader, showTrack,
-        trackLocationRecordList, showStationaryZoneClusters, setStationaryClusterList]);
+    }, [initOverlays, isShowStationaryZone, setStationaryClusterList, showStationaryZoneClusters, showTrack, trackLocationRecordList]);
+
+    useEffect(() => {
+        ( async () => {
+            if(currentTimelineItem) {
+                let locationRecordsData = await getLocationRecordsByRangeAsync(
+                    mobileDevice.id,
+                    currentTimelineItem.beginDate,
+                    currentTimelineItem.endDate
+                ) ?? [];
+                setTrackLocationRecordList(locationRecordsData);
+            }
+        } )()
+    }, [getLocationRecordsByRangeAsync, mobileDevice.id, currentTimelineItem, appSettingsData.minimalAccuracy]);
 
     TrackMap.fitToMap = function () {
         if (mapInstance && trackLocationRecordList) {
@@ -256,21 +241,11 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
     };
 
     return ( isLoaded && trackLocationRecordList !== null ?
-
             <div className={ 'track-map-container' }>
                 <div className={ 'track-map-container-header' }>
-                    <TrackMapHeader
-                        mobileDevice={ mobileDevice }
-                        timelineItem={ currentTimelineItem }
-                        initialDate={ initialDate }
-                        onCurrentTimelineItemChanged={ (currentTimelineItem) => {
-                            if (currentTimelineItem) {
-                                setCurrentTimelineItem(currentTimelineItem);
-                            }
-                        } }
-                    />
+                    <TrackMapHeader mobileDevice={ mobileDevice }/>
                 </div>
-                <div className={ `track-map-container-body${ isShowTrackMapSettings || isShowTrackMapZones ? ' track-map-container-body-split' : '' }` }>
+                <div className={ `track-map-container-body${ !isXSmall && (isShowTrackMapSettings || isShowTrackMapZones || isShowTrackMapTimeline) ? ' track-map-container-body-split' : '' }` }>
                     <GoogleMap
                         zoom={ AppConstants.trackMap.defaultZoom }
                         mapTypeId={ window.google.maps.MapTypeId.ROADMAP }
@@ -295,19 +270,25 @@ const TrackMap = ({ mobileDevice, timelineItem, initialDate, refreshToken }) => 
                         } }
                     >
                         { isXSmall ? null :
-                            <TrackMapInfoBox mobileDevice={ mobileDevice } timelineItem={ currentTimelineItem }/>
+                            <TrackMapInfoBox mobileDevice={ mobileDevice } />
                         }
                     </GoogleMap>
                 </div>
-                { !isXSmall && isShowTrackMapZones && !isShowTrackMapSettings ?
+                { !isXSmall && isShowTrackMapZones && !isShowTrackMapSettings && !isShowTrackMapTimeline ?
                     <div className={ 'dx-card responsive-paddings' }>
                         <TrackMapStationaryZonesList/>
                     </div>
                     : null
                 }
-                { !isXSmall && isShowTrackMapSettings && !isShowTrackMapZones ?
+                { !isXSmall && isShowTrackMapSettings && !isShowTrackMapZones && !isShowTrackMapTimeline ?
                     <div className={ 'dx-card responsive-paddings' }>
                        <TrackMapSettingsForm />
+                    </div>
+                    : null
+                }
+                { !isXSmall && isShowTrackMapTimeline && !isShowTrackMapZones && !isShowTrackMapSettings ?
+                    <div className={ 'dx-card responsive-paddings' }>
+                        <TrackMapTimelinePanel />
                     </div>
                     : null
                 }

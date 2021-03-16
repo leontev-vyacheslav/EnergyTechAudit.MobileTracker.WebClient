@@ -64,8 +64,9 @@ export { IoWarning as WarningIcon } from 'react-icons/io5';
 export { IoSettingsOutline as TrackMapSettingsOffIcon } from 'react-icons/io5';
 export { IoSettings as TrackMapSettingsOnIcon } from 'react-icons/io5';
 
-export { RiRoadMapFill as StationaryZoneOn } from 'react-icons/ri';
-export { RiRoadMapLine as StationaryZoneOff } from 'react-icons/ri';
+export { RiRoadMapFill as StationaryZoneOnIcon } from 'react-icons/ri';
+export { RiRoadMapLine as StationaryZoneOffIcon } from 'react-icons/ri';
+export { RiRoadMapLine as StationaryZonesIcon } from 'react-icons/ri';
 
 export { BsBoxArrowInLeft as  WorkDateBackwardIcon } from 'react-icons/bs';
 export { BsBoxArrowInRight as WorkDateForwardIcon } from 'react-icons/bs';
@@ -75,7 +76,10 @@ export { RiLogoutCircleLine as RadiusIcon } from 'react-icons/ri';
 export  { IoIosList as TrackMapZoneOffIcon } from 'react-icons/io';
 export  { IoIosListBox as TrackMapZoneOnIcon } from 'react-icons/io';
 
-export { IoCloseOutline as CloseIcon } from 'react-icons/io5'
+export { IoCloseOutline as CloseIcon } from 'react-icons/io5';
+
+export { IoTimerOutline as TimelineOffIcon } from 'react-icons/io5';
+export { IoTimerSharp as TimelineOnIcon } from 'react-icons/io5';
 
 import { MdMoreVert } from 'react-icons/md';
 export const GridAdditionalMenuIcon = () => <MdMoreVert style={ { cursor: 'pointer' } } size={ 18 }/>;
