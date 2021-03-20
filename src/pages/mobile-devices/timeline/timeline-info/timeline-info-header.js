@@ -2,13 +2,13 @@ import React from 'react';
 import { useScreenSize } from '../../../../utils/media-query';
 import { LocationIcon, UserIcon } from '../../../../constants/app-icons';
 
-export function TimelineInfoHeader ({ currentMobileDevice, departure, destination }) {
+export function TimelineInfoHeader ({ mobileDevice, departure, destination }) {
     const { isXSmall } = useScreenSize();
 
     return <>
         <div className={ 'timeline-info-user' }>
             <UserIcon size={ 22 }/>
-            <div>{!isXSmall ? 'Пользователь: ' : ''}{ currentMobileDevice.email } / { currentMobileDevice.model }</div>
+            <div>{!isXSmall ? 'Пользователь: ' : ''}{ mobileDevice.email } / { mobileDevice.model }</div>
         </div>
         { destination !== null ?
             <div className={ 'timeline-info-points' }>

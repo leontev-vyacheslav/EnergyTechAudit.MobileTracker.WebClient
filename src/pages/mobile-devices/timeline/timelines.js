@@ -9,21 +9,21 @@ import { BeginDateIcon, DistanceIcon,  GridAdditionalMenuIcon } from '../../../c
 
 import './timeline.scss';
 
-const Timelines = ({ currentMobileDevice, workDate }) => {
+const Timelines = ({ mobileDevice, workDate }) => {
 
     const { getTimelinesAsync } = useAppData();
     const [currentTimeline, setCurrentTimeline] = useState(null);
 
     useEffect(() => {
         ( async () => {
-                let timeline = await getTimelinesAsync(currentMobileDevice.id, workDate) ?? [];
+                let timeline = await getTimelinesAsync(mobileDevice.id, workDate) ?? [];
                 timeline = timeline.map(t => {
                     return { ...t, ...{ active: true } }
                 });
                 setCurrentTimeline(timeline);
             }
         )();
-    }, [getTimelinesAsync, currentMobileDevice.id, workDate]);
+    }, [getTimelinesAsync, mobileDevice.id, workDate]);
 
     const toggleRowDetailByRowKey = useCallback(({ dataGrid, rowKey, mode }) => {
         if (dataGrid.isRowExpanded(rowKey) && dataGrid.timelineDetailMode !== mode) {
@@ -144,7 +144,7 @@ const Timelines = ({ currentMobileDevice, workDate }) => {
                     render={ (e) => {
                         let detailComponent;
                         if (e.component.timelineDetailMode === 'info') {
-                            detailComponent = <TimelineInfo timeline={ e.data } currentMobileDevice={ currentMobileDevice }/>;
+                            detailComponent = <TimelineInfo timeline={ e.data } mobileDevice={ mobileDevice }/>;
                         } else {
                             detailComponent = null
                         }

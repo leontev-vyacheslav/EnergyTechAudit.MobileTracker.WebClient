@@ -11,7 +11,7 @@ const TrackMapStationaryZonesPanel = () => {
 
     return (
         <div style={ { height: 'calc(100% - 35px)' } }>
-            <TrackMapPanelHeader title={ 'Зоны стационарности' } icon={ () => <StationaryZonesIcon size={ 20 }/> } onClose={ () => {
+            <TrackMapPanelHeader title={ 'Зоны стационарности' } icon={ () => <StationaryZonesIcon size={ 22 }/> } onClose={ () => {
                 setIsShowTrackMapZones(false);
             } }/>
             <List className={ 'app-list' }

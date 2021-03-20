@@ -88,7 +88,7 @@ function TrackMapStationaryZonesProvider (props) {
                 id: 1,
                 iconRender: (props) => <RadiusIcon { ...props }/>,
                 description: 'Радиус центроида:',
-                value: `${Math.floor(cluster.centroidRadius * 10  ) / 10} м`
+                value: `${Math.floor(cluster.radius * 10  ) / 10} м`
             },
             {
                 id: 2,
@@ -145,8 +145,8 @@ function TrackMapStationaryZonesProvider (props) {
         const clustersIndexes = dbscan.run(geoClusterData, stationaryZoneRadius, stationaryZoneElementCount, SphericalCalculator.computeDistanceBetween2);
         const geoClusters = clustersIndexes.map((clusterIndexes) => clusterIndexes.map((pointId) => geoClusterData[pointId]));
 
-        let index = 0;
-        geoClusters.forEach( geoCluster => {
+
+        geoClusters.forEach( (geoCluster, index) => {
             const centroid = getBoundsByMarkers(geoCluster.map(element => {
                 const [, , { latitude, longitude }] = element;
                 return {
@@ -170,12 +170,14 @@ function TrackMapStationaryZonesProvider (props) {
                 }, ...stationaryClusterCircleDefaultProps
             };
             const circle = new window.google.maps.Circle(circleProps);
+            const clusterIndex = index + 1;
 
             circle.cluster = {
-                elements: geoCluster,
+                id: clusterIndex,
+                index: clusterIndex,
                 centroid: centroidCenter,
-                centroidRadius: diagonalDistance / 2,
-                index: index++,
+                radius: diagonalDistance / 2,
+                elements: geoCluster
             };
 
             circle.setMap(mapInstance);

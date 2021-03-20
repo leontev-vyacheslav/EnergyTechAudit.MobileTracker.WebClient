@@ -119,6 +119,11 @@ html, body {
 
 /* Grids */
   .app-grid {
+    .dx-master-detail-row {
+        .dx-master-detail-cell {
+          padding-top: 10px;
+        }
+    }
     .dx-toolbar .dx-toolbar-items-container {
       height: 45px;
     }
@@ -129,6 +134,9 @@ html, body {
       width: 250px !important;
     }
 
+    .dx-row .dx-item-content svg {
+      color: inherit;
+    }
     .dx-row svg {
       color: #464646;
     }

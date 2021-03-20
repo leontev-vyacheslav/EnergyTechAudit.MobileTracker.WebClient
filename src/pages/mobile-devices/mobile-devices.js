@@ -1,27 +1,26 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import DataGrid, { Column, Grouping, MasterDetail, Pager, Paging, Scrolling, SearchPanel } from 'devextreme-react/data-grid';
-import { useAppData } from '../../contexts/app-data';
-import { useHistory } from 'react-router-dom';
-import Timelines from './timeline/timelines'
 import AppConstants from '../../constants/app-constants'
 import { Button } from 'devextreme-react/button';
 import TrackMapPopup from '../../components/popups/track-map-popup/track-map-popup';
-import { useAppSettings } from '../../contexts/app-settings';
-import { useScreenSize } from '../../utils/media-query';
 import DataGridIconCellValueContainer from '../../components/data-grid-utils/data-grid-icon-cell-value-container';
 import moment from 'moment';
 import TrackSheetPopup from '../track-sheet/track-sheet-popup/track-sheet-popup';
-
+import { AndroidIcon, GridAdditionalMenuIcon, IosIcon, MobileDeviceIcon, RegistrationDateIcon } from '../../constants/app-icons';
 import MobileDeviceRowContextMenu from './mobile-devices-row-context-menu/mobile-device-row-context-menu';
 import MobileDevicesGroupRowContextMenu from './mobile-devices-group-row-context-menu/mobile-devices-group-row-context-menu';
-
-import { AndroidIcon, GridAdditionalMenuIcon, IosIcon, MobileDeviceIcon, RegistrationDateIcon } from '../../constants/app-icons';
-
-import './mobile-devices.scss';
 import ExtendedUserInfoPopup from '../../components/popups/extended-user-info-popup/extended-user-info-popup';
 import PageHeader from '../../components/page-header/page-header';
 import MobileDevicesMainContextMenu from './mobile-devices-main-context-menu/mobile-devices-main-context-menu';
 import { Template } from 'devextreme-react/core/template';
+import MobileDevicesMasterDetailView from './mobile-devices-master-detail-view/mobile-devices-master-detail-view';
+import { useAppData } from '../../contexts/app-data';
+import { useHistory } from 'react-router-dom';
+import { useAppSettings } from '../../contexts/app-settings';
+import { useScreenSize } from '../../utils/media-query';
+
+import './mobile-devices.scss';
+
 
 const MobileDevice = () => {
     const dxDataGridRef = useRef(null);
@@ -221,7 +220,7 @@ const MobileDevice = () => {
                     <MasterDetail
                         enabled={ true }
                         render={ (e) => {
-                            return <Timelines currentMobileDevice={ e.data } workDate={ appSettingsData.workDate }/>;
+                            return <MobileDevicesMasterDetailView mobileDevice={ e.data } workDate={ appSettingsData.workDate } /> ;
                         } }
                     />
                 </DataGrid>
@@ -290,7 +289,6 @@ const MobileDevice = () => {
                             }
                         }
                     />
-
                     </>
                 );
     }

@@ -70,7 +70,7 @@ export { RiRoadMapLine as StationaryZonesIcon } from 'react-icons/ri';
 
 export { BsBoxArrowInLeft as  WorkDateBackwardIcon } from 'react-icons/bs';
 export { BsBoxArrowInRight as WorkDateForwardIcon } from 'react-icons/bs';
-export { BsCheckBox as WorkDateTodayIcon } from 'react-icons/bs';
+export { IoTodayOutline as WorkDateTodayIcon } from 'react-icons/io5';
 export { RiLogoutCircleLine as RadiusIcon } from 'react-icons/ri';
 
 export  { IoIosList as TrackMapZoneOffIcon } from 'react-icons/io';

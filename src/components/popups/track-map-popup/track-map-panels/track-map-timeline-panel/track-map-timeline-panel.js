@@ -13,7 +13,7 @@ const TrackMapTimelinePanel = () => {
 
     return (
         <div style={ { height: 'calc(100% - 35px)' } }>
-            <TrackMapPanelHeader title={ 'Хронология' } icon={ () => <TimelineIcon size={ 20 }/> } onClose={ () => {
+            <TrackMapPanelHeader title={ 'Хронология' } icon={ () => <TimelineIcon size={ 22 }/> } onClose={ () => {
                 setIsShowTrackMapTimeline(false);
             } }/>
             <List className={ 'app-list' } height={ '100%' }

@@ -15,7 +15,7 @@ const TrackMapPanelHeader = ({ title,  onClose, icon }) => {
             </div>
             <div>
                 <Button className={ 'app-command-button app-command-button-small' } onClick={ onClose }>
-                    <CloseIcon size={ 20 }/>
+                    <CloseIcon size={ 22 }/>
                 </Button>
             </div>
         </div>

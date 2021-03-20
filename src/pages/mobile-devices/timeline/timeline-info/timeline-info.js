@@ -8,9 +8,7 @@ import { AccuracyIcon, BreakIcon, CountdownIcon, EdgePointsIcon, IntervalIcon } 
 
 import './timeline-info.scss';
 
-
-
-const TimelineInfo = ({ timeline, currentMobileDevice }) => {
+const TimelineInfo = ({ timeline, mobileDevice }) => {
 
     const { isXSmall, isSmall } = useScreenSize();
     const { getGeocodedAddressAsync } = useAppData();
@@ -78,7 +76,7 @@ const TimelineInfo = ({ timeline, currentMobileDevice }) => {
     return (timelineInfo ?
         (
             <div className={ 'timeline-info-container' }>
-                <TimelineInfoHeader currentMobileDevice={ currentMobileDevice } departure={ departure } destination={ destination }/>
+                <TimelineInfoHeader mobileDevice={ mobileDevice } departure={ departure } destination={ destination }/>
                 <DataGrid
                     className={ 'app-grid timeline-info' }
                     width={ isXSmall || isSmall ? '100%' : '50%' }
