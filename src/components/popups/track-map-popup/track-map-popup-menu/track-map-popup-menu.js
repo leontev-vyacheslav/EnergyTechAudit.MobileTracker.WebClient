@@ -7,13 +7,16 @@ import {
     StationaryZoneOnIcon,
     StationaryZoneOffIcon,
     TrackMapSettingsOffIcon,
-    TrackMapSettingsOnIcon, TrackMapZoneOffIcon, TrackMapZoneOnIcon,  TimelineOnIcon, TimelineOffIcon
+    TrackMapSettingsOnIcon, TrackMapZoneOffIcon, TrackMapZoneOnIcon, TimelineOnIcon, TimelineOffIcon, WorkDateTodayIcon
 } from '../../../../constants/app-icons';
 import ContextMenuItem from '../../../context-menu-item/context-menu-item';
 import { useScreenSize } from '../../../../utils/media-query';
 import { useTrackMapSettingsContext } from '../track-map-contexts/track-map-settings-context';
+import { useAppSettings } from '../../../../contexts/app-settings';
 
 const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
+
+    const { setAppSettingsData } = useAppSettings();
 
     const {
         isShowTrackMapSettings, setIsShowTrackMapSettings,
@@ -35,7 +38,21 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
                     e.component.hide();
                     commands.refresh();
                 },
-            }, {
+            },
+            {
+                name: 'workDateToday',
+                text: 'Сегодня',
+                renderIconItem: () => <WorkDateTodayIcon size={ 18 }/>,
+                onClick: (e) => {
+                    e.component.hide();
+                    setAppSettingsData(previous => {
+                        const workDate = new Date();
+                        workDate.setHours(0, 0, 0, 0);
+                        return { ...previous, workDate: workDate };
+                    });
+                }
+            },
+            {
                 name: 'workDate',
                 text: 'Рабочая дата',
                 renderIconItem: () => <WorkDateIcon size={ 18 }/>,
@@ -60,10 +77,6 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
                 onClick: (e) => {
                     e.component.hide();
                     setIsShowStationaryZone(prev => !prev );
-                    /*const delayTimer = setTimeout(() => {
-                        setIsShowStationaryZone(prev => !prev );
-                        clearTimeout(delayTimer);
-                    }, 50);*/
                 }
             }
         ];
@@ -108,8 +121,7 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
 
 
         return items;
-    }, [isShowStationaryZone, isXSmall, isShowTrackMapSettings, isShowTrackMapZones, isShowTrackMapTimeline, commands,
-        setIsShowStationaryZone, setIsShowTrackMapZones, setIsShowTrackMapTimeline, setIsShowTrackMapSettings]);
+    }, [isShowStationaryZone, isXSmall, isShowTrackMapSettings, isShowTrackMapZones, isShowTrackMapTimeline, commands, setAppSettingsData, setIsShowStationaryZone, setIsShowTrackMapZones, setIsShowTrackMapTimeline, setIsShowTrackMapSettings]);
 
     return <ContextMenu
         ref={ innerRef }

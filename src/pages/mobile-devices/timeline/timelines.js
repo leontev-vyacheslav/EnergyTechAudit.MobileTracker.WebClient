@@ -154,7 +154,8 @@ const Timelines = ({ mobileDevice, workDate }) => {
             </DataGrid>
         );
     }
-    return <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
+
+    return <div className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</div>
 };
 
 export default Timelines;

@@ -24,7 +24,7 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => 
         <TrackMapTimelineProvider mobileDevice={ mobileDevice } timelineItem={ timelineItem }>
             <TrackMapSettingsProvider>
                 <Popup className={ 'app-popup track-map-popup' } title={ 'Карта маршрута' }
-                       dragEnabled={ false }
+                       dragEnabled={ true }
                        visible={ true }
                        showTitle={ true }
                        showCloseButton={ true }

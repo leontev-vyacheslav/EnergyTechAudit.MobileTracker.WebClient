@@ -72,6 +72,26 @@ html, body {
   box-sizing: border-box;
 }
 
+
+
+.dx-popup-title .dx-toolbar-items-container {
+  height: 46px !important;
+}
+
+.dx-overlay-content.dx-popup-normal {
+  min-width: 300px !important;
+}
+
+.dx-dialog .dx-overlay-content.dx-popup-normal {
+  min-width: 300px !important;
+  max-width: 450px
+}
+
+.pac-container {
+  z-index: 15000 !important;
+}
+
+/*List*/
 .app-list {
   .dx-list-item-content {
   }
@@ -100,21 +120,17 @@ html, body {
   }
 }
 
-.dx-popup-title .dx-toolbar-items-container {
-  height: 46px !important;
-}
-
-.dx-overlay-content.dx-popup-normal {
-  min-width: 300px !important;
-}
-
-.dx-dialog .dx-overlay-content.dx-popup-normal {
-  min-width: 300px !important;
-  max-width: 450px
-}
-
-.pac-container {
-  z-index: 15000 !important;
+/*TabPanel*/
+.app-tab-panel {
+    .dx-datagrid-nodata {
+      padding: 5px;
+      position: initial;
+      width: 100%;
+      text-align: center;
+      transform: none;
+      font-size: inherit;
+      color: #ff5722;
+    }
 }
 
 /* Grids */

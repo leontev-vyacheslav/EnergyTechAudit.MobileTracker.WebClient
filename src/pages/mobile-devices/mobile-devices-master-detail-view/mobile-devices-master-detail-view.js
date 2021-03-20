@@ -9,7 +9,7 @@ import './mobile-devices-master-detail-view.scss';
 
 const MobileDevicesMasterDetailView = ({ mobileDevice, workDate }) => {
     return (
-        <TabPanel className={ 'mobile-device-master-detail-tab-panel' }>
+        <TabPanel className={ 'app-tab-panel mobile-device-master-detail-tab-panel' }>
             <Item title={ 'Хронология' }
                   tabRender={ (tab) => <IconTab tab={ tab }><TimelineIcon size={ 18 }/></IconTab> }
                   render={ () => {
