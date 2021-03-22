@@ -17,7 +17,7 @@ const TrackMapStationaryZonesPanel = () => {
             <List className={ 'app-list' }
                   dataSource={ stationaryClusterList }
                   height={ '100%' }
-                  showSelectionControls={ true }
+                  // showSelectionControls={ true }
                   selectionMode="single"
                   selectedItems={ [currentStationaryCluster] }
                   itemRender={ (stationaryCluster) => {

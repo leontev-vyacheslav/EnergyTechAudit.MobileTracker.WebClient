@@ -100,6 +100,11 @@ const SettingsForm = ({ style }) => {
                             } }
                         />
                         <SimpleItem
+                            dataField={ 'useStationaryZoneAddresses' }
+                            label={ { location: 'top', showColon: true, text: 'Получать адреса в зоне' } }
+                            editorType={ 'dxCheckBox' }
+                        />
+                        <SimpleItem
                             dataField={ 'useStationaryZoneCriteriaAccuracy' }
                             label={ { location: 'top', showColon: true, text: 'Использовать префильтр точности' } }
                             editorType={ 'dxCheckBox' }
@@ -114,6 +119,7 @@ const SettingsForm = ({ style }) => {
                                 max: 100,
                             } }
                         />
+
                     </Tab>
                 </TabbedItem>
                 <GroupItem>

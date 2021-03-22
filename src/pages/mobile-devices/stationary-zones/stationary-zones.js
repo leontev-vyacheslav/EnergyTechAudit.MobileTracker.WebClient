@@ -7,11 +7,32 @@ import AppConstants from '../../../constants/app-constants';
 import { DBSCAN } from 'density-clustering';
 import { SphericalCalculator } from '../../../utils/spherical';
 import { useJsApiLoader } from '@react-google-maps/api';
-import { AccuracyIcon, CountdownIcon, GridAdditionalMenuIcon, RadiusIcon, SpeedIcon } from '../../../constants/app-icons';
+import { AccuracyIcon, AddressIcon, CountdownIcon, GridAdditionalMenuIcon, RadiusIcon, SpeedIcon } from '../../../constants/app-icons';
 import DataGridIconCellValueContainer from '../../../components/data-grid-utils/data-grid-icon-cell-value-container';
 import StationaryZonesRowContextMenu from '../stationary-zones-row-context-menu/stationary-zones-row-context-menu';
 
+/*
+
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
+import { exportDataGrid as exportDataGridToPdf } from 'devextreme/pdf_exporter';
+
+*/
+
 const StationaryZones = ({ mobileDevice }) => {
+    const dataGridRef = useRef();
+
+    /*function exportGrid() {
+        const doc = new jsPDF();
+        const dataGrid = dataGridRef.current.instance;
+
+        exportDataGridToPdf({
+            jsPDFDocument: doc,
+            component: dataGrid
+        }).then(() => {
+            doc.save('Customers.pdf');
+        });
+    }*/
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: AppConstants.trackMap.apiKey,
@@ -20,7 +41,8 @@ const StationaryZones = ({ mobileDevice }) => {
 
     const  rowContextMenuRef = useRef(null);
     const [stationaryClusterList, setStationaryClusterList] = useState([]);
-    const { getLocationRecordsByRangeAsync } = useAppData();
+    const { getLocationRecordsByRangeAsync, getGeocodedAddressesAsync } = useAppData();
+
 
     const getBoundsByMarkers = useCallback((locationList) => {
         if(isLoaded === false) return null;
@@ -40,7 +62,9 @@ const StationaryZones = ({ mobileDevice }) => {
         stationaryZoneElementCount,
         stationaryZoneCriteriaSpeed,
         stationaryZoneCriteriaAccuracy,
-        useStationaryZoneCriteriaAccuracy } } = useAppSettings();
+        useStationaryZoneCriteriaAccuracy,
+        useStationaryZoneAddresses
+    } } = useAppSettings();
 
     useEffect(() => {
         ( async () => {
@@ -72,7 +96,8 @@ const StationaryZones = ({ mobileDevice }) => {
             const geoClusters = clustersIndexes.map((clusterIndexes) => clusterIndexes.map((pointId) => geoClusterData[pointId]));
 
             let clusterList = [];
-            geoClusters.forEach( (geoCluster, index) => {
+            let index = 0;
+            for (const geoCluster of geoClusters) {
 
                 const centroid = getBoundsByMarkers(geoCluster.map(element => {
                     const [, , { latitude, longitude }] = element;
@@ -81,22 +106,32 @@ const StationaryZones = ({ mobileDevice }) => {
                         longitude: longitude
                     };
                 }));
-
                 const diagonalDistance = window.google.maps.geometry.spherical.computeDistanceBetween(
                     centroid.getNorthEast(),
                     centroid.getSouthWest()
                 );
-
                 const radius = diagonalDistance / 2;
+                let formattedAddress = null;
 
-                const clusterIndex = index + 1;
+                if (useStationaryZoneAddresses === true) {
+                    const addresses = await getGeocodedAddressesAsync({
+                        latitude: centroid.getCenter().lat(),
+                        longitude: centroid.getCenter().lng(),
+                    });
+
+                    formattedAddress = addresses
+                        .filter(a => a.types.includes('street_address') || a.types.includes('premise'))
+                        .map(a => a.formatted_address)
+                        .filter((val, indx, arr) => arr.indexOf(val) === indx);
+                }
+
                 clusterList.push({
-                    id: clusterIndex,
-                    index: clusterIndex,
+                    id: index + 1,
+                    index: index + 1,
                     centroid: centroid,
                     radius: radius,
                     elements: geoCluster,
-
+                    addresses: formattedAddress,
                     speed: geoCluster
                         .map((element) => element[2].speed)
                         .reduce((acc, curr) => acc + curr) / geoCluster.length,
@@ -104,10 +139,11 @@ const StationaryZones = ({ mobileDevice }) => {
                         .map((element) => element[2].accuracy)
                         .reduce((acc, curr) => acc + curr) / geoCluster.length) * 10 ) / 10
                 })
-            });
+                index++;
+            }
             setStationaryClusterList(clusterList);
         } )();
-    }, [getBoundsByMarkers, getLocationRecordsByRangeAsync, isLoaded, mobileDevice.id, stationaryZoneCriteriaAccuracy, stationaryZoneCriteriaSpeed, stationaryZoneElementCount, stationaryZoneRadius, useStationaryZoneCriteriaAccuracy, workDate]);
+    }, [getBoundsByMarkers, getGeocodedAddressesAsync, getLocationRecordsByRangeAsync, isLoaded, mobileDevice.id, stationaryZoneCriteriaAccuracy, stationaryZoneCriteriaSpeed, stationaryZoneElementCount, stationaryZoneRadius, useStationaryZoneAddresses, useStationaryZoneCriteriaAccuracy, workDate]);
 
     if(stationaryClusterList.length > 0) {
         return (
@@ -115,6 +151,7 @@ const StationaryZones = ({ mobileDevice }) => {
             <DataGrid
                 className={ 'app-grid compact dx-card wide-card' }
                 dataSource={ stationaryClusterList }
+                ref={ dataGridRef }
                 width={ '100%' }
                 keyExpr={ 'id' }
                 focusedRowEnabled={ true }
@@ -139,7 +176,23 @@ const StationaryZones = ({ mobileDevice }) => {
                             )
                         } }/>
                 <Column dataField={ 'id' } dataType={ 'number' } caption={ 'Зона' } width={ 60 } alignment={ 'center' } />
-
+                {
+                    useStationaryZoneAddresses === true ?
+                    <Column dataField={ 'addresses' } dataType={ 'string' } caption={ 'Адреса' } alignment={ 'left' }
+                            cellRender={ (e) =>
+                                <DataGridIconCellValueContainer
+                                    cellDataFormatter={ () => {
+                                        return (
+                                            <div style={ { display: 'grid', rowGap: 10 } }>
+                                                { e.data.addresses.map((a, i) => ( <div key={ i }>{ a }</div> )) }
+                                            </div>
+                                        )
+                                    } }
+                                    iconRenderer={ (iconProps) => <AddressIcon { ...iconProps } /> }
+                                /> }
+                    />
+                    : null
+                }
                 <Column dataField={ 'count' } dataType={ 'number' } caption={ 'Отсчеты' } width={ 120 } alignment={ 'left' } hidingPriority={ 4 }
                         cellRender={ (e) =>
                             <DataGridIconCellValueContainer
@@ -174,7 +227,7 @@ const StationaryZones = ({ mobileDevice }) => {
                 ref={ rowContextMenuRef }
                 commands={
                     {
-                        showTrackMap: () => { },
+                        showTrackMap: () => { /* exportGrid() */ },
                     }
                 }
             />

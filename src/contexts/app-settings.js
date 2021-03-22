@@ -13,11 +13,13 @@ function AppSettingsProvider (props) {
         breakInterval: 1000,
         isShownBreakInterval: true,
         minimalAccuracy: 100,
+
         stationaryZoneRadius: 100,
         stationaryZoneElementCount: 10,
         stationaryZoneCriteriaSpeed: 2,
-        useStationaryZoneCriteriaAccuracy: false,
         stationaryZoneCriteriaAccuracy: 25,
+        useStationaryZoneCriteriaAccuracy: false,
+        useStationaryZoneAddresses: false,
     };
 
     const initialAppSettingsDataJson =
@@ -56,6 +58,10 @@ function AppSettingsProvider (props) {
     if(!initialAppSettingsData.useStationaryZoneCriteriaAccuracy)  {
         initialAppSettingsData = { ...initialAppSettingsData, ...{ useStationaryZoneCriteriaAccuracy: false } };
     }
+    if(!initialAppSettingsData.useStationaryZoneAddresses)  {
+        initialAppSettingsData = { ...initialAppSettingsData, ...{ useStationaryZoneAddresses: false } };
+    }
+
     const [appSettingsData, setAppSettingsData] = useState(initialAppSettingsData);
 
     useEffect(() => {

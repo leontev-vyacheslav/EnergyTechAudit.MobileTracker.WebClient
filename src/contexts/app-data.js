@@ -118,7 +118,7 @@ function AppDataProvider (props) {
         [axiosWithCredentials],
     );
 
-    const getGeocodedAddressAsync = useCallback(async (locationRecord) => {
+    const getGeocodedAddressesAsync = useCallback(async (locationRecord) => {
             const latLng = `${ locationRecord.latitude },${ locationRecord.longitude }`;
             const response = await fetch(
                 `${ AppConstants.trackMap.geocodeApiUrl }?latlng=${ encodeURIComponent(latLng) }&key=${ AppConstants.trackMap.apiKey }&language=ru&region=ru`
@@ -128,13 +128,25 @@ function AppDataProvider (props) {
                 if(dataResponse && dataResponse.status === 'OK') {
                     if(dataResponse.results.length > 0)
                     {
-                        return dataResponse.results.find((e, i) => i === 0).formatted_address;
+                        return dataResponse.results.map(e => e);
                     }
                 }
             }
             return null;
         },
         [],
+    );
+
+    const getGeocodedAddressAsync = useCallback(
+        async (locationRecord) => {
+
+            const results = await getGeocodedAddressesAsync(locationRecord);
+            if(results) {
+                return results.find((_, i) => i === i).formatted_address;
+            }
+            return  null;
+        },
+        [getGeocodedAddressesAsync]
     );
 
     const getGeocodedLocationAsync = useCallback(async (address) => {
@@ -286,7 +298,7 @@ function AppDataProvider (props) {
         <AppDataContext.Provider
             value={ {
                 getMobileDeviceAsync, getMobileDevicesAsync,  getTimelinesAsync, getLocationRecordsByRangeAsync,
-                getLocationRecordAsync,  getGeocodedAddressAsync, getGeocodedLocationAsync, getTrackSheetAsync,
+                getLocationRecordAsync,  getGeocodedAddressAsync, getGeocodedAddressesAsync, getGeocodedLocationAsync, getTrackSheetAsync,
                 postExtendedUserInfoAsync, getExtendedUserInfoAsync,
 
                 getOrganizationsAsync, getOrganizationOfficesAsync, deleteOrganizationAsync, deleteOfficeAsync,

@@ -99,8 +99,7 @@ html, body {
   .dx-list-item-selected svg {
     color: $base-accent;
   }
-
-  .dx-empty-message {
+   .dx-empty-message {
     color: $base-accent;
     font-size: 16px;
     text-align: center;
@@ -108,7 +107,7 @@ html, body {
   }
 
   .dx-list-item.dx-list-item-selected {
-    color: $base-accent;
+    color: $base-accent !important;
   }
 
   .dx-list-item.dx-state-hover .dx-radiobutton-icon::before {
