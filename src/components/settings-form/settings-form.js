@@ -6,7 +6,7 @@ import notify from 'devextreme/ui/notify';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useScreenSize } from '../../utils/media-query';
 
-import './settings.scss';
+import './settings-form.scss';
 
 const SettingsForm = ({ style }) => {
 

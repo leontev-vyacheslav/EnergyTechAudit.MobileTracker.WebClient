@@ -1,6 +1,6 @@
 import React from 'react';
 import TrackMapPanelHeader from '../track-map-panel-header/track-map-panel-header';
-import SettingsForm from '../../../../../pages/settings/settings-form';
+import SettingsForm from '../../../../settings-form/settings-form';
 import { SettingsIcon } from '../../../../../constants/app-icons';
 import { useTrackMapSettingsContext } from '../../track-map-contexts/track-map-settings-context';
 

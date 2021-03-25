@@ -111,18 +111,22 @@ const StationaryZones = ({ mobileDevice }) => {
                     centroid.getSouthWest()
                 );
                 const radius = diagonalDistance / 2;
-                let formattedAddress = null;
+                let formattedAddress = [];
 
                 if (useStationaryZoneAddresses === true) {
                     const addresses = await getGeocodedAddressesAsync({
                         latitude: centroid.getCenter().lat(),
                         longitude: centroid.getCenter().lng(),
                     });
-
-                    formattedAddress = addresses
-                        .filter(a => a.types.includes('street_address') || a.types.includes('premise'))
-                        .map(a => a.formatted_address)
-                        .filter((val, indx, arr) => arr.indexOf(val) === indx);
+                    if(addresses) {
+                        formattedAddress = addresses
+                            .filter(a => a.types.includes('street_address') || a.types.includes('premise'))
+                            .map(a => a.formatted_address)
+                            .filter((val, indx, arr) => arr.indexOf(val) === indx);
+                    }
+                    if(formattedAddress.length === 0 ) {
+                        formattedAddress.push(AppConstants.noDataLongText);
+                    }
                 }
 
                 clusterList.push({
@@ -179,8 +183,8 @@ const StationaryZones = ({ mobileDevice }) => {
                 {
                     useStationaryZoneAddresses === true ?
                     <Column dataField={ 'addresses' } dataType={ 'string' } caption={ 'Адреса' } alignment={ 'left' }
-                            cellRender={ (e) =>
-                                <DataGridIconCellValueContainer
+                            cellRender={ (e) => {
+                                return <DataGridIconCellValueContainer rowStyle={ { fontSize: 12 } }
                                     cellDataFormatter={ () => {
                                         return (
                                             <div style={ { display: 'grid', rowGap: 10 } }>
@@ -189,7 +193,8 @@ const StationaryZones = ({ mobileDevice }) => {
                                         )
                                     } }
                                     iconRenderer={ (iconProps) => <AddressIcon { ...iconProps } /> }
-                                /> }
+                                />
+                            } }
                     />
                     : null
                 }

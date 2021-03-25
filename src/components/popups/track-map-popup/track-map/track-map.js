@@ -23,7 +23,7 @@ const TrackMap = ({ mobileDevice }) => {
     const { isXSmall, isSmall } = useScreenSize();
     const { appSettingsData } = useAppSettings();
     const { getLocationRecordsByRangeAsync, getLocationRecordAsync, getGeocodedAddressAsync } = useAppData();
-    const { showStationaryZoneClusters, setStationaryClusterList } = useTrackMapStationaryZonesContext();
+    const { showStationaryZoneClustersAsync, setStationaryClusterList } = useTrackMapStationaryZonesContext();
     const { isShowTrackMapSettings, isShowTrackMapZones, isShowStationaryZone, isShowTrackMapTimeline } = useTrackMapSettingsContext();
     const  { currentTimelineItem } = useTrackMapTimelineContext();
     const {
@@ -200,26 +200,27 @@ const TrackMap = ({ mobileDevice }) => {
 
     const onTrackMapLoadHandler = useCallback((googleMap) => {
         mapInstance.current = googleMap;
-        const delayTimer = setTimeout(() => {
+        const delayTimer = setTimeout(async () => {
             showTrack();
             if (isShowStationaryZone) {
-                showStationaryZoneClusters(mapInstance.current, trackLocationRecordList);
+               await showStationaryZoneClustersAsync(mapInstance.current, trackLocationRecordList);
             }
             clearTimeout(delayTimer);
         }, 150);
-    }, [isShowStationaryZone, showStationaryZoneClusters, showTrack, trackLocationRecordList]);
+    }, [isShowStationaryZone, showStationaryZoneClustersAsync, showTrack, trackLocationRecordList]);
 
     useEffect(() => {
-        if (mapInstance.current) {
-            initOverlays();
-            showTrack();
-            if (isShowStationaryZone) {
-                showStationaryZoneClusters(mapInstance.current, trackLocationRecordList);
-            } else {
-                setStationaryClusterList([]);
+        (async () => {
+            if (mapInstance.current) {
+                initOverlays();
+                showTrack();
+                if (isShowStationaryZone) {
+                    await showStationaryZoneClustersAsync(mapInstance.current, trackLocationRecordList);
+                }
             }
-        }
-    }, [initOverlays, isShowStationaryZone, setStationaryClusterList, showStationaryZoneClusters, showTrack, trackLocationRecordList]);
+        }) ();
+
+    }, [initOverlays, isShowStationaryZone, setStationaryClusterList, showStationaryZoneClustersAsync, showTrack, trackLocationRecordList]);
 
     useEffect(() => {
         ( async () => {

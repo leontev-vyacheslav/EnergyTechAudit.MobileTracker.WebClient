@@ -1,7 +1,7 @@
 import React from 'react';
 import { SettingsIcon } from '../../constants/app-icons';
 import PageHeader from '../../components/page-header/page-header';
-import SettingsForm from './settings-form';
+import SettingsForm from '../../components/settings-form/settings-form';
 
 export default () => {
     return (
