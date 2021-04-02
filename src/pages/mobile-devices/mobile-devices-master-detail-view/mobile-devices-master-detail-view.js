@@ -7,23 +7,17 @@ import { StationaryZonesIcon, TimelineIcon } from '../../../constants/app-icons'
 
 import './mobile-devices-master-detail-view.scss';
 
-const MobileDevicesMasterDetailView = ({ mobileDevice, workDate }) => {
+const MobileDevicesMasterDetailView = ({ mobileDevice }) => {
     return (
         <TabPanel className={ 'app-tab-panel mobile-device-master-detail-tab-panel' }>
             <Item title={ 'Хронология' }
                   tabRender={ (tab) => <IconTab tab={ tab }><TimelineIcon size={ 18 }/></IconTab> }
-                  render={ () => {
-                      return (
-                          <Timelines mobileDevice={ mobileDevice } workDate={ workDate }/>
-                      )
-                  } }/>
+                  render={ () => <Timelines mobileDevice={ mobileDevice }/> }
+            />
             <Item title={ 'Зоны' }
                   tabRender={ (tab) => <IconTab tab={ tab }><StationaryZonesIcon size={ 18 }/></IconTab> }
-                  render={ () => {
-                      return (
-                          <StationaryZones mobileDevice={ mobileDevice }/>
-                      );
-                  } }/>
+                  render={ () => <StationaryZones mobileDevice={ mobileDevice }/> }
+            />
         </TabPanel>
     );
 };

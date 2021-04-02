@@ -5,7 +5,7 @@ import TrackMapInfoWindow from '../track-map-components/track-map-info-window/tr
 import TrackMapInfoBox from '../track-map-components/track-map-info-box/track-map-info-box';
 import TrackMapHeader from '../track-map-components/track-map-header/track-map-header';
 import AppConstants from '../../../../constants/app-constants';
-import TrackMapStationaryZonesList from '../track-map-panels/track-map-stationary-zones-panel/track-map-stationary-zones-panel';
+import TrackMapStationaryZonesPanel from '../track-map-panels/track-map-stationary-zones-panel/track-map-stationary-zones-panel';
 import TrackMapSettingsForm from '../track-map-panels/track-map-settings-panel/track-map-settings-panel';
 import TrackMapTimelinePanel from '../track-map-panels/track-map-timeline-panel/track-map-timeline-panel';
 import { useTrackMapSettingsContext } from '../track-map-contexts/track-map-settings-context';
@@ -23,7 +23,7 @@ const TrackMap = ({ mobileDevice }) => {
     const { isXSmall, isSmall } = useScreenSize();
     const { appSettingsData } = useAppSettings();
     const { getLocationRecordsByRangeAsync, getLocationRecordAsync, getGeocodedAddressAsync } = useAppData();
-    const { showStationaryZoneClustersAsync, setStationaryClusterList } = useTrackMapStationaryZonesContext();
+    const { showStationaryZoneClustersAsync } = useTrackMapStationaryZonesContext();
     const { isShowTrackMapSettings, isShowTrackMapZones, isShowStationaryZone, isShowTrackMapTimeline } = useTrackMapSettingsContext();
     const  { currentTimelineItem } = useTrackMapTimelineContext();
     const {
@@ -220,7 +220,7 @@ const TrackMap = ({ mobileDevice }) => {
             }
         }) ();
 
-    }, [initOverlays, isShowStationaryZone, setStationaryClusterList, showStationaryZoneClustersAsync, showTrack, trackLocationRecordList]);
+    }, [initOverlays, isShowStationaryZone, showStationaryZoneClustersAsync, showTrack, trackLocationRecordList]);
 
     useEffect(() => {
         ( async () => {
@@ -277,7 +277,7 @@ const TrackMap = ({ mobileDevice }) => {
                 </div>
                 { !isXSmall && isShowTrackMapZones && !isShowTrackMapSettings && !isShowTrackMapTimeline ?
                     <div className={ 'dx-card responsive-paddings' }>
-                        <TrackMapStationaryZonesList/>
+                        <TrackMapStationaryZonesPanel />
                     </div>
                     : null
                 }

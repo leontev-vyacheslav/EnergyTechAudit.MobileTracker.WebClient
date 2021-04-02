@@ -20,6 +20,7 @@ import { useAppSettings } from '../../contexts/app-settings';
 import { useScreenSize } from '../../utils/media-query';
 
 import './mobile-devices.scss';
+import { DataGridToolbarButton } from '../../components/data-grid-utils/data-grid-toolbar-button';
 
 
 const MobileDevice = () => {
@@ -86,19 +87,6 @@ const MobileDevice = () => {
         }
     }, []);
 
-    const DataGridToolbarButton = () => {
-        return (
-            <Button className={ 'app-command-button app-command-button-small' } onClick={ (e) => {
-                if (mainContextMenuRef && mainContextMenuRef.current) {
-                    mainContextMenuRef.current.instance.option('target', e.element);
-                    mainContextMenuRef.current.instance.show();
-                }
-            } }>
-                <GridAdditionalMenuIcon/>
-            </Button>
-        );
-    }
-
     const GroupRowContent = ({ groupCell }) => {
 
         const items = groupCell.data.items === null ? groupCell.data.collapsedItems : groupCell.data.items;
@@ -159,7 +147,7 @@ const MobileDevice = () => {
                     <Paging defaultPageSize={ 10 }/>
                     <Pager showPageSizeSelector={ true } showInfo={ true }/>
                     <Grouping autoExpandAll={ true } key={ 'userId' }/>
-                    <Template name={ 'DataGridToolbarButtonTemplate' } render={ DataGridToolbarButton }/>
+                    <Template name={ 'DataGridToolbarButtonTemplate' } render={ DataGridToolbarButton.bind(this, { contextMenuRef: mainContextMenuRef }) }/>
                     <Column type={ 'buttons' } width={ 45 } cellRender={ () => {
                         return (
                             <Button className={ 'app-command-button app-command-button-small' } onClick={ (e) => {
@@ -220,7 +208,7 @@ const MobileDevice = () => {
                     <MasterDetail
                         enabled={ true }
                         render={ (e) => {
-                            return <MobileDevicesMasterDetailView mobileDevice={ e.data } workDate={ appSettingsData.workDate } /> ;
+                            return <MobileDevicesMasterDetailView mobileDevice={ e.data } /> ;
                         } }
                     />
                 </DataGrid>

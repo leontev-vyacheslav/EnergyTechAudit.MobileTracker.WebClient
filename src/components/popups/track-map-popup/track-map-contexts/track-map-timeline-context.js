@@ -21,7 +21,7 @@ function TrackMapTimelineProvider (props) {
                 return t;
             } );
             setCurrentTimeline(timeline );
-            setCurrentTimelineItem(timelineItem);
+            setCurrentTimelineItem(timelineItem)
         } )();
     }, [getTimelinesAsync, mobileDevice.id, appSettingsData.workDate, getDailyTimelineItem]);
 

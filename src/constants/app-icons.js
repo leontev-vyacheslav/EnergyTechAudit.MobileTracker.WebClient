@@ -59,7 +59,8 @@ export { IoExitOutline as ExitIcon } from 'react-icons/io5';
 export { CgRemoveR as DeleteIcon } from 'react-icons/cg';
 export { CgAddR as AddIcon } from 'react-icons/cg';
 export { BiEdit as EditIcon } from 'react-icons/bi';
-export { IoWarning as WarningIcon } from 'react-icons/io5';
+export { IoWarningSharp as WarningIcon } from 'react-icons/io5';
+export { IoInformationCircleSharp as InformationIcon } from 'react-icons/io5';
 
 export { IoSettingsOutline as TrackMapSettingsOffIcon } from 'react-icons/io5';
 export { IoSettings as TrackMapSettingsOnIcon } from 'react-icons/io5';
@@ -80,6 +81,9 @@ export { IoCloseOutline as CloseIcon } from 'react-icons/io5';
 
 export { IoTimerOutline as TimelineOffIcon } from 'react-icons/io5';
 export { IoTimerSharp as TimelineOnIcon } from 'react-icons/io5';
+
+export { RiFileExcel2Line as ExportToXlsxIcon } from 'react-icons/ri';
+
 
 import { MdMoreVert } from 'react-icons/md';
 export const GridAdditionalMenuIcon = () => <MdMoreVert style={ { cursor: 'pointer' } } size={ 18 }/>;

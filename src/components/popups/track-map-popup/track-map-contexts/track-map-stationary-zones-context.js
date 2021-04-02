@@ -19,10 +19,11 @@ function TrackMapStationaryZonesProvider (props) {
     const [currentStationaryCluster, setCurrentStationaryCluster] = useState(null);
 
     const { getBoundsByMarkers, getInfoWindow } = useTrackMapUtilsContext();
-    const { getGeocodedAddressAsync, getGeocodedAddressesAsync } = useAppData();
+    const { getGeocodedAddressAsync } = useAppData();
     const { appSettingsData } = useAppSettings();
     const { isShowStationaryZone } = useTrackMapSettingsContext();
     const currentClusterInfoWindow = useRef(null);
+    const currentStationaryClusterList = useRef([]);
 
     const stationaryClusterCircleDefaultProps = useMemo(() => {
         return ( {
@@ -35,22 +36,21 @@ function TrackMapStationaryZonesProvider (props) {
     }, []);
 
     const clearOverlays = useCallback(() => {
-        setStationaryClusterList(prev => {
-            if(prev.length > 0) {
-                prev.forEach(sc => {
-                    sc.setMap(null);
-                    sc = null;
-                });
-            }
-            return [];
-        });
+        if (currentStationaryClusterList.current.length > 0) {
+            currentStationaryClusterList.current.forEach(sc => {
+                sc.setMap(null);
+                sc = null;
+            });
+            currentStationaryClusterList.current = [];
+        }
+        setStationaryClusterList([]);
         if (currentClusterInfoWindow.current) {
             currentClusterInfoWindow.current.setMap(null);
             currentClusterInfoWindow.current = null;
         }
     }, []);
 
-    const showInfoWindowAsync = useCallback(async (circle) => {
+    const showInfoWindowAsync = useCallback(async (mapInstance, circle) => {
 
         if (currentClusterInfoWindow.current) {
             currentClusterInfoWindow.current.setMap(null);
@@ -117,7 +117,7 @@ function TrackMapStationaryZonesProvider (props) {
             )
         );
 
-        currentClusterInfoWindow.current = getInfoWindow(circle.getMap(), locationRecordInfo, content);
+        currentClusterInfoWindow.current = getInfoWindow(mapInstance, locationRecordInfo, content);
 
     }, [getGeocodedAddressAsync, getInfoWindow]);
 
@@ -128,8 +128,7 @@ function TrackMapStationaryZonesProvider (props) {
             stationaryZoneElementCount,
             stationaryZoneCriteriaSpeed,
             stationaryZoneCriteriaAccuracy,
-            useStationaryZoneCriteriaAccuracy,
-            useStationaryZoneAddresses
+            useStationaryZoneCriteriaAccuracy
         } = appSettingsData;
 
         const geoClusterData = locationList
@@ -145,7 +144,7 @@ function TrackMapStationaryZonesProvider (props) {
         const geoClusters = clustersIndexes.map((clusterIndexes) => clusterIndexes.map((pointId) => geoClusterData[pointId]));
 
         let index = 0;
-        const currentsStationaryClusters = [];
+
         for (const geoCluster of geoClusters) {
 
             const centroid = getBoundsByMarkers(geoCluster.map(element => {
@@ -164,24 +163,6 @@ function TrackMapStationaryZonesProvider (props) {
             );
 
             const radius = diagonalDistance / 2;
-
-            let formattedAddress = [];
-            if(useStationaryZoneAddresses === true) {
-                const addresses = await getGeocodedAddressesAsync({
-                    latitude: centroid.getCenter().lat(),
-                    longitude: centroid.getCenter().lng(),
-                });
-                if(addresses) {
-                    formattedAddress = addresses
-                        .filter(a => a.types.includes('street_address') || a.types.includes('premise'))
-                        .map(a => a.formatted_address)
-                        .filter((val, indx, arr) => arr.indexOf(val) === indx);
-                }
-                if(formattedAddress.length === 0 ) {
-                    formattedAddress.push(AppConstants.noDataLongText);
-                }
-            }
-
             const circleProps = {
                 ...{
                     radius: radius, center: centroidCenter,
@@ -195,7 +176,7 @@ function TrackMapStationaryZonesProvider (props) {
                 centroid: centroidCenter,
                 radius: diagonalDistance / 2,
                 elements: geoCluster,
-                addresses: formattedAddress,
+                addresses: [],
             };
 
             circle.setMap(mapInstance);
@@ -205,13 +186,13 @@ function TrackMapStationaryZonesProvider (props) {
                 setCurrentStationaryCluster(circle);
             });
 
-            currentsStationaryClusters.push(circle);
+            currentStationaryClusterList.current.push(circle);
             index++;
         }
 
-        setStationaryClusterList(currentsStationaryClusters);
+        setStationaryClusterList([...currentStationaryClusterList.current]);
 
-    }, [clearOverlays, appSettingsData, getBoundsByMarkers, getGeocodedAddressesAsync, stationaryClusterCircleDefaultProps, showInfoWindowAsync]);
+    }, [appSettingsData, clearOverlays, getBoundsByMarkers, showInfoWindowAsync, stationaryClusterCircleDefaultProps]);
 
     useEffect(() => {
         if (!isShowStationaryZone) {

@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import ContextMenu from 'devextreme-react/context-menu';
 
-import { TrackMapIcon } from '../../../constants/app-icons';
-import ContextMenuItem from '../../../components/context-menu-item/context-menu-item';
+import { TrackMapIcon } from '../../../../constants/app-icons';
+import ContextMenuItem from '../../../../components/context-menu-item/context-menu-item';
 
 const StationaryZonesRowContextMenu = ({ innerRef, commands }) => {
 

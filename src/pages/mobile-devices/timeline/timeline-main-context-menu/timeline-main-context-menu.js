@@ -1,29 +1,18 @@
 import React, { useMemo } from 'react';
 import ContextMenu from 'devextreme-react/context-menu';
+import { ExportToXlsxIcon } from '../../../../constants/app-icons';
+import ContextMenuItem from '../../../../components/context-menu-item/context-menu-item';
 
-import { ExportToXlsxIcon, RefreshIcon } from '../../../constants/app-icons';
-import ContextMenuItem from '../../../components/context-menu-item/context-menu-item';
-
-const TrackSheetMainContextMenu = ({ innerRef, commands }) => {
+const TimelineMainContextMenu = ({ innerRef, commands }) => {
 
     const items = useMemo(() => {
         return [
             {
-                text: 'Обновить...',
-                renderIconItem: () => <RefreshIcon size={ 18 }/>,
-                onClick: async (e) => {
-                    e.component.hide();
-                    if(commands.refreshAsync) {
-                        await commands.refreshAsync();
-                    }
-                }
-            },
-            {
-                text: 'Экспорт в Xlsx...',
+                text: 'Экспорт в XLSX...',
                 renderIconItem: () => <ExportToXlsxIcon size={ 18 }/>,
                 onClick: async (e) => {
                     e.component.hide();
-                    if(commands.refreshAsync) {
+                    if(commands.exportToXlsx) {
                         await commands.exportToXlsx();
                     }
                 }
@@ -41,7 +30,7 @@ const TrackSheetMainContextMenu = ({ innerRef, commands }) => {
     />
 }
 
-export default React.forwardRef((props, ref) => <TrackSheetMainContextMenu
+export default React.forwardRef((props, ref) => <TimelineMainContextMenu
     innerRef={ ref } { ...props }
 />);
 

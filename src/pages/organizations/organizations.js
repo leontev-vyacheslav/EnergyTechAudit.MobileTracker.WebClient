@@ -11,9 +11,10 @@ import OrganizationGroupRowContextMenu from './organization-group-row-context-me
 import OrganizationRowContextMenu from './organization-row-context-menu/organization-row-context-menu';
 import { Template } from 'devextreme-react/core/template';
 import OrganizationPopup from '../../components/popups/organization-popup/organization-popup';
-import showConfirmDialog from '../../utils/confirm';
+import { showConfirmDialog } from '../../utils/dialogs';
 import { useScreenSize } from '../../utils/media-query';
 import OfficePopup from '../../components/popups/office-popup/office-popup';
+import { DataGridToolbarButton } from '../../components/data-grid-utils/data-grid-toolbar-button';
 
 const Organizations = () => {
     const { getOrganizationOfficesAsync, deleteOrganizationAsync, deleteOfficeAsync } = useAppData();
@@ -62,7 +63,7 @@ const Organizations = () => {
     const deleteOrganizationByIdAsync = useCallback(async () => {
         showConfirmDialog({
             title: 'Предупреждение',
-            appIconName: 'WarningIcon',
+            iconName: 'WarningIcon',
             textRender: () => <>Действительно хотите <b>удалить</b> организацию!</>,
             callback: async () => {
                 if (dxDataGridRef.current && dxDataGridRef.current.instance) {
@@ -103,7 +104,7 @@ const Organizations = () => {
     const deleteOfficeByIdAsync = useCallback(async () => {
         showConfirmDialog({
             title: 'Предупреждение',
-            appIconName: 'WarningIcon',
+            iconName: 'WarningIcon',
             textRender: () => <>Действительно хотите <b>удалить</b> офис!</>,
             callback: async () => {
                 if (dxDataGridRef.current && dxDataGridRef.current.instance) {
@@ -162,19 +163,6 @@ const Organizations = () => {
             </> );
     }
 
-    const DataGridToolbarButton = () => {
-        return (
-            <Button className={ 'app-command-button app-command-button-small' } onClick={ (e) => {
-                if (mainContextMenuRef && mainContextMenuRef.current) {
-                    mainContextMenuRef.current.instance.option('target', e.element);
-                    mainContextMenuRef.current.instance.show();
-                }
-            } }>
-                <GridAdditionalMenuIcon/>
-            </Button>
-        );
-    }
-
     if (!( organizations === null || organizations.length === 0 )) {
         return (
             <>
@@ -206,8 +194,7 @@ const Organizations = () => {
                           } }
                 >
 
-                    <Template name={ 'DataGridToolbarButtonTemplate' } render={ DataGridToolbarButton }/>
-
+                    <Template name={ 'DataGridToolbarButtonTemplate' } render={ DataGridToolbarButton.bind(this, { contextMenuRef: mainContextMenuRef }) }/>
                     <SearchPanel visible={ true } searchVisibleColumnsOnly={ false }/>
                     <Scrolling showScrollbar={ 'never' }/>
                     <Paging defaultPageSize={ 10 }/>

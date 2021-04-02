@@ -169,7 +169,11 @@ html, body {
     font-size: 13px;
     line-height: 18px;
   }
-
+  .app-grid-detail {
+    .dx-datagrid-borders > .dx-datagrid-header-panel {
+      padding: 0;
+    }
+  }
 /* Buttons */
   .app-command-button {
     border-radius: 50%;

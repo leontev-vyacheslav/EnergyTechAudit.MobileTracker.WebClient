@@ -18,9 +18,11 @@ import PageHeader from '../../components/page-header/page-header';
 import TrackSheetMainContextMenu from './track-sheet-main-context-menu/track-sheet-main-context-menu'
 
 import './track-sheet.scss';
+import { trackSheetExcelExporter } from './track-sheet-excel-exporter';
+import { DataGridToolbarButton } from '../../components/data-grid-utils/data-grid-toolbar-button';
 
 const TrackSheet = () => {
-    function useQuery() {
+    function useQuery () {
         return new URLSearchParams(useLocation().search);
     }
 
@@ -28,25 +30,25 @@ const TrackSheet = () => {
 
     const dxDataGridRef = useRef(null);
     const { isXSmall } = useScreenSize();
-    const { getDailyTimelineItem } = useAppSettings();
+    const { appSettingsData: { workDate }, getDailyTimelineItem } = useAppSettings();
     const { getMobileDeviceAsync, getTrackSheetAsync } = useAppData();
     const [trackSheet, setTrackSheet] = useState(null);
-    const [currentMobileDevice, setCurrentMobileDevice] = useState(null);
+    const [mobileDevice, setMobileDevice] = useState(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState(null);
 
     const [trackMapCurrentDate, setTrackMapCurrentDate] = useState(null);
     const mainContextMenuRef = useRef();
     const rowContextMenuRef = useRef();
 
-    const [currentMobileDeviceId] = useState(query.get('mobileDeviceId'));
+    const [mobileDeviceId] = useState(query.get('mobileDeviceId'));
     const [currentDate] = useState(query.get('currentDate'));
 
     const refreshAsync = useCallback(async () => {
         if (currentDate) {
-            const mobileDevice = await getMobileDeviceAsync(currentMobileDeviceId);
-            setCurrentMobileDevice(mobileDevice);
+            const mobileDevice = await getMobileDeviceAsync(mobileDeviceId);
+            setMobileDevice(mobileDevice);
 
-            let trackSheet = await getTrackSheetAsync(currentMobileDeviceId, currentDate);
+            let trackSheet = await getTrackSheetAsync(mobileDeviceId, currentDate);
             if (trackSheet && trackSheet.dailyCoveredDistances) {
                 trackSheet.dailyCoveredDistances = trackSheet.dailyCoveredDistances.map(ts => {
                     return { ...ts, ...{ userId: mobileDevice.userId, mobileDeviceId: mobileDevice.id } }
@@ -54,7 +56,7 @@ const TrackSheet = () => {
                 setTrackSheet(trackSheet);
             }
         }
-    }, [currentDate, currentMobileDeviceId, getMobileDeviceAsync, getTrackSheetAsync]);
+    }, [currentDate, mobileDeviceId, getMobileDeviceAsync, getTrackSheetAsync]);
 
     useEffect(() => {
         ( async () => {
@@ -77,12 +79,19 @@ const TrackSheet = () => {
         }
     }, []);
 
+    const getUserDescription = useCallback(() => {
+        if(mobileDevice && mobileDevice.extendedUserInfo) {
+            return !mobileDevice.extendedUserInfo
+                ? mobileDevice.email
+                : `${ mobileDevice.extendedUserInfo.firstName } ${ mobileDevice.extendedUserInfo.lastName }`;
+        }
+        return '';
+    }, [mobileDevice]) ;
+
     SideNavigationMenu.treeViewRef?.current?.instance.unselectAll();
 
     const GroupRowContent = () => {
-        const userCaption = !currentMobileDevice.extendedUserInfo
-            ? currentMobileDevice.email
-            : `${ currentMobileDevice.extendedUserInfo.firstName } ${ currentMobileDevice.extendedUserInfo.lastName }`;
+        const userCaption = getUserDescription();
         return (
             <div className={ 'user-grid-group track-sheet-group ' }>
                 <div className={ 'dx-icon dx-icon-user' }/>
@@ -90,7 +99,7 @@ const TrackSheet = () => {
                     <div className={ 'mobile-devices-group-line' }>
                         <div>
                             <span>{ !isXSmall ? 'Пользователь: ' : '' }</span>
-                            <span>{ userCaption } / { currentMobileDevice.model }</span>
+                            <span>{ userCaption } / { mobileDevice.model }</span>
                         </div>
                     </div>
                     <div className={ 'mobile-devices-group-line' }>
@@ -103,20 +112,7 @@ const TrackSheet = () => {
         );
     }
 
-    const DataGridToolbarButton = () => {
-        return (
-            <Button className={ 'app-command-button app-command-button-small' } onClick={ (e) => {
-                if (mainContextMenuRef && mainContextMenuRef.current) {
-                    mainContextMenuRef.current.instance.option('target', e.element);
-                    mainContextMenuRef.current.instance.show();
-                }
-            } }>
-                <GridAdditionalMenuIcon/>
-            </Button>
-        );
-    }
-
-    if (currentDate && trackSheet !== null && trackSheet.length !== 0 && currentMobileDevice) {
+    if (currentDate && trackSheet !== null && trackSheet.length !== 0 && mobileDevice) {
         return (
             <>
                 <PageHeader caption={ 'Путевой отчет' }>
@@ -138,7 +134,7 @@ const TrackSheet = () => {
                               e.component.collapseAll(-1);
                           } }
                 >
-                    <Template name={ 'DataGridToolbarButtonTemplate' } render={ DataGridToolbarButton }/>
+                    <Template name={ 'DataGridToolbarButtonTemplate' } render={ DataGridToolbarButton.bind(this, { contextMenuRef: mainContextMenuRef }) }/>
                     <SearchPanel visible={ true } searchVisibleColumnsOnly={ false }/>
 
                     <Scrolling showScrollbar={ 'never' }/>
@@ -149,7 +145,7 @@ const TrackSheet = () => {
                     <Column
                         dataField={ 'userId' }
                         groupIndex={ 0 }
-                        groupCellRender={ () => <GroupRowContent /> }
+                        groupCellRender={ () => <GroupRowContent/> }
                         visible={ false }
                     />
 
@@ -159,7 +155,7 @@ const TrackSheet = () => {
                                 rowContextMenuRef.current.instance.option('target', e.element);
                                 rowContextMenuRef.current.instance.show();
                             } }>
-                                <GridAdditionalMenuIcon  />
+                                <GridAdditionalMenuIcon/>
                             </Button>
                         )
                     } }
@@ -187,17 +183,17 @@ const TrackSheet = () => {
 
                     <Column dataField={ 'averageAccuracy' } caption={ 'Средняя точность отсчетов, м' } width={ 125 } alignment={ 'left' } hidingPriority={ 1 }
                             cellRender={ (e) => <DataGridIconCellValueContainer
-                                    cellDataFormatter={ () => `${ ( e.data.averageAccuracy ).toFixed(2) } м` }
-                                    iconRenderer={ (iconProps) => <AccuracyIcon { ...iconProps } /> }
-                                />
+                                cellDataFormatter={ () => `${ ( e.data.averageAccuracy ).toFixed(2) } м` }
+                                iconRenderer={ (iconProps) => <AccuracyIcon { ...iconProps } /> }
+                            />
                             }
                     />
-                    <Column />
+                    <Column/>
 
                     <MasterDetail
                         enabled={ true }
                         render={ (e) => {
-                            return <Timelines currentMobileDevice={ currentMobileDevice } workDate={ e.data.date }/>;
+                            return <Timelines mobileDevice={ mobileDevice } workDate={ e.data.date }/>;
                         } }
                     />
                 </DataGrid>
@@ -214,13 +210,20 @@ const TrackSheet = () => {
                     ref={ mainContextMenuRef }
                     commands={
                         {
-                            refreshAsync: refreshAsync
+                            refreshAsync: refreshAsync,
+                            exportToXlsx: () => {
+                                trackSheetExcelExporter({
+                                        dxDataGrid: dxDataGridRef.current.instance,
+                                        mobileDevice: mobileDevice,
+                                        workDate: workDate
+                                    });
+                            }
                         }
                     }/>
 
-                { currentMobileDevice && currentTimelineItem !== null ?
+                { mobileDevice && currentTimelineItem !== null ?
                     <TrackMapPopup
-                        mobileDevice={ currentMobileDevice }
+                        mobileDevice={ mobileDevice }
                         timelineItem={ currentTimelineItem }
                         initialDate={ trackMapCurrentDate }
                         onClose={ () => {

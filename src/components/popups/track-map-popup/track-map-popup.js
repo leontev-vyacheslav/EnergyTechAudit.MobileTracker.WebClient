@@ -62,6 +62,7 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => 
                                 workDate.setHours(0, 0, 0, 0);
                                 return { ...previous, workDate: workDate };
                             });
+
                         } }>
                             <WorkDateBackwardIcon size={ 18 }/>
                         </Button>
