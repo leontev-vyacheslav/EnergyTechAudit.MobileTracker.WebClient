@@ -16,7 +16,6 @@ const AppConstants = {
         baseDarkgreyTextColor: '#464646'
     },
 
-
     motionActivityTypeDictionary: [
         { id: 1, code: 'still', description: 'В покое' },
         { id: 2, code: 'walking', description: 'Прогулка' },

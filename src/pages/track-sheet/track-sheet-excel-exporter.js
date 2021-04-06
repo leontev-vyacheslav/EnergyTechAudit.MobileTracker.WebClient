@@ -1,10 +1,9 @@
 import { Workbook } from 'exceljs';
 import { exportDataGrid } from 'devextreme/excel_exporter';
-import { excelSaver } from '../../utils/excel-export-helper';
+import { excelCommonCellStyler, excelHeaderCellStyler, excelSaver } from '../../utils/excel-export-helper';
 
-const trackSheetExcelExporter = ({ dxDataGrid, mobileDevice, workDate }) => {
-    const title = 'Путевой отчет',
-        workbook = new Workbook(),
+const trackSheetExcelExporter = ({ dxDataGrid, mobileDevice, workDate, title }) => {
+    const workbook = new Workbook(),
         worksheet = workbook.addWorksheet(title, {
             properties: {
                 defaultRowHeight: 25
@@ -15,8 +14,7 @@ const trackSheetExcelExporter = ({ dxDataGrid, mobileDevice, workDate }) => {
         component: dxDataGrid,
         worksheet: worksheet,
         customizeCell: ({ gridCell, excelCell }) => {
-            excelCell.font = { name: 'Tahoma', size: 12 };
-            excelCell.alignment = { horizontal: 'left' };
+            excelCommonCellStyler({ excelCell });
             if (gridCell.rowType === 'data') {
                 switch (gridCell.column.dataField) {
                     case 'distance': {
@@ -35,6 +33,8 @@ const trackSheetExcelExporter = ({ dxDataGrid, mobileDevice, workDate }) => {
                         break;
                     }
                 }
+            } else if(gridCell.rowType === 'header') {
+                excelHeaderCellStyler({ excelCell });
             }
         }
     }).then(() => {

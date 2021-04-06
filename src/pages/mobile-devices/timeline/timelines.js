@@ -188,7 +188,8 @@ const Timelines = ({ mobileDevice }) => {
                                 timelineExcelExporter({
                                     dxDataGrid: dxDataGridRef.current.instance,
                                     mobileDevice,
-                                    workDate
+                                    workDate,
+                                    title: 'Хронология',
                                 });
                             }
                         }

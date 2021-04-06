@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import ContextMenu from 'devextreme-react/context-menu';
 
-import { AddOrganizationIcon, RefreshIcon } from '../../../constants/app-icons';
+import { AddOrganizationIcon, ExportToXlsxIcon, RefreshIcon } from '../../../constants/app-icons';
 import ContextMenuItem from '../../../components/context-menu-item/context-menu-item';
 
 const OrganizationMainContextMenu = ({ innerRef, commands }) => {
@@ -9,7 +9,17 @@ const OrganizationMainContextMenu = ({ innerRef, commands }) => {
     const items = useMemo(() => {
         return [
             {
-                text: 'Добавить организацию...',
+                text: 'Обновить...',
+                renderIconItem: () => <RefreshIcon size={ 18 }/>,
+                onClick: async (e) => {
+                    e.component.hide();
+                    if(commands.refreshAsync) {
+                        await commands.refreshAsync();
+                    }
+                }
+            },
+            {
+                text: 'Добавить...',
                 renderIconItem: () => <AddOrganizationIcon size={ 18 }/>,
                 onClick: (e) => {
                     e.component.hide();
@@ -19,12 +29,12 @@ const OrganizationMainContextMenu = ({ innerRef, commands }) => {
                 }
             },
             {
-                text: 'Обновить...',
-                renderIconItem: () => <RefreshIcon size={ 18 }/>,
+                text: 'Экспорт в XLSX...',
+                renderIconItem: () => <ExportToXlsxIcon size={ 18 }/>,
                 onClick: async (e) => {
                     e.component.hide();
-                    if(commands.refreshAsync) {
-                        await commands.refreshAsync();
+                    if(commands.exportToXlsx) {
+                        await commands.exportToXlsx();
                     }
                 }
             }];

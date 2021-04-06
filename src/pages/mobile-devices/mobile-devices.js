@@ -18,10 +18,10 @@ import { useAppData } from '../../contexts/app-data';
 import { useHistory } from 'react-router-dom';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useScreenSize } from '../../utils/media-query';
+import { DataGridToolbarButton } from '../../components/data-grid-utils/data-grid-toolbar-button';
+import { mobileDeviceExcelExporter } from './mobile-devices-excel-exporter';
 
 import './mobile-devices.scss';
-import { DataGridToolbarButton } from '../../components/data-grid-utils/data-grid-toolbar-button';
-
 
 const MobileDevice = () => {
     const dxDataGridRef = useRef(null);
@@ -64,7 +64,7 @@ const MobileDevice = () => {
         }
     }, [mobileDevices]);
 
-    const getDataAsync =  useCallback(async () => {
+    const getDataAsync = useCallback(async () => {
         const mobileDevicesData = await getMobileDevicesAsync() ?? [];
         setMobileDevices(mobileDevicesData);
     }, [getMobileDevicesAsync]);
@@ -100,7 +100,7 @@ const MobileDevice = () => {
                     <Button className={ 'app-command-button app-command-button-small' } onClick={ (e) => {
                         dxDataGridRef.current.instance.option('focusedRowKey', groupCell.key);
                         e.event.stopPropagation();
-                        if(groupRowContextMenuRef && groupRowContextMenuRef.current) {
+                        if (groupRowContextMenuRef && groupRowContextMenuRef.current) {
                             groupRowContextMenuRef.current.instance.option('target', e.element);
                             groupRowContextMenuRef.current.instance.show();
                         }
@@ -151,7 +151,7 @@ const MobileDevice = () => {
                     <Column type={ 'buttons' } width={ 45 } cellRender={ () => {
                         return (
                             <Button className={ 'app-command-button app-command-button-small' } onClick={ (e) => {
-                                if(rowContextMenuRef && rowContextMenuRef.current) {
+                                if (rowContextMenuRef && rowContextMenuRef.current) {
                                     rowContextMenuRef.current.instance.option('target', e.element);
                                     rowContextMenuRef.current.instance.show();
                                 }
@@ -169,8 +169,8 @@ const MobileDevice = () => {
                         visible={ false }
                     />
 
-                    <Column dataField={ 'extendedUserInfo.firstName' } visible={ false } />
-                    <Column dataField={ 'extendedUserInfo.lastName' } visible={ false } />
+                    <Column dataField={ 'extendedUserInfo.firstName' } visible={ false }/>
+                    <Column dataField={ 'extendedUserInfo.lastName' } visible={ false }/>
 
                     <Column dataField={ 'model' } caption={ 'Модель' } width={ isXSmall ? '100%' : 100 } allowSorting={ false } hidingPriority={ 4 }
                             cellRender={ (e) => {
@@ -185,7 +185,7 @@ const MobileDevice = () => {
                             } }
                     />
 
-                    <Column dataField={ 'os' } caption={ 'ОС' } width={ 120 } allowSorting={ false } hidingPriority={ 2 }
+                    <Column dataField={ 'os' } caption={ 'ОС' } width={ 135 } allowSorting={ false } hidingPriority={ 2 }
                             cellRender={ (e) =>
                                 <DataGridIconCellValueContainer
                                     cellDataFormatter={ () => e.data.os }
@@ -208,7 +208,7 @@ const MobileDevice = () => {
                     <MasterDetail
                         enabled={ true }
                         render={ (e) => {
-                            return <MobileDevicesMasterDetailView mobileDevice={ e.data } /> ;
+                            return <MobileDevicesMasterDetailView mobileDevice={ e.data }/>;
                         } }
                     />
                 </DataGrid>
@@ -251,13 +251,14 @@ const MobileDevice = () => {
                         setExtendedUserInfoPopupTrigger(false);
                     }
                     }/>
-                        : null
-                    }
+                    : null
+                }
                 <MobileDevicesMainContextMenu
                     ref={ mainContextMenuRef }
                     commands={
                         {
-                            refresh: getDataAsync
+                            refresh: getDataAsync,
+                            exportToXlsx: () => mobileDeviceExcelExporter({ dxDataGrid: dxDataGridRef.current.instance, title: 'Мобильные устройства' })
                         }
                     }/>
                 <MobileDevicesGroupRowContextMenu
@@ -268,17 +269,17 @@ const MobileDevice = () => {
                         }
                     }
                 />
-                    <MobileDeviceRowContextMenu
-                        ref={ rowContextMenuRef }
-                        commands={
-                            {
-                                showTrackMap: showTrackMap,
-                                showTrackSheet: showTrackSheet
-                            }
+                <MobileDeviceRowContextMenu
+                    ref={ rowContextMenuRef }
+                    commands={
+                        {
+                            showTrackMap: showTrackMap,
+                            showTrackSheet: showTrackSheet
                         }
-                    />
-                    </>
-                );
+                    }
+                />
+            </>
+        );
     }
 
     return (

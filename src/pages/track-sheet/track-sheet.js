@@ -214,8 +214,9 @@ const TrackSheet = () => {
                             exportToXlsx: () => {
                                 trackSheetExcelExporter({
                                         dxDataGrid: dxDataGridRef.current.instance,
-                                        mobileDevice: mobileDevice,
-                                        workDate: workDate
+                                        mobileDevice,
+                                        workDate,
+                                        title: 'Путевой отчет'
                                     });
                             }
                         }

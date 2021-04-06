@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import ContextMenu from 'devextreme-react/context-menu';
 
-import {  RefreshIcon } from '../../../constants/app-icons';
+import { ExportToXlsxIcon, RefreshIcon } from '../../../constants/app-icons';
 import ContextMenuItem from '../../../components/context-menu-item/context-menu-item';
 
 const MobileDevicesMainContextMenu = ({ innerRef, commands }) => {
@@ -15,6 +15,16 @@ const MobileDevicesMainContextMenu = ({ innerRef, commands }) => {
                     e.component.hide();
                     if(commands.refresh) {
                         commands.refresh();
+                    }
+                }
+            },
+            {
+                text: 'Экспорт в XLSX...',
+                renderIconItem: () => <ExportToXlsxIcon size={ 18 }/>,
+                onClick: async (e) => {
+                    e.component.hide();
+                    if(commands.exportToXlsx) {
+                        await commands.exportToXlsx();
                     }
                 }
             }];

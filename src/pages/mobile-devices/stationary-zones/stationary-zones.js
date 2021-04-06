@@ -223,7 +223,8 @@ const StationaryZones = ({ mobileDevice }) => {
                                 stationaryZonesExcelExporter({
                                     dxDataGrid: dxDataGridRef.current.instance,
                                     mobileDevice,
-                                    workDate
+                                    workDate,
+                                    title: 'Зоны стационарности'
                                 });
                             }
                         }

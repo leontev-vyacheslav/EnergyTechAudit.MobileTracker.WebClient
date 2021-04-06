@@ -15,6 +15,7 @@ import { showConfirmDialog } from '../../utils/dialogs';
 import { useScreenSize } from '../../utils/media-query';
 import OfficePopup from '../../components/popups/office-popup/office-popup';
 import { DataGridToolbarButton } from '../../components/data-grid-utils/data-grid-toolbar-button';
+import { organizationsExcelExporter } from './organizations-excel-exporter';
 
 const Organizations = () => {
     const { getOrganizationOfficesAsync, deleteOrganizationAsync, deleteOfficeAsync } = useAppData();
@@ -270,7 +271,8 @@ const Organizations = () => {
                     commands={
                         {
                             addOrganization: addOrganization,
-                            refreshAsync: refreshAsync
+                            refreshAsync: refreshAsync,
+                            exportToXlsx: () => organizationsExcelExporter({ dxDataGrid: dxDataGridRef.current.instance, title: 'Организации' })
                         }
                     }/>
 
