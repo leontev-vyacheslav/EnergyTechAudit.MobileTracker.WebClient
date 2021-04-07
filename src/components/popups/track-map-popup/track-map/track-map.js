@@ -201,10 +201,11 @@ const TrackMap = ({ mobileDevice }) => {
     const onTrackMapLoadHandler = useCallback((googleMap) => {
         mapInstance.current = googleMap;
         const delayTimer = setTimeout(async () => {
-            showTrack();
+
             if (isShowStationaryZone) {
                await showStationaryZoneClustersAsync(mapInstance.current, trackLocationRecordList);
             }
+            showTrack();
             clearTimeout(delayTimer);
         }, 150);
     }, [isShowStationaryZone, showStationaryZoneClustersAsync, showTrack, trackLocationRecordList]);
@@ -213,10 +214,11 @@ const TrackMap = ({ mobileDevice }) => {
         (async () => {
             if (mapInstance.current) {
                 initOverlays();
-                showTrack();
+
                 if (isShowStationaryZone) {
                     await showStationaryZoneClustersAsync(mapInstance.current, trackLocationRecordList);
                 }
+                showTrack();
             }
         }) ();
 

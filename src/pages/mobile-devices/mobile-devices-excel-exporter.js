@@ -18,6 +18,11 @@ const mobileDeviceExcelExporter = ({ dxDataGrid, title }) => {
 
             if (gridCell.rowType === 'data') {
                 switch (gridCell.column.dataField) {
+                    case 'registrationDate': {
+                        excelCell.value = gridCell.value;
+                        excelCell.numFmt = '[$-419]DD MMMM YYYY;@';
+                        break;
+                    }
                     default: {
                         excelCell.value = gridCell.value;
                         excelCell.numFmt = '#.##';

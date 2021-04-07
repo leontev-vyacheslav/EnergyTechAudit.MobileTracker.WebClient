@@ -14,11 +14,11 @@ const TrackMapStationaryZonesPanel = () => {
     const { setIsShowTrackMapZones } = useTrackMapSettingsContext();
     const [currentStationaryClusterList, setCurrentStationaryClusterList] = useState([]);
     const { getGeocodedAddressesAsync } = useAppData();
-    const { appSettingsData: { useStationaryZoneAddresses } } = useAppSettings();
+    const { appSettingsData } = useAppSettings();
 
     useEffect(() => {
         ( async () => {
-            if (useStationaryZoneAddresses === true) {
+            if (appSettingsData.useStationaryZoneAddresses === true) {
                 const result = [];
                 for (const stationaryCluster of stationaryClusterList) {
                     let formattedAddress = [];
@@ -44,7 +44,7 @@ const TrackMapStationaryZonesPanel = () => {
                 setCurrentStationaryClusterList([...stationaryClusterList]);
             }
         } )();
-    }, [getGeocodedAddressesAsync, stationaryClusterList, useStationaryZoneAddresses]);
+    }, [appSettingsData.useStationaryZoneAddresses, getGeocodedAddressesAsync, stationaryClusterList]);
 
     return (
         <div style={ { height: 'calc(100% - 35px)' } }>
