@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import TrackMapInfoWindow from '../track-map-components/track-map-info-window/track-map-info-window';
@@ -12,30 +12,23 @@ import { useTrackMapSettingsContext } from '../track-map-contexts/track-map-sett
 import { useScreenSize } from '../../../../utils/media-query';
 import { useAppData } from '../../../../contexts/app-data';
 import { useAppSettings } from '../../../../contexts/app-settings';
-import { useTrackMapStationaryZonesContext } from '../track-map-contexts/track-map-stationary-zones-context';
+import { useTrackMapLocationRecordsContext } from '../track-map-contexts/track-map-location-records-context';
 import { useTrackMapUtilsContext } from '../track-map-contexts/track-map-utils-context';
-import { useTrackMapTimelineContext } from '../track-map-contexts/track-map-timeline-context';
 
 import './track-map.scss';
-
 
 const TrackMap = ({ mobileDevice }) => {
     const { isXSmall, isSmall } = useScreenSize();
     const { appSettingsData } = useAppSettings();
-    const { getLocationRecordsByRangeAsync, getLocationRecordAsync, getGeocodedAddressAsync } = useAppData();
-    const { showStationaryZoneClustersAsync } = useTrackMapStationaryZonesContext();
+    const {  getLocationRecordAsync, getGeocodedAddressAsync } = useAppData();
+    const { showStationaryZoneClustersAsync, trackLocationRecordList } = useTrackMapLocationRecordsContext();
     const { isShowTrackMapSettings, isShowTrackMapZones, isShowStationaryZone, isShowTrackMapTimeline } = useTrackMapSettingsContext();
-    const  { currentTimelineItem } = useTrackMapTimelineContext();
-    const {
-        centerMapByInfoWindow,
-        fitMapBoundsByLocations,
-        getBoundsByMarkers,
-        getBreakIntervals,
-        getInfoWindow,
-        getMarker
-    } = useTrackMapUtilsContext()
+    const { isLoaded } = useJsApiLoader({
+        googleMapsApiKey: AppConstants.trackMap.apiKey,
+        libraries: AppConstants.trackMap.libraries
+    });
+    const { setCurrentMapInstance, centerMapByInfoWindow, fitMapBoundsByLocations, getBoundsByMarkers, getBreakIntervals, getInfoWindow, getMarker } = useTrackMapUtilsContext()
 
-    const [trackLocationRecordList, setTrackLocationRecordList] = useState(null);
     const mapInstance = useRef(null);
     const trackPath = useRef(null);
     const currentMarkers = useRef([]);
@@ -67,17 +60,12 @@ const TrackMap = ({ mobileDevice }) => {
 
     }, []);
 
-    const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: AppConstants.trackMap.apiKey,
-        libraries: AppConstants.trackMap.libraries
-    });
-
     const fitMap = useCallback((locationList) => {
         if (currentInfoWindow.current) {
-            centerMapByInfoWindow(mapInstance.current, currentInfoWindow.current);
+            centerMapByInfoWindow(currentInfoWindow.current);
             return;
         }
-        fitMapBoundsByLocations(mapInstance.current, locationList);
+        fitMapBoundsByLocations(locationList);
     }, [centerMapByInfoWindow, fitMapBoundsByLocations]);
 
     const showInfoWindowAsync = useCallback(async trackLocationRecord => {
@@ -96,12 +84,12 @@ const TrackMap = ({ mobileDevice }) => {
                     { locationRecord: locationRecord, address: address }
                 )
             );
-            currentInfoWindow.current = getInfoWindow(mapInstance.current, locationRecord, content);
+            currentInfoWindow.current = getInfoWindow(locationRecord, content);
         }
     }, [getGeocodedAddressAsync, getInfoWindow, getLocationRecordAsync]);
 
     const buildMarker = useCallback((locationRecord, order) => {
-        const marker = getMarker(mapInstance.current, locationRecord, order, async () => {
+        const marker = getMarker(locationRecord, order, async () => {
             await showInfoWindowAsync(locationRecord);
         });
         currentMarkers.current.push(marker);
@@ -174,9 +162,8 @@ const TrackMap = ({ mobileDevice }) => {
     }, [buildMarker, getBoundsByMarkers, trackLocationRecordList]);
 
     const showTrack = useCallback(() => {
-        fitMap(trackLocationRecordList);
         if (trackPath.current === null && trackLocationRecordList && trackLocationRecordList.length > 0) {
-
+            fitMap(trackLocationRecordList);
             trackPath.current = new window.google.maps.Polyline({
                 path: trackLocationRecordList.map(locationRecord => {
                     return {
@@ -193,49 +180,33 @@ const TrackMap = ({ mobileDevice }) => {
             buildMarkersOnPolylinePath();
             buildOutsideMarkers();
             if (appSettingsData.isShownBreakInterval) {
-                currentBreakIntervals.current = getBreakIntervals(mapInstance.current, trackLocationRecordList, appSettingsData.breakInterval);
+                currentBreakIntervals.current = getBreakIntervals(trackLocationRecordList, appSettingsData.breakInterval);
             }
         }
-    }, [fitMap, trackLocationRecordList, buildMarkersOnPolylinePath, buildOutsideMarkers, appSettingsData.isShownBreakInterval, appSettingsData.breakInterval, getBreakIntervals]);
+    }, [appSettingsData.breakInterval, appSettingsData.isShownBreakInterval, buildMarkersOnPolylinePath, buildOutsideMarkers, fitMap, getBreakIntervals, trackLocationRecordList]);
 
     const onTrackMapLoadHandler = useCallback((googleMap) => {
         mapInstance.current = googleMap;
-        const delayTimer = setTimeout(async () => {
-
-            if (isShowStationaryZone) {
-               await showStationaryZoneClustersAsync(mapInstance.current, trackLocationRecordList);
-            }
-            showTrack();
+        setCurrentMapInstance(googleMap);
+        /*const delayTimer = setTimeout(async () => {
             clearTimeout(delayTimer);
-        }, 150);
-    }, [isShowStationaryZone, showStationaryZoneClustersAsync, showTrack, trackLocationRecordList]);
-
-    useEffect(() => {
-        (async () => {
-            if (mapInstance.current) {
-                initOverlays();
-
-                if (isShowStationaryZone) {
-                    await showStationaryZoneClustersAsync(mapInstance.current, trackLocationRecordList);
-                }
-                showTrack();
+            showTrack();
+            if (isShowStationaryZone) {
+               await showStationaryZoneClustersAsync();
             }
-        }) ();
-
-    }, [initOverlays, isShowStationaryZone, showStationaryZoneClustersAsync, showTrack, trackLocationRecordList]);
+        }, 150);*/
+    }, [setCurrentMapInstance]);
 
     useEffect(() => {
         ( async () => {
-            if(currentTimelineItem) {
-                let locationRecordsData = await getLocationRecordsByRangeAsync(
-                    mobileDevice.id,
-                    currentTimelineItem.beginDate,
-                    currentTimelineItem.endDate
-                ) ?? [];
-                setTrackLocationRecordList(locationRecordsData);
+            console.log('track-map')
+            initOverlays();
+            showTrack();
+            if (isShowStationaryZone) {
+                await showStationaryZoneClustersAsync();
             }
-        } )()
-    }, [getLocationRecordsByRangeAsync, mobileDevice.id, currentTimelineItem, appSettingsData.minimalAccuracy]);
+        } )();
+    }, [initOverlays, isShowStationaryZone, showStationaryZoneClustersAsync, showTrack]);
 
     TrackMap.fitToMap = function () {
         if (mapInstance && trackLocationRecordList) {

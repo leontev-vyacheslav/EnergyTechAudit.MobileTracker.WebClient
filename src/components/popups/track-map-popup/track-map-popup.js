@@ -9,7 +9,7 @@ import TrackMapPopupMenu from './track-map-popup-menu/track-map-popup-menu'
 import { AdditionalMenuIcon, WorkDateBackwardIcon, WorkDateForwardIcon, WorkDateTodayIcon } from '../../../constants/app-icons';
 import { useAppSettings } from '../../../contexts/app-settings';
 import Moment from 'moment';
-import { TrackMapStationaryZonesProvider } from './track-map-contexts/track-map-stationary-zones-context';
+import { TrackMapLocationRecordsProvider } from './track-map-contexts/track-map-location-records-context';
 import { TrackMapUtilsProvider } from './track-map-contexts/track-map-utils-context';
 import { TrackMapSettingsProvider } from './track-map-contexts/track-map-settings-context';
 import { TrackMapTimelineProvider } from './track-map-contexts/track-map-timeline-context';
@@ -34,13 +34,9 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => 
                        contentRender={ () => {
                            return (
                                <TrackMapUtilsProvider>
-                                   <TrackMapStationaryZonesProvider>
-                                       <TrackMap
-                                           mobileDevice={ mobileDevice }
-                                           timelineItem={ timelineItem }
-                                           initialDate={ initialDate }
-                                       />
-                                   </TrackMapStationaryZonesProvider>
+                                   <TrackMapLocationRecordsProvider mobileDevice={ mobileDevice } >
+                                       <TrackMap mobileDevice={ mobileDevice }/>
+                                   </TrackMapLocationRecordsProvider>
                                </TrackMapUtilsProvider>
                            );
                        } }>

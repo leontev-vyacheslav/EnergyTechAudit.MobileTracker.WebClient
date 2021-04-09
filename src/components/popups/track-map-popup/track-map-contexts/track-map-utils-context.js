@@ -1,11 +1,14 @@
 import AppConstants from '../../../../constants/app-constants';
-import React, { createContext, useCallback, useContext } from 'react';
+import React, { createContext, useCallback, useContext, useState } from 'react';
 
 const TrackMapUtilsContext = createContext({});
 
 const useTrackMapUtilsContext = () => useContext(TrackMapUtilsContext);
 
 function TrackMapUtilsProvider (props) {
+
+    const [currentMapInstance, setCurrentMapInstance] = useState(null);
+
     const getBoundsByMarkers = useCallback((locationList) => {
         const boundBox = new window.google.maps.LatLngBounds();
         for (let i = 0; i < locationList.length; i++) {
@@ -17,17 +20,19 @@ function TrackMapUtilsProvider (props) {
         return boundBox;
     }, []);
 
-    const fitMapBoundsByLocations = useCallback((mapInstance, locationList) => {
-        if (locationList && locationList.length > 0) {
+    const fitMapBoundsByLocations = useCallback((locationList) => {
+        if (currentMapInstance && locationList && locationList.length > 0) {
             const boundBox = getBoundsByMarkers(locationList);
             if (boundBox) {
-                mapInstance.setCenter(boundBox.getCenter());
-                mapInstance.fitBounds(boundBox);
+                currentMapInstance.setCenter(boundBox.getCenter());
+                currentMapInstance.fitBounds(boundBox);
             }
         }
-    }, [getBoundsByMarkers]);
+    }, [currentMapInstance, getBoundsByMarkers]);
 
-    const getInfoWindow = useCallback((mapInstance, locationRecord, content) => {
+    const getInfoWindow = useCallback((locationRecord, content) => {
+
+        if(!currentMapInstance) return null;
 
         const infoWindow = new window.google.maps.InfoWindow({
             position: {
@@ -37,29 +42,30 @@ function TrackMapUtilsProvider (props) {
             content: content,
         });
 
-        mapInstance.setCenter({
+        currentMapInstance.setCenter({
             lat: locationRecord.latitude,
             lng: locationRecord.longitude
         });
-        const currentZoom = mapInstance.getZoom();
+        const currentZoom = currentMapInstance.getZoom();
         if (currentZoom <= AppConstants.trackMap.defaultZoom) {
-            mapInstance.setZoom(AppConstants.trackMap.defaultZoom);
+            currentMapInstance.setZoom(AppConstants.trackMap.defaultZoom);
         }
-        infoWindow.open(mapInstance);
+        infoWindow.open(currentMapInstance);
         return infoWindow;
-    }, []);
 
-    const centerMapByInfoWindow = useCallback((mapInstance, infoWindow) => {
+    }, [currentMapInstance]);
+
+    const centerMapByInfoWindow = useCallback((infoWindow) => {
         if (infoWindow) {
-            const currentZoom = mapInstance.getZoom();
+            const currentZoom = currentMapInstance.getZoom();
             if (currentZoom <= AppConstants.trackMap.defaultZoom) {
-                mapInstance.setZoom(AppConstants.trackMap.defaultZoom);
+                currentMapInstance.setZoom(AppConstants.trackMap.defaultZoom);
             }
-            mapInstance.setCenter(infoWindow.getPosition());
+            currentMapInstance.setCenter(infoWindow.getPosition());
         }
-    }, []);
+    }, [currentMapInstance]);
 
-    const getBreakIntervals = useCallback( (mapInstance, locationList, breakInterval) => {
+    const getBreakIntervals = useCallback( (locationList, breakInterval) => {
         const breakIntervals = [];
         if(locationList && locationList.length > 0) {
 
@@ -82,15 +88,15 @@ function TrackMapUtilsProvider (props) {
                         strokeOpacity: AppConstants.trackMap.breakIntervalPathStrokeOpacity,
                         strokeWeight: AppConstants.trackMap.polylineTrackPathStrokeWeight,
                     });
-                    breakIntervalPath.setMap(mapInstance);
+                    breakIntervalPath.setMap(currentMapInstance);
                     breakIntervals.push(breakIntervalPath);
                 }
             }
         }
         return breakIntervals;
-    }, []);
+    }, [currentMapInstance]);
 
-    const getMarker = useCallback((mapInstance, locationRecord, order, onClickAsync) => {
+    const getMarker = useCallback((locationRecord, order, onClickAsync) => {
         const marker = new window.google.maps.Marker(
             {
                 position: {
@@ -116,13 +122,14 @@ function TrackMapUtilsProvider (props) {
             });
         marker.addListener('click', onClickAsync);
 
-        marker.setMap(mapInstance);
+        marker.setMap(currentMapInstance);
         return marker;
-    }, []);
+    }, [currentMapInstance]);
 
     return (
         <TrackMapUtilsContext.Provider
             value={ {
+                currentMapInstance, setCurrentMapInstance,
                 getBoundsByMarkers, fitMapBoundsByLocations, centerMapByInfoWindow, getInfoWindow, getBreakIntervals, getMarker
             } }
             { ...props }
