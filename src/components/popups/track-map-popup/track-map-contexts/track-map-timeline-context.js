@@ -23,7 +23,7 @@ function TrackMapTimelineProvider (props) {
             setCurrentTimeline(timeline );
             setCurrentTimelineItem(timelineItem)
         } )();
-    }, [getTimelinesAsync, mobileDevice.id, appSettingsData.workDate, getDailyTimelineItem]);
+    }, [appSettingsData.workDate, getDailyTimelineItem, getTimelinesAsync, mobileDevice.id]);
 
     return (
         <TrackMapTimelineContext.Provider value={ { currentTimeline, currentTimelineItem, setCurrentTimelineItem } }  { ...props } />
