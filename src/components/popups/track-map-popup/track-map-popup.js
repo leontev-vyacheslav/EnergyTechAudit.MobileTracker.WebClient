@@ -13,6 +13,7 @@ import { TrackMapLocationRecordsProvider } from './track-map-contexts/track-map-
 import { TrackMapUtilsProvider } from './track-map-contexts/track-map-utils-context';
 import { TrackMapSettingsProvider } from './track-map-contexts/track-map-settings-context';
 import { TrackMapTimelineProvider } from './track-map-contexts/track-map-timeline-context';
+import { TrackMapStationaryZonesProvider } from './track-map-contexts/track-map-stationary-zones-context';
 
 const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => {
     const { isXSmall, isSmall } = useScreenSize();
@@ -33,11 +34,13 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => 
                        height={ isXSmall || isSmall ? '95%' : '90%' }
                        contentRender={ () => {
                            return (
-                               <TrackMapUtilsProvider>
-                                   <TrackMapLocationRecordsProvider mobileDevice={ mobileDevice } >
-                                       <TrackMap mobileDevice={ mobileDevice }/>
-                                   </TrackMapLocationRecordsProvider>
-                               </TrackMapUtilsProvider>
+                               <TrackMapLocationRecordsProvider mobileDevice={ mobileDevice }>
+                                   <TrackMapUtilsProvider>
+                                       <TrackMapStationaryZonesProvider>
+                                           <TrackMap mobileDevice={ mobileDevice }/>
+                                       </TrackMapStationaryZonesProvider>
+                                   </TrackMapUtilsProvider>
+                               </TrackMapLocationRecordsProvider>
                            );
                        } }>
                     <ToolbarItem location={ 'after' }>

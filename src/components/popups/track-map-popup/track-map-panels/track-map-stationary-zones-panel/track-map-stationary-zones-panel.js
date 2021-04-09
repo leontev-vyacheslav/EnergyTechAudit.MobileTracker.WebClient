@@ -3,11 +3,11 @@ import List from 'devextreme-react/ui/list';
 import TrackMapStationaryZonesListItem from './track-map-stationary-zones-list-item';
 import TrackMapPanelHeader from '../track-map-panel-header/track-map-panel-header';
 import { useTrackMapSettingsContext } from '../../track-map-contexts/track-map-settings-context';
-import { useTrackMapLocationRecordsContext } from '../../track-map-contexts/track-map-location-records-context';
 import { StationaryZonesIcon } from '../../../../../constants/app-icons';
+import { useTrackMapStationaryZonesContext } from '../../track-map-contexts/track-map-stationary-zones-context';
 
 const TrackMapStationaryZonesPanel = () => {
-    const { stationaryClusterList, showInfoWindowAsync, currentStationaryCluster, setCurrentStationaryCluster } = useTrackMapLocationRecordsContext();
+    const { stationaryClusterList, showInfoWindowAsync, currentStationaryCluster, setCurrentStationaryCluster } = useTrackMapStationaryZonesContext();
     const { setIsShowTrackMapZones } = useTrackMapSettingsContext();
 
     return (
