@@ -10,14 +10,14 @@ import { AdditionalMenuIcon, WorkDateBackwardIcon, WorkDateForwardIcon, WorkDate
 import { useAppSettings } from '../../../contexts/app-settings';
 import Moment from 'moment';
 import { TrackMapLocationRecordsProvider } from './track-map-contexts/track-map-location-records-context';
-import { TrackMapUtilsProvider } from './track-map-contexts/track-map-utils-context';
+import { TrackMapTrackProvider } from './track-map-contexts/track-map-track-context';
 import { TrackMapSettingsProvider } from './track-map-contexts/track-map-settings-context';
 import { TrackMapTimelineProvider } from './track-map-contexts/track-map-timeline-context';
 import { TrackMapStationaryZonesProvider } from './track-map-contexts/track-map-stationary-zones-context';
 
 const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => {
     const { isXSmall, isSmall } = useScreenSize();
-    const { setAppSettingsData } = useAppSettings();
+    const { setAppSettingsData, setWorkDateToday } = useAppSettings();
     const { showWorkDatePicker } = useSharedArea();
     const contextMenuRef = useRef();
 
@@ -35,22 +35,18 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => 
                        contentRender={ () => {
                            return (
                                <TrackMapLocationRecordsProvider mobileDevice={ mobileDevice }>
-                                   <TrackMapUtilsProvider>
+                                   <TrackMapTrackProvider>
                                        <TrackMapStationaryZonesProvider>
                                            <TrackMap mobileDevice={ mobileDevice }/>
                                        </TrackMapStationaryZonesProvider>
-                                   </TrackMapUtilsProvider>
+                                   </TrackMapTrackProvider>
                                </TrackMapLocationRecordsProvider>
                            );
                        } }>
                     <ToolbarItem location={ 'after' }>
 
                         <Button className={ 'app-popup-header-menu-button' } hint='Сегодня' onClick={ () => {
-                            setAppSettingsData(previous => {
-                                const workDate = new Date();
-                                workDate.setHours(0, 0, 0, 0);
-                                return { ...previous, workDate: workDate };
-                            });
+                            setWorkDateToday();
                         } }>
                             <WorkDateTodayIcon size={ 18 }/>
                         </Button>
@@ -93,7 +89,7 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => 
                                         },
                                         showWorkDatePicker: () => showWorkDatePicker(),
                                         fitToMap: () => {
-                                            TrackMap.fitToMap();
+                                            TrackMapTrackProvider.fitMapBoundsByLocations();
                                         }
                                     }
                                 }

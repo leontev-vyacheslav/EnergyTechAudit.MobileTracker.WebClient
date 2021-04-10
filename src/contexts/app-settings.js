@@ -75,7 +75,17 @@ function AppSettingsProvider (props) {
         return { id: 0, beginDate: beginDate, endDate: endDate };
     }, [appSettingsData.workDate]);
 
-    return <AppSettingsContext.Provider value={ { appSettingsData, setAppSettingsData, getDailyTimelineItem } } { ...props } />;
+    const setWorkDateToday = useCallback(() => {
+        setAppSettingsData(previous => {
+            const workDate = new Date();
+            workDate.setHours(0, 0, 0, 0);
+            return { ...previous, workDate: workDate };
+        });
+    }, []);
+
+    return <AppSettingsContext.Provider value={ {
+        appSettingsData, setAppSettingsData,
+        getDailyTimelineItem, setWorkDateToday } } { ...props } />;
 }
 
 export { AppSettingsProvider, useAppSettings };

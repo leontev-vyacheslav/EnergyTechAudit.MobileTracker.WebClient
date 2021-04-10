@@ -22,6 +22,7 @@ import { DataGridToolbarButton } from '../../components/data-grid-utils/data-gri
 import { mobileDeviceExcelExporter } from './mobile-devices-excel-exporter';
 
 import './mobile-devices.scss';
+import { getUserDescription } from '../../utils/string-helper';
 
 const MobileDevice = () => {
     const dxDataGridRef = useRef(null);
@@ -91,9 +92,7 @@ const MobileDevice = () => {
 
         const items = groupCell.data.items === null ? groupCell.data.collapsedItems : groupCell.data.items;
         const groupDataItem = items[0];
-        const userCaption = !groupDataItem.extendedUserInfo
-            ? groupDataItem.email
-            : `${ groupDataItem.extendedUserInfo.firstName } ${ groupDataItem.extendedUserInfo.lastName }`;
+        const userCaption = getUserDescription(groupDataItem);
         return (
             <>
                 <div className={ 'user-grid-group mobile-devices-group' }>

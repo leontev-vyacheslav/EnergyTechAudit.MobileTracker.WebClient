@@ -22,7 +22,7 @@ const StationaryZones = ({ mobileDevice }) => {
 
     const mainContextMenuRef = useRef(null);
     const [stationaryClusterList, setStationaryClusterList] = useState([]);
-    const { getLocationRecordsByRangeAsync, getGeocodedAddressesAsync } = useAppData();
+    const { getLocationRecordsByRangeAsync, getGeocodedSelectedAddressesAsync } = useAppData();
 
     const getBoundsByMarkers = useCallback((locationList) => {
         if (isLoaded === false) return null;
@@ -94,22 +94,13 @@ const StationaryZones = ({ mobileDevice }) => {
                     centroid.getSouthWest()
                 );
                 const radius = diagonalDistance / 2;
-                let formattedAddress = [];
+                let selectedAddresses = [];
 
                 if (useStationaryZoneAddresses === true) {
-                    const addresses = await getGeocodedAddressesAsync({
+                    selectedAddresses = await getGeocodedSelectedAddressesAsync({
                         latitude: centroid.getCenter().lat(),
                         longitude: centroid.getCenter().lng(),
                     });
-                    if (addresses) {
-                        formattedAddress = addresses
-                            .filter(a => a.types.includes('street_address') || a.types.includes('premise'))
-                            .map(a => a.formatted_address)
-                            .filter((val, indx, arr) => arr.indexOf(val) === indx);
-                    }
-                    if (formattedAddress.length === 0) {
-                        formattedAddress.push(AppConstants.noDataLongText);
-                    }
                 }
 
                 clusterList.push({
@@ -119,7 +110,7 @@ const StationaryZones = ({ mobileDevice }) => {
                     radius: radius,
                     elements: geoCluster,
                     count: geoCluster.length,
-                    addresses: formattedAddress,
+                    addresses: selectedAddresses,
                     speed: geoCluster
                         .map((element) => element[2].speed)
                         .reduce((acc, curr) => acc + curr) / geoCluster.length,
@@ -131,7 +122,7 @@ const StationaryZones = ({ mobileDevice }) => {
             }
             setStationaryClusterList(clusterList);
         } )();
-    }, [getBoundsByMarkers, getGeocodedAddressesAsync, getLocationRecordsByRangeAsync, isLoaded, mobileDevice.id, stationaryZoneCriteriaAccuracy, stationaryZoneCriteriaSpeed, stationaryZoneElementCount, stationaryZoneRadius, useStationaryZoneAddresses, useStationaryZoneCriteriaAccuracy, workDate]);
+    }, [getBoundsByMarkers, getGeocodedSelectedAddressesAsync, getLocationRecordsByRangeAsync, isLoaded, mobileDevice.id, stationaryZoneCriteriaAccuracy, stationaryZoneCriteriaSpeed, stationaryZoneElementCount, stationaryZoneRadius, useStationaryZoneAddresses, useStationaryZoneCriteriaAccuracy, workDate]);
 
     const onDataGridToolbarPreparing = useCallback((e) => {
         if (e?.toolbarOptions) {

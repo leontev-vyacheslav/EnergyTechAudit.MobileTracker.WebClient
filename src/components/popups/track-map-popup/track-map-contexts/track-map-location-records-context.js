@@ -16,7 +16,6 @@ function TrackMapLocationRecordsProvider (props) {
     useEffect(() => {
         ( async () => {
             if (currentTimelineItem) {
-                console.log('locationRecordsData');
                 let locationRecordsData = await getLocationRecordsByRangeAsync(
                     mobileDevice.id,
                     currentTimelineItem.beginDate,

@@ -1,4 +1,4 @@
-import { AboutIcon, ExitIcon, HomeIcon, ListsIcon, MobileDeviceIcon, OrganizationIcon, SettingsIcon, WorkDateIcon } from './app-icons';
+import { AboutIcon, ExitIcon, HomeIcon, ListsIcon, MobileDeviceIcon, OrganizationIcon, SettingsIcon, WorkDateIcon, WorkDateTodayIcon } from './app-icons';
 import React from 'react';
 
 export const navigation = [
@@ -13,25 +13,30 @@ export const navigation = [
         items: [
             {
                 text: 'Организации',
-                icon: () => <OrganizationIcon size={ 22 } />,
+                icon: () => <OrganizationIcon size={ 22 }/>,
                 path: '/organizations',
             },
             {
                 text: 'Мобильные устройства',
-                icon: () => <MobileDeviceIcon size={ 22 } />,
+                icon: () => <MobileDeviceIcon size={ 22 }/>,
                 path: '/mobile-devices',
             },
         ]
     },
     {
+        text: 'Настройки',
+        icon: () => <SettingsIcon size={ 22 }/>,
+        path: '/settings',
+    },
+    {
         text: 'Рабочая дата',
-        icon: () => <WorkDateIcon size={ 22 } />,
+        icon: () => <WorkDateIcon size={ 22 }/>,
         command: 'workDate'
     },
     {
-        text: 'Настройки',
-        icon: () => <SettingsIcon size={ 22 } />,
-        path: '/settings',
+        text: 'Сегодня',
+        icon: () => <WorkDateTodayIcon size={ 22 }/>,
+        command: 'workDateToday'
     },
     {
         text: 'О программе',

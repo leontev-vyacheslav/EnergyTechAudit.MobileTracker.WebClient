@@ -7,7 +7,7 @@ import { AccuracyIcon, ActivityIcon, CountdownIcon, RadiusIcon, SpeedIcon } from
 import { SphericalCalculator } from '../../../../utils/spherical';
 import { useTrackMapSettingsContext } from './track-map-settings-context';
 import { useAppSettings } from '../../../../contexts/app-settings';
-import { useTrackMapUtilsContext } from './track-map-utils-context';
+import { useTrackMapTrackContext } from './track-map-track-context';
 import { useAppData } from '../../../../contexts/app-data';
 import { useTrackMapLocationRecordsContext } from './track-map-location-records-context';
 
@@ -19,8 +19,8 @@ function TrackMapStationaryZonesProvider (props) {
 
     const { trackLocationRecordList } = useTrackMapLocationRecordsContext();
     const { isShowStationaryZone } = useTrackMapSettingsContext();
-    const { currentMapInstance, getBoundsByMarkers, getInfoWindow } = useTrackMapUtilsContext();
-    const { getGeocodedAddressAsync, getGeocodedAddressesAsync } = useAppData();
+    const { currentMapInstance, getBoundsByMarkers, buildInfoWindow } = useTrackMapTrackContext();
+    const { getGeocodedSelectedAddressesAsync } = useAppData();
     const { appSettingsData } = useAppSettings();
     const {
         stationaryZoneRadius,
@@ -47,7 +47,7 @@ function TrackMapStationaryZonesProvider (props) {
         } );
     }, []);
 
-    const clearOverlays = useCallback(() => {
+    const closeAllOverlays = useCallback(() => {
         if (currentStationaryClusterCircleList.current.length > 0) {
             currentStationaryClusterCircleList.current.forEach(sc => {
                 sc.setMap(null);
@@ -87,7 +87,7 @@ function TrackMapStationaryZonesProvider (props) {
             batteryLevel: null,
         };
 
-        const address = await getGeocodedAddressAsync(locationRecordInfo);
+        const selectedAddress = await  getGeocodedSelectedAddressesAsync(locationRecordInfo) ;
 
         let dataSheet = [
             {
@@ -125,25 +125,31 @@ function TrackMapStationaryZonesProvider (props) {
         const content = ReactDOMServer.renderToString(
             React.createElement(
                 TrackMapInfoWindow,
-                { locationRecord: locationRecordInfo, address: address, externalDatasheet: dataSheet }
+                { locationRecord: locationRecordInfo, addresses: selectedAddress, externalDatasheet: dataSheet }
             )
         );
 
-        currentClusterInfoWindow.current = getInfoWindow(locationRecordInfo, content);
+        const offset = window.google.maps.geometry.spherical.computeOffset
+        (
+            new window.google.maps.LatLng ( locationRecordInfo.latitude, locationRecordInfo.longitude),
+            0.85 * cluster.radius, 0
+        );
+        if (offset) {
+            locationRecordInfo.latitude = offset.lat();
+            locationRecordInfo.longitude = offset.lng();
+        }
 
-    }, [getGeocodedAddressAsync, getInfoWindow, stationaryClusterList]);
+        currentClusterInfoWindow.current = buildInfoWindow(locationRecordInfo, content);
 
-    const showStationaryZoneClustersAsync = useCallback(async () => {
-        clearOverlays();
-        console.log('showStationaryZoneClustersAsync');
+    }, [stationaryClusterList, getGeocodedSelectedAddressesAsync, buildInfoWindow]);
+
+    const buildStationaryZoneClusters = useCallback(() => {
         for (const cluster of stationaryClusterList) {
-
             const circleProps = {
                 ...{
                     radius: cluster.radius, center: cluster.centroid,
                 }, ...stationaryClusterCircleDefaultProps
             };
-
             const circle = new window.google.maps.Circle(circleProps);
             circle.setMap(currentMapInstance);
 
@@ -153,85 +159,80 @@ function TrackMapStationaryZonesProvider (props) {
             });
             currentStationaryClusterCircleList.current.push(circle);
         }
+    }, [currentMapInstance, showInfoWindowAsync, stationaryClusterCircleDefaultProps, stationaryClusterList]);
 
-    }, [clearOverlays, currentMapInstance, showInfoWindowAsync, stationaryClusterCircleDefaultProps, stationaryClusterList]);
+    const constructStationaryClusterListAsync = useCallback( async () => {
+        if (currentMapInstance && trackLocationRecordList.length > 0) {
+            const currentStationaryClusterList = [];
+            const geoClusterData = trackLocationRecordList
+                .filter(locationRecord => locationRecord.speed < stationaryZoneCriteriaSpeed && ( !useStationaryZoneCriteriaAccuracy === true || locationRecord.accuracy < stationaryZoneCriteriaAccuracy ))
+                .map(locationRecord => [locationRecord.latitude, locationRecord.longitude, locationRecord]);
 
-    useEffect(() => {
-        clearOverlays();
+            const dbscan = new DBSCAN();
+            const clustersIndexes = dbscan.run(geoClusterData, stationaryZoneRadius, stationaryZoneElementCount, SphericalCalculator.computeDistanceBetween2);
+            const geoClusters = clustersIndexes.map((clusterIndexes) => clusterIndexes.map((pointId) => geoClusterData[pointId]));
 
-        ( async () => {
-            if (currentMapInstance && isShowStationaryZone && trackLocationRecordList) {
-                const currentStationaryClusterList = [];
-                const geoClusterData = trackLocationRecordList
-                    .filter(locationRecord => locationRecord.speed < stationaryZoneCriteriaSpeed && ( !useStationaryZoneCriteriaAccuracy === true || locationRecord.accuracy < stationaryZoneCriteriaAccuracy ))
-                    .map(locationRecord => [locationRecord.latitude, locationRecord.longitude, locationRecord]);
+            let index = 0;
 
-                const dbscan = new DBSCAN();
-                const clustersIndexes = dbscan.run(geoClusterData, stationaryZoneRadius, stationaryZoneElementCount, SphericalCalculator.computeDistanceBetween2);
-                const geoClusters = clustersIndexes.map((clusterIndexes) => clusterIndexes.map((pointId) => geoClusterData[pointId]));
+            for (const geoCluster of geoClusters) {
 
-                let index = 0;
-
-                for (const geoCluster of geoClusters) {
-
-                    const centroid = getBoundsByMarkers(geoCluster.map(element => {
-                        const [, , { latitude, longitude }] = element;
-                        return {
-                            latitude: latitude,
-                            longitude: longitude
-                        };
-                    }));
-
-                    const centroidCenter = centroid.getCenter();
-                    const diagonalDistance = window.google.maps.geometry.spherical.computeDistanceBetween(
-                        centroid.getNorthEast(),
-                        centroid.getSouthWest()
-                    );
-                    let formattedAddress = [];
-
-                    if (useStationaryZoneAddresses === true) {
-                        const addresses = await getGeocodedAddressesAsync({
-                            latitude: centroidCenter.lat(),
-                            longitude: centroidCenter.lng(),
-                        });
-                        if (addresses) {
-                            formattedAddress = addresses
-                                .filter(a => a.types.includes('street_address') || a.types.includes('premise'))
-                                .map(a => a.formatted_address)
-                                .filter((val, indx, arr) => arr.indexOf(val) === indx);
-                        }
-                        if (formattedAddress.length === 0) {
-                            formattedAddress.push(AppConstants.noDataLongText);
-                        }
-                    }
-
-                    const cluster = {
-                        id: index,
-                        index: index,
-                        centroid: centroidCenter,
-                        radius: diagonalDistance / 2,
-                        elements: geoCluster,
-                        addresses: formattedAddress,
+                const centroid = getBoundsByMarkers(geoCluster.map(element => {
+                    const [, , { latitude, longitude }] = element;
+                    return {
+                        latitude: latitude,
+                        longitude: longitude
                     };
+                }));
 
-                    currentStationaryClusterList.push(cluster);
-                    index++;
+                const centroidCenter = centroid.getCenter();
+                const diagonalDistance = window.google.maps.geometry.spherical.computeDistanceBetween(
+                    centroid.getNorthEast(),
+                    centroid.getSouthWest()
+                );
+
+                let selectedAddresses = [];
+                if (useStationaryZoneAddresses === true) {
+                    selectedAddresses = await  getGeocodedSelectedAddressesAsync({
+                        latitude: centroidCenter.lat(),
+                        longitude: centroidCenter.lng(),
+                    }) ;
                 }
-                setStationaryClusterList([...currentStationaryClusterList]);
-            }
-        } )();
 
-    }, [clearOverlays, currentMapInstance, getBoundsByMarkers, getGeocodedAddressesAsync, isShowStationaryZone, stationaryZoneCriteriaAccuracy, stationaryZoneCriteriaSpeed, stationaryZoneElementCount, stationaryZoneRadius, trackLocationRecordList, useStationaryZoneAddresses, useStationaryZoneCriteriaAccuracy])
+                const cluster = {
+                    id: index,
+                    index: index,
+                    centroid: centroidCenter,
+                    radius: diagonalDistance / 2,
+                    elements: geoCluster,
+                    addresses: selectedAddresses,
+                };
+
+                currentStationaryClusterList.push(cluster);
+                index++;
+            }
+            setStationaryClusterList(currentStationaryClusterList);
+        } else {
+            setStationaryClusterList([]);
+        }
+        }, [currentMapInstance, getBoundsByMarkers, getGeocodedSelectedAddressesAsync, stationaryZoneCriteriaAccuracy, stationaryZoneCriteriaSpeed, stationaryZoneElementCount, stationaryZoneRadius, trackLocationRecordList, useStationaryZoneAddresses, useStationaryZoneCriteriaAccuracy]
+    );
 
     useEffect(() => {
         ( async () => {
-            if (!isShowStationaryZone) {
-                clearOverlays();
+            if (isShowStationaryZone) {
+                await constructStationaryClusterListAsync();
             } else {
-                await showStationaryZoneClustersAsync();
+                setStationaryClusterList([]);
             }
         } )();
-    }, [clearOverlays, isShowStationaryZone, showStationaryZoneClustersAsync]);
+    }, [constructStationaryClusterListAsync, isShowStationaryZone])
+
+    useEffect(() => {
+        closeAllOverlays();
+        if (isShowStationaryZone) {
+            buildStationaryZoneClusters();
+        }
+    }, [closeAllOverlays, isShowStationaryZone, buildStationaryZoneClusters]);
 
     return (
         <TrackMapStationaryZonesContext.Provider

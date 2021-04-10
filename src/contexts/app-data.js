@@ -149,6 +149,21 @@ function AppDataProvider (props) {
         [getGeocodedAddressesAsync]
     );
 
+    const getGeocodedSelectedAddressesAsync = useCallback(async (locationRecordInfo) => {
+        let selectedAddress = [];
+        const addresses = await getGeocodedAddressesAsync(locationRecordInfo);
+        if (addresses) {
+            selectedAddress = addresses
+                .filter(a => a.types.includes('street_address') || a.types.includes('premise'))
+                .map(a => a.formatted_address)
+                .filter((val, indx, arr) => arr.indexOf(val) === indx);
+        }
+        if (selectedAddress.length === 0) {
+            selectedAddress.push(AppConstants.noDataLongText);
+        }
+        return selectedAddress;
+    }, [getGeocodedAddressesAsync]);
+
     const getGeocodedLocationAsync = useCallback(async (address) => {
             const response = await fetch(
                 `${ AppConstants.trackMap.geocodeApiUrl }?address=${ encodeURIComponent(address) }&key=${ AppConstants.trackMap.apiKey }&language=ru&region=ru`
@@ -298,7 +313,7 @@ function AppDataProvider (props) {
         <AppDataContext.Provider
             value={ {
                 getMobileDeviceAsync, getMobileDevicesAsync,  getTimelinesAsync, getLocationRecordsByRangeAsync,
-                getLocationRecordAsync,  getGeocodedAddressAsync, getGeocodedAddressesAsync, getGeocodedLocationAsync, getTrackSheetAsync,
+                getLocationRecordAsync,  getGeocodedAddressAsync, getGeocodedAddressesAsync, getGeocodedSelectedAddressesAsync, getGeocodedLocationAsync, getTrackSheetAsync,
                 postExtendedUserInfoAsync, getExtendedUserInfoAsync,
 
                 getOrganizationsAsync, getOrganizationOfficesAsync, deleteOrganizationAsync, deleteOfficeAsync,

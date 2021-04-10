@@ -7,6 +7,7 @@ import { useScreenSize } from '../../utils/media-query';
 import { useSharedArea } from '../../contexts/shared-area';
 
 import './side-navigation-menu.scss';
+import { useAppSettings } from '../../contexts/app-settings';
 
 export default function SideNavigationMenu (props) {
     const {
@@ -17,11 +18,13 @@ export default function SideNavigationMenu (props) {
         onMenuReady
     } = props;
 
+    const { isLarge } = useScreenSize();
     const { showWorkDatePicker, signOutWithConfirm } = useSharedArea();
     const { navigationData: { currentPath } } = useNavigation();
+    const { setWorkDateToday } = useAppSettings();
+
     const treeViewRef = useRef();
     const wrapperRef = useRef();
-    const { isLarge } = useScreenSize();
 
     function normalizePath () {
         return navigation.map((item) => {
@@ -92,6 +95,9 @@ export default function SideNavigationMenu (props) {
                         }
                         if (event.itemData.command === 'exit') {
                             signOutWithConfirm();
+                        }
+                        if (event.itemData.command === 'workDateToday') {
+                            setWorkDateToday();
                         }
                         selectedItemChanged(event);
                     } }

@@ -8,14 +8,14 @@ import TrackMapSettingsForm from '../track-map-panels/track-map-settings-panel/t
 import TrackMapTimelinePanel from '../track-map-panels/track-map-timeline-panel/track-map-timeline-panel';
 import { useTrackMapSettingsContext } from '../track-map-contexts/track-map-settings-context';
 import { useScreenSize } from '../../../../utils/media-query';
-import { useTrackMapUtilsContext } from '../track-map-contexts/track-map-utils-context';
+import { useTrackMapTrackContext } from '../track-map-contexts/track-map-track-context';
 
 import './track-map.scss';
 
 const TrackMap = ({ mobileDevice }) => {
     const { isXSmall, isSmall } = useScreenSize();
     const { isShowTrackMapSettings, isShowTrackMapZones, isShowTrackMapTimeline } = useTrackMapSettingsContext();
-    const { setCurrentMapInstance, fitMapBoundsByLocations, closeInfoWindow } = useTrackMapUtilsContext();
+    const { setCurrentMapInstance, fitMapBoundsByLocations, closeInfoWindow } = useTrackMapTrackContext();
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: AppConstants.trackMap.apiKey,
@@ -25,8 +25,6 @@ const TrackMap = ({ mobileDevice }) => {
     const onTrackMapLoadHandler = useCallback((googleMap) => {
         setCurrentMapInstance(googleMap);
     }, [setCurrentMapInstance]);
-
-    TrackMap.fitToMap = fitMapBoundsByLocations;
 
     return ( isLoaded ?
             <div className={ 'track-map-container' }>

@@ -19,7 +19,7 @@ const TrackSheetMainContextMenu = ({ innerRef, commands }) => {
                 }
             },
             {
-                text: 'Экспорт в Xlsx...',
+                text: 'Экспорт в XLSX...',
                 renderIconItem: () => <ExportToXlsxIcon size={ 18 }/>,
                 onClick: async (e) => {
                     e.component.hide();

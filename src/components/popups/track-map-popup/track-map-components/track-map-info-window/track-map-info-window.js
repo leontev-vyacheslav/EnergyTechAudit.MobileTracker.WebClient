@@ -6,7 +6,7 @@ import { AccuracyIcon, ActivityIcon, AddressIcon, BatteryIcon, ChargingLevelIcon
 
 import './track-map-info-window.scss'
 
-const TrackMapInfoWindow = ({ locationRecord, address, externalDatasheet }) => {
+const TrackMapInfoWindow = ({ locationRecord, addresses, externalDatasheet }) => {
     const { isXSmall, isSmall } = useScreenSize();
 
     const activityTypeDescription = AppConstants.motionActivityTypeDictionary.find(activity => activity.id === locationRecord.motionActivityTypeId);
@@ -54,16 +54,18 @@ const TrackMapInfoWindow = ({ locationRecord, address, externalDatasheet }) => {
 
     return (
         <table className={ 'simple-grid track-map-info-window-grid' } style={ isXSmall ? { fontSize: 10 } : ( isSmall ? { fontSize: 11 } : {} ) }>
-            { address !== null ? (
+            { addresses !== null && addresses.length > 0 ? (
                 <thead>
-                    <tr>
-                        <td colSpan={ 2 }>
-                            <div className={ 'track-map-info-window-data-row' }>
+                <tr>
+                    <td colSpan={ 2 }>
+                        { addresses.map((a, i) => (
+                            <div key={ i } className={ 'track-map-info-window-data-row' }>
                                 <AddressIcon size={ 18 }/>
-                                <span style={ { fontWeight: 500 } }>{ address ?? AppConstants.noDataLongText }</span>
+                                <span style={ { fontWeight: 500 } }>{ a ?? AppConstants.noDataLongText }</span>
                             </div>
-                        </td>
-                    </tr>
+                        )) }
+                    </td>
+                </tr>
                 </thead> )
                 : null
             }

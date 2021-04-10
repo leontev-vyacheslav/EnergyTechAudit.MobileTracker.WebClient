@@ -6,15 +6,14 @@ import TrackMapInfoWindow from '../track-map-components/track-map-info-window/tr
 import { useAppSettings } from '../../../../contexts/app-settings';
 import { useTrackMapLocationRecordsContext } from './track-map-location-records-context';
 
-const TrackMapUtilsContext = createContext({});
+const TrackMapTrackContext = createContext({});
 
-const useTrackMapUtilsContext = () => useContext(TrackMapUtilsContext);
+const useTrackMapTrackContext = () => useContext(TrackMapTrackContext);
 
-function TrackMapUtilsProvider (props) {
-
-    const { trackLocationRecordList } = useTrackMapLocationRecordsContext();
+function TrackMapTrackProvider (props) {
     const { appSettingsData } = useAppSettings();
     const { getLocationRecordAsync, getGeocodedAddressAsync } = useAppData();
+    const { trackLocationRecordList } = useTrackMapLocationRecordsContext();
     const [currentMapInstance, setCurrentMapInstance] = useState(null);
 
     const currentInfoWindow = useRef(null);
@@ -23,18 +22,19 @@ function TrackMapUtilsProvider (props) {
     const currentBreakIntervals = useRef([]);
 
     const getBoundsByMarkers = useCallback((locationList) => {
-        const boundBox = new window.google.maps.LatLngBounds();
-        for (let i = 0; i < locationList.length; i++) {
-            boundBox.extend({
-                lat: locationList[i].latitude,
-                lng: locationList[i].longitude
-            });
+        if (currentMapInstance) {
+            const boundBox = new window.google.maps.LatLngBounds();
+            for (let i = 0; i < locationList.length; i++) {
+                boundBox.extend({
+                    lat: locationList[i].latitude,
+                    lng: locationList[i].longitude
+                });
+            }
+            return boundBox;
         }
-        return boundBox;
-    }, []);
+    }, [currentMapInstance]);
 
-    const getInfoWindow = useCallback((locationRecord, content) => {
-
+    const buildInfoWindow = useCallback((locationRecord, content) => {
         if (currentMapInstance) {
             const infoWindow = new window.google.maps.InfoWindow({
                 position: {
@@ -67,38 +67,7 @@ function TrackMapUtilsProvider (props) {
         }
     }, [currentMapInstance]);
 
-    const getBreakIntervals = useCallback((locationList, breakInterval) => {
-        const breakIntervals = [];
-        if (currentMapInstance && locationList && locationList.length > 0) {
-
-            for (let i = 0; i < locationList.length - 1; i++) {
-                const currentLocation = new window.google.maps.LatLng({
-                    lat: locationList[i].latitude,
-                    lng: locationList[i].longitude
-                }), nextLocation = new window.google.maps.LatLng({
-                    lat: locationList[i + 1].latitude,
-                    lng: locationList[i + 1].longitude
-                });
-
-                const distance = window.google.maps.geometry.spherical.computeDistanceBetween(currentLocation, nextLocation);
-
-                if (distance >= breakInterval) {
-                    const breakIntervalPath = new window.google.maps.Polyline({
-                        path: [currentLocation, nextLocation],
-                        geodesic: true,
-                        strokeColor: AppConstants.trackMap.breakIntervalPathStrokeColor,
-                        strokeOpacity: AppConstants.trackMap.breakIntervalPathStrokeOpacity,
-                        strokeWeight: AppConstants.trackMap.polylineTrackPathStrokeWeight,
-                    });
-                    breakIntervalPath.setMap(currentMapInstance);
-                    breakIntervals.push(breakIntervalPath);
-                }
-            }
-        }
-        return breakIntervals;
-    }, [currentMapInstance]);
-
-    const clearOverlays = useCallback(() => {
+    const closeAllOverlays = useCallback(() => {
         if (trackPath.current !== null) {
             trackPath.current.setMap(null);
             trackPath.current = null;
@@ -151,12 +120,12 @@ function TrackMapUtilsProvider (props) {
             const content = ReactDOMServer.renderToString(
                 React.createElement(
                     TrackMapInfoWindow,
-                    { locationRecord: locationRecord, address: address }
+                    { locationRecord: locationRecord, addresses: [address] }
                 )
             );
-            currentInfoWindow.current = getInfoWindow(locationRecord, content);
+            currentInfoWindow.current = buildInfoWindow(locationRecord, content);
         }
-    }, [currentMapInstance, getGeocodedAddressAsync, getInfoWindow, getLocationRecordAsync]);
+    }, [currentMapInstance, getGeocodedAddressAsync, buildInfoWindow, getLocationRecordAsync]);
 
     const closeInfoWindow = useCallback(() => {
         if (currentInfoWindow.current !== null) {
@@ -164,6 +133,37 @@ function TrackMapUtilsProvider (props) {
             currentInfoWindow.current = null;
         }
     }, []);
+
+    const buildBreakIntervals = useCallback((locationList, breakInterval) => {
+        const breakIntervals = [];
+        if (currentMapInstance && locationList && locationList.length > 0) {
+
+            for (let i = 0; i < locationList.length - 1; i++) {
+                const currentLocation = new window.google.maps.LatLng({
+                    lat: locationList[i].latitude,
+                    lng: locationList[i].longitude
+                }), nextLocation = new window.google.maps.LatLng({
+                    lat: locationList[i + 1].latitude,
+                    lng: locationList[i + 1].longitude
+                });
+
+                const distance = window.google.maps.geometry.spherical.computeDistanceBetween(currentLocation, nextLocation);
+
+                if (distance >= breakInterval) {
+                    const breakIntervalPath = new window.google.maps.Polyline({
+                        path: [currentLocation, nextLocation],
+                        geodesic: true,
+                        strokeColor: AppConstants.trackMap.breakIntervalPathStrokeColor,
+                        strokeOpacity: AppConstants.trackMap.breakIntervalPathStrokeOpacity,
+                        strokeWeight: AppConstants.trackMap.polylineTrackPathStrokeWeight,
+                    });
+                    breakIntervalPath.setMap(currentMapInstance);
+                    breakIntervals.push(breakIntervalPath);
+                }
+            }
+        }
+        return breakIntervals;
+    }, [currentMapInstance]);
 
     const buildMarker = useCallback((locationRecord, order) => {
 
@@ -284,21 +284,23 @@ function TrackMapUtilsProvider (props) {
             buildMarkersOnPolylinePath();
             buildOutsideMarkers();
             if (appSettingsData.isShownBreakInterval) {
-                currentBreakIntervals.current = getBreakIntervals(trackLocationRecordList, appSettingsData.breakInterval);
+                currentBreakIntervals.current = buildBreakIntervals(trackLocationRecordList, appSettingsData.breakInterval);
             }
         }
-    }, [appSettingsData.breakInterval, appSettingsData.isShownBreakInterval, buildMarkersOnPolylinePath, buildOutsideMarkers, currentMapInstance, fitMapBoundsByLocations, getBreakIntervals, trackLocationRecordList]);
+    }, [appSettingsData.breakInterval, appSettingsData.isShownBreakInterval, buildMarkersOnPolylinePath, buildOutsideMarkers, currentMapInstance, fitMapBoundsByLocations, buildBreakIntervals, trackLocationRecordList]);
 
     useEffect(() => {
-        clearOverlays();
+        closeAllOverlays();
         showTrack();
-    }, [clearOverlays, showTrack]);
+    }, [closeAllOverlays, showTrack]);
+
+    TrackMapTrackProvider.fitMapBoundsByLocations = fitMapBoundsByLocations;
 
     return (
-        <TrackMapUtilsContext.Provider
+        <TrackMapTrackContext.Provider
             value={ {
                 currentMapInstance, setCurrentMapInstance,
-                getBoundsByMarkers, getInfoWindow,
+                getBoundsByMarkers, buildInfoWindow,
                 fitMapBoundsByLocations, closeInfoWindow
             } }
             { ...props }
@@ -306,4 +308,4 @@ function TrackMapUtilsProvider (props) {
     );
 }
 
-export { TrackMapUtilsProvider, useTrackMapUtilsContext };
+export { TrackMapTrackProvider, useTrackMapTrackContext };

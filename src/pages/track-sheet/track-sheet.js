@@ -20,6 +20,7 @@ import TrackSheetMainContextMenu from './track-sheet-main-context-menu/track-she
 import './track-sheet.scss';
 import { trackSheetExcelExporter } from './track-sheet-excel-exporter';
 import { DataGridToolbarButton } from '../../components/data-grid-utils/data-grid-toolbar-button';
+import { getUserDescription } from '../../utils/string-helper';
 
 const TrackSheet = () => {
     function useQuery () {
@@ -27,21 +28,20 @@ const TrackSheet = () => {
     }
 
     let query = useQuery();
-
-    const dxDataGridRef = useRef(null);
     const { isXSmall } = useScreenSize();
     const { appSettingsData: { workDate }, getDailyTimelineItem } = useAppSettings();
     const { getMobileDeviceAsync, getTrackSheetAsync } = useAppData();
+
     const [trackSheet, setTrackSheet] = useState(null);
     const [mobileDevice, setMobileDevice] = useState(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState(null);
-
     const [trackMapCurrentDate, setTrackMapCurrentDate] = useState(null);
-    const mainContextMenuRef = useRef();
-    const rowContextMenuRef = useRef();
-
     const [mobileDeviceId] = useState(query.get('mobileDeviceId'));
     const [currentDate] = useState(query.get('currentDate'));
+
+    const dxDataGridRef = useRef(null);
+    const mainContextMenuRef = useRef();
+    const rowContextMenuRef = useRef();
 
     const refreshAsync = useCallback(async () => {
         if (currentDate) {
@@ -79,19 +79,10 @@ const TrackSheet = () => {
         }
     }, []);
 
-    const getUserDescription = useCallback(() => {
-        if(mobileDevice && mobileDevice.extendedUserInfo) {
-            return !mobileDevice.extendedUserInfo
-                ? mobileDevice.email
-                : `${ mobileDevice.extendedUserInfo.firstName } ${ mobileDevice.extendedUserInfo.lastName }`;
-        }
-        return '';
-    }, [mobileDevice]) ;
-
     SideNavigationMenu.treeViewRef?.current?.instance.unselectAll();
 
     const GroupRowContent = () => {
-        const userCaption = getUserDescription();
+        const userCaption = getUserDescription(mobileDevice);
         return (
             <div className={ 'user-grid-group track-sheet-group ' }>
                 <div className={ 'dx-icon dx-icon-user' }/>

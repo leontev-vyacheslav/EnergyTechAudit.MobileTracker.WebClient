@@ -1,4 +1,5 @@
 import saveAs from 'file-saver';
+import { getUserDescription } from './string-helper';
 
 const ExcelExportConstants = {
     colors: {
@@ -14,11 +15,7 @@ const excelSaver = ({ workbook, mobileDevice, workDate, title }) => {
     const formattedDate = new Date(workDate ?? new Date())
         .toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
 
-    const userCaption = mobileDevice
-        ? !mobileDevice.extendedUserInfo
-            ? mobileDevice.email
-            : `${ mobileDevice.extendedUserInfo.firstName } ${ mobileDevice.extendedUserInfo.lastName }`
-        : null;
+    const userCaption = mobileDevice ? getUserDescription(mobileDevice) : null;
 
     const fileName = mobileDevice
         ? `${ title } (${ userCaption }#${ mobileDevice.model } - ${ formattedDate }).xlsx`
