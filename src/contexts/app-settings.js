@@ -19,7 +19,8 @@ function AppSettingsProvider (props) {
         stationaryZoneCriteriaSpeed: 2,
         stationaryZoneCriteriaAccuracy: 25,
         useStationaryZoneCriteriaAccuracy: false,
-        useStationaryZoneAddresses: false,
+        useStationaryZoneAddressesOnMap: false,
+        useStationaryZoneAddressesOnList: false,
     };
 
     const initialAppSettingsDataJson =
@@ -58,8 +59,11 @@ function AppSettingsProvider (props) {
     if(!initialAppSettingsData.useStationaryZoneCriteriaAccuracy)  {
         initialAppSettingsData = { ...initialAppSettingsData, ...{ useStationaryZoneCriteriaAccuracy: false } };
     }
-    if(!initialAppSettingsData.useStationaryZoneAddresses)  {
-        initialAppSettingsData = { ...initialAppSettingsData, ...{ useStationaryZoneAddresses: false } };
+    if(!initialAppSettingsData.useStationaryZoneAddressesOnMap)  {
+        initialAppSettingsData = { ...initialAppSettingsData, ...{ useStationaryZoneAddressesOnMap: false } };
+    }
+    if(!initialAppSettingsData.useStationaryZoneAddressesOnList)  {
+        initialAppSettingsData = { ...initialAppSettingsData, ...{ useStationaryZoneAddressesOnList: false } };
     }
 
     const [appSettingsData, setAppSettingsData] = useState(initialAppSettingsData);

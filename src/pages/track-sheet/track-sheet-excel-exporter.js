@@ -1,6 +1,7 @@
 import { Workbook } from 'exceljs';
 import { exportDataGrid } from 'devextreme/excel_exporter';
-import { excelCommonCellStyler, excelHeaderCellStyler, excelSaver } from '../../utils/excel-export-helper';
+import { excelCommonCellStyler, excelGroupCellStyler, excelHeaderCellStyler, excelSaver } from '../../utils/excel-export-helper';
+import { getUserDeviceDescription } from '../../utils/string-helper';
 
 const trackSheetExcelExporter = ({ dxDataGrid, mobileDevice, workDate, title }) => {
     const workbook = new Workbook(),
@@ -33,7 +34,13 @@ const trackSheetExcelExporter = ({ dxDataGrid, mobileDevice, workDate, title }) 
                         break;
                     }
                 }
-            } else if(gridCell.rowType === 'header') {
+            } else if (gridCell.rowType === 'group') {
+                const groupElement = dxDataGrid.getDataSource().items().find( i => i.key === gridCell.value);
+                if (groupElement) {
+                    excelCell.value = getUserDeviceDescription(mobileDevice);
+                }
+                excelGroupCellStyler({ excelCell });
+            } else if (gridCell.rowType === 'header') {
                 excelHeaderCellStyler({ excelCell });
             }
         }

@@ -11,7 +11,7 @@ import DataGridIconCellValueContainer from '../../../components/data-grid-utils/
 import { Template } from 'devextreme-react/core/template';
 import StationaryZoneMainContextMenu from './stationary-zones-main-context-menu/stationary-zones-main-context-menu';
 import { stationaryZonesExcelExporter } from './stationary-zones-excel-exporter';
-import { DataGridToolbarButton } from '../../../components/data-grid-utils/data-grid-toolbar-button';
+import { DataGridToolbarButton, onDataGridToolbarPreparing } from '../../../components/data-grid-utils/data-grid-toolbar-button';
 
 const StationaryZones = ({ mobileDevice }) => {
     const dxDataGridRef = useRef();
@@ -45,7 +45,7 @@ const StationaryZones = ({ mobileDevice }) => {
             stationaryZoneCriteriaSpeed,
             stationaryZoneCriteriaAccuracy,
             useStationaryZoneCriteriaAccuracy,
-            useStationaryZoneAddresses
+            useStationaryZoneAddressesOnList
         }
     } = useAppSettings();
 
@@ -96,7 +96,7 @@ const StationaryZones = ({ mobileDevice }) => {
                 const radius = diagonalDistance / 2;
                 let selectedAddresses = [];
 
-                if (useStationaryZoneAddresses === true) {
+                if (useStationaryZoneAddressesOnList === true) {
                     selectedAddresses = await getGeocodedSelectedAddressesAsync({
                         latitude: centroid.getCenter().lat(),
                         longitude: centroid.getCenter().lng(),
@@ -122,22 +122,7 @@ const StationaryZones = ({ mobileDevice }) => {
             }
             setStationaryClusterList(clusterList);
         } )();
-    }, [getBoundsByMarkers, getGeocodedSelectedAddressesAsync, getLocationRecordsByRangeAsync, isLoaded, mobileDevice.id, stationaryZoneCriteriaAccuracy, stationaryZoneCriteriaSpeed, stationaryZoneElementCount, stationaryZoneRadius, useStationaryZoneAddresses, useStationaryZoneCriteriaAccuracy, workDate]);
-
-    const onDataGridToolbarPreparing = useCallback((e) => {
-        if (e?.toolbarOptions) {
-            e.toolbarOptions.items.forEach(i => {
-                i.location = 'before';
-            })
-
-            e.toolbarOptions.items.unshift(
-                {
-                    location: 'before',
-                    template: 'DataGridToolbarButtonTemplate'
-                }
-            );
-        }
-    }, []);
+    }, [getBoundsByMarkers, getGeocodedSelectedAddressesAsync, getLocationRecordsByRangeAsync, isLoaded, mobileDevice.id, stationaryZoneCriteriaAccuracy, stationaryZoneCriteriaSpeed, stationaryZoneElementCount, stationaryZoneRadius, useStationaryZoneAddressesOnList, useStationaryZoneCriteriaAccuracy, workDate]);
 
     if (stationaryClusterList.length > 0) {
         return (
@@ -159,7 +144,7 @@ const StationaryZones = ({ mobileDevice }) => {
 
                     <Column dataField={ 'id' } dataType={ 'number' } caption={ 'Зона' } width={ 60 } alignment={ 'center' }/>
                     {
-                        useStationaryZoneAddresses === true ?
+                        useStationaryZoneAddressesOnList === true ?
                             <Column dataField={ 'addresses' } dataType={ 'string' } caption={ 'Адреса' } alignment={ 'left' }
                                     cellRender={ (e) => {
                                         return <DataGridIconCellValueContainer rowStyle={ { fontSize: 12 } }

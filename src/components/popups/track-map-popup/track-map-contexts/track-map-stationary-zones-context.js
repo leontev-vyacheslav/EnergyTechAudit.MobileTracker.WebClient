@@ -3,7 +3,7 @@ import AppConstants from '../../../../constants/app-constants';
 import { DBSCAN } from 'density-clustering';
 import ReactDOMServer from 'react-dom/server';
 import TrackMapInfoWindow from '../track-map-components/track-map-info-window/track-map-info-window';
-import { AccuracyIcon, ActivityIcon, CountdownIcon, RadiusIcon, SpeedIcon } from '../../../../constants/app-icons';
+import { AccuracyIcon, CountdownIcon, RadiusIcon, SpeedIcon } from '../../../../constants/app-icons';
 import { SphericalCalculator } from '../../../../utils/spherical';
 import { useTrackMapSettingsContext } from './track-map-settings-context';
 import { useAppSettings } from '../../../../contexts/app-settings';
@@ -28,7 +28,7 @@ function TrackMapStationaryZonesProvider (props) {
         stationaryZoneCriteriaSpeed,
         stationaryZoneCriteriaAccuracy,
         useStationaryZoneCriteriaAccuracy,
-        useStationaryZoneAddresses,
+        useStationaryZoneAddressesOnMap,
     } = appSettingsData;
 
     const [stationaryClusterList, setStationaryClusterList] = useState([]);
@@ -109,12 +109,6 @@ function TrackMapStationaryZonesProvider (props) {
                 value: `${ locationRecordInfo.accuracy } м`
             },
             {
-                id: 3,
-                iconRender: (props) => <ActivityIcon { ...props }/>,
-                description: 'Активность:',
-                value: 'В зоне стационарности'
-            },
-            {
                 id: 4,
                 iconRender: (props) => <SpeedIcon { ...props }/>,
                 description: 'Средняя скорость:',
@@ -191,7 +185,7 @@ function TrackMapStationaryZonesProvider (props) {
                 );
 
                 let selectedAddresses = [];
-                if (useStationaryZoneAddresses === true) {
+                if (useStationaryZoneAddressesOnMap === true) {
                     selectedAddresses = await  getGeocodedSelectedAddressesAsync({
                         latitude: centroidCenter.lat(),
                         longitude: centroidCenter.lng(),
@@ -214,7 +208,7 @@ function TrackMapStationaryZonesProvider (props) {
         } else {
             setStationaryClusterList([]);
         }
-        }, [currentMapInstance, getBoundsByMarkers, getGeocodedSelectedAddressesAsync, stationaryZoneCriteriaAccuracy, stationaryZoneCriteriaSpeed, stationaryZoneElementCount, stationaryZoneRadius, trackLocationRecordList, useStationaryZoneAddresses, useStationaryZoneCriteriaAccuracy]
+        }, [currentMapInstance, getBoundsByMarkers, getGeocodedSelectedAddressesAsync, stationaryZoneCriteriaAccuracy, stationaryZoneCriteriaSpeed, stationaryZoneElementCount, stationaryZoneRadius, trackLocationRecordList, useStationaryZoneAddressesOnMap, useStationaryZoneCriteriaAccuracy]
     );
 
     useEffect(() => {

@@ -14,7 +14,7 @@ import OrganizationPopup from '../../components/popups/organization-popup/organi
 import { showConfirmDialog } from '../../utils/dialogs';
 import { useScreenSize } from '../../utils/media-query';
 import OfficePopup from '../../components/popups/office-popup/office-popup';
-import { DataGridToolbarButton } from '../../components/data-grid-utils/data-grid-toolbar-button';
+import { DataGridToolbarButton, onDataGridToolbarPreparing } from '../../components/data-grid-utils/data-grid-toolbar-button';
 import { organizationsExcelExporter } from './organizations-excel-exporter';
 
 const Organizations = () => {
@@ -119,21 +119,6 @@ const Organizations = () => {
             }
         });
     }, [deleteOfficeAsync, organizations, refreshAsync]);
-
-    const onDataGridToolbarPreparing = useCallback((e) => {
-        if (e?.toolbarOptions) {
-            e.toolbarOptions.items.forEach(i => {
-                i.location = 'before';
-            })
-
-            e.toolbarOptions.items.unshift(
-                {
-                    location: 'before',
-                    template: 'DataGridToolbarButtonTemplate'
-                }
-            );
-        }
-    }, []);
 
     const GroupRowContent = ({ groupCell }) => {
         const items = groupCell.data.items === null ? groupCell.data.collapsedItems : groupCell.data.items;

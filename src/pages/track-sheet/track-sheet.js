@@ -19,8 +19,8 @@ import TrackSheetMainContextMenu from './track-sheet-main-context-menu/track-she
 
 import './track-sheet.scss';
 import { trackSheetExcelExporter } from './track-sheet-excel-exporter';
-import { DataGridToolbarButton } from '../../components/data-grid-utils/data-grid-toolbar-button';
-import { getUserDescription } from '../../utils/string-helper';
+import { DataGridToolbarButton, onDataGridToolbarPreparing } from '../../components/data-grid-utils/data-grid-toolbar-button';
+import { getUserDeviceDescription } from '../../utils/string-helper';
 
 const TrackSheet = () => {
     function useQuery () {
@@ -64,25 +64,10 @@ const TrackSheet = () => {
         } )();
     }, [refreshAsync]);
 
-    const onDataGridToolbarPreparing = useCallback((e) => {
-        if (e?.toolbarOptions) {
-            e.toolbarOptions.items.forEach(i => {
-                i.location = 'before';
-            })
-
-            e.toolbarOptions.items.unshift(
-                {
-                    location: 'before',
-                    template: 'DataGridToolbarButtonTemplate'
-                }
-            );
-        }
-    }, []);
-
     SideNavigationMenu.treeViewRef?.current?.instance.unselectAll();
 
     const GroupRowContent = () => {
-        const userCaption = getUserDescription(mobileDevice);
+        const userCaption = getUserDeviceDescription(mobileDevice);
         return (
             <div className={ 'user-grid-group track-sheet-group ' }>
                 <div className={ 'dx-icon dx-icon-user' }/>
@@ -90,7 +75,7 @@ const TrackSheet = () => {
                     <div className={ 'mobile-devices-group-line' }>
                         <div>
                             <span>{ !isXSmall ? 'Пользователь: ' : '' }</span>
-                            <span>{ userCaption } / { mobileDevice.model }</span>
+                            <span>{ userCaption } </span>
                         </div>
                     </div>
                     <div className={ 'mobile-devices-group-line' }>

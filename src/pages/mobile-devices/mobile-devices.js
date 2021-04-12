@@ -18,7 +18,7 @@ import { useAppData } from '../../contexts/app-data';
 import { useHistory } from 'react-router-dom';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useScreenSize } from '../../utils/media-query';
-import { DataGridToolbarButton } from '../../components/data-grid-utils/data-grid-toolbar-button';
+import { DataGridToolbarButton, onDataGridToolbarPreparing } from '../../components/data-grid-utils/data-grid-toolbar-button';
 import { mobileDeviceExcelExporter } from './mobile-devices-excel-exporter';
 
 import './mobile-devices.scss';
@@ -73,20 +73,6 @@ const MobileDevice = () => {
     useEffect(() => {
         ( async () => await getDataAsync() )();
     }, [getDataAsync]);
-
-    const onDataGridToolbarPreparing = useCallback((e) => {
-        if (e?.toolbarOptions) {
-            e.toolbarOptions.items.forEach(i => {
-                i.location = 'before';
-            });
-            e.toolbarOptions.items.unshift(
-                {
-                    location: 'before',
-                    template: 'DataGridToolbarButtonTemplate'
-                }
-            );
-        }
-    }, []);
 
     const GroupRowContent = ({ groupCell }) => {
 

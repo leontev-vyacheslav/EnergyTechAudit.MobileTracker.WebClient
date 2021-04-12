@@ -23,8 +23,9 @@ const SettingsForm = ({ style }) => {
                 colCount={ 1 }
                 formData={ appSettingsData }
                 ref={ dxAppSettingsFormRef }
+
             >
-                <TabbedItem>
+                <TabbedItem >
                     <Tab title={ 'Основные' }>
                         <SimpleItem
                             dataField={ 'workDate' }
@@ -100,18 +101,13 @@ const SettingsForm = ({ style }) => {
                             } }
                         />
                         <SimpleItem
-                            dataField={ 'useStationaryZoneAddresses' }
-                            label={ { location: 'top', showColon: true, text: 'Получать адреса в зоне' } }
-                            editorType={ 'dxCheckBox' }
-                        />
-                        <SimpleItem
                             dataField={ 'useStationaryZoneCriteriaAccuracy' }
                             label={ { location: 'top', showColon: true, text: 'Использовать префильтр точности' } }
                             editorType={ 'dxCheckBox' }
                         />
                         <SimpleItem
                             dataField={ 'stationaryZoneCriteriaAccuracy' }
-                            label={ { location: 'top', showColon: true, text: 'Префильтр точночти, (м)' } }
+                            label={ { location: 'top', showColon: true, text: 'Префильтр точноcти, (м)' } }
                             editorType={ 'dxNumberBox' }
                             editorOptions={ {
                                 type: 'integer',
@@ -120,6 +116,18 @@ const SettingsForm = ({ style }) => {
                             } }
                         />
 
+                    </Tab>
+                    <Tab title={ 'Адреса' } >
+                        <SimpleItem
+                            dataField={ 'useStationaryZoneAddressesOnMap' }
+                            label={ { location: 'top', showColon: true, text: 'Получать адреса в зоне для карты' } }
+                            editorType={ 'dxCheckBox' }
+                        />
+                        <SimpleItem
+                            dataField={ 'useStationaryZoneAddressesOnList' }
+                            label={ { location: 'top', showColon: true, text: 'Получать адреса в зоне для списка' } }
+                            editorType={ 'dxCheckBox' }
+                        />
                     </Tab>
                 </TabbedItem>
                 <GroupItem>

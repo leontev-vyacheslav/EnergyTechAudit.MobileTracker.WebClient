@@ -7,4 +7,13 @@ const getUserDescription = (mobileDevice) => {
     return null;
 };
 
-export  { getUserDescription };
+const getUserDeviceDescription = (mobileDevice) => {
+    if(mobileDevice && mobileDevice.extendedUserInfo) {
+        return !mobileDevice.extendedUserInfo
+            ? mobileDevice.email
+            : `${ mobileDevice.extendedUserInfo.firstName } ${ mobileDevice.extendedUserInfo.lastName } / ${ mobileDevice.model }`;
+    }
+    return null;
+};
+
+export  { getUserDescription, getUserDeviceDescription };

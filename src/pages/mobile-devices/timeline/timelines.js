@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import DataGrid, { Column, MasterDetail, Scrolling, Selection, Summary, TotalItem } from 'devextreme-react/data-grid';
+import DataGrid, { Column, MasterDetail, Scrolling, Summary, TotalItem } from 'devextreme-react/data-grid';
 import { Button } from 'devextreme-react/button';
 import { useAppData } from '../../../contexts/app-data';
 import { useAppSettings } from '../../../contexts/app-settings';
@@ -8,26 +8,25 @@ import AppConstants from '../../../constants/app-constants';
 import DataGridIconCellValueContainer from '../../../components/data-grid-utils/data-grid-icon-cell-value-container';
 import { BeginDateIcon, DistanceIcon, GridAdditionalMenuIcon } from '../../../constants/app-icons';
 import { Template } from 'devextreme-react/core/template';
-import { DataGridToolbarButton } from '../../../components/data-grid-utils/data-grid-toolbar-button';
+import { DataGridToolbarButton, onDataGridToolbarPreparing } from '../../../components/data-grid-utils/data-grid-toolbar-button';
 import { timelineExcelExporter } from './timeline-excel-exporter';
 import  TimelineMainContextMenu from  './timeline-main-context-menu/timeline-main-context-menu';
 
 import './timeline.scss';
 
-
 const Timelines = ({ mobileDevice }) => {
 
-    const dxDataGridRef = useRef(null);
     const { appSettingsData: { workDate } } = useAppSettings();
     const { getTimelinesAsync } = useAppData();
     const [currentTimeline, setCurrentTimeline] = useState(null);
+    const dxDataGridRef = useRef(null);
     const mainContextMenuRef = useRef(null);
 
     useEffect(() => {
         ( async () => {
                 let timeline = await getTimelinesAsync(mobileDevice.id, workDate) ?? [];
                 timeline = timeline.map(t => {
-                    return { ...t, ...{ active: true } }
+                    return { ...t, active: true }
                 });
                 setCurrentTimeline(timeline);
             }
@@ -47,21 +46,6 @@ const Timelines = ({ mobileDevice }) => {
                 dataGrid.timelineDetailMode = mode;
                 dataGrid.expandRow(rowKey);
             }
-        }
-    }, []);
-
-    const onDataGridToolbarPreparing = useCallback((e) => {
-        if (e?.toolbarOptions) {
-            e.toolbarOptions.items.forEach(i => {
-                i.location = 'before';
-            })
-
-            e.toolbarOptions.items.unshift(
-                {
-                    location: 'before',
-                    template: 'DataGridToolbarButtonTemplate'
-                }
-            );
         }
     }, []);
 
@@ -101,9 +85,8 @@ const Timelines = ({ mobileDevice }) => {
                     } }
                 >
                     <Template name={ 'DataGridToolbarButtonTemplate' } render={ DataGridToolbarButton.bind(this, { contextMenuRef: mainContextMenuRef }) }/>
-                    <Selection mode={ 'multiple' } showCheckBoxesMode={ 'always' }/>
                     <Scrolling showScrollbar={ 'never' }/>
-                    <Column type="selection" width={ 60 }/>
+
                     <Column type={ 'buttons' } width={ 60 }
                             cellRender={ (e) => {
                                 return (
@@ -116,6 +99,7 @@ const Timelines = ({ mobileDevice }) => {
                                     </>
                                 )
                             } }/>
+
                     <Column dataField={ 'id' } dataType={ 'number' } caption={ 'Час' } width={ 60 } alignment={ 'center' }/>
 
                     <Column dataField={ 'beginDate' } dataType={ 'datetime' } hidingPriority={ 1 } caption={ 'Период времени' } width={ 200 }
@@ -139,7 +123,6 @@ const Timelines = ({ mobileDevice }) => {
                                     iconRenderer={ (iconProps) => <DistanceIcon { ...iconProps } /> }
                                 /> }
                     />
-
                     <Summary calculateCustomSummary={ (options) => {
                         if (!currentTimeline) return;
                         if (options.name === 'totalDistance') {

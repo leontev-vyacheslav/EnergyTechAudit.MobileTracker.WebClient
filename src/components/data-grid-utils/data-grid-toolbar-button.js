@@ -2,6 +2,21 @@ import React from 'react';
 import { Button } from 'devextreme-react/button';
 import { GridAdditionalMenuIcon } from '../../constants/app-icons';
 
+const onDataGridToolbarPreparing = (e) => {
+    if (e?.toolbarOptions) {
+        e.toolbarOptions.items.forEach(i => {
+            i.location = 'before';
+        })
+
+        e.toolbarOptions.items.unshift(
+            {
+                location: 'before',
+                template: 'DataGridToolbarButtonTemplate'
+            }
+        );
+    }
+};
+
 const DataGridToolbarButton = ({ contextMenuRef }) => {
     return (
         <Button className={ 'app-command-button app-command-button-small' } onClick={ (e) => {
@@ -15,4 +30,4 @@ const DataGridToolbarButton = ({ contextMenuRef }) => {
     );
 }
 
-export { DataGridToolbarButton };
+export { onDataGridToolbarPreparing, DataGridToolbarButton };
