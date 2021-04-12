@@ -4,7 +4,6 @@ import { useAuth } from './auth';
 import { useSharedArea } from './shared-area';
 import * as axios from 'axios';
 import { HttpConstants } from '../constants/app-http-constants';
-import { DateEx } from '../utils/DateEx';
 import Moment from 'moment';
 import { useAppSettings } from './app-settings';
 import AppConstants from '../constants/app-constants';
@@ -87,8 +86,9 @@ function AppDataProvider (props) {
     );
 
     const getLocationRecordsByRangeAsync = useCallback(async (mobileDeviceId, beginDate, endDate) => {
+            const utcOffset = Moment().utcOffset();
             const response = await axiosWithCredentials({
-                    url: `${ routes.host }${ routes.locationRecord }?mobileDeviceId=${ mobileDeviceId }&beginDate=${ new DateEx(beginDate).toLocalISOString() }&endDate=${ new DateEx(endDate).toLocalISOString() }`,
+                    url: `${ routes.host }${ routes.locationRecord }?mobileDeviceId=${ mobileDeviceId }&beginDate=${ Moment(beginDate).add(utcOffset, 'm').toDate().toISOString() }&endDate=${ Moment(endDate).add(utcOffset, 'm').toDate().toISOString() }`,
                     method: HttpConstants.Methods.Get,
                 },
             );
@@ -183,8 +183,9 @@ function AppDataProvider (props) {
     );
 
     const getTrackSheetAsync = useCallback(async (mobileDeviceId, currentData) => {
+            const utcOffset = Moment().utcOffset();
             const response = await axiosWithCredentials({
-                    url: `${ routes.host }${ routes.timeline }/track-sheet?mobileDeviceId=${ mobileDeviceId }&currentDate=${new DateEx(currentData).toLocalISOString()}`,
+                    url: `${ routes.host }${ routes.timeline }/track-sheet?mobileDeviceId=${ mobileDeviceId }&currentDate=${Moment(currentData).add(utcOffset, 'm').toDate().toISOString()}`,
                     method: HttpConstants.Methods.Get,
                 },
             );

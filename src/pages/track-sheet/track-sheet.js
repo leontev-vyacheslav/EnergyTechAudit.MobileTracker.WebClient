@@ -80,7 +80,7 @@ const TrackSheet = () => {
                     </div>
                     <div className={ 'mobile-devices-group-line' }>
                         <span>{ !isXSmall ? 'Всего пройдено за период:' : null }
-                            <code className={ 'badge badge-important' }>{ ( trackSheet.totalCoveredDistance / 1000 ).toFixed(2) } км</code>
+                            <span className={ 'badge' }>{ ( trackSheet.totalCoveredDistance / 1000 ).toFixed(2) } км</span>
                         </span>
                     </div>
                 </div>
