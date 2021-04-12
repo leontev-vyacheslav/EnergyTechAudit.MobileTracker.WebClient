@@ -24,8 +24,11 @@ const trackSheetExcelExporter = ({ dxDataGrid, mobileDevice, workDate, title }) 
                         break;
                     }
                     case 'date': {
-                        excelCell.value = gridCell.value;
-                        excelCell.numFmt = '[$-419]DD MMMM YYYY;@';
+                        excelCell.value = new Date(gridCell.value)
+                            .toLocaleDateString(
+                                'ru-RU',
+                                { day: '2-digit', month: 'long', year: 'numeric' }
+                            );
                         break;
                     }
                     default: {

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import DataGrid, { Column, Grouping, MasterDetail, Pager, Paging, Scrolling, SearchPanel } from 'devextreme-react/data-grid';
+import DataGrid, { Column, Grouping, LoadPanel, MasterDetail, Pager, Paging, Scrolling, SearchPanel } from 'devextreme-react/data-grid';
 import AppConstants from '../../constants/app-constants'
 import { Button } from 'devextreme-react/button';
 import TrackMapPopup from '../../components/popups/track-map-popup/track-map-popup';
@@ -110,23 +110,24 @@ const MobileDevice = () => {
                 <PageHeader caption={ !isXSmall ? 'Мобильные устройства' : 'Устройства' }>
                     <MobileDeviceIcon size={ 30 }/>
                 </PageHeader>
-                <DataGrid ref={ dxDataGridRef }
-                          keyExpr={ 'id' }
-                          className={ 'app-grid mobile-devices dx-card wide-card' }
-                          noDataText={ AppConstants.noDataLongText }
-                          dataSource={ mobileDevices }
-                          showBorders={ false }
-                          focusedRowEnabled={ true }
-                          showColumnHeaders={ !isXSmall }
-                          defaultFocusedRowIndex={ 0 }
-                          columnAutoWidth={ true }
-                          columnHidingEnabled={ true }
-                          onToolbarPreparing={ onDataGridToolbarPreparing }
-                          onRowExpanding={ (e) => {
-                              e.component.collapseAll(-1);
-                          } }
-
+                <DataGrid
+                    ref={ dxDataGridRef }
+                    keyExpr={ 'id' }
+                    className={ 'app-grid mobile-devices dx-card wide-card' }
+                    noDataText={ AppConstants.noDataLongText }
+                    dataSource={ mobileDevices }
+                    showBorders={ false }
+                    focusedRowEnabled={ true }
+                    showColumnHeaders={ !isXSmall }
+                    defaultFocusedRowIndex={ 0 }
+                    columnAutoWidth={ true }
+                    columnHidingEnabled={ true }
+                    onToolbarPreparing={ onDataGridToolbarPreparing }
+                    onRowExpanding={ (e) => {
+                        e.component.collapseAll(-1);
+                    } }
                 >
+                    <LoadPanel enabled={ false }/>
                     <SearchPanel visible={ true } searchVisibleColumnsOnly={ false }/>
                     <Scrolling showScrollbar={ 'never' }/>
                     <Paging defaultPageSize={ 10 }/>

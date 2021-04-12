@@ -11,7 +11,6 @@ const ExcelExportConstants = {
 };
 
 const excelSaver = ({ workbook, mobileDevice, workDate, title }) => {
-
     const formattedDate = new Date(workDate ?? new Date())
         .toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
 

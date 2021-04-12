@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import DataGrid, { Column, Grouping, MasterDetail, Pager, Paging, Scrolling, SearchPanel } from 'devextreme-react/data-grid';
+import DataGrid, { Column, Grouping, LoadPanel, MasterDetail, Pager, Paging, Scrolling, SearchPanel } from 'devextreme-react/data-grid';
 import { Template } from 'devextreme-react/core/template';
 import { Button } from 'devextreme-react/button';
 import { useAppData } from '../../contexts/app-data';
@@ -94,22 +94,24 @@ const TrackSheet = () => {
                 <PageHeader caption={ 'Путевой отчет' }>
                     <TimelineIcon size={ 30 }/>
                 </PageHeader>
-                <DataGrid ref={ dxDataGridRef }
-                          keyExpr={ 'id' }
-                          className={ 'app-grid mobile-devices track-sheet dx-card wide-card' }
-                          noDataText={ AppConstants.noDataLongText }
-                          dataSource={ trackSheet?.dailyCoveredDistances ?? [] }
-                          showBorders={ false }
-                          focusedRowEnabled={ true }
-                          showColumnHeaders={ !isXSmall }
-                          defaultFocusedRowIndex={ 0 }
-                          columnAutoWidth={ true }
-                          columnHidingEnabled={ true }
-                          onToolbarPreparing={ onDataGridToolbarPreparing }
-                          onRowExpanding={ (e) => {
-                              e.component.collapseAll(-1);
-                          } }
+                <DataGrid
+                    ref={ dxDataGridRef }
+                    keyExpr={ 'id' }
+                    className={ 'app-grid mobile-devices track-sheet dx-card wide-card' }
+                    noDataText={ AppConstants.noDataLongText }
+                    dataSource={ trackSheet?.dailyCoveredDistances ?? [] }
+                    showBorders={ false }
+                    focusedRowEnabled={ true }
+                    showColumnHeaders={ !isXSmall }
+                    defaultFocusedRowIndex={ 0 }
+                    columnAutoWidth={ true }
+                    columnHidingEnabled={ true }
+                    onToolbarPreparing={ onDataGridToolbarPreparing }
+                    onRowExpanding={ (e) => {
+                        e.component.collapseAll(-1);
+                    } }
                 >
+                    <LoadPanel enabled={ false }/>
                     <Template name={ 'DataGridToolbarButtonTemplate' } render={ DataGridToolbarButton.bind(this, { contextMenuRef: mainContextMenuRef }) }/>
                     <SearchPanel visible={ true } searchVisibleColumnsOnly={ false }/>
 

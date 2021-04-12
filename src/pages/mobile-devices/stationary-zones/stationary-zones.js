@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import DataGrid, { Scrolling, Column } from 'devextreme-react/ui/data-grid';
+import DataGrid, { Scrolling, Column, LoadPanel } from 'devextreme-react/ui/data-grid';
 import { useAppData } from '../../../contexts/app-data';
 import { useAppSettings } from '../../../contexts/app-settings';
 import AppConstants from '../../../constants/app-constants';
@@ -139,6 +139,7 @@ const StationaryZones = ({ mobileDevice }) => {
                     onToolbarPreparing={ onDataGridToolbarPreparing }
                     showBorders={ true }
                     noDataText={ AppConstants.noDataLongText }>
+                    <LoadPanel enabled={ false }/>
                     <Scrolling showScrollbar={ 'never' }/>
                     <Template name={ 'DataGridToolbarButtonTemplate' } render={ DataGridToolbarButton.bind(this, { contextMenuRef: mainContextMenuRef }) }/>
 

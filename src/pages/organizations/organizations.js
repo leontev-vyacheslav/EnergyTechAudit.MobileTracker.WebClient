@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import AppConstants  from '../../constants/app-constants';
 import { useAppData } from '../../contexts/app-data';
-import DataGrid, { Column, Grouping, Pager, Paging, Scrolling, SearchPanel } from 'devextreme-react/data-grid';
+import DataGrid, { Column, Grouping, LoadPanel, Pager, Paging, Scrolling, SearchPanel } from 'devextreme-react/data-grid';
 import { Button } from 'devextreme-react/button';
 import { AddressIcon, GridAdditionalMenuIcon, OrganizationIcon } from '../../constants/app-icons';
 import DataGridIconCellValueContainer from '../../components/data-grid-utils/data-grid-icon-cell-value-container';
@@ -155,31 +155,32 @@ const Organizations = () => {
                 <PageHeader caption={ 'Организации' }>
                     <OrganizationIcon size={ 30 }/>
                 </PageHeader>
-                <DataGrid ref={ dxDataGridRef }
-                          keyExpr={ 'id' }
-                          className={ 'app-grid mobile-devices dx-card wide-card' }
-                          noDataText={ AppConstants.noDataLongText }
-                          dataSource={ organizations }
-                          showBorders={ false }
-                          focusedRowEnabled={ true }
-                          showColumnHeaders={ !isXSmall }
-                          defaultFocusedRowIndex={ 0 }
-                          columnAutoWidth={ true }
-                          columnHidingEnabled={ true }
-                          onRowExpanding={ (e) => {
-                              e.component.collapseAll(-1);
-                          } }
-                          onToolbarPreparing={ onDataGridToolbarPreparing }
-                          onRowPrepared={ (e) => {
-                              if (e.rowType === 'group' && e.data && e.data.items) {
-                                  if (e.data.items.find(o => !!o).office === null) {
-                                      const key = e.component.getKeyByRowIndex(e.rowIndex);
-                                      e.component.collapseRow(key);
-                                  }
-                              }
-                          } }
+                <DataGrid
+                    ref={ dxDataGridRef }
+                    keyExpr={ 'id' }
+                    className={ 'app-grid mobile-devices dx-card wide-card' }
+                    noDataText={ AppConstants.noDataLongText }
+                    dataSource={ organizations }
+                    showBorders={ false }
+                    focusedRowEnabled={ true }
+                    showColumnHeaders={ !isXSmall }
+                    defaultFocusedRowIndex={ 0 }
+                    columnAutoWidth={ true }
+                    columnHidingEnabled={ true }
+                    onRowExpanding={ (e) => {
+                        e.component.collapseAll(-1);
+                    } }
+                    onToolbarPreparing={ onDataGridToolbarPreparing }
+                    onRowPrepared={ (e) => {
+                        if (e.rowType === 'group' && e.data && e.data.items) {
+                            if (e.data.items.find(o => !!o).office === null) {
+                                const key = e.component.getKeyByRowIndex(e.rowIndex);
+                                e.component.collapseRow(key);
+                            }
+                        }
+                    } }
                 >
-
+                    <LoadPanel enabled={ false }/>
                     <Template name={ 'DataGridToolbarButtonTemplate' } render={ DataGridToolbarButton.bind(this, { contextMenuRef: mainContextMenuRef }) }/>
                     <SearchPanel visible={ true } searchVisibleColumnsOnly={ false }/>
                     <Scrolling showScrollbar={ 'never' }/>

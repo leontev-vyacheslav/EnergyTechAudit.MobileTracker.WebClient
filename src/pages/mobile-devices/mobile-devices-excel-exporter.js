@@ -3,6 +3,7 @@ import { exportDataGrid } from 'devextreme/excel_exporter';
 import { excelCommonCellStyler, excelGroupCellStyler, excelHeaderCellStyler, excelSaver } from '../../utils/excel-export-helper';
 
 const mobileDeviceExcelExporter = ({ dxDataGrid, title }) => {
+
     const workbook = new Workbook(),
         worksheet = workbook.addWorksheet(title, {
             properties: {

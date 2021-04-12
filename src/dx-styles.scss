@@ -133,6 +133,9 @@ html, body {
 
 /* Grids */
   .app-grid {
+    .dx-overlay-wrapper.dx-loadpanel-wrapper {
+      display: none;
+    }
     .dx-master-detail-row {
         .dx-master-detail-cell {
           padding-top: 10px;

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import DataGrid, { Column, MasterDetail, Scrolling, Summary, TotalItem } from 'devextreme-react/data-grid';
+import DataGrid, { Column, LoadPanel, MasterDetail, Scrolling, Summary, TotalItem } from 'devextreme-react/data-grid';
 import { Button } from 'devextreme-react/button';
 import { useAppData } from '../../../contexts/app-data';
 import { useAppSettings } from '../../../contexts/app-settings';
@@ -84,6 +84,7 @@ const Timelines = ({ mobileDevice }) => {
                         e.component.selectAll();
                     } }
                 >
+                    <LoadPanel enabled={ false }/>
                     <Template name={ 'DataGridToolbarButtonTemplate' } render={ DataGridToolbarButton.bind(this, { contextMenuRef: mainContextMenuRef }) }/>
                     <Scrolling showScrollbar={ 'never' }/>
 
