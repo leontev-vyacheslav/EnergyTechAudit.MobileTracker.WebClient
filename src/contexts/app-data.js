@@ -159,7 +159,7 @@ function AppDataProvider (props) {
                 .filter((val, indx, arr) => arr.indexOf(val) === indx);
         }
         if (selectedAddress.length === 0) {
-            selectedAddress.push(AppConstants.noDataLongText);
+            selectedAddress.push(addresses.find((_, i) => i === i).formatted_address)
         }
         return selectedAddress;
     }, [getGeocodedAddressesAsync]);

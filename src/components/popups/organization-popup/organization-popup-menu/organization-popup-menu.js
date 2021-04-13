@@ -31,7 +31,7 @@ OrganizationPopupMenu.propTypes = {
         PropTypes.func,
         PropTypes.shape({ current: PropTypes.any })
     ]),
-    commands:PropTypes.arrayOf(PropTypes.func).isRequired
+    commands: PropTypes.object.isRequired
 }
 
 export default React.forwardRef((props, ref) => <OrganizationPopupMenu innerRef={ ref } { ...props } />);

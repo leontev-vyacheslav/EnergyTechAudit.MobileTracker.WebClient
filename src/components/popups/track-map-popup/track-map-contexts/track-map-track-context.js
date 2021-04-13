@@ -12,7 +12,7 @@ const useTrackMapTrackContext = () => useContext(TrackMapTrackContext);
 
 function TrackMapTrackProvider (props) {
     const { appSettingsData } = useAppSettings();
-    const { getLocationRecordAsync, getGeocodedAddressAsync } = useAppData();
+    const { getLocationRecordAsync, getGeocodedSelectedAddressesAsync } = useAppData();
     const { trackLocationRecordList } = useTrackMapLocationRecordsContext();
     const [currentMapInstance, setCurrentMapInstance] = useState(null);
 
@@ -116,16 +116,16 @@ function TrackMapTrackProvider (props) {
                 currentInfoWindow.current.close();
             }
 
-            const address = await getGeocodedAddressAsync(locationRecord);
+            const addresses = await getGeocodedSelectedAddressesAsync(locationRecord);
             const content = ReactDOMServer.renderToString(
                 React.createElement(
                     TrackMapInfoWindow,
-                    { locationRecord: locationRecord, addresses: [address] }
+                    { locationRecord: locationRecord, addresses: addresses }
                 )
             );
             currentInfoWindow.current = buildInfoWindow(locationRecord, content);
         }
-    }, [currentMapInstance, getGeocodedAddressAsync, buildInfoWindow, getLocationRecordAsync]);
+    }, [currentMapInstance, getGeocodedSelectedAddressesAsync, buildInfoWindow, getLocationRecordAsync]);
 
     const closeInfoWindow = useCallback(() => {
         if (currentInfoWindow.current !== null) {
