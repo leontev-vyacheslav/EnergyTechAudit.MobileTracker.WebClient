@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useAppData } from '../../../../contexts/app-data';
 import { useAppSettings } from '../../../../contexts/app-settings';
 
@@ -27,6 +28,14 @@ function TrackMapTimelineProvider (props) {
 
     return (
         <TrackMapTimelineContext.Provider value={ { currentTimeline, currentTimelineItem, setCurrentTimelineItem } }  { ...props } />
+    )
+}
+
+TrackMapTimelineProvider.propTypes = {
+    props: PropTypes.objectOf(
+        PropTypes.shape(
+            { mobileDevice: PropTypes.shape({ id: PropTypes.number.isRequired }) }
+        )
     )
 }
 

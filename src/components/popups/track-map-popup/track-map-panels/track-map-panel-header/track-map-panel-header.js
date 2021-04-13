@@ -1,10 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Button from 'devextreme-react/ui/button';
 import { CloseIcon } from '../../../../../constants/app-icons';
 
 import  './track-map-panel-header.scss'
 
-const TrackMapPanelHeader = ({ title,  onClose, icon }) => {
+const TrackMapPanelHeader = ({ title, icon, onClose }) => {
     return (
         <div className={ 'track-map-panel-header dx-popup-title' } >
             <div style={ { marginTop: 5 } }>
@@ -20,6 +21,12 @@ const TrackMapPanelHeader = ({ title,  onClose, icon }) => {
             </div>
         </div>
     );
+}
+
+TrackMapPanelHeader.propTypes = {
+    title: PropTypes.string.isRequired,
+    icon: PropTypes.func.isRequired,
+    onClose: PropTypes.func.isRequired
 }
 
 export default TrackMapPanelHeader;

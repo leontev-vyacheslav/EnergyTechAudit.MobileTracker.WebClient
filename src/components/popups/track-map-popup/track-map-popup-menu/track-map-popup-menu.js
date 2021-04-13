@@ -13,6 +13,7 @@ import ContextMenuItem from '../../../context-menu-item/context-menu-item';
 import { useScreenSize } from '../../../../utils/media-query';
 import { useTrackMapSettingsContext } from '../track-map-contexts/track-map-settings-context';
 import { useAppSettings } from '../../../../contexts/app-settings';
+import PropTypes from 'prop-types';
 
 const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
 
@@ -130,6 +131,14 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
         items={ items.filter(i => !initialDate || i.name !== 'workDate' ) }
         position={ { my: 'top right', at: 'bottom right' } }
     />
+}
+
+TrackMapPopupMenu.propTypes = {
+    innerRef: PropTypes.oneOfType([
+        PropTypes.func,
+        PropTypes.shape({ current: PropTypes.any })
+    ]),
+    commands:PropTypes.arrayOf(PropTypes.func).isRequired
 }
 
 export default React.forwardRef((props, ref) => <TrackMapPopupMenu innerRef={ ref } { ...props } />);

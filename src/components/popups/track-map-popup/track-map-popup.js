@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import PropTypes from 'prop-types';
 import TrackMap from './track-map/track-map';
 import { Popup } from 'devextreme-react/popup';
 import { ToolbarItem } from 'devextreme-react/popup';
@@ -101,4 +102,18 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => 
         </TrackMapTimelineProvider>
     );
 };
+
+TrackMapPopup.propTypes = {
+    mobileDevice: PropTypes.objectOf(PropTypes.shape({
+        id: PropTypes.number.isRequired
+    })),
+    timelineItem: PropTypes.objectOf(PropTypes.shape(
+        {
+            beginDate: PropTypes.instanceOf(Date).isRequired,
+            endDate: PropTypes.instanceOf(Date).isRequired,
+        })),
+    initialDate: PropTypes.instanceOf(Date),
+    onClose: PropTypes.func.isRequired
+}
+
 export default TrackMapPopup;

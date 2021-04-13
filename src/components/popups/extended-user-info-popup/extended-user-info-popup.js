@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import Form, { SimpleItem } from 'devextreme-react/form';
 import Button from 'devextreme-react/button';
 import { DialogConstants } from '../../../constants/app-dialog-constant';
@@ -123,5 +124,10 @@ const ExtendedUserInfoPopup = ({ userId, callback }) => {
         </AppModalPopup>
     );
 };
+
+ExtendedUserInfoPopup.propTypes = {
+    userId: PropTypes.number.isRequired,
+    callback: PropTypes.func.isRequired
+}
 
 export default ExtendedUserInfoPopup;

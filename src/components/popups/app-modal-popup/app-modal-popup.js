@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Popup from 'devextreme-react/popup';
 import { useScreenSize } from '../../../utils/media-query';
 import { DialogConstants } from '../../../constants/app-dialog-constant';
@@ -17,6 +18,15 @@ const AppModalPopup = ({ title,  children, onClose }) => {
             { children }
         </Popup>
     )
+}
+
+AppModalPopup.propTypes = {
+    title: PropTypes.string.isRequired,
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.node),
+        PropTypes.node
+    ]).isRequired,
+    onClose: PropTypes.func.isRequired
 }
 
 export default  AppModalPopup;

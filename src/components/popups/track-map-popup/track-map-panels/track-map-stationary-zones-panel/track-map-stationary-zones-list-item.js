@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { CountdownIcon, RadiusIcon } from '../../../../../constants/app-icons';
 import './track-map-stationary-zones-list-item.scss';
 
@@ -37,4 +38,15 @@ const TrackMapStationaryZonesListItem = ({ stationaryCluster, onClick }) => {
         </>
     );
 }
+
+TrackMapStationaryZonesListItem.propTypes = {
+    stationaryCluster: PropTypes.shape({
+        index: PropTypes.number.isRequired,
+        radius: PropTypes.number.isRequired,
+        elements: PropTypes.array.isRequired
+    }),
+    onClick: PropTypes.func.isRequired
+}
+
+
 export default TrackMapStationaryZonesListItem;

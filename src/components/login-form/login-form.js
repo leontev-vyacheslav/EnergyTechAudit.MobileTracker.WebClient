@@ -1,12 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react';
-import Form, {
-    Item,
-    Label,
-    ButtonItem,
-    ButtonOptions,
-    RequiredRule
-
-} from 'devextreme-react/form';
+import Form, { Item, Label, ButtonItem, ButtonOptions, RequiredRule } from 'devextreme-react/form';
 import LoadIndicator from 'devextreme-react/load-indicator';
 import notify from 'devextreme/ui/notify';
 import { useAuth } from '../../contexts/auth';

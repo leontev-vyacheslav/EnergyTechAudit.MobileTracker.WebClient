@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useAppData } from '../../../../contexts/app-data';
 import { useTrackMapTimelineContext } from './track-map-timeline-context';
 
@@ -32,6 +33,14 @@ function TrackMapLocationRecordsProvider (props) {
             { ...props }
         />
     );
+}
+
+TrackMapLocationRecordsProvider.propTypes = {
+    props: PropTypes.objectOf(
+        PropTypes.shape(
+        { mobileDevice: PropTypes.shape({ id: PropTypes.number.isRequired }) }
+        )
+    )
 }
 
 export { TrackMapLocationRecordsProvider, useTrackMapLocationRecordsContext };

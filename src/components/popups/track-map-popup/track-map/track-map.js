@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import TrackMapInfoBox from '../track-map-components/track-map-info-box/track-map-info-box';
 import TrackMapHeader from '../track-map-components/track-map-header/track-map-header';
@@ -81,4 +82,9 @@ const TrackMap = ({ mobileDevice }) => {
             <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
     );
 };
+
+TrackMap.propTypes = {
+    mobileDevice: PropTypes.object.isRequired
+}
+
 export default TrackMap;

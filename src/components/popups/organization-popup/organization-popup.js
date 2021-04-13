@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import  PropTypes from 'prop-types';
 import { DialogConstants } from '../../../constants/app-dialog-constant';
 import ScrollView from 'devextreme-react/scroll-view';
 import Form, { GroupItem, SimpleItem, Tab, TabbedItem } from 'devextreme-react/form';
@@ -231,6 +232,14 @@ const OrganizationPopup = ({ editMode, organization, callback }) => {
             </ToolbarItem>
         </AppModalPopup>
     ) : null;
+}
+
+OrganizationPopup.propTypes = {
+    editMode: PropTypes.bool.isRequired,
+    organization: PropTypes
+        .shape({ organizationId: PropTypes.number.isRequired })
+        .isRequired,
+    callback: PropTypes.func.isRequired
 }
 
 export default OrganizationPopup;

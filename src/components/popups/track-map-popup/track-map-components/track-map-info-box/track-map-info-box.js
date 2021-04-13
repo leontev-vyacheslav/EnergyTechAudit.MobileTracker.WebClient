@@ -1,5 +1,5 @@
 import React from 'react';
-
+import PropTypes from 'prop-types';
 import './track-map-info-box.scss';
 import { BeginDateIcon, DateRangeIcon, EndDateIcon, MobileDeviceIcon } from '../../../../../constants/app-icons';
 import { useTrackMapTimelineContext } from '../../track-map-contexts/track-map-timeline-context';
@@ -30,7 +30,10 @@ const TrackMapInfoBox = ({ mobileDevice }) => {
                 </div>
             </div> : null
     );
+}
 
+TrackMapInfoBox.propTypes = {
+    mobileDevice: PropTypes.object.isRequired
 }
 
 export default TrackMapInfoBox;

@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import { DialogConstants } from '../../../constants/app-dialog-constant';
 import ScrollView from 'devextreme-react/scroll-view';
 import Form, { SimpleItem } from 'devextreme-react/form';
@@ -130,6 +131,14 @@ const OfficePopup = ({ editMode, organization, callback }) => {
             </div>
         </AppModalPopup>
     );
+}
+
+OfficePopup.propTypes = {
+    editMode: PropTypes.bool.isRequired,
+    organization: PropTypes.shape({
+        office: PropTypes.object.isRequired,
+    }).isRequired,
+    callback: PropTypes.func.isRequired
 }
 
 export default OfficePopup;

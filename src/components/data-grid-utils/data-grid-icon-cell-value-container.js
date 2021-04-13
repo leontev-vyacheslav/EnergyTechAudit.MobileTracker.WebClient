@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const DataGridIconCellValueContainer = ({ cellDataFormatter, iconRenderer, rowStyle }) => {
     const iconProps = { style: {} };
@@ -9,6 +10,12 @@ const DataGridIconCellValueContainer = ({ cellDataFormatter, iconRenderer, rowSt
         </div>
 
     )
+}
+
+DataGridIconCellValueContainer.propTypes = {
+    cellDataFormatter: PropTypes.func.isRequired,
+    iconRenderer: PropTypes.func.isRequired,
+    rowStyle: PropTypes.object
 }
 
 export default DataGridIconCellValueContainer;

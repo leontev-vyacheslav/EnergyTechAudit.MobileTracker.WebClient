@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import Toolbar, { Item } from 'devextreme-react/toolbar';
 import Button from 'devextreme-react/button';
 import UserPanel from '../user-panel/user-panel';
@@ -9,7 +11,7 @@ import './header.scss';
 import { useAppSettings } from '../../contexts/app-settings';
 import { MenuIcon } from '../../constants/app-icons';
 
-export default ({ menuToggleEnabled, title, toggleMenu }) => {
+const Header = ({ menuToggleEnabled, title, toggleMenu }) => {
     const { appSettingsData } = useAppSettings();
 
     const WorkDateWidget = ({ outerStyle }) => {
@@ -73,4 +75,12 @@ export default ({ menuToggleEnabled, title, toggleMenu }) => {
             </Toolbar>
         </header>
     )
-};
+}
+
+Header.propTypes = {
+    menuToggleEnabled: PropTypes.bool.isRequired,
+    title: PropTypes.string.isRequired,
+    toggleMenu: PropTypes.func.isRequired
+}
+
+export default Header;
