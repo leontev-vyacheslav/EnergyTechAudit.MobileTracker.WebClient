@@ -55,18 +55,20 @@ const TrackMapInfoWindow = ({ locationRecord, addresses, externalDatasheet }) =>
     return (
         <table className={ 'simple-grid track-map-info-window-grid' } style={ isXSmall ? { fontSize: 10 } : ( isSmall ? { fontSize: 11 } : {} ) }>
             { addresses !== null && addresses.length > 0 ? (
-                <thead>
-                <tr>
-                    <td colSpan={ 2 }>
-                        { addresses.map((a, i) => (
-                            <div key={ i } className={ 'track-map-info-window-data-row' }>
+                    <thead>
+                    <tr>
+                        <td colSpan={ 2 }>
+                            <div className={ 'track-map-info-window-data-row' }>
                                 <AddressIcon size={ 18 }/>
-                                <span style={ { fontWeight: 500 } }>{ a ?? AppConstants.noDataLongText }</span>
+                                <div style={ { display: 'grid', gap: 3 } }>
+                                    { addresses.map((a, i) => (
+                                        <div key={ i } style={ { fontWeight: 500 } }>{ a ?? AppConstants.noDataLongText }</div>
+                                    )) }
+                                </div>
                             </div>
-                        )) }
-                    </td>
-                </tr>
-                </thead> )
+                        </td>
+                    </tr>
+                    </thead> )
                 : null
             }
             <tbody>
