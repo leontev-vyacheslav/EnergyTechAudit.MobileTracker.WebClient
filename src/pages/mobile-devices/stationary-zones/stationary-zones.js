@@ -3,8 +3,6 @@ import DataGrid, { Scrolling, Column, LoadPanel } from 'devextreme-react/ui/data
 import { useAppData } from '../../../contexts/app-data';
 import { useAppSettings } from '../../../contexts/app-settings';
 import AppConstants from '../../../constants/app-constants';
-import { DBSCAN } from 'density-clustering';
-import { SphericalCalculator } from '../../../utils/spherical';
 import { useJsApiLoader } from '@react-google-maps/api';
 import { AccuracyIcon, AddressIcon, CountdownIcon, RadiusIcon, SpeedIcon } from '../../../constants/app-icons';
 import DataGridIconCellValueContainer from '../../../components/data-grid-utils/data-grid-icon-cell-value-container';
@@ -12,6 +10,7 @@ import { Template } from 'devextreme-react/core/template';
 import StationaryZoneMainContextMenu from './stationary-zones-main-context-menu/stationary-zones-main-context-menu';
 import { stationaryZonesExcelExporter } from './stationary-zones-excel-exporter';
 import { DataGridToolbarButton, onDataGridToolbarPreparing } from '../../../components/data-grid-utils/data-grid-toolbar-button';
+import { getGeoClusters } from '../../../utils/geo-cluster-helper';
 
 const StationaryZones = ({ mobileDevice }) => {
     const dxDataGridRef = useRef();
@@ -52,9 +51,7 @@ const StationaryZones = ({ mobileDevice }) => {
     useEffect(() => {
         ( async () => {
             if (isLoaded === false) return;
-
-            const beginDate = new Date(workDate);
-            const endDate = new Date(workDate);
+            const beginDate = new Date(workDate), endDate = new Date(workDate);
             endDate.setHours(24);
 
             let locationRecordsData = await getLocationRecordsByRangeAsync(
@@ -63,20 +60,13 @@ const StationaryZones = ({ mobileDevice }) => {
                 endDate
             ) ?? [];
 
-            const geoClusterData = locationRecordsData
-                .filter(locationRecord => locationRecord.speed < stationaryZoneCriteriaSpeed &&
-                    ( !useStationaryZoneCriteriaAccuracy === true || locationRecord.accuracy < stationaryZoneCriteriaAccuracy )
-                ).map(locationRecord => [locationRecord.latitude, locationRecord.longitude, locationRecord]);
-
-            const dbscan = new DBSCAN();
-
-            const clustersIndexes = dbscan.run(geoClusterData,
+            const geoClusters = getGeoClusters(locationRecordsData, {
                 stationaryZoneRadius,
                 stationaryZoneElementCount,
-                SphericalCalculator.computeDistanceBetween2
-            );
-
-            const geoClusters = clustersIndexes.map((clusterIndexes) => clusterIndexes.map((pointId) => geoClusterData[pointId]));
+                stationaryZoneCriteriaSpeed,
+                stationaryZoneCriteriaAccuracy,
+                useStationaryZoneCriteriaAccuracy
+            });
 
             let clusterList = [];
             let index = 0;

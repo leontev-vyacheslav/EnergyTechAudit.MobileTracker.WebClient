@@ -1,15 +1,14 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import AppConstants from '../../../../constants/app-constants';
-import { DBSCAN } from 'density-clustering';
 import ReactDOMServer from 'react-dom/server';
 import TrackMapInfoWindow from '../track-map-components/track-map-info-window/track-map-info-window';
 import { AccuracyIcon, CountdownIcon, RadiusIcon, SpeedIcon } from '../../../../constants/app-icons';
-import { SphericalCalculator } from '../../../../utils/spherical';
 import { useTrackMapSettingsContext } from './track-map-settings-context';
 import { useAppSettings } from '../../../../contexts/app-settings';
 import { useTrackMapTrackContext } from './track-map-track-context';
 import { useAppData } from '../../../../contexts/app-data';
 import { useTrackMapLocationRecordsContext } from './track-map-location-records-context';
+import { getGeoClusters } from '../../../../utils/geo-cluster-helper';
 
 const TrackMapStationaryZonesContext = createContext({});
 
@@ -158,13 +157,14 @@ function TrackMapStationaryZonesProvider (props) {
     const constructStationaryClusterListAsync = useCallback( async () => {
         if (currentMapInstance && trackLocationRecordList.length > 0) {
             const currentStationaryClusterList = [];
-            const geoClusterData = trackLocationRecordList
-                .filter(locationRecord => locationRecord.speed < stationaryZoneCriteriaSpeed && ( !useStationaryZoneCriteriaAccuracy === true || locationRecord.accuracy < stationaryZoneCriteriaAccuracy ))
-                .map(locationRecord => [locationRecord.latitude, locationRecord.longitude, locationRecord]);
 
-            const dbscan = new DBSCAN();
-            const clustersIndexes = dbscan.run(geoClusterData, stationaryZoneRadius, stationaryZoneElementCount, SphericalCalculator.computeDistanceBetween2);
-            const geoClusters = clustersIndexes.map((clusterIndexes) => clusterIndexes.map((pointId) => geoClusterData[pointId]));
+            const geoClusters = getGeoClusters(trackLocationRecordList, {
+                stationaryZoneRadius,
+                stationaryZoneElementCount,
+                stationaryZoneCriteriaSpeed,
+                stationaryZoneCriteriaAccuracy,
+                useStationaryZoneCriteriaAccuracy
+            });
 
             let index = 0;
 

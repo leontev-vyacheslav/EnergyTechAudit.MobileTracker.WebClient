@@ -54,8 +54,10 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => 
 
                         <Button className={ 'app-popup-header-menu-button' } hint='Назад' onClick={ () => {
                             setAppSettingsData(previous => {
-                                const workDate = Moment(previous.workDate).add(-1, 'days').toDate();
-                                workDate.setHours(0, 0, 0, 0);
+                                const workDate = Moment(previous.workDate)
+                                    .add(-1, 'days')
+                                    .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+                                    .toDate();
                                 return { ...previous, workDate: workDate };
                             });
 
@@ -65,8 +67,10 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => 
 
                         <Button className={ 'app-popup-header-menu-button' } hint='Вперед' onClick={ () => {
                             setAppSettingsData(previous => {
-                                const workDate = Moment(previous.workDate).add(+1, 'days').toDate();
-                                workDate.setHours(0, 0, 0, 0);
+                                const workDate = Moment(previous.workDate)
+                                    .add(+1, 'days')
+                                    .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+                                    .toDate();
                                 return { ...previous, workDate: workDate };
                             });
                         } }>
@@ -81,19 +85,11 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => 
                             <TrackMapPopupMenu
                                 ref={ contextMenuRef }
                                 initialDate={ initialDate }
-                                commands={
-                                    {
-                                        refresh: () => {
-                                            setAppSettingsData(prev => {
-                                                return { ...prev }
-                                            })
-                                        },
-                                        showWorkDatePicker: () => showWorkDatePicker(),
-                                        fitToMap: () => {
-                                            TrackMapTrackProvider.fitMapBoundsByLocations();
-                                        }
-                                    }
-                                }
+                                commands={ {
+                                    refresh: () => setAppSettingsData(prev => ( { ...prev, workDate: new Date(prev.workDate) } )),
+                                    showWorkDatePicker: () => showWorkDatePicker(),
+                                    fitToMap: () => TrackMapTrackProvider.fitMapBoundsByLocations()
+                                } }
                             />
                         </Button>
                     </ToolbarItem>
