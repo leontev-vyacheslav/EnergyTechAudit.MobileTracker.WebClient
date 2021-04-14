@@ -104,14 +104,15 @@ const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => 
 };
 
 TrackMapPopup.propTypes = {
-    mobileDevice: PropTypes.objectOf(PropTypes.shape({
+    mobileDevice: PropTypes.shape({
         id: PropTypes.number.isRequired
-    })),
-    timelineItem: PropTypes.objectOf(PropTypes.shape(
+    }),
+    timelineItem: PropTypes.shape(
         {
+            id: PropTypes.number.isRequired,
             beginDate: PropTypes.instanceOf(Date).isRequired,
             endDate: PropTypes.instanceOf(Date).isRequired,
-        })),
+        }),
     initialDate: PropTypes.instanceOf(Date),
     onClose: PropTypes.func.isRequired
 }

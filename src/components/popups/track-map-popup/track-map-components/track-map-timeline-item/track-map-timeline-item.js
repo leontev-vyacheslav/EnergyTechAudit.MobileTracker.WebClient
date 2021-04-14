@@ -18,10 +18,9 @@ export const TrackMapTimelineItem = ({ timelineItem }) => {
 }
 
 TrackMapTimelineItem.propTypes = {
-    timelineItem: PropTypes.objectOf(
-            PropTypes.shape({
-                beginDate: PropTypes.instanceOf(Date),
-                endDate: PropTypes.instanceOf(Date)
-            })
-    ).isRequired
+    timelineItem: PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        beginDate: PropTypes.instanceOf(Date),
+        endDate: PropTypes.instanceOf(Date)
+    }).isRequired
 }

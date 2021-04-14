@@ -236,9 +236,9 @@ const OrganizationPopup = ({ editMode, organization, callback }) => {
 
 OrganizationPopup.propTypes = {
     editMode: PropTypes.bool.isRequired,
-    organization: PropTypes
-        .shape({ organizationId: PropTypes.number.isRequired })
-        .isRequired,
+    organization: PropTypes.shape(
+        { organizationId: PropTypes.number.isRequired }
+        ),
     callback: PropTypes.func.isRequired
 }
 

@@ -32,10 +32,8 @@ function TrackMapTimelineProvider (props) {
 }
 
 TrackMapTimelineProvider.propTypes = {
-    props: PropTypes.objectOf(
-        PropTypes.shape(
-            { mobileDevice: PropTypes.shape({ id: PropTypes.number.isRequired }) }
-        )
+    props: PropTypes.shape(
+        { mobileDevice: PropTypes.shape({ id: PropTypes.number.isRequired }) }
     )
 }
 

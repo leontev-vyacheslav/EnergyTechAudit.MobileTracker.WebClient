@@ -36,10 +36,8 @@ function TrackMapLocationRecordsProvider (props) {
 }
 
 TrackMapLocationRecordsProvider.propTypes = {
-    props: PropTypes.objectOf(
-        PropTypes.shape(
+    props: PropTypes.shape(
         { mobileDevice: PropTypes.shape({ id: PropTypes.number.isRequired }) }
-        )
     )
 }
 
