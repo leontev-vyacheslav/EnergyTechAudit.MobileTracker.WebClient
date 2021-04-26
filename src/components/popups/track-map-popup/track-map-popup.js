@@ -16,14 +16,14 @@ import { TrackMapSettingsProvider } from './track-map-contexts/track-map-setting
 import { TrackMapTimelineProvider } from './track-map-contexts/track-map-timeline-context';
 import { TrackMapStationaryZonesProvider } from './track-map-contexts/track-map-stationary-zones-context';
 
-const TrackMapPopup = ({ mobileDevice, timelineItem, initialDate, onClose }) => {
+const TrackMapPopup = ({ mobileDevice, initialDate, onClose }) => {
     const { isXSmall, isSmall } = useScreenSize();
     const { setAppSettingsData, setWorkDateToday } = useAppSettings();
     const { showWorkDatePicker } = useSharedArea();
     const contextMenuRef = useRef();
 
     return (
-        <TrackMapTimelineProvider mobileDevice={ mobileDevice } timelineItem={ timelineItem }>
+        <TrackMapTimelineProvider mobileDevice={ mobileDevice } >
             <TrackMapSettingsProvider>
                 <Popup className={ 'app-popup track-map-popup' } title={ 'Карта маршрута' }
                        dragEnabled={ true }

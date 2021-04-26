@@ -29,7 +29,7 @@ const TrackSheet = () => {
 
     let query = useQuery();
     const { isXSmall } = useScreenSize();
-    const { appSettingsData: { workDate }, getDailyTimelineItem } = useAppSettings();
+    const { setAppSettingsData, appSettingsData: { workDate }, getDailyTimelineItem } = useAppSettings();
     const { getMobileDeviceAsync, getTrackSheetAsync } = useAppData();
 
     const [trackSheet, setTrackSheet] = useState(null);
@@ -180,6 +180,12 @@ const TrackSheet = () => {
                     if (dxDataGridRef.current && dxDataGridRef.current.instance) {
                         const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
                         const currentDailyCoveredDistanceItem = trackSheet.dailyCoveredDistances.find(ts => ts.id === currentRowKey);
+
+                        setAppSettingsData(previous => {
+                            const workDate = new Date(currentDailyCoveredDistanceItem.date)
+                            return { ...previous, workDate: workDate };
+                        });
+
                         setTrackMapCurrentDate(currentDailyCoveredDistanceItem.date)
                         setCurrentTimelineItem(getDailyTimelineItem(currentDailyCoveredDistanceItem.date));
                     }
@@ -203,7 +209,7 @@ const TrackSheet = () => {
                 { mobileDevice && currentTimelineItem !== null ?
                     <TrackMapPopup
                         mobileDevice={ mobileDevice }
-                        timelineItem={ currentTimelineItem }
+                        /*timelineItem={ currentTimelineItem }*/
                         initialDate={ trackMapCurrentDate }
                         onClose={ () => {
                             setCurrentTimelineItem(null);
