@@ -12,7 +12,7 @@ import { stationaryZonesExcelExporter } from './stationary-zones-excel-exporter'
 import { DataGridToolbarButton, onDataGridToolbarPreparing } from '../../../components/data-grid-utils/data-grid-toolbar-button';
 import { getGeoClusters } from '../../../utils/geo-cluster-helper';
 
-const StationaryZones = ({ mobileDevice }) => {
+const StationaryZones = ({ mobileDevice, workDate }) => {
     const dxDataGridRef = useRef();
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: AppConstants.trackMap.apiKey,
@@ -38,7 +38,7 @@ const StationaryZones = ({ mobileDevice }) => {
 
     const {
         appSettingsData: {
-            workDate,
+            workDate: appSettingsWorkDate,
             stationaryZoneRadius,
             stationaryZoneElementCount,
             stationaryZoneCriteriaSpeed,
@@ -48,10 +48,13 @@ const StationaryZones = ({ mobileDevice }) => {
         }
     } = useAppSettings();
 
+    const [currentWorkDate] = useState(workDate ?? appSettingsWorkDate);
+
     useEffect(() => {
         ( async () => {
             if (isLoaded === false) return;
-            const beginDate = new Date(workDate), endDate = new Date(workDate);
+            const beginDate = new Date(currentWorkDate),
+                endDate = new Date(currentWorkDate);
             endDate.setHours(24);
 
             let locationRecordsData = await getLocationRecordsByRangeAsync(
@@ -112,7 +115,7 @@ const StationaryZones = ({ mobileDevice }) => {
             }
             setStationaryClusterList(clusterList);
         } )();
-    }, [getBoundsByMarkers, getGeocodedSelectedAddressesAsync, getLocationRecordsByRangeAsync, isLoaded, mobileDevice.id, stationaryZoneCriteriaAccuracy, stationaryZoneCriteriaSpeed, stationaryZoneElementCount, stationaryZoneRadius, useStationaryZoneAddressesOnList, useStationaryZoneCriteriaAccuracy, workDate]);
+    }, [currentWorkDate, getBoundsByMarkers, getGeocodedSelectedAddressesAsync, getLocationRecordsByRangeAsync, isLoaded, mobileDevice.id, stationaryZoneCriteriaAccuracy, stationaryZoneCriteriaSpeed, stationaryZoneElementCount, stationaryZoneRadius, useStationaryZoneAddressesOnList, useStationaryZoneCriteriaAccuracy]);
 
     if (stationaryClusterList.length > 0) {
         return (
@@ -190,7 +193,7 @@ const StationaryZones = ({ mobileDevice }) => {
                                 stationaryZonesExcelExporter({
                                     dxDataGrid: dxDataGridRef.current.instance,
                                     mobileDevice,
-                                    workDate,
+                                    workDate: currentWorkDate,
                                     title: 'Зоны стационарности'
                                 });
                             }

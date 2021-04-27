@@ -6,7 +6,6 @@ import { useAppData } from '../../contexts/app-data';
 import AppConstants from '../../constants/app-constants'
 import SideNavigationMenu from '../../components/side-navigation-menu/side-navigation-menu';
 import { useLocation } from 'react-router';
-import Timelines from '../mobile-devices/timeline/timelines';
 import TrackSheetContextMenu from './track-sheet-context-menu'
 import { useScreenSize } from '../../utils/media-query';
 import TrackMapPopup from '../../components/popups/track-map-popup/track-map-popup';
@@ -21,6 +20,7 @@ import './track-sheet.scss';
 import { trackSheetExcelExporter } from './track-sheet-excel-exporter';
 import { DataGridToolbarButton, onDataGridToolbarPreparing } from '../../components/data-grid-utils/data-grid-toolbar-button';
 import { getUserDeviceDescription } from '../../utils/string-helper';
+import MobileDevicesMasterDetailView from '../mobile-devices/mobile-devices-master-detail-view/mobile-devices-master-detail-view';
 
 const TrackSheet = () => {
     function useQuery () {
@@ -171,9 +171,10 @@ const TrackSheet = () => {
                     <MasterDetail
                         enabled={ true }
                         render={ (e) => {
-                            return <Timelines mobileDevice={ mobileDevice } workDate={ e.data.date }/>;
+                            return <MobileDevicesMasterDetailView mobileDevice={ mobileDevice } workDate={ e.data.date }/>;
                         } }
                     />
+
                 </DataGrid>
 
                 <TrackSheetContextMenu ref={ rowContextMenuRef } onShowTrackMapItemClick={ () => {

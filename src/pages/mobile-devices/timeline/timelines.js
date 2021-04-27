@@ -14,9 +14,11 @@ import  TimelineMainContextMenu from  './timeline-main-context-menu/timeline-mai
 
 import './timeline.scss';
 
-const Timelines = ({ mobileDevice }) => {
+const Timelines = ({ mobileDevice, workDate }) => {
 
-    const { appSettingsData: { workDate } } = useAppSettings();
+    const { appSettingsData: { workDate: appSettingsWorkDate } } = useAppSettings();
+    const [currentWorkDate] = useState(workDate ?? appSettingsWorkDate);
+
     const { getTimelinesAsync } = useAppData();
     const [currentTimeline, setCurrentTimeline] = useState(null);
     const dxDataGridRef = useRef(null);
@@ -24,14 +26,14 @@ const Timelines = ({ mobileDevice }) => {
 
     useEffect(() => {
         ( async () => {
-                let timeline = await getTimelinesAsync(mobileDevice.id, workDate) ?? [];
+                let timeline = await getTimelinesAsync(mobileDevice.id, currentWorkDate) ?? [];
                 timeline = timeline.map(t => {
                     return { ...t, active: true }
                 });
                 setCurrentTimeline(timeline);
             }
         )();
-    }, [getTimelinesAsync, mobileDevice.id, workDate]);
+    }, [currentWorkDate, getTimelinesAsync, mobileDevice.id]);
 
     const toggleRowDetailByRowKey = useCallback(({ dataGrid, rowKey, mode }) => {
         if (dataGrid.isRowExpanded(rowKey) && dataGrid.timelineDetailMode !== mode) {
@@ -172,7 +174,7 @@ const Timelines = ({ mobileDevice }) => {
                                 timelineExcelExporter({
                                     dxDataGrid: dxDataGridRef.current.instance,
                                     mobileDevice,
-                                    workDate,
+                                    workDate: currentWorkDate,
                                     title: 'Хронология',
                                 });
                             }
