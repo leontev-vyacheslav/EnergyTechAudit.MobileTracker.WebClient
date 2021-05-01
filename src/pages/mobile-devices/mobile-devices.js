@@ -202,7 +202,6 @@ const MobileDevice = () => {
                 { currentMobileDevice && currentTimelineItem !== null ?
                     <TrackMapPopup
                         mobileDevice={ currentMobileDevice }
-                        /*timelineItem={ currentTimelineItem }*/
                         onClose={ () => {
                             setCurrentTimelineItem(null);
                         } }/>

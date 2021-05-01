@@ -310,6 +310,17 @@ function AppDataProvider (props) {
         return null;
     }, [axiosWithCredentials]);
 
+    const getAdministratorsAsync = useCallback( async () => {
+        const response = await axiosWithCredentials({
+            url: `${ routes.host }${ routes.administrator }/administrators`,
+            method: HttpConstants.Methods.Get
+        });
+        if (response && response.status === HttpConstants.StatusCodes.Ok) {
+            return response.data;
+        }
+        return null;
+    }, [axiosWithCredentials]);
+
     return (
         <AppDataContext.Provider
             value={ {
@@ -318,7 +329,9 @@ function AppDataProvider (props) {
                 postExtendedUserInfoAsync, getExtendedUserInfoAsync,
 
                 getOrganizationsAsync, getOrganizationOfficesAsync, deleteOrganizationAsync, deleteOfficeAsync,
-                postOrganizationAsync, getOfficeAsync, postOfficeAsync, deleteScheduleItemAsync
+                postOrganizationAsync, getOfficeAsync, postOfficeAsync, deleteScheduleItemAsync,
+
+                getAdministratorsAsync
             } }
             { ...props }
         />

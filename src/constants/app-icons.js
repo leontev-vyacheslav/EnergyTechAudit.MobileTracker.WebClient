@@ -47,7 +47,8 @@ export { MdAspectRatio as FitToMapIcon } from 'react-icons/md';
 export { IoMap as TrackMapIcon } from 'react-icons/io5';
 export { FiRefreshCcw as RefreshIcon } from 'react-icons/fi';
 
-export { BsPeople as OrganizationIcon } from 'react-icons/bs';
+export { RiGroupLine as OrganizationIcon } from 'react-icons/ri';
+export { RiAdminLine as AdminIcon } from 'react-icons/ri';
 export { AiOutlineUsergroupAdd as AddOrganizationIcon } from 'react-icons/ai';
 
 export { IoGridOutline as ListsIcon } from 'react-icons/io5';
@@ -83,6 +84,7 @@ export { IoTimerOutline as TimelineOffIcon } from 'react-icons/io5';
 export { IoTimerSharp as TimelineOnIcon } from 'react-icons/io5';
 
 export { RiFileExcel2Line as ExportToXlsxIcon } from 'react-icons/ri';
+export { MdMailOutline as EmailIcon } from 'react-icons/md';
 
 
 import { MdMoreVert } from 'react-icons/md';

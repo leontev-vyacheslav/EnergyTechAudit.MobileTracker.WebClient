@@ -8,6 +8,7 @@ import { useSharedArea } from '../../contexts/shared-area';
 
 import './side-navigation-menu.scss';
 import { useAppSettings } from '../../contexts/app-settings';
+import { useAuth } from '../../contexts/auth';
 
 export default function SideNavigationMenu (props) {
     const {
@@ -22,17 +23,22 @@ export default function SideNavigationMenu (props) {
     const { showWorkDatePicker, signOutWithConfirm } = useSharedArea();
     const { navigationData: { currentPath } } = useNavigation();
     const { setWorkDateToday } = useAppSettings();
-
+    const { user } = useAuth();
     const treeViewRef = useRef();
     const wrapperRef = useRef();
 
     function normalizePath () {
-        return navigation.map((item) => {
-            if (item.path && !( /^\//.test(item.path) )) {
-                item.path = `/${ item.path }`;
-            }
-            return { ...item, expanded: isLarge }
-        });
+        return navigation
+            .filter(i => i.restricted === false || (i.restricted === true && user.organizationId === null) )
+            .map((item) => {
+                if (item.path && !( /^\//.test(item.path) )) {
+                    item.path = `/${ item.path }`;
+                }
+                if(item.items) {
+                    item.items = item.items.filter(i => i.restricted === false || (i.restricted === true && user.organizationId === null))
+                }
+                return { ...item, expanded: isLarge }
+            });
     }
 
     const items = useMemo(

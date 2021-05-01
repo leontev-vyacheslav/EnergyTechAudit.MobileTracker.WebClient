@@ -16,14 +16,14 @@ import { TrackMapSettingsProvider } from './track-map-contexts/track-map-setting
 import { TrackMapTimelineProvider } from './track-map-contexts/track-map-timeline-context';
 import { TrackMapStationaryZonesProvider } from './track-map-contexts/track-map-stationary-zones-context';
 
-const TrackMapPopup = ({ mobileDevice, initialDate, onClose }) => {
+const TrackMapPopup = ({ mobileDevice, workDate, onClose }) => {
     const { isXSmall, isSmall } = useScreenSize();
     const { setAppSettingsData, setWorkDateToday } = useAppSettings();
     const { showWorkDatePicker } = useSharedArea();
     const contextMenuRef = useRef();
 
     return (
-        <TrackMapTimelineProvider mobileDevice={ mobileDevice } >
+        <TrackMapTimelineProvider mobileDevice={ mobileDevice } workDate={ workDate } >
             <TrackMapSettingsProvider>
                 <Popup className={ 'app-popup track-map-popup' } title={ 'Карта маршрута' }
                        dragEnabled={ true }
@@ -45,37 +45,41 @@ const TrackMapPopup = ({ mobileDevice, initialDate, onClose }) => {
                            );
                        } }>
                     <ToolbarItem location={ 'after' }>
+                        { !workDate ?
+                            <>
+                                <Button className={ 'app-popup-header-menu-button' } hint='Сегодня' onClick={ () => {
+                                    setWorkDateToday();
+                                } }>
+                                    <WorkDateTodayIcon size={ 18 }/>
+                                </Button>
 
-                        <Button className={ 'app-popup-header-menu-button' } hint='Сегодня' onClick={ () => {
-                            setWorkDateToday();
-                        } }>
-                            <WorkDateTodayIcon size={ 18 }/>
-                        </Button>
+                                <Button className={ 'app-popup-header-menu-button' } hint='Назад' onClick={ () => {
+                                    setAppSettingsData(previous => {
+                                        const workDate = Moment(previous.workDate)
+                                            .add(-1, 'days')
+                                            .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+                                            .toDate();
+                                        return { ...previous, workDate: workDate };
+                                    });
 
-                        <Button className={ 'app-popup-header-menu-button' } hint='Назад' onClick={ () => {
-                            setAppSettingsData(previous => {
-                                const workDate = Moment(previous.workDate)
-                                    .add(-1, 'days')
-                                    .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
-                                    .toDate();
-                                return { ...previous, workDate: workDate };
-                            });
+                                } }>
+                                    <WorkDateBackwardIcon size={ 18 }/>
+                                </Button>
 
-                        } }>
-                            <WorkDateBackwardIcon size={ 18 }/>
-                        </Button>
-
-                        <Button className={ 'app-popup-header-menu-button' } hint='Вперед' onClick={ () => {
-                            setAppSettingsData(previous => {
-                                const workDate = Moment(previous.workDate)
-                                    .add(+1, 'days')
-                                    .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
-                                    .toDate();
-                                return { ...previous, workDate: workDate };
-                            });
-                        } }>
-                            <WorkDateForwardIcon size={ 18 }/>
-                        </Button>
+                                <Button className={ 'app-popup-header-menu-button' } hint='Вперед' onClick={ () => {
+                                    setAppSettingsData(previous => {
+                                        const workDate = Moment(previous.workDate)
+                                            .add(+1, 'days')
+                                            .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+                                            .toDate();
+                                        return { ...previous, workDate: workDate };
+                                    });
+                                } }>
+                                    <WorkDateForwardIcon size={ 18 }/>
+                                </Button>
+                            </>
+                            : null
+                        }
 
                         <Button className={ 'app-popup-header-menu-button' } hint='Меню' onClick={ (e) => {
                             contextMenuRef.current.instance.option('target', e.element);
@@ -84,7 +88,7 @@ const TrackMapPopup = ({ mobileDevice, initialDate, onClose }) => {
                             <AdditionalMenuIcon size={ 18 }/>
                             <TrackMapPopupMenu
                                 ref={ contextMenuRef }
-                                initialDate={ initialDate }
+                                initialDate={ workDate }
                                 commands={ {
                                     refresh: () => setAppSettingsData(prev => ( { ...prev, workDate: new Date(prev.workDate) } )),
                                     showWorkDatePicker: () => showWorkDatePicker(),
@@ -109,7 +113,7 @@ TrackMapPopup.propTypes = {
             beginDate: PropTypes.instanceOf(Date).isRequired,
             endDate: PropTypes.instanceOf(Date).isRequired,
         }),
-    initialDate: PropTypes.instanceOf(Date),
+    workDate: PropTypes.instanceOf(Date),
     onClose: PropTypes.func.isRequired
 }
 

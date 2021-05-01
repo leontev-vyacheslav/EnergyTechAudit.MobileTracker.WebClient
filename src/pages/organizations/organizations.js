@@ -6,7 +6,6 @@ import { Button } from 'devextreme-react/button';
 import { AddressIcon, GridAdditionalMenuIcon, OrganizationIcon } from '../../constants/app-icons';
 import DataGridIconCellValueContainer from '../../components/data-grid-utils/data-grid-icon-cell-value-container';
 import PageHeader from '../../components/page-header/page-header';
-import OrganizationMainContextMenu from './organization-main-context-menu/organization-main-context-menu';
 import OrganizationGroupRowContextMenu from './organization-group-row-context-menu/organization-group-row-context-menu';
 import OrganizationRowContextMenu from './organization-row-context-menu/organization-row-context-menu';
 import { Template } from 'devextreme-react/core/template';
@@ -16,6 +15,7 @@ import { useScreenSize } from '../../utils/media-query';
 import OfficePopup from '../../components/popups/office-popup/office-popup';
 import { DataGridToolbarButton, onDataGridToolbarPreparing } from '../../components/data-grid-utils/data-grid-toolbar-button';
 import { organizationsExcelExporter } from './organizations-excel-exporter';
+import DataGridMainContextMenu from '../../components/data-grid-main-context-menu/data-grid-main-context-menu';
 
 const Organizations = () => {
     const { getOrganizationOfficesAsync, deleteOrganizationAsync, deleteOfficeAsync } = useAppData();
@@ -252,11 +252,12 @@ const Organizations = () => {
                     />
                     : null
                 }
-                <OrganizationMainContextMenu
+
+                <DataGridMainContextMenu
                     ref={ mainContextMenuRef }
                     commands={
                         {
-                            addOrganization: addOrganization,
+                            addAsync: addOrganization,
                             refreshAsync: refreshAsync,
                             exportToXlsx: () => organizationsExcelExporter({ dxDataGrid: dxDataGridRef.current.instance, title: 'Организации' })
                         }

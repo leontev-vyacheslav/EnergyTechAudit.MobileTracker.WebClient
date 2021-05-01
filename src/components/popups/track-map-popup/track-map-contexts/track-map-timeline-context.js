@@ -7,16 +7,17 @@ const TrackMapTimelineContext = createContext({});
 const useTrackMapTimelineContext = () => useContext(TrackMapTimelineContext);
 
 function TrackMapTimelineProvider (props) {
-    const { mobileDevice } = props;
+    const { mobileDevice, workDate } = props;
     const { getTimelinesAsync } = useAppData();
     const { appSettingsData,getDailyTimelineItem } = useAppSettings();
     const [currentTimeline, setCurrentTimeline] = useState([]);
     const [currentTimelineItem, setCurrentTimelineItem] = useState(null);
 
+
     useEffect(() => {
         ( async () => {
-            const timelineItem = getDailyTimelineItem();
-            let timeline = await getTimelinesAsync(mobileDevice.id, appSettingsData.workDate) ?? [];
+            const timelineItem = getDailyTimelineItem(workDate);
+            let timeline = await getTimelinesAsync(mobileDevice.id, workDate ?? appSettingsData.workDate) ?? [];
             timeline = ( [timelineItem, ...timeline] ).map(t => {
                 t.endDate.setTime(t.endDate.getTime() - 1000);
                 return t;
@@ -24,7 +25,7 @@ function TrackMapTimelineProvider (props) {
             setCurrentTimeline(timeline );
             setCurrentTimelineItem(timelineItem)
         } )();
-    }, [appSettingsData.workDate, getDailyTimelineItem, getTimelinesAsync, mobileDevice.id]);
+    }, [appSettingsData.workDate, getDailyTimelineItem, getTimelinesAsync, mobileDevice.id, workDate]);
 
     return (
         <TrackMapTimelineContext.Provider value={ { currentTimeline, currentTimelineItem, setCurrentTimelineItem } }  { ...props } />

@@ -6,6 +6,7 @@ import { HomePage, MobileDevicesPage, TrackSheetPage, SettingsPage } from '../pa
 const AboutPage = lazy(() => import('../pages/about/about'));
 const SignOutPage = lazy(() => import('../pages/sign-out/sign-out'));
 const OrganizationsPage = lazy(() => import('../pages/organizations/organizations'));
+const AdministratorsPage = lazy(() => import('../pages/administrators/administrators'));
 
 const routes = [
     {
@@ -23,6 +24,10 @@ const routes = [
     {
         path: '/organizations',
         component: OrganizationsPage,
+    },
+    {
+        path: '/administrators',
+        component: AdministratorsPage,
     },
     {
         path: '/track-sheet',
