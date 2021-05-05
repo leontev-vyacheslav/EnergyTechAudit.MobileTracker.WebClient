@@ -22,8 +22,8 @@ const DataGridRowContextMenu = ({ innerRef, commands }) => {
                 renderIconItem: () => <DeleteIcon size={ 18 }/>,
                 onClick: async (e) => {
                     e.component.hide();
-                    if (commands.delete) {
-                        await commands.delete();
+                    if (commands.remove) {
+                        await commands.remove();
                     }
                 }
             }];

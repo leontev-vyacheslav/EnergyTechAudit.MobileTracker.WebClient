@@ -6,7 +6,7 @@ import TrackMapPopup from '../../components/popups/track-map-popup/track-map-pop
 import DataGridIconCellValueContainer from '../../components/data-grid-utils/data-grid-icon-cell-value-container';
 import moment from 'moment';
 import TrackSheetPopup from '../track-sheet/track-sheet-popup/track-sheet-popup';
-import { AndroidIcon, GridAdditionalMenuIcon, IosIcon, MobileDeviceIcon, RegistrationDateIcon } from '../../constants/app-icons';
+import { AndroidIcon, GridAdditionalMenuIcon, IosIcon, MobileDeviceIcon, RegistrationDateIcon, UserIcon } from '../../constants/app-icons';
 import MobileDeviceRowContextMenu from './mobile-devices-row-context-menu/mobile-device-row-context-menu';
 import MobileDevicesGroupRowContextMenu from './mobile-devices-group-row-context-menu/mobile-devices-group-row-context-menu';
 import ExtendedUserInfoPopup from '../../components/popups/extended-user-info-popup/extended-user-info-popup';
@@ -92,13 +92,15 @@ const MobileDevice = () => {
                     } }>
                         <GridAdditionalMenuIcon/>
                     </Button>
-                    <div className={ 'dx-icon dx-icon-user' }/>
-                    <div className={ 'mobile-devices-group-line' }>
-                        <div>
-                            <span style={ { marginRight: 10 } }>{ !isXSmall ? 'Пользователь:' : '' }</span>
-                            <span>{ userCaption }</span>
-                        </div>
-                    </div>
+                    <DataGridIconCellValueContainer
+                        rowStyle={ { gridTemplateColumns: '25px 1fr' } }
+                        cellDataFormatter={ () => {
+                            return userCaption;
+                        } }
+                        iconRenderer={ (iconProps) => {
+                            return <UserIcon size={ 20 } { ...iconProps } />;
+                        } }
+                    />
                 </div>
             </>
         );

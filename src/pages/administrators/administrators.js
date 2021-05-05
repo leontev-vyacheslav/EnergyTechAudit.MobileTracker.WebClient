@@ -12,48 +12,70 @@ import DataGridIconCellValueContainer from '../../components/data-grid-utils/dat
 
 import DataGridMainContextMenu from  '../../components/data-grid-main-context-menu/data-grid-main-context-menu';
 import DataGridRowContextMenu from '../../components/data-grid-row-context-menu/data-grid-row-context-menu';
+import AdministratorPopup from '../../components/popups/administrator-popup/administrator-popup';
+import { DialogConstants } from '../../constants/app-dialog-constant';
+import { showConfirmDialog } from '../../utils/dialogs';
 
 const Administrators = () => {
 
-    const { getAdministratorsAsync } = useAppData();
+    const { getAdminListAsync, deleteAdminAsync } = useAppData();
     const { isXSmall } = useScreenSize();
 
     const [administrators, setAdministrators] = useState(null);
+    const [currentAdministrator, setCurrentAdministrator] = useState(null);
+    const [administratorPopupTrigger, setAdministratorPopupTrigger] = useState(false);
 
     const dxDataGridRef = useRef(null);
-    const mainContextMenuRef = useRef();
-    const groupRowContextMenuRef = useRef();
-    const rowContextMenuRef = useRef();
+    const mainContextMenuRef = useRef(null);
+    const rowContextMenuRef = useRef(null);
+    const editMode = useRef(false);
 
-    const refreshAsync = useCallback(async () => {
-        const administrators = await getAdministratorsAsync();
-        console.log(administrators);
+    const updateDataAsync = useCallback(async () => {
+        const administrators = await getAdminListAsync();
         setAdministrators(administrators);
-    }, [getAdministratorsAsync]);
+    }, [getAdminListAsync]);
+
+    const add = useCallback( () => {
+
+    }, []);
+
+    const edit = useCallback(() => {
+        if (dxDataGridRef.current && dxDataGridRef.current.instance) {
+            const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
+            const administrator = administrators.find(adm => adm.id === currentRowKey);
+            setCurrentAdministrator(administrator);
+            editMode.current = true;
+            setAdministratorPopupTrigger(true);
+        }
+    }, [administrators]);
+
+    const remove = useCallback( async () => {
+        showConfirmDialog({
+            title: 'Предупреждение',
+            iconName: 'WarningIcon',
+            textRender: () => <>Действительно хотите <b>удалить</b> администратора!</>,
+            callback: async () => {
+                if (dxDataGridRef.current && dxDataGridRef.current.instance) {
+                    const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
+                    await deleteAdminAsync(currentRowKey);
+                    await updateDataAsync();
+                }
+            }
+        });
+    }, [deleteAdminAsync, updateDataAsync]);
 
     useEffect(() => {
         ( async () => {
-            await refreshAsync();
+            await updateDataAsync();
         } )();
-    }, [refreshAsync]);
+    }, [updateDataAsync]);
 
     const GroupRowContent = ({ groupCell }) => {
         const items = groupCell.data.items === null ? groupCell.data.collapsedItems : groupCell.data.items;
         const groupDataItem = items[0];
-        console.log(groupDataItem)
         return (
             <>
                 <div className={ 'user-grid-group mobile-devices-group' }>
-                    <Button className={ 'app-command-button app-command-button-small' } onClick={ (e) => {
-                        dxDataGridRef.current.instance.option('focusedRowKey', groupCell.key);
-                        e.event.stopPropagation();
-                        if (groupRowContextMenuRef && groupRowContextMenuRef.current) {
-                            groupRowContextMenuRef.current.instance.option('target', e.element);
-                            groupRowContextMenuRef.current.instance.show();
-                        }
-                    } }>
-                        <GridAdditionalMenuIcon/>
-                    </Button>
                     <DataGridIconCellValueContainer
                         rowStyle={ { gridTemplateColumns: '25px 1fr' } }
                         cellDataFormatter={ () => {
@@ -128,7 +150,8 @@ const Administrators = () => {
                         visible={ false }
                     />
 
-                    <Column dataField={ 'email' } caption={ 'Почта' } width={ '100%' } allowSorting={ false } hidingPriority={ 4 }
+                    <Column dataField={ 'isActive' } caption={ 'Актив.' } width={ 50 } allowSorting={ false } hidingPriority={ 3 } />
+                    <Column dataField={ 'email' } caption={ 'Почта' } width={ '90%' } allowSorting={ false } hidingPriority={ 4 }
                             cellRender={ (e) => {
                                 return e.data.email ?
                                     <DataGridIconCellValueContainer
@@ -146,25 +169,34 @@ const Administrators = () => {
 
                 </DataGrid>
 
+                { administratorPopupTrigger
+                    ? <AdministratorPopup
+                        editMode={ editMode.current }
+                        administrator={ currentAdministrator }
+                        callback={ async ({ modalResult }) => {
+                            setAdministratorPopupTrigger(false);
+                            if(modalResult === DialogConstants.ModalResults.Ok) {
+                                await updateDataAsync();
+                            }
+                        } }
+                    />
+                    : null
+                }
                 <DataGridMainContextMenu
                     ref={ mainContextMenuRef }
                     commands={
                         {
-                            addAsync: () => {
-                            },
-                            refreshAsync: refreshAsync,
-                            exportToXlsx: () => {
-                            }
+                            add: null,
+                            refresh: updateDataAsync,
+                            exportToXlsx: null
                         }
                     }/>
                     <DataGridRowContextMenu
                         ref={ rowContextMenuRef }
                         commands={
                             {
-                                edit: () => {
-                                },
-                                delete: () => {
-                                }
+                                edit: edit,
+                                remove: remove,
                             }
                         }
                     />

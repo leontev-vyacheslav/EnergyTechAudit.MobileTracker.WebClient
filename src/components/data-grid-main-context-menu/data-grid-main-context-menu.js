@@ -12,8 +12,8 @@ const DataGridMainContextMenu = ({ innerRef, commands }) => {
                 renderIconItem: () => <RefreshIcon size={ 18 }/>,
                 onClick: async (e) => {
                     e.component.hide();
-                    if(commands.refreshAsync) {
-                        await commands.refreshAsync();
+                    if(commands.refresh) {
+                        await commands.refresh();
                     }
                 }
             },
@@ -22,8 +22,8 @@ const DataGridMainContextMenu = ({ innerRef, commands }) => {
                 renderIconItem: () => <AddIcon size={ 18 }/>,
                 onClick: (e) => {
                     e.component.hide();
-                    if(commands.addAsync) {
-                        commands.addAsync();
+                    if(commands.add) {
+                        commands.add();
                     }
                 }
             },

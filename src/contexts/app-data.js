@@ -310,7 +310,7 @@ function AppDataProvider (props) {
         return null;
     }, [axiosWithCredentials]);
 
-    const getAdministratorsAsync = useCallback( async () => {
+    const getAdminListAsync = useCallback( async () => {
         const response = await axiosWithCredentials({
             url: `${ routes.host }${ routes.administrator }/administrators`,
             method: HttpConstants.Methods.Get
@@ -321,17 +321,52 @@ function AppDataProvider (props) {
         return null;
     }, [axiosWithCredentials]);
 
+    const getAdminAsync = useCallback(async (id) =>{
+        const response = await axiosWithCredentials({
+            url: `${ routes.host }${ routes.administrator }/${id}`,
+            method: HttpConstants.Methods.Get
+        });
+        if (response && response.status === HttpConstants.StatusCodes.Ok) {
+            return response.data;
+        }
+        return null;
+    }, [axiosWithCredentials] );
+
+    const postAdminAsync = useCallback(async (admin) => {
+        const response = await axiosWithCredentials({
+            url: `${ routes.host }${ routes.administrator }`,
+            method: HttpConstants.Methods.Post,
+            data: admin
+        });
+        if (response && response.status === HttpConstants.StatusCodes.Ok) {
+            return response.data;
+        }
+        return null;
+    }, [axiosWithCredentials]);
+
+    const deleteAdminAsync = useCallback(async (id) => {
+        const response = await axiosWithCredentials({
+            url: `${ routes.host }${ routes.administrator }/${ id }`,
+            method: HttpConstants.Methods.Delete
+        });
+        if (response && response.status === HttpConstants.StatusCodes.Ok) {
+            return response.data;
+        }
+        return null;
+    }, [axiosWithCredentials]);
+
     return (
         <AppDataContext.Provider
             value={ {
-                getMobileDeviceAsync, getMobileDevicesAsync,  getTimelinesAsync, getLocationRecordsByRangeAsync,
-                getLocationRecordAsync,  getGeocodedAddressAsync, getGeocodedAddressesAsync, getGeocodedSelectedAddressesAsync, getGeocodedLocationAsync, getTrackSheetAsync,
-                postExtendedUserInfoAsync, getExtendedUserInfoAsync,
-
-                getOrganizationsAsync, getOrganizationOfficesAsync, deleteOrganizationAsync, deleteOfficeAsync,
-                postOrganizationAsync, getOfficeAsync, postOfficeAsync, deleteScheduleItemAsync,
-
-                getAdministratorsAsync
+                getMobileDeviceAsync, getMobileDevicesAsync,
+                getTimelinesAsync,
+                getLocationRecordsByRangeAsync, getLocationRecordAsync,
+                getGeocodedAddressAsync, getGeocodedAddressesAsync, getGeocodedSelectedAddressesAsync, getGeocodedLocationAsync,
+                getTrackSheetAsync,
+                getExtendedUserInfoAsync, postExtendedUserInfoAsync,
+                getOrganizationsAsync, getOrganizationOfficesAsync, deleteOrganizationAsync,  postOrganizationAsync,
+                getOfficeAsync, postOfficeAsync, deleteOfficeAsync, deleteScheduleItemAsync,
+                getAdminListAsync, getAdminAsync, postAdminAsync, deleteAdminAsync
             } }
             { ...props }
         />

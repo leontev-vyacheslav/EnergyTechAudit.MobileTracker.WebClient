@@ -24,7 +24,7 @@ export { MdMoreHoriz as EdgePointsIcon } from 'react-icons/md';
 
 // mobile-device.js
 export { RiCalendarCheckLine as RegistrationDateIcon } from 'react-icons/ri';
-export { MdAndroid as AndroidIcon } from 'react-icons/md';
+export { AiOutlineAndroid as AndroidIcon } from 'react-icons/ai';
 export { SiIos as IosIcon } from 'react-icons/si';
 export { MdMoreVert as AdditionalMenuIcon } from 'react-icons/md';
 export { IoPhonePortraitSharp as MobileDeviceIcon } from 'react-icons/io5';
@@ -33,7 +33,6 @@ export { IoPhonePortraitSharp as MobileDeviceIcon } from 'react-icons/io5';
 export { MdTimeline as TimelineIcon  } from 'react-icons/md';
 
 // timeline-info-header.js
-export { MdPerson as UserIcon } from 'react-icons/md';
 export { MdLocationOn as LocationIcon } from 'react-icons/md';
 
 export { RiCalendarLine as CurrentDateIcon } from 'react-icons/ri';
@@ -49,6 +48,7 @@ export { FiRefreshCcw as RefreshIcon } from 'react-icons/fi';
 
 export { RiGroupLine as OrganizationIcon } from 'react-icons/ri';
 export { RiAdminLine as AdminIcon } from 'react-icons/ri';
+export { RiUserLocationLine as UserIcon } from 'react-icons/ri';
 export { AiOutlineUsergroupAdd as AddOrganizationIcon } from 'react-icons/ai';
 
 export { IoGridOutline as ListsIcon } from 'react-icons/io5';
