@@ -8,7 +8,6 @@ function AppSettingsProvider (props) {
 
     const coreInitialAppSettingsData = {
         workDate: new Date(new Date().setHours(0, 0, 0, 0)),
-        duringWorkingDay: true,
 
         breakInterval: 1000,
         isShownBreakInterval: true,

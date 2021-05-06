@@ -1,5 +1,5 @@
 const getUserDescription = (mobileDevice) => {
-    if(mobileDevice && mobileDevice.extendedUserInfo) {
+    if(mobileDevice) {
         return !mobileDevice.extendedUserInfo
             ? mobileDevice.email
             : `${ mobileDevice.extendedUserInfo.firstName } ${ mobileDevice.extendedUserInfo.lastName }`;

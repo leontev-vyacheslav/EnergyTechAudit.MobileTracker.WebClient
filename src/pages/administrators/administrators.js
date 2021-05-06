@@ -15,6 +15,7 @@ import DataGridRowContextMenu from '../../components/data-grid-row-context-menu/
 import AdministratorPopup from '../../components/popups/administrator-popup/administrator-popup';
 import { DialogConstants } from '../../constants/app-dialog-constant';
 import { showConfirmDialog } from '../../utils/dialogs';
+import { administratorExcelExporter } from './administrators-excel-exporter';
 
 const Administrators = () => {
 
@@ -36,7 +37,8 @@ const Administrators = () => {
     }, [getAdminListAsync]);
 
     const add = useCallback( () => {
-
+        editMode.current = false;
+        setAdministratorPopupTrigger(true);
     }, []);
 
     const edit = useCallback(() => {
@@ -186,9 +188,14 @@ const Administrators = () => {
                     ref={ mainContextMenuRef }
                     commands={
                         {
-                            add: null,
+                            add: add,
                             refresh: updateDataAsync,
-                            exportToXlsx: null
+                            exportToXlsx: () => {
+                                administratorExcelExporter({
+                                    dxDataGrid: dxDataGridRef.current.instance,
+                                    title: 'Администраторы'
+                                });
+                            }
                         }
                     }/>
                     <DataGridRowContextMenu

@@ -85,6 +85,7 @@ const OfficePopup = ({ editMode, organization, callback }) => {
                     <Form className={ 'organization-popup-form responsive-paddings' } ref={ formRef } formData={ currentOffice }>
                         <SimpleItem
                             dataField={ 'organizationDescription' }
+                            isRequired={ true }
                             label={ { location: 'top', showColon: true, text: 'Наименование организации' } }
                             editorType={ 'dxTextBox' }
                             editorOptions={
@@ -117,9 +118,16 @@ const OfficePopup = ({ editMode, organization, callback }) => {
                     <div>&nbsp;</div>
                     <Button type={ 'default' } text={ DialogConstants.ButtonCaptions.Ok } width={ DialogConstants.ButtonWidths.Normal }
                             onClick={ async () => {
-                                let formData = formRef.current.instance.option('formData');
-                                const responseData = await postOfficeAsync(formData);
-                                callback({ modalResult: DialogConstants.ModalResults.Ok, data: responseData !== null ? formData : null });
+                                const formData = formRef.current.instance.option('formData');
+                                const validationGroupResult = formRef.current.instance.validate();
+                                if (!validationGroupResult.isValid) {
+                                    validationGroupResult.brokenRules
+                                        .find(() => true)
+                                        .validator.focus()
+                                } else {
+                                    const responseData = await postOfficeAsync(formData);
+                                    callback({ modalResult: DialogConstants.ModalResults.Ok, data: responseData !== null ? formData : null });
+                                }
                             } }
                     />
                     <Button type={ 'normal' } text={ DialogConstants.ButtonCaptions.Cancel } width={ DialogConstants.ButtonWidths.Normal }

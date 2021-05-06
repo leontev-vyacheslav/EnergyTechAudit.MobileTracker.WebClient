@@ -257,8 +257,8 @@ const Organizations = () => {
                     ref={ mainContextMenuRef }
                     commands={
                         {
-                            addAsync: addOrganization,
-                            refreshAsync: refreshAsync,
+                            add: addOrganization,
+                            refresh: refreshAsync,
                             exportToXlsx: () => organizationsExcelExporter({ dxDataGrid: dxDataGridRef.current.instance, title: 'Организации' })
                         }
                     }/>

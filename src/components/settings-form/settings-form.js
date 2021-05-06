@@ -35,11 +35,6 @@ const SettingsForm = ({ style }) => {
                                 type: 'date'
                             } }
                         />
-                        <SimpleItem
-                            dataField={ 'duringWorkingDay' }
-                            label={ { location: 'top', showColon: true, text: 'В течении рабочего дня' } }
-                            editorType={ 'dxCheckBox' }
-                        />
                     </Tab>
                     <Tab title={ 'Карта' }>
                         <SimpleItem

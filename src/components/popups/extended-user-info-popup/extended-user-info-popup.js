@@ -110,8 +110,15 @@ const ExtendedUserInfoPopup = ({ userId, callback }) => {
                             onClick={ async () => {
                                 let formData = formRef.current.instance.option('formData');
                                 formData = { ...formData, ...{ id: userId } };
-                                const responseData = await postExtendedUserInfoAsync(formData);
-                                callback({ modalResult: DialogConstants.ModalResults.Ok, data: responseData !== null ? formData : null });
+                                const validationGroupResult = formRef.current.instance.validate();
+                                if (!validationGroupResult.isValid) {
+                                    validationGroupResult.brokenRules
+                                        .find(() => true)
+                                        .validator.focus()
+                                } else {
+                                    const responseData = await postExtendedUserInfoAsync(formData);
+                                    callback({ modalResult: DialogConstants.ModalResults.Ok, data: responseData !== null ? formData : null });
+                                }
                             } }
                     />
                     <Button type={ 'normal' } text={ DialogConstants.ButtonCaptions.Cancel } width={ DialogConstants.ButtonWidths.Normal }

@@ -15,23 +15,27 @@ const AdministratorPopup = ({ editMode, administrator, callback }) => {
     const formRef = useRef(null);
 
     useEffect(() => {
-        (async () => {
-            if(editMode === true && administrator) {
+        ( async () => {
+            const organizations = await getOrganizationsAsync();
+            setOrganizations(organizations);
+            if (editMode === true && administrator) {
                 const currentAdministrator = await getAdminAsync(administrator.id);
-                const organizations = await getOrganizationsAsync();
-                console.log(currentAdministrator);
-                console.log(organizations);
-                setOrganizations(organizations);
                 setCurrentAdministrator(currentAdministrator);
+            } else {
+                setCurrentAdministrator({ id: 0, email: null, organizationId: null, editPassword: null, isActive: false });
             }
-        }) ();
+        } )();
     }, [administrator, editMode, getAdminAsync, getOrganizationsAsync]);
 
     return currentAdministrator ? (
         <AppModalPopup onClose={ callback } title={ 'Администратор' }>
             <div className={ 'popup-form-container' }>
                 <ScrollView>
-                    <Form className={ 'organization-popup-form responsive-paddings' } ref={ formRef } formData={ currentAdministrator }>
+                    <Form className={ 'organization-popup-form responsive-paddings' }
+                          ref={ formRef }
+                          formData={ currentAdministrator }
+                          validationGroup="adminUserValidationGroup"
+                    >
 
                         <SimpleItem dataField={ 'organizationId' }
                                     label={ { location: 'top', showColon: true, text: 'Организация' } }
@@ -49,15 +53,19 @@ const AdministratorPopup = ({ editMode, administrator, callback }) => {
                             dataField={ 'email' }
                             label={ { location: 'top', showColon: true, text: 'Электронная почта' } }
                             editorType={ 'dxTextBox' }
-                        />
+                            validationRules={ [{ type: 'required' }, { type: 'email' }] } />
 
                         <SimpleItem
                             dataField={ 'editablePassword' }
                             label={ { location: 'top', showColon: true, text: 'Пароль' } }
                             editorType={ 'dxTextBox' }
+                            validationRules={ !editMode
+                                ? [{ type: 'required' }, { type: 'stringLength', min: 8, message: 'Длина пароля не менее 8 символов' }]
+                                : null
+                            }
                             editorOptions={
                                 {
-                                    mode : 'password',
+                                    mode: 'password',
                                     readOnly: true,
                                     placeholder: 'Новый пароль',
                                     inputAttr: { autocomplete: 'new-password' },
@@ -74,14 +82,22 @@ const AdministratorPopup = ({ editMode, administrator, callback }) => {
                             editorType={ 'dxCheckBox' }
                         />
                     </Form>
+
                 </ScrollView>
                 <div className={ 'popup-form-buttons-row' }>
                     <div>&nbsp;</div>
                     <Button type={ 'default' } text={ DialogConstants.ButtonCaptions.Ok } width={ DialogConstants.ButtonWidths.Normal }
                             onClick={ async () => {
-                                let formData = formRef.current.instance.option('formData');
-                                const responseData = await postAdminAsync(formData);
-                                callback({ modalResult: DialogConstants.ModalResults.Ok, data: responseData !== null ? formData : null });
+                                const formData = formRef.current.instance.option('formData');
+                                const validationGroupResult = formRef.current.instance.validate();
+                                if (!validationGroupResult.isValid) {
+                                    validationGroupResult.brokenRules
+                                        .find(() => true)
+                                        .validator.focus()
+                                } else {
+                                    const responseData = await postAdminAsync(formData);
+                                    callback({ modalResult: DialogConstants.ModalResults.Ok, data: responseData !== null ? formData : null });
+                                }
                             } }
                     />
                     <Button type={ 'normal' } text={ DialogConstants.ButtonCaptions.Cancel } width={ DialogConstants.ButtonWidths.Normal }
@@ -90,6 +106,7 @@ const AdministratorPopup = ({ editMode, administrator, callback }) => {
                             } }
                     />
                 </div>
+
             </div>
         </AppModalPopup>
     ) : null;

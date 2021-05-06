@@ -187,22 +187,29 @@ const OrganizationPopup = ({ editMode, organization, callback }) => {
                     <Button type={ 'default' } text={ DialogConstants.ButtonCaptions.Ok } width={ DialogConstants.ButtonWidths.Normal }
                             onClick={ async () => {
                                 const formData = formRef.current.instance.option('formData');
+                                const validationGroupResult = formRef.current.instance.validate();
+                                if (!validationGroupResult.isValid) {
+                                    validationGroupResult.brokenRules
+                                        .find(() => true)
+                                        .validator.focus()
+                                } else {
 
-                                formData.scheduleItems = Object.keys(formData.scheduleItems).map(s => {
-                                    const scheduleItem = formData.scheduleItems[s];
-                                    return {
-                                        ...scheduleItem, ...{
-                                            periodBegin: scheduleItem.periodBegin instanceof Date
-                                                ? scheduleItem.periodBegin.toLocaleTimeString('ru-RU')
-                                                : scheduleItem.periodBegin,
-                                            periodEnd: scheduleItem.periodEnd instanceof Date
-                                                ? scheduleItem.periodEnd.toLocaleTimeString('ru-RU')
-                                                : scheduleItem.periodEnd
-                                        }
-                                    };
-                                });
-                                const responseData = await postOrganizationAsync(formData);
-                                callback({ modalResult: DialogConstants.ModalResults.Ok, data: responseData !== null ? formData : null });
+                                    formData.scheduleItems = Object.keys(formData.scheduleItems).map(s => {
+                                        const scheduleItem = formData.scheduleItems[s];
+                                        return {
+                                            ...scheduleItem, ...{
+                                                periodBegin: scheduleItem.periodBegin instanceof Date
+                                                    ? scheduleItem.periodBegin.toLocaleTimeString('ru-RU')
+                                                    : scheduleItem.periodBegin,
+                                                periodEnd: scheduleItem.periodEnd instanceof Date
+                                                    ? scheduleItem.periodEnd.toLocaleTimeString('ru-RU')
+                                                    : scheduleItem.periodEnd
+                                            }
+                                        };
+                                    });
+                                    const responseData = await postOrganizationAsync(formData);
+                                    callback({ modalResult: DialogConstants.ModalResults.Ok, data: responseData !== null ? formData : null });
+                                }
                             } }
                     />
                     <Button type={ 'normal' } text={ DialogConstants.ButtonCaptions.Cancel } width={ DialogConstants.ButtonWidths.Normal }
