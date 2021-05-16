@@ -18,25 +18,40 @@ function AppDataProvider (props) {
         async (config) => {
             let response = null;
             const userAuthData = await getUserAuthDataFromStorageAsync();
+            config = config || {};
+            config.headers = config.headers || {};
+            config.headers = { ...config.headers, ...HttpConstants.Headers.AcceptJson };
+
             if (userAuthData) {
-                config = config || {};
-                config.headers = config.headers || {};
-                config.headers = { ...config.headers, ...HttpConstants.Headers.AcceptJson };
                 config.headers.Authorization = `Bearer ${ userAuthData.token }`;
-                try {
-                    showLoader();
-                    response = await axios.request(config);
-                } catch (error) {
-                    response = error.response;
-                    notify('В процессе выполнения запроса или получения данных от сервера произошла ошибка', 'error', 10000);
-                } finally {
-                    hideLoader();
-                }
             }
+
+            try {
+                showLoader();
+                response = await axios.request(config);
+            } catch (error) {
+                response = error.response;
+                notify('В процессе выполнения запроса или получения данных от сервера произошла ошибка', 'error', 10000);
+            } finally {
+                hideLoader();
+            }
+
             return response;
         },
         [getUserAuthDataFromStorageAsync, hideLoader, showLoader],
     );
+
+    const getAssignOrganizationAsync = useCallback(async (userVerificationData) => {
+        const response = await axiosWithCredentials({
+            url: `${ routes.host }${ routes.accountAssignOrganization }`,
+            method: HttpConstants.Methods.Post,
+            data: userVerificationData
+        });
+        if (response && response.status === HttpConstants.StatusCodes.Ok) {
+            return response.data;
+        }
+        return null;
+    }, [axiosWithCredentials]);
 
     const getMobileDevicesAsync = useCallback(async () => {
         const response = await axiosWithCredentials({
@@ -358,6 +373,7 @@ function AppDataProvider (props) {
     return (
         <AppDataContext.Provider
             value={ {
+                getAssignOrganizationAsync,
                 getMobileDeviceAsync, getMobileDevicesAsync,
                 getTimelinesAsync,
                 getLocationRecordsByRangeAsync, getLocationRecordAsync,

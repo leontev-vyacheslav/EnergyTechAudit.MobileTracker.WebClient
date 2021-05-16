@@ -17,7 +17,7 @@ import PropTypes from 'prop-types';
 
 const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
 
-    const { setAppSettingsData } = useAppSettings();
+    const { setWorkDateToday } = useAppSettings();
 
     const {
         isShowTrackMapSettings, setIsShowTrackMapSettings,
@@ -46,11 +46,7 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
                 renderIconItem: () => <WorkDateTodayIcon size={ 18 }/>,
                 onClick: (e) => {
                     e.component.hide();
-                    setAppSettingsData(previous => {
-                        const workDate = new Date();
-                        workDate.setHours(0, 0, 0, 0);
-                        return { ...previous, workDate: workDate };
-                    });
+                    setWorkDateToday();
                 }
             },
             {
@@ -122,7 +118,7 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }) => {
 
 
         return items;
-    }, [isShowStationaryZone, isXSmall, isShowTrackMapSettings, isShowTrackMapZones, isShowTrackMapTimeline, commands, setAppSettingsData, setIsShowStationaryZone, setIsShowTrackMapZones, setIsShowTrackMapTimeline, setIsShowTrackMapSettings]);
+    }, [commands, isShowStationaryZone, isShowTrackMapSettings, isShowTrackMapTimeline, isShowTrackMapZones, isXSmall, setIsShowStationaryZone, setIsShowTrackMapSettings, setIsShowTrackMapTimeline, setIsShowTrackMapZones, setWorkDateToday]);
 
     return <ContextMenu
         ref={ innerRef }

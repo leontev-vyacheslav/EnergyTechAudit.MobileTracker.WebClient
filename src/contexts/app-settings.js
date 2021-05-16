@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import notify from 'devextreme/ui/notify';
 
 const AppSettingsContext = createContext({});
 
@@ -84,6 +85,7 @@ function AppSettingsProvider (props) {
             workDate.setHours(0, 0, 0, 0);
             return { ...previous, workDate: workDate };
         });
+        notify('Рабочая дата изменена на текущую', 'success', 5000);
     }, []);
 
     return <AppSettingsContext.Provider value={ {
