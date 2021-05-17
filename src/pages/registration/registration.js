@@ -15,7 +15,7 @@ const Registration = () => {
     const [organizations, setOrganizations] = useState(null);
     const [userVerificationData, setUserVerificationData] = useState(null);
     const [currentUserOrganization] = useState({ organizationId: null });
-    const [isAssignedOrganization, setIsAssignedOrganization] = useState(false);
+    const [assignedOrganization, setAssignedOrganization] = useState(null);
 
     const formRef = useRef(null);
 
@@ -25,7 +25,6 @@ const Registration = () => {
             const [, rawVerificationData] = location.hash.split('userVerificationData=');
             if (rawVerificationData) {
                 const verificationData = JSON.parse(atob(rawVerificationData) ?? 'null');
-                console.log(verificationData);
                 setUserVerificationData( verificationData);
             }
         }
@@ -48,10 +47,13 @@ const Registration = () => {
     };
 
     const RegisteredContent = () => {
-        return isAssignedOrganization ?
+        return assignedOrganization !== null ?
             (
                 <div className={ 'description' } style={ { textAlign: 'justify', fontSize: 16, lineHeight: 2 } }>
-                    <div>Учетная запись пользователя <b>{ userVerificationData.email }</b> была <b>успешно присоединена к организации</b>!</div>
+                    <div style={ { height: 300 } }>
+                        Учетная запись пользователя { userVerificationData.email} была успешно присоединена к организации:
+                        <br/><div style={ { marginTop: 30 } }><b>{assignedOrganization.description}</b></div>
+                    </div>
                 </div>
             ) :
             (
@@ -87,13 +89,10 @@ const Registration = () => {
                                 const formData = formRef.current.instance.option('formData');
                                 const validationGroupResult = formRef.current.instance.validate();
                                 if (!validationGroupResult.isValid) {
-                                    validationGroupResult.brokenRules
-                                        .find(() => true)
-                                        .validator.focus()
+                                    validationGroupResult.brokenRules.find(() => true).validator.focus()
                                 } else {
-                                    console.log({ ...userVerificationData, ...formData });
                                     const response = await getAssignOrganizationAsync({ ...userVerificationData, ...formData });
-                                    setIsAssignedOrganization(response !== null)
+                                    setAssignedOrganization(response);
                                 }
                             } }
                         />
