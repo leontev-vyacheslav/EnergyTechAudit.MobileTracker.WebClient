@@ -248,7 +248,7 @@ function AppDataProvider (props) {
 
     const getOrganizationsAsync = useCallback(async () => {
         const response = await axiosWithCredentials({
-            url: `${ routes.host }${ routes.organization }/organizations`,
+            url: `${ routes.host }${ routes.organization }`,
             method: HttpConstants.Methods.Get
         });
         if (response && response.status === HttpConstants.StatusCodes.Ok) {
