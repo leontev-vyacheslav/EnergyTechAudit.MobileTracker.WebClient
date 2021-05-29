@@ -21,6 +21,7 @@ const OrganizationPopup = ({ editMode, organization, callback }) => {
     const formRef = useRef(null);
     const contextMenuRef = useRef(null);
     const headerToolbarItemRef = useRef(null);
+    const currentSelectedIndex = useRef(0)
 
     useEffect(() => {
         ( async () => {
@@ -104,8 +105,11 @@ const OrganizationPopup = ({ editMode, organization, callback }) => {
                 <ScrollView>
                     <Form className={ 'organization-popup-form responsive-paddings' } ref={ formRef } formData={ currentOrganization }>
                         <TabbedItem tabPanelOptions={ {
+                            selectedIndex: currentSelectedIndex.current,
                             onSelectionChanged: (e) => {
                                 const selectedIndex = e.component.option('selectedIndex');
+                                currentSelectedIndex.current = selectedIndex;
+                                console.log(selectedIndex);
                                 if (headerToolbarItemRef && headerToolbarItemRef.current) {
                                     headerToolbarItemRef.current.instance.option('visible', selectedIndex === 1)
                                 }
