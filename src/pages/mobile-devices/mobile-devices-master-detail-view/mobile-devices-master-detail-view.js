@@ -2,8 +2,9 @@ import React from 'react';
 import TabPanel, { Item } from 'devextreme-react/ui/tab-panel';
 import Timelines from '../timeline/timelines';
 import StationaryZones from '../stationary-zones/stationary-zones';
+import BackgroundStatuses from '../background-statuses/background-statuses';
 import IconTab from '../../../components/tab-utils/icon-tab';
-import { StationaryZonesIcon, TimelineIcon } from '../../../constants/app-icons';
+import { StationaryZonesIcon, StatusInfoIcon, TimelineIcon } from '../../../constants/app-icons';
 
 import './mobile-devices-master-detail-view.scss';
 
@@ -17,6 +18,10 @@ const MobileDevicesMasterDetailView = ({ mobileDevice, workDate }) => {
             <Item title={ 'Зоны' }
                   tabRender={ (tab) => <IconTab tab={ tab }><StationaryZonesIcon size={ 18 }/></IconTab> }
                   render={ () => <StationaryZones mobileDevice={ mobileDevice } workDate={ workDate }/> }
+            />
+            <Item title={ 'Статусы' }
+                  tabRender={ (tab) => <IconTab tab={ tab }><StatusInfoIcon size={ 18 }/></IconTab> }
+                  render={ () => <BackgroundStatuses mobileDevice={ mobileDevice } workDate={ workDate }/> }
             />
         </TabPanel>
     );

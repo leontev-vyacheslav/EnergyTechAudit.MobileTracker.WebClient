@@ -75,6 +75,31 @@ function AppDataProvider (props) {
         return null;
     }, [axiosWithCredentials]);
 
+    const getMobileDeviceBackgroundStatusListAsync = useCallback( async (mobileDeviceId, beginDate, endDate) => {
+        const utcOffset = Moment().utcOffset();
+        const response = await axiosWithCredentials({
+                url: `${ routes.host }${ routes.mobileDevice }/background-status/${mobileDeviceId}?beginDate=${ Moment(beginDate).add(utcOffset, 'm').toDate().toISOString() }&endDate=${ Moment(endDate).add(utcOffset, 'm').toDate().toISOString() }`,
+                method: HttpConstants.Methods.Get,
+            },
+        );
+        if (response && response.status === HttpConstants.StatusCodes.Ok) {
+            const rwaBackgroundStatuses = response.data;
+            let backgroundStatuses = null;
+            if (rwaBackgroundStatuses) {
+                backgroundStatuses = rwaBackgroundStatuses.map(r => {
+                    return {
+                        id: r.id,
+                        mobileDeviceId: r.mobileDeviceId,
+                        mobileDeviceDateTime: r.mobileDeviceDateTime,
+                        serverDateTime: r.serverDateTime,
+                        statusInfo: JSON.parse(r.statusInfo)
+                    }
+                });
+            }
+            return backgroundStatuses;
+        }
+    }, [axiosWithCredentials]);
+
     const getTimelinesAsync = useCallback(async (mobileDeviceId, workDate) => {
             const utcOffset = Moment().utcOffset();
 
@@ -374,7 +399,7 @@ function AppDataProvider (props) {
         <AppDataContext.Provider
             value={ {
                 getAssignOrganizationAsync,
-                getMobileDeviceAsync, getMobileDevicesAsync,
+                getMobileDeviceAsync, getMobileDevicesAsync, getMobileDeviceBackgroundStatusListAsync,
                 getTimelinesAsync,
                 getLocationRecordsByRangeAsync, getLocationRecordAsync,
                 getGeocodedAddressAsync, getGeocodedAddressesAsync, getGeocodedSelectedAddressesAsync, getGeocodedLocationAsync,

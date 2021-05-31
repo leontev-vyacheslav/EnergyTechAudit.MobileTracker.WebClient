@@ -85,7 +85,12 @@ export { IoTimerSharp as TimelineOnIcon } from 'react-icons/io5';
 
 export { RiFileExcel2Line as ExportToXlsxIcon } from 'react-icons/ri';
 export { MdMailOutline as EmailIcon } from 'react-icons/md';
-
+export { BsInfoSquare as StatusInfoIcon } from 'react-icons/bs';
+export { MdLocationDisabled as LocationDisabledIcon } from 'react-icons/md';
+export { MdLocationSearching as LocationEnabledIcon } from 'react-icons/md';
+export { BiMemoryCard as MemoryIcon } from 'react-icons/bi';
+export { RiBatteryLine as LowPowerModeEnabled } from 'react-icons/ri';
+export { RiBatteryChargeLine as LowPowerModeDisabled } from 'react-icons/ri';
 
 import { MdMoreVert } from 'react-icons/md';
 export const GridAdditionalMenuIcon = () => <MdMoreVert style={ { cursor: 'pointer' } } size={ 18 }/>;
