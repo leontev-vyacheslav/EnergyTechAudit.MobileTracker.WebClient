@@ -92,7 +92,7 @@ const TrackSheet = () => {
         return (
             <>
                 <PageHeader caption={ 'Путевой отчет' }>
-                    <TimelineIcon size={ 30 }/>
+                    <TimelineIcon size={ AppConstants.headerIconSize }/>
                 </PageHeader>
                 <DataGrid
                     ref={ dxDataGridRef }
@@ -217,7 +217,7 @@ const TrackSheet = () => {
     return (
         <>
             <PageHeader caption={ 'Путевой отчет' }>
-                <TimelineIcon size={ 30 }/>
+                <TimelineIcon size={ AppConstants.headerIconSize }/>
             </PageHeader>
             <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
         </>

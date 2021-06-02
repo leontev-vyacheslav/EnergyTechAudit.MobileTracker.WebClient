@@ -153,7 +153,7 @@ const Organizations = () => {
         return (
             <>
                 <PageHeader caption={ 'Организации' }>
-                    <OrganizationIcon size={ 30 }/>
+                    <OrganizationIcon size={ AppConstants.headerIconSize }/>
                 </PageHeader>
                 <DataGrid
                     ref={ dxDataGridRef }
@@ -288,7 +288,7 @@ const Organizations = () => {
     return (
         <>
             <PageHeader caption={ 'Организации' }>
-                <OrganizationIcon size={ 30 }/>
+                <OrganizationIcon size={ AppConstants.headerIconSize }/>
             </PageHeader>
             <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
         </>

@@ -8,7 +8,7 @@ export default () => {
     return (
         <>
             <PageHeader caption={ 'Главная' }>
-                <HomeIcon size={ 30 }/>
+                <HomeIcon size={ AppConstants.headerIconSize }/>
             </PageHeader>
             <div className={ 'content-block' }>
                 <div className={ 'dx-card responsive-paddings home-page-content' }>

@@ -96,7 +96,7 @@ const Administrators = () => {
         return (
             <>
                 <PageHeader caption={ 'Администраторы' }>
-                    <AdminIcon size={ 30 }/>
+                    <AdminIcon size={ AppConstants.headerIconSize }/>
                 </PageHeader>
                 <DataGrid
                     ref={ dxDataGridRef }
@@ -214,7 +214,7 @@ const Administrators = () => {
     return (
         <>
             <PageHeader caption={ 'Администраторы' }>
-                <AdminIcon size={ 30 }/>
+                <AdminIcon size={ AppConstants.headerIconSize }/>
             </PageHeader>
             <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
         </>

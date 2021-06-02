@@ -12,6 +12,7 @@ import { useAppSettings } from '../../contexts/app-settings';
 import { useAppData } from '../../contexts/app-data';
 
 import './track-map.css';
+import AppConstants from '../../constants/app-constants';
 
 export default () => {
     function useQuery () {
@@ -48,7 +49,7 @@ export default () => {
     return (
         <>
             <PageHeader caption={ 'Карта маршрута' }>
-                <TrackMapIcon size={ 30 }/>
+                <TrackMapIcon size={ AppConstants.headerIconSize }/>
             </PageHeader>
             <div className={ 'content-block track-map-page' } style={ { height: 'calc(100vh - 150px)' } }>
                 { mobileDevice

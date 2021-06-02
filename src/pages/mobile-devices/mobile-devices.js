@@ -115,7 +115,7 @@ const MobileDevice = () => {
         return (
             <>
                 <PageHeader caption={ !isXSmall ? 'Мобильные устройства' : 'Устройства' }>
-                    <MobileDeviceIcon size={ 30 }/>
+                    <MobileDeviceIcon size={ AppConstants.headerIconSize }/>
                 </PageHeader>
                 <DataGrid
                     ref={ dxDataGridRef }
@@ -277,7 +277,7 @@ const MobileDevice = () => {
     return (
         <>
             <PageHeader caption={ !isXSmall ? 'Мобильные устройства' : 'Устройства' }>
-                <MobileDeviceIcon size={ 30 }/>
+                <MobileDeviceIcon size={ AppConstants.headerIconSize }/>
             </PageHeader>
             <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
         </>

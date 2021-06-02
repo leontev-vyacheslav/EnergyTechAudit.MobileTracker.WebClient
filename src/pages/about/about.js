@@ -9,7 +9,7 @@ import { ReactComponent as AppAbout } from '../../assets/app-about.svg'
 export default () => (
     <>
         <PageHeader caption={ 'О программе' }>
-            <AboutIcon size={ 30 }/>
+            <AboutIcon size={ AppConstants.headerIconSize }/>
         </PageHeader>
         <div className={ 'content-block' }>
             <div className={ 'dx-card responsive-paddings' }>
