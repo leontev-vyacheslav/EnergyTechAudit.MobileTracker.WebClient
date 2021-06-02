@@ -7,9 +7,9 @@ import { DataGridToolbarButton, onDataGridToolbarPreparing } from '../../../comp
 import { Template } from 'devextreme-react/core/template';
 import { Pager, Paging } from 'devextreme-react/data-grid';
 import DataGridIconCellValueContainer from '../../../components/data-grid-utils/data-grid-icon-cell-value-container';
-import { BeginDateIcon, LocationDisabledIcon, LocationEnabledIcon, LowPowerModeDisabled, LowPowerModeEnabled, MemoryIcon } from '../../../constants/app-icons';
 import { stationaryZonesExcelExporter } from '../stationary-zones/stationary-zones-excel-exporter';
 import StationaryZoneMainContextMenu from '../stationary-zones/stationary-zones-main-context-menu/stationary-zones-main-context-menu';
+import { BeginDateIcon, LocationDisabledIcon, LocationEnabledIcon, LowPowerModeDisabled, LowPowerModeEnabled, MemoryIcon } from '../../../constants/app-icons';
 
 const BackgroundStatuses = ({ mobileDevice, workDate }) => {
 
@@ -40,7 +40,6 @@ const BackgroundStatuses = ({ mobileDevice, workDate }) => {
     }, [currentWorkDate, getMobileDeviceBackgroundStatusListAsync, mobileDevice.id])
 
     if (backgroundStatusList.length > 0) {
-        console.log(backgroundStatusList);
         return (
             <>
                 <DataGrid
@@ -60,9 +59,9 @@ const BackgroundStatuses = ({ mobileDevice, workDate }) => {
                     <Template name={ 'DataGridToolbarButtonTemplate' } render={ DataGridToolbarButton.bind(this, { contextMenuRef: mainContextMenuRef }) }/>
                     <Paging defaultPageSize={ 5 } pageSize={ 5 }/>
                     <Pager showPageSizeSelector={ true } showInfo={ true }/>
-                    <Column dataField={ 'id' } dataType={ 'number' } caption={ 'Статус' } width={ 60 } alignment={ 'center' }/>
+                    <Column dataField={ 'id' } dataType={ 'number' } caption={ 'Статус' } width={ 60 } alignment={ 'center' } visible={ false }/>
 
-                    <Column dataField={ 'mobileDeviceDateTime' } dataType={ 'datetime' } hidingPriority={ 1 } caption={ 'Время' } width={ 200 }
+                    <Column dataField={ 'mobileDeviceDateTime' } dataType={ 'datetime' } hidingPriority={ 3 } caption={ 'Время' } width={ 180 }
                             cellRender={ (e) =>
                                 <DataGridIconCellValueContainer
                                     cellDataFormatter={ () => `${ new Date(e.data.mobileDeviceDateTime).toLocaleDateString('ru-RU', { hour: 'numeric', minute: 'numeric' }) }` }
@@ -71,7 +70,7 @@ const BackgroundStatuses = ({ mobileDevice, workDate }) => {
                             }
                     />
 
-                    <Column dataField={ 'isLocationEnabled' } dataType={ 'boolean' } caption={ 'Геолокации' } width={ 150 } alignment={ 'left' } hidingPriority={ 4 }
+                    <Column dataField={ 'isLocationEnabled' } dataType={ 'boolean' } caption={ 'Геолокации' } width={ 135 } alignment={ 'left' } hidingPriority={ 4 }
                             cellRender={ (e) =>
                                 <DataGridIconCellValueContainer
                                     cellDataFormatter={ () => `${ e.data.statusInfo.isLocationEnabled === true ? 'Разрешены' : 'Запрещены' } ` }
@@ -79,14 +78,14 @@ const BackgroundStatuses = ({ mobileDevice, workDate }) => {
                                 /> }
                     />
 
-                    <Column dataField={ 'usedMemory' } dataType={ 'boolean' } caption={ 'Память' } width={ 120 } alignment={ 'left' } hidingPriority={ 3 }
+                    <Column dataField={ 'usedMemory' } dataType={ 'boolean' } caption={ 'Память' } width={ 120 } alignment={ 'left' } hidingPriority={ 2 }
                             cellRender={ (e) =>
                                 <DataGridIconCellValueContainer
                                     cellDataFormatter={ () => `${ e.data.statusInfo.usedMemory } ` }
                                     iconRenderer={ (iconProps) => <MemoryIcon { ...iconProps } /> }
                                 /> }
                     />
-                    <Column dataField={ 'lowPowerMode' } dataType={ 'numeric' } caption={ 'Энергосбережение' } width={ 120 } alignment={ 'left' } hidingPriority={ 3 }
+                    <Column dataField={ 'lowPowerMode' } dataType={ 'numeric' } caption={ 'Энергосбережение' } width={ 120 } alignment={ 'left' } hidingPriority={ 1 }
                             cellRender={ (e) =>
                                 <DataGridIconCellValueContainer
                                     cellDataFormatter={ () => `${ e.data.statusInfo.powerState.lowPowerMode === true ? 'Разрешено' : 'Запрещено'} ` }

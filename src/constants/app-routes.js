@@ -1,7 +1,7 @@
 import { lazy } from 'react';
 
 import { withNavigationWatcher } from '../contexts/navigation';
-import { HomePage, MobileDevicesPage, TrackSheetPage, SettingsPage } from '../pages';
+import { HomePage, MobileDevicesPage, TrackSheetPage, SettingsPage, TrackMapPage } from '../pages';
 
 const AboutPage = lazy(() => import('../pages/about/about'));
 const SignOutPage = lazy(() => import('../pages/sign-out/sign-out'));
@@ -32,6 +32,10 @@ const routes = [
     {
         path: '/track-sheet',
         component: TrackSheetPage,
+    },
+    {
+        path: '/track-map',
+        component: TrackMapPage,
     },
     {
         path: '/about',

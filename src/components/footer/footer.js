@@ -1,6 +1,8 @@
 import React from 'react';
 import './footer.scss';
+import { useAppSettings } from '../../contexts/app-settings';
 
 export default ({ ...rest }) => {
-    return <footer className={ 'footer' } { ...rest } />;
+    const { appSettingsData: { isShowFooter: isShowFooter } } = useAppSettings();
+    return isShowFooter ? <footer className={ 'footer' } { ...rest } /> : null;
 };

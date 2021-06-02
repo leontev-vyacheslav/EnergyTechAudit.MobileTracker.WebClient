@@ -41,18 +41,23 @@ const MobileDevice = () => {
     const [trackSheetPopupTrigger, setTrackSheetPopupTrigger] = useState(false);
     const [extendedUserInfoPopupTrigger, setExtendedUserInfoPopupTrigger] = useState(false);
 
-    const showTrackMap = useCallback(() => {
+    const showTrackMap = useCallback((e) => {
         if (dxDataGridRef.current && dxDataGridRef.current.instance) {
             const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
             const mobileDevice = mobileDevices.find(md => md.id === currentRowKey);
-            setCurrentMobileDevice(mobileDevice);
-            setCurrentTimelineItem(getDailyTimelineItem());
+
+            if(e.event.ctrlKey === true){
+                history.push(`/track-map?mobileDeviceId=${ mobileDevice.id }`);
+            } else {
+                setCurrentMobileDevice(mobileDevice);
+                setCurrentTimelineItem(getDailyTimelineItem());
+            }
         }
-    }, [getDailyTimelineItem, mobileDevices]);
+    }, [getDailyTimelineItem, history, mobileDevices]);
 
     const showTrackSheet = useCallback(() => {
         if (dxDataGridRef.current && dxDataGridRef.current.instance) {
-            setTrackSheetPopupTrigger(true);
+            setTrackSheetPopupTrigger(true)
         }
     }, [])
 

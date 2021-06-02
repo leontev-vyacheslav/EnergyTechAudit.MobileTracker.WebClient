@@ -21,6 +21,8 @@ function AppSettingsProvider (props) {
         useStationaryZoneCriteriaAccuracy: false,
         useStationaryZoneAddressesOnMap: false,
         useStationaryZoneAddressesOnList: false,
+
+        isShowFooter: true,
     };
 
     const initialAppSettingsDataJson =
@@ -64,6 +66,9 @@ function AppSettingsProvider (props) {
     }
     if(!initialAppSettingsData.useStationaryZoneAddressesOnList)  {
         initialAppSettingsData = { ...initialAppSettingsData, ...{ useStationaryZoneAddressesOnList: false } };
+    }
+    if(!initialAppSettingsData.isShowFooter)  {
+        initialAppSettingsData = { ...initialAppSettingsData, ...{ isShowFooter: true } };
     }
 
     const [appSettingsData, setAppSettingsData] = useState(initialAppSettingsData);

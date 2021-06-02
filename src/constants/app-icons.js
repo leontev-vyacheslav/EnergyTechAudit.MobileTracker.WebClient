@@ -43,7 +43,10 @@ export { MdTimeline as DistanceIcon  } from 'react-icons/md';
 
 export { MdAspectRatio as FitToMapIcon } from 'react-icons/md';
 
-export { IoMap as TrackMapIcon } from 'react-icons/io5';
+export { IoMapOutline as TrackMapIcon } from 'react-icons/io5';
+export { IoMapSharp as TrackMapIcon2 } from 'react-icons/io5';
+export { IoMap as TrackMapIcon3 } from 'react-icons/io5';
+
 export { FiRefreshCcw as RefreshIcon } from 'react-icons/fi';
 
 export { RiGroupLine as OrganizationIcon } from 'react-icons/ri';

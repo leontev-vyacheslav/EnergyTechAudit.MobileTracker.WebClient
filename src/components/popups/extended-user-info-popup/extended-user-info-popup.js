@@ -52,7 +52,7 @@ const ExtendedUserInfoPopup = ({ userId, callback }) => {
         } )();
     }, [currentOrganization, getOrganizationOfficesAsync]);
 
-    return (
+    return extendedUserInfo && offices && organizations ? (
         <AppModalPopup title={ 'Сведения о пользователе' } onClose={ callback }>
             <div className={ 'popup-form-container' }>
                 <ScrollView>
@@ -129,7 +129,7 @@ const ExtendedUserInfoPopup = ({ userId, callback }) => {
                 </div>
             </div>
         </AppModalPopup>
-    );
+    ) : null;
 };
 
 ExtendedUserInfoPopup.propTypes = {

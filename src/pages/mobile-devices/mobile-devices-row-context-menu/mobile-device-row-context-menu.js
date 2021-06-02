@@ -13,7 +13,7 @@ const MobileDeviceRowContextMenu = ({ innerRef, commands }) => {
                 renderIconItem: () => <TrackMapIcon size={ 18 }/>,
                 onClick: (e) => {
                     e.component.hide();
-                    commands.showTrackMap();
+                    commands.showTrackMap(e);
                 }
             },
             {

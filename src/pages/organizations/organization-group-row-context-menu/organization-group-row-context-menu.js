@@ -8,16 +8,6 @@ const OrganizationGroupRowContextMenu = ({ innerRef, commands }) => {
     const items = useMemo(() => {
         return [
             {
-                text: 'Добавить офис...',
-                renderIconItem: () => <OfficeIcon size={ 18 }/>,
-                onClick: async (e) => {
-                    e.component.hide();
-                    if (commands.addOffice) {
-                        await commands.addOffice();
-                    }
-                }
-            },
-            {
                 text: 'Редактировать...',
                 renderIconItem: () => <EditIcon size={ 18 }/>,
                 onClick: async (e) => {
@@ -34,6 +24,16 @@ const OrganizationGroupRowContextMenu = ({ innerRef, commands }) => {
                     e.component.hide();
                     if (commands.deleteOrganization) {
                         await commands.deleteOrganization();
+                    }
+                }
+            },
+            {
+                text: 'Добавить офис...',
+                renderIconItem: () => <OfficeIcon size={ 18 }/>,
+                onClick: async (e) => {
+                    e.component.hide();
+                    if (commands.addOffice) {
+                        await commands.addOffice();
                     }
                 }
             }];

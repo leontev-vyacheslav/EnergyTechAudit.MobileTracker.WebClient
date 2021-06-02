@@ -78,7 +78,7 @@ const OfficePopup = ({ editMode, organization, callback }) => {
         }
     }, [mapIsLoaded]);
 
-    return (
+    return currentOffice ? (
         <AppModalPopup title={ 'Офис' } onClose={ callback }>
             <div className={ 'popup-form-container' }>
                 <ScrollView>
@@ -138,7 +138,7 @@ const OfficePopup = ({ editMode, organization, callback }) => {
                 </div>
             </div>
         </AppModalPopup>
-    );
+    ) : null;
 }
 
 OfficePopup.propTypes = {
