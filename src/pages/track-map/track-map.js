@@ -50,7 +50,7 @@ export default () => {
             <PageHeader caption={ 'Карта маршрута' }>
                 <TrackMapIcon size={ 30 }/>
             </PageHeader>
-            <div className={ 'content-block track-map-page' } style={ { height: 'calc(100vh - 185px)' } }>
+            <div className={ 'content-block track-map-page' } style={ { height: 'calc(100vh - 150px)' } }>
                 { mobileDevice
                     ? <TrackMapTimelineProvider mobileDevice={ mobileDevice } workDate={ workDate }>
                         <TrackMapSettingsProvider>
