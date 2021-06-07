@@ -10,9 +10,9 @@ import { TrackMapLocationRecordsProvider } from '../../components/popups/track-m
 import { useLocation } from 'react-router';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useAppData } from '../../contexts/app-data';
+import AppConstants from '../../constants/app-constants';
 
 import './track-map.css';
-import AppConstants from '../../constants/app-constants';
 
 export default () => {
     function useQuery () {

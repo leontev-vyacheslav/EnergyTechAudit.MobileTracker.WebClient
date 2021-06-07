@@ -8,6 +8,7 @@ import { useTrackMapTimelineContext } from '../../track-map-contexts/track-map-t
 import { getUserDeviceDescription } from '../../../../../utils/string-helper';
 
 import './track-map-header.scss';
+import List from 'devextreme-react/ui/list';
 
 const TrackMapHeader = ({ mobileDevice }) => {
 
@@ -26,10 +27,13 @@ const TrackMapHeader = ({ mobileDevice }) => {
                         className={ 'track-map-header-select-box' }
                         dataSource={ currentTimeline }
                         selectionMode="single"
-                        value={ currentTimelineItem }
+                        keyExpr={ 'id' }
                         displayExpr={ () => `${ currentTimelineItem.beginDate.toLocaleTimeString('ru-RU') } - ${ currentTimelineItem.endDate.toLocaleTimeString('ru-RU') }` }
                         onSelectionChanged={ (e) => {
-                            setCurrentTimelineItem(e.selectedItem)
+                            const timeLineItem = currentTimeline.find(ti => ti.id === e.selectedItem.id);
+                            if(timeLineItem) {
+                                setCurrentTimelineItem(timeLineItem)
+                            }
                         } }
                         itemRender={ (timelineItem) => <TrackMapTimelineItem timelineItem={ timelineItem }/> }
                     /> ) : null }

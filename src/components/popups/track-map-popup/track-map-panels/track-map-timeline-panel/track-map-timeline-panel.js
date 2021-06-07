@@ -10,25 +10,25 @@ const TrackMapTimelinePanel = () => {
 
     const { setIsShowTrackMapTimeline } = useTrackMapSettingsContext();
     const { currentTimeline, currentTimelineItem, setCurrentTimelineItem } = useTrackMapTimelineContext();
-
-    return (
+    return  currentTimeline && currentTimelineItem ? (
         <div style={ { height: 'calc(100% - 35px)' } }>
             <TrackMapPanelHeader title={ 'Хронология' } icon={ () => <TimelineIcon size={ 22 }/> } onClose={ () => {
                 setIsShowTrackMapTimeline(false);
             } }/>
             <List className={ 'app-list' } height={ '100%' }
                   dataSource={ currentTimeline }
-                  selectedItems={ [currentTimelineItem] }
+                  keyExpr={ 'id' }
                   showSelectionControls={ true }
                   selectionMode="single"
                   onSelectionChanged={ (e) => {
-                      setCurrentTimelineItem(e.addedItems.find(ti =>!!ti))
+                      const selectedItem = e.component.option('selectedItems').find(ti =>!!ti);
+                      setCurrentTimelineItem(currentTimeline.find(ti=> ti.id === (selectedItem ? selectedItem.id : 0)));
                   } }
                   itemRender={ (timelineItem) =>
                       <TrackMapTimelineItem timelineItem={ timelineItem }/>
                    }
             />
         </div>
-    )
+    ) : null
 }
 export default TrackMapTimelinePanel;
