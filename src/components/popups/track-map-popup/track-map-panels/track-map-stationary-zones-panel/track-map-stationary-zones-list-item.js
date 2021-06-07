@@ -52,8 +52,7 @@ TrackMapStationaryZonesListItem.propTypes = {
         index: PropTypes.number.isRequired,
         radius: PropTypes.number.isRequired,
         elements: PropTypes.array.isRequired
-    }),
-    onClick: PropTypes.func.isRequired
+    })
 }
 
 
