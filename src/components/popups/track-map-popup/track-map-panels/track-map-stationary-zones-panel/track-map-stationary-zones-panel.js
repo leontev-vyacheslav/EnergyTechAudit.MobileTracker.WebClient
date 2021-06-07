@@ -7,26 +7,24 @@ import { StationaryZonesIcon } from '../../../../../constants/app-icons';
 import { useTrackMapStationaryZonesContext } from '../../track-map-contexts/track-map-stationary-zones-context';
 
 const TrackMapStationaryZonesPanel = () => {
-    const { stationaryClusterList, showInfoWindowAsync, currentStationaryCluster, setCurrentStationaryCluster } = useTrackMapStationaryZonesContext();
+    const { stationaryClusterList, currentStationaryCluster } = useTrackMapStationaryZonesContext();
     const { setIsShowTrackMapZones } = useTrackMapSettingsContext();
-
     return (
         <div style={ { height: 'calc(100% - 35px)' } }>
             <TrackMapPanelHeader title={ 'Зоны стационарности' } icon={ () => <StationaryZonesIcon size={ 22 }/> } onClose={ () => {
                 setIsShowTrackMapZones(false);
             } }/>
-            <List className={ 'app-list' }
-                  dataSource={ stationaryClusterList }
-                  height={ '100%' }
-                  selectionMode="single"
-                  selectedItems={ [currentStationaryCluster] }
-                  itemRender={ (stationaryCluster) => {
-                      return <TrackMapStationaryZonesListItem stationaryCluster={ stationaryCluster } onClick={ async () => {
-                          await showInfoWindowAsync(stationaryCluster.index);
-                          setCurrentStationaryCluster(stationaryCluster);
-                      } }/>
-                  } }>
-            </List>
+                <List className={ 'app-list' }
+                      dataSource={ stationaryClusterList }
+                      height={ '100%' }
+                      keyExpr={ 'index' }
+                      selectionMode="single"
+                      selectedItems={ [currentStationaryCluster] }
+                      itemRender={ (stationaryCluster) => {
+                          return <TrackMapStationaryZonesListItem stationaryCluster={ stationaryCluster }/>
+                      } }
+                   >
+                </List>
         </div>
     );
 }

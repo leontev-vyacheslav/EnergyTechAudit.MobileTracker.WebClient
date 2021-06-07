@@ -148,7 +148,8 @@ function TrackMapStationaryZonesProvider (props) {
 
             circle.addListener('click', async () => {
                 await showInfoWindowAsync(cluster.index);
-                setCurrentStationaryCluster(circle);
+
+                setCurrentStationaryCluster(cluster);
             });
             currentStationaryClusterCircleList.current.push(circle);
         }
