@@ -8,7 +8,6 @@ import { useTrackMapTimelineContext } from '../../track-map-contexts/track-map-t
 import { getUserDeviceDescription } from '../../../../../utils/string-helper';
 
 import './track-map-header.scss';
-import List from 'devextreme-react/ui/list';
 
 const TrackMapHeader = ({ mobileDevice }) => {
 

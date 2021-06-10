@@ -28,7 +28,7 @@ const ContentAuth = () => {
                 </Switch>
                 <Footer>
                     <div> Copyright © { new Date().getFullYear() } { AppConstants.appInfo.companyName }.</div>
-                </Footer>
+                </Footer>track-map-header.js
             </SideNavBarLayout>
         </>
     );
