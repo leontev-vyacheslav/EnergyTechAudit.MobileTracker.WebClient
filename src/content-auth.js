@@ -17,8 +17,10 @@ const ContentAuth = () => {
                         { routes.map(({ path, component }) => (
                             <Route exact key={ path } path={ path } component={ component }/>
                         )) }
-                        <Route path={ ['/confirm-registration', '/reject-registration'] } component={ RegistrationPage }/>
-                       <Redirect to={ '/home' } />
+                        <Route exact={ false } path={ ['/confirm-registration', '/reject-registration'] } component={ RegistrationPage }/>
+                        <Route path={ '*' }>
+                            <Redirect to={ '/home' } />
+                        </Route>
                     </Suspense>
                 </Switch>
                 <Footer>
