@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import routes from './constants/app-routes';
 import { SideNavOuterToolbar as SideNavBarLayout } from './layouts';
 import { Footer } from './components';
@@ -17,8 +17,8 @@ const ContentAuth = () => {
                         { routes.map(({ path, component }) => (
                             <Route exact key={ path } path={ path } component={ component }/>
                         )) }
-                        <Route exact path={ ['/confirm-registration', '/reject-registration'] } component={ RegistrationPage }/>
-                       {/* <Redirect to={ '/home' }/>*/}
+                        <Route path={ ['/confirm-registration', '/reject-registration'] } component={ RegistrationPage }/>
+                       <Redirect to={ '/home' } />
                     </Suspense>
                 </Switch>
                 <Footer>

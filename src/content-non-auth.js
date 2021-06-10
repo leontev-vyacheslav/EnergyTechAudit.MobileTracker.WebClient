@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { SingleCard } from './layouts';
 import { LoginForm } from './components';
 import Loader from './components/loader/loader';
@@ -15,8 +15,8 @@ const ContentNonAuth = () => {
                         <LoginForm/>
                     </SingleCard>
                 </Route>
-                <Route exact path={ ['/confirm-registration', '/reject-registration'] } component={ RegistrationPage }/>
-                {/*<Redirect to={ '/login' }/>*/}
+                <Route path={ ['/confirm-registration', '/reject-registration'] } component={ RegistrationPage }/>
+                <Redirect to={ '/login' }/>
             </Suspense>
         </Switch>
     );

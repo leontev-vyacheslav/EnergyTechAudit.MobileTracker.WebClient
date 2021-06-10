@@ -22,20 +22,28 @@ const Registration = () => {
     useEffect(() => {
         const isConfirm = window.location.hash.includes('confirm-registration');
         if (isConfirm) {
+
             const [, rawVerificationData] = location.hash.split('userVerificationData=');
             if (rawVerificationData) {
-                const verificationData = JSON.parse(atob(rawVerificationData) ?? 'null');
-                setUserVerificationData( verificationData);
+                try {
+                    const verificationData = JSON.parse(atob(rawVerificationData) ?? 'null');
+                    setUserVerificationData(verificationData);
+                }
+                catch {
+                    setUserVerificationData(null)
+                }
             }
         }
     }, []);
 
     useEffect(() => {
         ( async () => {
-            const organizations = await getOrganizationsAsync();
-            setOrganizations(organizations);
+            if(userVerificationData) {
+                const organizations = await getOrganizationsAsync();
+                setOrganizations(organizations);
+            }
         } )();
-    }, [getOrganizationsAsync]);
+    }, [getOrganizationsAsync, userVerificationData]);
 
     const UnregisteredContent = () => {
         return (
