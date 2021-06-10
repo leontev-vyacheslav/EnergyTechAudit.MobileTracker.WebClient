@@ -20,15 +20,14 @@ const ExtendedUserInfoPopup = ({ userId, callback }) => {
         ( async () => {
             let extendedUserInfo = await getExtendedUserInfoAsync(userId);
             extendedUserInfo = extendedUserInfo !== null ? { ...extendedUserInfo, ...{ organizationId: extendedUserInfo.office?.organizationId } } : null;
-            const organizationId = extendedUserInfo !== null ? extendedUserInfo.office?.organizationId : null;
+            setExtendedUserInfo(extendedUserInfo);
 
+            const organizationId = extendedUserInfo !== null ? extendedUserInfo.office?.organizationId : null;
             const organizations = await getOrganizationsAsync();
+            setOrganizations(organizations);
 
             const organizationOffices = await getOrganizationOfficesAsync(organizationId);
             const offices = organizationOffices.map(org => org.office);
-
-            setOrganizations(organizations);
-            setExtendedUserInfo(extendedUserInfo);
 
             if (extendedUserInfo && extendedUserInfo.officeId) {
                 setOffices(offices);
@@ -52,7 +51,7 @@ const ExtendedUserInfoPopup = ({ userId, callback }) => {
         } )();
     }, [currentOrganization, getOrganizationOfficesAsync]);
 
-    return extendedUserInfo && offices && organizations ? (
+    return organizations ? (
         <AppModalPopup title={ 'Сведения о пользователе' } onClose={ callback }>
             <div className={ 'popup-form-container' }>
                 <ScrollView>
