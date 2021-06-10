@@ -21,7 +21,9 @@ const ContentNonAuth = () => {
                 <Route exact={ false }  path={ '/reject-registration' } >
                     <RegistrationPage />
                 </Route>
-                <Redirect from={ '/' } to={ '/login' } />
+                <Route>
+                    <Redirect from={ '/' } to={ '/login' } />
+                </Route>
             </Suspense>
         </Switch>
     );
