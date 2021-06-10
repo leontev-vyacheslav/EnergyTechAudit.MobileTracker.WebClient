@@ -3,7 +3,6 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { SingleCard } from './layouts';
 import { LoginForm } from './components';
 
-
 import RegistrationPage from './pages/registration/registration';
 
 const ContentNonAuth = () => {
