@@ -66,8 +66,8 @@ const Registration = () => {
             ) :
             (
             <div className={ 'description' } style={ { textAlign: 'justify', fontSize: 16, lineHeight: 2 } }>
-                <div>Учетная запись пользователя <b>{ userVerificationData.email }</b> была <b>успешно зарегистрирована</b>!</div>
-                <div style={ { marginTop: 20 } }>Выберите организацию, к которой будет присоединена учетная запись.</div>
+                <div>Учетная запись пользователя <b>{ userVerificationData.email }</b> была <b>уже успешно зарегистрирована</b>!</div>
+                <div style={ { marginTop: 20 } }>Выберите группу/организацию, к которой будет присоединена учетная запись.</div>
                 <div className={ 'popup-form-container' }>
 
                     <Form
@@ -79,6 +79,7 @@ const Registration = () => {
                             dataField={ 'organizationId' }
                             label={ { location: 'top', showColon: true, text: 'Организация' } }
                             editorType={ 'dxSelectBox' }
+                            validationRules={ [{ type: 'required' }] }
                             editorOptions=
                                 { {
                                     width: !user || isSmall || isXSmall ? '100%' : 'calc(100vw / 3)',
@@ -94,11 +95,11 @@ const Registration = () => {
                         <Button
                             type={ 'default' } text={ 'Присоединить' }
                             onClick={ async () => {
-                                const formData = formRef.current.instance.option('formData');
                                 const validationGroupResult = formRef.current.instance.validate();
                                 if (!validationGroupResult.isValid) {
                                     validationGroupResult.brokenRules.find(() => true).validator.focus()
                                 } else {
+                                    const formData = formRef.current.instance.option('formData');
                                     const response = await getAssignOrganizationAsync({ ...userVerificationData, ...formData });
                                     setAssignedOrganization(response);
                                 }

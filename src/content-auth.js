@@ -23,12 +23,12 @@ const ContentAuth = () => {
                         <RegistrationPage/>
                     </Route>
                     <Route path={ '*' }>
-                        <Redirect from={ '/' } to={ '/home' }/>
+                        <Redirect to={ '/home' }/>
                     </Route>
                 </Switch>
                 <Footer>
                     <div> Copyright © { new Date().getFullYear() } { AppConstants.appInfo.companyName }.</div>
-                </Footer>track-map-header.js
+                </Footer>
             </SideNavBarLayout>
         </>
     );
