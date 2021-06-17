@@ -5,7 +5,7 @@ import AppConstants from '../../constants/app-constants';
 import './single-card.scss';
 
 export default ({ title, description, children }) => (
-    <ScrollView  height={ '100%' } width={ '100%' } className={ 'with-footer single-card' }>
+    <ScrollView height={ '100vh' } width={ '100%' } className={ 'with-footer single-card' }>
         <div className={ 'dx-card content' }>
             <div className={ 'header' }>
                 <div className={ 'header-title-logo-container' }>
