@@ -66,7 +66,7 @@ const Registration = () => {
             ) :
             (
             <div className={ 'description' } style={ { textAlign: 'justify', fontSize: 16, lineHeight: 2 } }>
-                <div>Учетная запись пользователя <b>{ userVerificationData.email }</b> была <b>уже успешно зарегистрирована</b>!</div>
+                <div>Учетная запись пользователя <b>{ userVerificationData.email }</b> была <b>уже успешно зарегистрирована</b>!*</div>
                 <div style={ { marginTop: 20 } }>Выберите группу/организацию, к которой будет присоединена учетная запись.</div>
                 <div className={ 'popup-form-container' }>
 
@@ -106,11 +106,12 @@ const Registration = () => {
                             } }
                         />
                     </div>
-                    <p>
-                        Finally, some of our services give you access to content that belongs to other people or organizations — for example,
-                        a store owner’s description of their own business, or a newspaper article displayed in ETA News.
-                        You may not use this content without that person or organization’s permission, or as otherwise allowed by law.
-                        The views expressed in other people or organizations’ content are theirs, and don’t necessarily reflect ETA’s views.
+                    <p style={ { fontSize: 10, marginTop: 30 } }>
+                        *Все содержательные материалы и услуги на сайте, включая, среди прочего, торговые знаки и логотипы, дизайн, текст,
+                        графика, звук, изображения, программное обеспечение и другие материалы веб-сайта (далее «Материалы»)
+                        являются интеллектуальной собственностью ЭТА, его лицензиаров или других поставщиков.
+                        За исключением описанных здесь случаев, никакие Материалы не могут копироваться, воспроизводиться или распространяться
+                        в каком-либо виде без предварительного письменного разрешения ЭТА.
                     </p>
                 </div>
             </div>
