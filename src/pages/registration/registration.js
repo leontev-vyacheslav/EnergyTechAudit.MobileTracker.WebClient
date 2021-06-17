@@ -106,6 +106,12 @@ const Registration = () => {
                             } }
                         />
                     </div>
+                    <p>
+                        Finally, some of our services give you access to content that belongs to other people or organizations — for example,
+                        a store owner’s description of their own business, or a newspaper article displayed in ETA News.
+                        You may not use this content without that person or organization’s permission, or as otherwise allowed by law.
+                        The views expressed in other people or organizations’ content are theirs, and don’t necessarily reflect ETA’s views.
+                    </p>
                 </div>
             </div>
         );
