@@ -137,7 +137,7 @@ const MobileDevice = () => {
                     <LoadPanel enabled={ false }/>
                     <SearchPanel visible={ true } searchVisibleColumnsOnly={ false }/>
                     <Scrolling showScrollbar={ 'never' }/>
-                    <Paging defaultPageSize={ 10 }/>
+                    <Paging defaultPageSize={ 20 }/>
                     <Pager showPageSizeSelector={ true } showInfo={ true }/>
                     <Grouping autoExpandAll={ true } key={ 'userId' }/>
                     <Template name={ 'DataGridToolbarButtonTemplate' } render={ DataGridToolbarButton.bind(this, { contextMenuRef: mainContextMenuRef }) }/>
