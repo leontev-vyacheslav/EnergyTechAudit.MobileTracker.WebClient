@@ -57,11 +57,12 @@ const BackgroundStatuses = ({ mobileDevice, workDate }) => {
                     <LoadPanel enabled={ false }/>
                     <Scrolling showScrollbar={ 'never' }/>
                     <Template name={ 'DataGridToolbarButtonTemplate' } render={ DataGridToolbarButton.bind(this, { contextMenuRef: mainContextMenuRef }) }/>
-                    <Paging defaultPageSize={ 5 } pageSize={ 5 }/>
-                    <Pager showPageSizeSelector={ true } showInfo={ true }/>
+
+                    <Pager allowedPageSizes={ [5, 10] } showPageSizeSelector={ true }  />
+                    <Paging defaultPageSize={ 5 } />
                     <Column dataField={ 'id' } dataType={ 'number' } caption={ 'Статус' } width={ 60 } alignment={ 'center' } visible={ false }/>
 
-                    <Column dataField={ 'mobileDeviceDateTime' } dataType={ 'datetime' } hidingPriority={ 3 } caption={ 'Время' } width={ 180 }
+                    <Column dataField={ 'mobileDeviceDateTime' } dataType={ 'datetime' } sortOrder={ 'desc' } hidingPriority={ 3 } caption={ 'Время' } width={ 180 }
                             cellRender={ (e) =>
                                 <DataGridIconCellValueContainer
                                     cellDataFormatter={ () => `${ new Date(e.data.mobileDeviceDateTime).toLocaleDateString('ru-RU', { hour: 'numeric', minute: 'numeric' }) }` }
