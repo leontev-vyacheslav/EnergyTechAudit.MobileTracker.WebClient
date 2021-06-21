@@ -10,8 +10,7 @@ export { MdDateRange as DateRangeIcon } from 'react-icons/md';
 export { MdTimer as TimeIcon } from 'react-icons/md';
 export { BiHorizontalCenter as AccuracyIcon } from 'react-icons/bi';
 export { IoIosWalk as ActivityIcon } from 'react-icons/io';
-export { IoMdBatteryCharging as ChargingLevelIcon } from 'react-icons/io';
-export { IoBatteryChargingOutline as BatteryIcon } from 'react-icons/io5';
+
 export { IoSpeedometerOutline as SpeedIcon } from 'react-icons/io5';
 export { BsBuilding as AddressIcon } from 'react-icons/bs';
 export { BsBuilding as OfficeIcon } from 'react-icons/bs';
@@ -92,8 +91,17 @@ export { BsInfoSquare as StatusInfoIcon } from 'react-icons/bs';
 export { MdLocationDisabled as LocationDisabledIcon } from 'react-icons/md';
 export { MdLocationSearching as LocationEnabledIcon } from 'react-icons/md';
 export { BiMemoryCard as MemoryIcon } from 'react-icons/bi';
-export { RiBatteryLine as LowPowerModeEnabled } from 'react-icons/ri';
-export { RiBatteryChargeLine as LowPowerModeDisabled } from 'react-icons/ri';
+
+export { RiBatteryLine as LowPowerModeEnabledIcon } from 'react-icons/ri';
+export { RiBatteryChargeLine as LowPowerModeDisabledIcon } from 'react-icons/ri';
+export { RiBatteryLowLine as BatteryLevelIcon } from 'react-icons/ri';
+
+export { BsToggleOn as BackgroundGeolocationOnIcon } from 'react-icons/bs';
+export { BsToggleOff as BackgroundGeolocationOffIcon } from 'react-icons/bs';
+export { BsQuestion as BackgroundGeolocationUndefinedIcon } from 'react-icons/bs';
+
+export { IoMdBatteryCharging as ChargingLevelIcon } from 'react-icons/io';
+export { IoBatteryChargingOutline as BatteryIcon } from 'react-icons/io5';
 
 import { MdMoreVert } from 'react-icons/md';
 export const GridAdditionalMenuIcon = () => <MdMoreVert style={ { cursor: 'pointer' } } size={ 18 }/>;

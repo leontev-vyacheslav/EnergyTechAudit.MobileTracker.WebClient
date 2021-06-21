@@ -9,7 +9,17 @@ import { Pager, Paging } from 'devextreme-react/data-grid';
 import DataGridIconCellValueContainer from '../../../components/data-grid-utils/data-grid-icon-cell-value-container';
 import { stationaryZonesExcelExporter } from '../stationary-zones/stationary-zones-excel-exporter';
 import StationaryZoneMainContextMenu from '../stationary-zones/stationary-zones-main-context-menu/stationary-zones-main-context-menu';
-import { BeginDateIcon, LocationDisabledIcon, LocationEnabledIcon, LowPowerModeDisabled, LowPowerModeEnabled, MemoryIcon } from '../../../constants/app-icons';
+import {
+    BackgroundGeolocationOffIcon,
+    BackgroundGeolocationOnIcon,
+    BackgroundGeolocationUndefinedIcon,
+    BatteryLevelIcon,
+    BeginDateIcon,
+    LocationDisabledIcon,
+    LocationEnabledIcon,
+    LowPowerModeDisabledIcon,
+    LowPowerModeEnabledIcon
+} from '../../../constants/app-icons';
 
 const BackgroundStatuses = ({ mobileDevice, workDate }) => {
 
@@ -71,6 +81,23 @@ const BackgroundStatuses = ({ mobileDevice, workDate }) => {
                             }
                     />
 
+                    <Column dataField={ 'geoTrackingEnabled' } dataType={ 'datetime' } hidingPriority={ 4 } caption={ 'Включение' } width={ 150 }
+                            cellRender={ (e) =>
+                            {
+                                let status = !e.data.statusInfo.appBackgroundGeolocationSettings
+                                    ? 'Неопределено'
+                                    : (e.data.statusInfo.appBackgroundGeolocationSettings.geoTrackingEnabled === true ? 'Включено' : 'Выключено');
+
+                                return <DataGridIconCellValueContainer
+                                    cellDataFormatter={ () => `${ status }` }
+                                    iconRenderer={ (iconProps) => status === 'Включено'
+                                        ?  <BackgroundGeolocationOnIcon { ...iconProps } />
+                                        : (status === 'Неопределено' ? <BackgroundGeolocationUndefinedIcon { ...iconProps } /> : <BackgroundGeolocationOffIcon { ...iconProps } /> )
+                                    }
+                                />
+                            } }
+                    />
+
                     <Column dataField={ 'isLocationEnabled' } dataType={ 'boolean' } caption={ 'Геолокации' } width={ 135 } alignment={ 'left' } hidingPriority={ 4 }
                             cellRender={ (e) =>
                                 <DataGridIconCellValueContainer
@@ -79,18 +106,19 @@ const BackgroundStatuses = ({ mobileDevice, workDate }) => {
                                 /> }
                     />
 
-                    <Column dataField={ 'usedMemory' } dataType={ 'boolean' } caption={ 'Память' } width={ 120 } alignment={ 'left' } hidingPriority={ 2 }
+                    <Column dataField={ 'batteryLevel' } dataType={ 'numeric' } caption={ 'Батарея' } width={ 120 } alignment={ 'left' } hidingPriority={ 1 }
                             cellRender={ (e) =>
                                 <DataGridIconCellValueContainer
-                                    cellDataFormatter={ () => `${ e.data.statusInfo.usedMemory } ` }
-                                    iconRenderer={ (iconProps) => <MemoryIcon { ...iconProps } /> }
+                                    cellDataFormatter={ () => `${(e.data.statusInfo.powerState.batteryLevel * 100).toFixed(1)} %` }
+                                    iconRenderer={ (iconProps) =>   <BatteryLevelIcon { ...iconProps } />  }
                                 /> }
                     />
-                    <Column dataField={ 'lowPowerMode' } dataType={ 'numeric' } caption={ 'Энергосбережение' } width={ 120 } alignment={ 'left' } hidingPriority={ 1 }
+
+                    <Column dataField={ 'lowPowerMode' } dataType={ 'boolean' } caption={ 'Энергосбережение' } width={ 120 } alignment={ 'left' } hidingPriority={ 1 }
                             cellRender={ (e) =>
                                 <DataGridIconCellValueContainer
                                     cellDataFormatter={ () => `${ e.data.statusInfo.powerState.lowPowerMode === true ? 'Разрешено' : 'Запрещено'} ` }
-                                    iconRenderer={ (iconProps) =>  e.data.statusInfo.powerState.lowPowerMode === true ? <LowPowerModeEnabled { ...iconProps } /> : <LowPowerModeDisabled { ...iconProps } /> }
+                                    iconRenderer={ (iconProps) =>  e.data.statusInfo.powerState.lowPowerMode === true ? <LowPowerModeEnabledIcon { ...iconProps } /> : <LowPowerModeDisabledIcon { ...iconProps } /> }
                                 /> }
                     />
                 </DataGrid>

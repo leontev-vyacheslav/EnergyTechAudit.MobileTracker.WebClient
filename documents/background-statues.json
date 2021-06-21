@@ -1,0 +1,31 @@
+{
+  "appSettings": {
+    "pushNotificationServiceToken": "dSdXeAWqTSmoHxo_k1xDHg:APA91bG62Dp8sDbstTcUDx-RA7-Ca1ArChgXy9V-HnBY7uGgnDesh8cikCWjj9LpzTRuzLJjxFnBRhU6Ks3olyDAAiqs6rt91y2Sj7DJlo3OZ5L0EKcmuFKKj4dad4wcoFGJK3WdPOEa",
+    "mobileDeviceId": 14,
+    "workDate": "2021-06-20T16:09:54.014Z",
+    "mapMode": "heatmap",
+    "markersCompactionReverseRatio": 1,
+    "heatMapClusterRadius": 10
+  },
+  "appBackgroundGeolocationSettings": {
+    "mobileDeviceId": 14,
+    "geoTrackingEnabled": true,
+    "useSchedule": true,
+    "debugSoundEnabled": true,
+    "schedule": [
+      "2-6 08:30-17:30"
+    ]
+  },
+  "usedMemory": 3947344,
+  "powerState": {
+    "batteryLevel": 0.6800000071525574,
+    "lowPowerMode": false,
+    "batteryState": "unplugged"
+  },
+  "isLocationEnabled": true,
+  "availableLocationProviders": {
+    "network": true,
+    "gps": true,
+    "passive": true
+  }
+}
