@@ -5,12 +5,15 @@
 // https://habr.com/ru/company/skillbox/blog/428231/
 module.exports = {
   root: true,
-  'plugins': ['react', 'react-hooks', 'prettier'],
+  'parser': '@typescript-eslint/parser',
+  'plugins': ['react', 'react-hooks', 'prettier', '@typescript-eslint'],
   'extends': [
     'prettier',
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:prettier/recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended'
   ],
   'parserOptions': {
     'sourceType': 'module',
@@ -22,7 +25,7 @@ module.exports = {
   },
   'settings': {
     'react': {
-      'version': '17.0.1'
+      'version': '17.0.2'
     }
   },
   'rules': {

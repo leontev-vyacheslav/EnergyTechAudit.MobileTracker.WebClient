@@ -1,0 +1,19 @@
+export type TimelineModel = {
+  id: number,
+  beginDate: Date,
+  endDate: Date,
+  distance: number
+  averageSpeed: number
+  averageAccuracy: number
+  bestAccuracy: number
+  worstAccuracy: number
+  totalAmountLocations: number
+  valuableAmountLocations: number
+  takeAccountOutsidePoints: boolean
+  largestInterval: number
+  smallestInterval: number
+  hasGap: boolean
+  active: boolean
+  firstLocationRecord: any
+  lastLocationRecord: any
+}
