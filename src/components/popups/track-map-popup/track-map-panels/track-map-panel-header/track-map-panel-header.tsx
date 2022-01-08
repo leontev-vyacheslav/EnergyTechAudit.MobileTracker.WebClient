@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Button from 'devextreme-react/ui/button';
 import { CloseIcon } from '../../../../../constants/app-icons';
 
@@ -22,12 +21,6 @@ const TrackMapPanelHeader = ({ title, icon, onClose }: TrackMapPanelHeaderProps)
             </div>
         </div>
     );
-}
-
-TrackMapPanelHeader.propTypes = {
-    title: PropTypes.string.isRequired,
-    icon: PropTypes.func.isRequired,
-    onClose: PropTypes.func.isRequired
 }
 
 export default TrackMapPanelHeader;

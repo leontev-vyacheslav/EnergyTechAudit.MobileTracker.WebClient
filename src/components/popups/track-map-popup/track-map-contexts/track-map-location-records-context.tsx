@@ -1,19 +1,24 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { AppDataContextModel, useAppData } from '../../../../contexts/app-data';
 import { useTrackMapTimelineContext } from './track-map-timeline-context';
 import { TrackMapLocationRecordsProviderProps } from '../../../../models/track-map-location-records-provider-props';
+import {
+    TrackLocationRecordModel,
+    TrackMapLocationRecordsContextModel
+} from '../../../../models/track-location-record';
+import { TrackMapTimelineContextModel } from '../../../../models/track-map-timeline-provider-props';
 
-const TrackMapLocationRecordsContext = createContext({});
+
+const TrackMapLocationRecordsContext = createContext<TrackMapLocationRecordsContextModel>({} as TrackMapLocationRecordsContextModel);
 
 const useTrackMapLocationRecordsContext = () => useContext(TrackMapLocationRecordsContext);
 
 function TrackMapLocationRecordsProvider (props: TrackMapLocationRecordsProviderProps) {
 
     const { mobileDevice } = props;
-    const { currentTimelineItem }: any = useTrackMapTimelineContext();
+    const { currentTimelineItem }: TrackMapTimelineContextModel = useTrackMapTimelineContext();
     const { getLocationRecordsByRangeAsync }: AppDataContextModel = useAppData();
-    const [trackLocationRecordList, setTrackLocationRecordList] = useState([]);
+    const [trackLocationRecordList, setTrackLocationRecordList] = useState<TrackLocationRecordModel[]>([]);
 
     useEffect(() => {
         ( async () => {
@@ -34,12 +39,6 @@ function TrackMapLocationRecordsProvider (props: TrackMapLocationRecordsProvider
             { ...props }
         />
     );
-}
-
-TrackMapLocationRecordsProvider.propTypes = {
-    props: PropTypes.shape(
-        { mobileDevice: PropTypes.shape({ id: PropTypes.number.isRequired }) }
-    )
 }
 
 export { TrackMapLocationRecordsProvider, useTrackMapLocationRecordsContext };

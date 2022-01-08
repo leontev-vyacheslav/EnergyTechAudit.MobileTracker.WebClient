@@ -13,13 +13,13 @@ import ContextMenuItem from '../../../context-menu-item/context-menu-item';
 import { useScreenSize } from '../../../../utils/media-query';
 import { useTrackMapSettingsContext } from '../track-map-contexts/track-map-settings-context';
 import { useAppSettings } from '../../../../contexts/app-settings';
-import PropTypes from 'prop-types';
 import { ContextMenuProps } from '../../../../models/context-menu-props';
 import { AppSettingsContextModel } from '../../../../models/app-settings-context';
-import { ContextMenuItemItemModel } from '../../../data-grid-main-context-menu/data-grid-main-context-menu';
 import { TrackMapSettingsContextModel } from '../../../../models/track-map-settings-context';
+import { ContextMenuItemItemModel } from '../../../../models/context-menu-item-props';
+import { ItemContextMenuEvent } from 'devextreme/ui/context_menu';
 
-const TrackMapPopupMenu = ({ innerRef, initialDate, commands }: (ContextMenuProps & { initialDate?: any}) ) => {
+const TrackMapPopupMenu = ({ innerRef, initialDate, commands }: (ContextMenuProps & { initialDate?: Date}) ) => {
 
     const { setWorkDateToday }: AppSettingsContextModel = useAppSettings();
 
@@ -38,8 +38,8 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }: (ContextMenuProp
                 name: 'refresh',
                 text: 'Обновить',
                 renderIconItem: () => <RefreshIcon size={ 18 }/>,
-                onClick: (e: any) => {
-                    e.component.hide();
+                onClick: async (e: ItemContextMenuEvent) => {
+                    await e.component.hide();
                     commands.refresh();
                 },
             },
@@ -47,8 +47,8 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }: (ContextMenuProp
                 name: 'workDateToday',
                 text: 'Сегодня',
                 renderIconItem: () => <WorkDateTodayIcon size={ 18 }/>,
-                onClick: (e: any) => {
-                    e.component.hide();
+                onClick: async (e: ItemContextMenuEvent) => {
+                    await e.component.hide();
                     setWorkDateToday();
                 }
             },
@@ -56,8 +56,8 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }: (ContextMenuProp
                 name: 'workDate',
                 text: 'Рабочая дата',
                 renderIconItem: () => <WorkDateIcon size={ 18 }/>,
-                onClick: (e: any) => {
-                    e.component.hide();
+                onClick: async (e: ItemContextMenuEvent) => {
+                    await e.component.hide();
                     commands.showWorkDatePicker();
                 }
             },
@@ -65,8 +65,8 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }: (ContextMenuProp
                 name: 'fitToMap',
                 text: 'По размеру',
                 renderIconItem: () => <FitToMapIcon size={ 18 }/>,
-                onClick: (e: any) => {
-                    e.component.hide();
+                onClick: async (e: ItemContextMenuEvent) => {
+                    await e.component.hide();
                     commands.fitToMap();
                 },
             },
@@ -74,8 +74,8 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }: (ContextMenuProp
                 name: 'showStationaryZones',
                 text: isShowStationaryZone ? 'Скрывать зоны' : 'Показывать зоны',
                 renderIconItem: () => ( isShowStationaryZone ? <StationaryZoneOffIcon size={ 18 }/> : <StationaryZoneOnIcon size={ 18 }/> ),
-                onClick: (e: any) => {
-                    e.component.hide();
+                onClick: async (e: ItemContextMenuEvent) => {
+                    await e.component.hide();
                     setIsShowStationaryZone(prev => !prev );
                 }
             }
@@ -86,8 +86,8 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }: (ContextMenuProp
                 text: isShowTrackMapSettings ? 'Скрыть настройки' : 'Показать настройки',
                 renderIconItem: () => ( isShowTrackMapSettings ? <TrackMapSettingsOffIcon size={ 18 }/> :
                     <TrackMapSettingsOnIcon size={ 18 }/> ),
-                onClick: (e: any) => {
-                    e.component.hide();
+                onClick: async (e: ItemContextMenuEvent) => {
+                    await e.component.hide();
                     setIsShowTrackMapZones(false);
                     setIsShowTrackMapTimeline(false);
                     setIsShowTrackMapSettings(prev => !prev);
@@ -98,8 +98,8 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }: (ContextMenuProp
                 text: isShowTrackMapZones ? 'Скрыть список зон' : 'Показать список зон',
                 renderIconItem: () => ( isShowTrackMapZones ? <TrackMapZoneOffIcon size={ 18 }/> :
                     <TrackMapZoneOnIcon size={ 18 }/> ),
-                onClick: (e: any) => {
-                    e.component.hide();
+                onClick: async (e: ItemContextMenuEvent) => {
+                    await e.component.hide();
                     setIsShowTrackMapSettings(false);
                     setIsShowTrackMapTimeline(false);
                     setIsShowTrackMapZones(prev => !prev);
@@ -110,8 +110,8 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }: (ContextMenuProp
                 text: isShowTrackMapTimeline ? 'Скрыть хронологию' : 'Показать хронологию',
                 renderIconItem: () => ( isShowTrackMapTimeline ? <TimelineOffIcon size={ 18 }/> :
                     <TimelineOnIcon size={ 18 }/> ),
-                onClick: (e: any) => {
-                    e.component.hide();
+                onClick: async (e: ItemContextMenuEvent) => {
+                    await e.component.hide();
                     setIsShowTrackMapSettings(false);
                     setIsShowTrackMapZones(false);
                     setIsShowTrackMapTimeline(prev => !prev);
@@ -132,14 +132,6 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }: (ContextMenuProp
     />
 }
 
-TrackMapPopupMenu.propTypes = {
-    innerRef: PropTypes.oneOfType([
-        PropTypes.func,
-        PropTypes.shape({ current: PropTypes.any })
-    ]),
-    commands: PropTypes.object.isRequired
-}
-
-export default React.forwardRef<any, ContextMenuProps>((props, ref) =>
+export default React.forwardRef<any, (ContextMenuProps & { initialDate?: any})>((props, ref) =>
   <TrackMapPopupMenu  { ...props } innerRef={ ref } />
 );

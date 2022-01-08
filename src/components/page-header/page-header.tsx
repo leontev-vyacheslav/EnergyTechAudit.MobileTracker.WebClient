@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { PageHeaderProps } from '../../models/page-header-props';
 
 // Todo: css
@@ -10,14 +9,6 @@ const PageHeader = ({ caption, children }: PageHeaderProps) => {
             <h2 className={ 'content-block' }>{ caption }</h2>
         </div>
     );
-}
-
-PageHeader.propTypes = {
-    caption: PropTypes.string.isRequired,
-    children: PropTypes.oneOfType([
-        PropTypes.arrayOf(PropTypes.node),
-        PropTypes.node
-    ]).isRequired
 }
 
 export default PageHeader;

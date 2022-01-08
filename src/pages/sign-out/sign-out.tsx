@@ -7,7 +7,9 @@ export default function () {
     const { signOut }: AuthContextModel = useAuth();
 
     useEffect(() => {
-        signOut();
+        (async () => {
+            await signOut();
+        })();
     }, [signOut]);
 
     return (

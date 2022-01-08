@@ -1,7 +1,8 @@
 import { ReactNode } from 'react';
+import { PopupCallbackModel } from './popup-callback';
 
 export type AppModalPopupProps = {
   title: string,
   children: ReactNode,
-  onClose: any
+  callback: ({ ...any }: PopupCallbackModel) => void
 }

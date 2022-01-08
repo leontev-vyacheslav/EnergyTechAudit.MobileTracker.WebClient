@@ -14,7 +14,7 @@ import AppConstants from '../../constants/app-constants';
 
 import './track-map.css';
 import { AppSettingsContextModel } from '../../models/app-settings-context';
-import { MobileDeviceModel } from '../mobile-devices/mobile-devices';
+import { MobileDeviceModel } from '../../models/mobile-device';
 
 export default () => {
     function useQuery () {

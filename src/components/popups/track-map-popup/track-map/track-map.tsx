@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react';
-import PropTypes from 'prop-types';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import TrackMapInfoBox from '../track-map-components/track-map-info-box/track-map-info-box';
 import TrackMapHeader from '../track-map-components/track-map-header/track-map-header';
@@ -12,13 +11,14 @@ import { useScreenSize } from '../../../../utils/media-query';
 import { useTrackMapTrackContext } from '../track-map-contexts/track-map-track-context';
 
 import './track-map.scss';
-import { MobileDeviceModel } from '../../../../pages/mobile-devices/mobile-devices';
 import { TrackMapSettingsContextModel } from '../../../../models/track-map-settings-context';
+import { MobileDeviceModel } from '../../../../models/mobile-device';
+import { TrackMapTrackContextModel } from '../../../../models/track-map-context';
 
 const TrackMap = ({ mobileDevice }: { mobileDevice: MobileDeviceModel }) => {
     const { isXSmall, isSmall } = useScreenSize();
     const { isShowTrackMapSettings, isShowTrackMapZones, isShowTrackMapTimeline }: TrackMapSettingsContextModel = useTrackMapSettingsContext();
-    const { setCurrentMapInstance, fitMapBoundsByLocations, closeInfoWindow }: any = useTrackMapTrackContext();
+    const { setCurrentMapInstance, fitMapBoundsByLocations, closeInfoWindow }: TrackMapTrackContextModel = useTrackMapTrackContext();
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: AppConstants.trackMap.apiKey,
@@ -84,9 +84,5 @@ const TrackMap = ({ mobileDevice }: { mobileDevice: MobileDeviceModel }) => {
             <span className={ 'dx-datagrid-nodata' }>{ AppConstants.noDataLongText }</span>
     );
 };
-
-TrackMap.propTypes = {
-    mobileDevice: PropTypes.object.isRequired
-}
 
 export default TrackMap;

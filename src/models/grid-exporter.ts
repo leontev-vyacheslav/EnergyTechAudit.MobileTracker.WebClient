@@ -1,5 +1,5 @@
 import dxDataGrid from 'devextreme/ui/data_grid';
-import { MobileDeviceModel } from '../pages/mobile-devices/mobile-devices';
+import { MobileDeviceModel } from './mobile-device';
 
 export type GridExporterModel = {
   dataGrid: dxDataGrid<any, any>,

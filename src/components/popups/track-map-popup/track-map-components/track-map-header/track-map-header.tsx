@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import SelectBox from 'devextreme-react/select-box';
 import { UserIcon } from '../../../../../constants/app-icons';
 import { TrackMapTimelineItem } from '../track-map-timeline-item/track-map-timeline-item';
@@ -8,7 +7,7 @@ import { useTrackMapTimelineContext } from '../../track-map-contexts/track-map-t
 import { getUserDeviceDescription } from '../../../../../utils/string-helper';
 
 import './track-map-header.scss';
-import { MobileDeviceModel } from '../../../../../pages/mobile-devices/mobile-devices';
+import { MobileDeviceModel } from '../../../../../models/mobile-device';
 
 const TrackMapHeader = ({ mobileDevice }: { mobileDevice: MobileDeviceModel }) => {
 
@@ -40,10 +39,6 @@ const TrackMapHeader = ({ mobileDevice }: { mobileDevice: MobileDeviceModel }) =
             </div>
         </div>
     );
-}
-
-TrackMapHeader.propTypes = {
-    mobileDevice: PropTypes.object.isRequired
 }
 
 export default TrackMapHeader;

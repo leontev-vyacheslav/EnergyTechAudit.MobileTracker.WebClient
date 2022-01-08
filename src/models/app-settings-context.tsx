@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
+import { TimelineModel } from './timeline';
 
 export type AppSettingsDataContextModel = {
   workDate: Date,
@@ -18,6 +19,6 @@ export type AppSettingsDataContextModel = {
 export type AppSettingsContextModel = {
   appSettingsData: AppSettingsDataContextModel,
   setAppSettingsData: Dispatch<SetStateAction<AppSettingsDataContextModel>>,
-  getDailyTimelineItem: (date?: Date) => { id: number, beginDate: Date, endDate: Date },
+  getDailyTimelineItem: (date?: Date) => TimelineModel,
   setWorkDateToday: () => void
 };

@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import { DialogConstants } from '../../../constants/app-dialog-constant';
 import ScrollView from 'devextreme-react/scroll-view';
 import Form, { SimpleItem } from 'devextreme-react/form';
@@ -79,7 +78,7 @@ const OfficePopup = ({ editMode, organization, callback }: OfficePopupProps) => 
     }, [mapIsLoaded]);
 
     return currentOffice ? (
-        <AppModalPopup title={ 'Офис' } onClose={ callback }>
+        <AppModalPopup title={ 'Офис' } callback={ callback }>
             <div className={ 'popup-form-container' }>
                 <ScrollView>
                     <Form className={ 'organization-popup-form responsive-paddings' }
@@ -139,14 +138,6 @@ const OfficePopup = ({ editMode, organization, callback }: OfficePopupProps) => 
             </div>
         </AppModalPopup>
     ) : null;
-}
-
-OfficePopup.propTypes = {
-    editMode: PropTypes.bool.isRequired,
-    organization: PropTypes.shape({
-        office: PropTypes.object.isRequired,
-    }).isRequired,
-    callback: PropTypes.func.isRequired
 }
 
 export default OfficePopup;

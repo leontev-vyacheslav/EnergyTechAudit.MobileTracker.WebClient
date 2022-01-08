@@ -37,11 +37,17 @@ export default function ({ title, children }: SideNavProps) {
     }, []);
 
     const onOutsideClick = useCallback(() => {
+        let result = false;
         setMenuStatus(
-            prevMenuStatus => prevMenuStatus !== MenuStatus.Closed && !isLarge
-                ? MenuStatus.Closed
-                : prevMenuStatus
+            prevMenuStatus => {
+                result = prevMenuStatus !== MenuStatus.Closed && !isLarge;
+                return prevMenuStatus !== MenuStatus.Closed && !isLarge
+                  ? MenuStatus.Closed
+                  : prevMenuStatus;
+            }
         );
+
+        return result;
     }, [isLarge]);
 
     const onNavigationChanged = useCallback(({ itemData: { path }, event, node }) => {

@@ -41,13 +41,13 @@ const TimelineInfo = ({ timeline, mobileDevice }: TimelineInfoProps) => {
                         id: 1,
                         description: 'По краевым точкам:',
                         iconRender: (props: IconBaseProps) => <EdgePointsIcon { ...props }/>,
-                        value: timeLineLocal.takeAccountOutsidePoints === true ? 'Да' : 'Heт'
+                        value: timeLineLocal.takeAccountOutsidePoints ? 'Да' : 'Heт'
                     },
                     {
                         id: 2,
                         description: 'Разрыв:',
                         iconRender: (props: IconBaseProps) => <BreakIcon { ...props }/>,
-                        value: timeLineLocal.hasGap === true ? 'Да' : 'Нет'
+                        value: timeLineLocal.hasGap ? 'Да' : 'Нет'
                     },
                     {
                         id: 3,

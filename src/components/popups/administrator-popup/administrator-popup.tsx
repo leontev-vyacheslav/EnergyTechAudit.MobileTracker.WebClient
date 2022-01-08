@@ -20,7 +20,7 @@ const AdministratorPopup = ({ editMode, administrator, callback }: Administrator
         ( async () => {
             const organizations = await getOrganizationsAsync();
             setOrganizations(organizations);
-            if (editMode === true && administrator) {
+            if (editMode && administrator) {
                 const currentAdministrator = await getAdminAsync(administrator.id);
                 setCurrentAdministrator(currentAdministrator);
             } else {
@@ -30,7 +30,7 @@ const AdministratorPopup = ({ editMode, administrator, callback }: Administrator
     }, [administrator, editMode, getAdminAsync, getOrganizationsAsync]);
 
     return currentAdministrator ? (
-        <AppModalPopup onClose={ callback } title={ 'Администратор' }>
+        <AppModalPopup callback={ callback } title={ 'Администратор' }>
             <div className={ 'popup-form-container' }>
                 <ScrollView>
                     <Form className={ 'organization-popup-form responsive-paddings' }

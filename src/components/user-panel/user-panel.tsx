@@ -10,8 +10,8 @@ import './user-panel.scss';
 import { useAppSettings } from '../../contexts/app-settings';
 import { UserPanelProps } from '../../models/user-panel-props';
 import { AppSettingsContextModel } from '../../models/app-settings-context';
-import { ContextMenuItemItemModel } from '../data-grid-main-context-menu/data-grid-main-context-menu';
 import { AuthContextModel } from '../../models/auth-context';
+import { ContextMenuItemItemModel } from '../../models/context-menu-item-props';
 
 export default function ({ menuMode }: UserPanelProps) {
     const { user }: AuthContextModel = useAuth();

@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import Form, { SimpleItem } from 'devextreme-react/form';
 import Button from 'devextreme-react/button';
 import { DialogConstants } from '../../../constants/app-dialog-constant';
@@ -53,7 +52,7 @@ const ExtendedUserInfoPopup = ({ userId, callback }: ExtendedUserInfoPopupProps)
     }, [currentOrganization, getOrganizationOfficesAsync]);
 
     return organizations ? (
-        <AppModalPopup title={ 'Сведения о пользователе' } onClose={ callback }>
+        <AppModalPopup title={ 'Сведения о пользователе' } callback={ callback }>
             <div className={ 'popup-form-container' }>
                 <ScrollView>
                     <Form className={ 'responsive-paddings' } ref={ formRef } formData={ extendedUserInfo }>
@@ -130,10 +129,5 @@ const ExtendedUserInfoPopup = ({ userId, callback }: ExtendedUserInfoPopupProps)
         </AppModalPopup>
     ) : null;
 };
-
-ExtendedUserInfoPopup.propTypes = {
-    userId: PropTypes.number.isRequired,
-    callback: PropTypes.func.isRequired
-}
 
 export default ExtendedUserInfoPopup;

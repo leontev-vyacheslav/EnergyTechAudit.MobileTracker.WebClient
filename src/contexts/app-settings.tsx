@@ -2,6 +2,7 @@ import React, { createContext, useCallback, useContext, useEffect, useState } fr
 import notify from 'devextreme/ui/notify';
 import { AppSettingsContextModel, AppSettingsDataContextModel } from '../models/app-settings-context';
 import { AppBaseProviderProps } from '../models/app-base-provider-props';
+import { TimelineModel } from '../models/timeline';
 
 const AppSettingsContext = createContext<AppSettingsContextModel>({} as AppSettingsContextModel);
 
@@ -83,7 +84,26 @@ function AppSettingsProvider (props: AppBaseProviderProps) {
         const beginDate = new Date(date ?? appSettingsData.workDate.valueOf());
         const endDate = new Date(date ?? appSettingsData.workDate.valueOf());
         endDate.setHours(24);
-        return { id: 0, beginDate: beginDate, endDate: endDate };
+
+        return {
+            id: 0,
+            beginDate: beginDate,
+            endDate: endDate,
+            distance: 0,
+            averageSpeed: 0,
+            averageAccuracy: 0,
+            bestAccuracy: 0,
+            worstAccuracy: 0,
+            totalAmountLocations: 0,
+            valuableAmountLocations: 0,
+            takeAccountOutsidePoints: false,
+            largestInterval: 0,
+            smallestInterval: 0,
+            hasGap: false,
+            active: false,
+            firstLocationRecord: null,
+            lastLocationRecord: null
+        } as TimelineModel;
     }, [appSettingsData.workDate]);
 
     const setWorkDateToday = useCallback(() => {

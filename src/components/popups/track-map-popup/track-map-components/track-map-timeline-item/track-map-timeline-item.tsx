@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { BeginDateIcon, EndDateIcon } from '../../../../../constants/app-icons';
 import { TrackMapTimelineItemProps } from '../../../../../models/track-map-timeline-item-props';
 
@@ -16,12 +15,4 @@ export const TrackMapTimelineItem = ({ timelineItem }: TrackMapTimelineItemProps
             </div>
         </div>
     );
-}
-
-TrackMapTimelineItem.propTypes = {
-    timelineItem: PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        beginDate: PropTypes.instanceOf(Date),
-        endDate: PropTypes.instanceOf(Date)
-    }).isRequired
 }

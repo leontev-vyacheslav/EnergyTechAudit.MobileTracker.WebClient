@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import DataGrid, { Scrolling, Column, LoadPanel } from 'devextreme-react/ui/data-grid';
+import DataGrid, { Column, LoadPanel, Scrolling } from 'devextreme-react/ui/data-grid';
 import { AppDataContextModel, useAppData } from '../../../contexts/app-data';
 import { useAppSettings } from '../../../contexts/app-settings';
 import AppConstants from '../../../constants/app-constants';
@@ -9,22 +9,14 @@ import DataGridIconCellValueContainer from '../../../components/data-grid-utils/
 import { Template } from 'devextreme-react/core/template';
 import StationaryZoneMainContextMenu from './stationary-zones-main-context-menu/stationary-zones-main-context-menu';
 import { stationaryZonesExcelExporter } from './stationary-zones-excel-exporter';
-import { DataGridToolbarButton, onDataGridToolbarPreparing } from '../../../components/data-grid-utils/data-grid-toolbar-button';
+import {
+  DataGridToolbarButton,
+  onDataGridToolbarPreparing
+} from '../../../components/data-grid-utils/data-grid-toolbar-button';
 import { getGeoClusters } from '../../../utils/geo-cluster-helper';
 import { AppSettingsContextModel } from '../../../models/app-settings-context';
 import { MobileDeviceWorkDateModel } from '../../../models/mobile-device-work-date-model';
-
-export type ClusterModel = {
-    id: number,
-    index: number,
-    centroid: google.maps.LatLngBounds | null,
-    radius: number,
-    elements: any[],
-    count: number,
-    addresses: string[],
-    speed: number,
-    accuracy: number
-}
+import { ClusterModel } from '../../../models/cluster-model';
 
 const StationaryZones = ({ mobileDevice, workDate }: MobileDeviceWorkDateModel) => {
     const dxDataGridRef = useRef<DataGrid<ClusterModel, number>>(null);

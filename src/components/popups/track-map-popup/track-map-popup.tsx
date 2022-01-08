@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import PropTypes from 'prop-types';
 import TrackMap from './track-map/track-map';
 import { Popup, ToolbarItem } from 'devextreme-react/popup';
 import { useScreenSize } from '../../../utils/media-query';
@@ -19,7 +18,7 @@ import { TrackMapTrackProvider } from './track-map-contexts/track-map-track-cont
 import { TrackMapSettingsProvider } from './track-map-contexts/track-map-settings-context';
 import { TrackMapTimelineProvider } from './track-map-contexts/track-map-timeline-context';
 import { TrackMapStationaryZonesProvider } from './track-map-contexts/track-map-stationary-zones-context';
-import { AppSettingsContextModel, AppSettingsDataContextModel } from '../../../models/app-settings-context';
+import { AppSettingsContextModel } from '../../../models/app-settings-context';
 import ContextMenu from 'devextreme-react/context-menu';
 import { TrackMapPopupProps } from '../../../models/track-map-popup-props';
 
@@ -99,7 +98,7 @@ const TrackMapPopup = ({ mobileDevice, workDate, onClose }: TrackMapPopupProps) 
                                 commands={ {
                                     refresh: () => setAppSettingsData(prev => ( { ...prev, workDate: new Date(prev.workDate) } )),
                                     showWorkDatePicker: () => showWorkDatePicker(),
-                                    fitToMap: () => TrackMapTrackProvider.fitMapBoundsByLocations()
+                                    fitToMap: () => (TrackMapTrackProvider as any).fitMapBoundsByLocations()
                                 } }
                             />
                         </Button>
@@ -109,19 +108,5 @@ const TrackMapPopup = ({ mobileDevice, workDate, onClose }: TrackMapPopupProps) 
         </TrackMapTimelineProvider>
     );
 };
-
-TrackMapPopup.propTypes = {
-    mobileDevice: PropTypes.shape({
-        id: PropTypes.number.isRequired
-    }),
-    timelineItem: PropTypes.shape(
-        {
-            id: PropTypes.number.isRequired,
-            beginDate: PropTypes.instanceOf(Date).isRequired,
-            endDate: PropTypes.instanceOf(Date).isRequired,
-        }),
-    workDate: PropTypes.instanceOf(Date),
-    onClose: PropTypes.func.isRequired
-}
 
 export default TrackMapPopup;

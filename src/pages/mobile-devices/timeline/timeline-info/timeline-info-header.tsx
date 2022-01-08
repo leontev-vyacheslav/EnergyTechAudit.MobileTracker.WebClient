@@ -1,13 +1,7 @@
 import React from 'react';
 import { useScreenSize } from '../../../../utils/media-query';
 import { LocationIcon, UserIcon } from '../../../../constants/app-icons';
-import { MobileDeviceModel } from '../../mobile-devices';
-
-export type TimelineInfoHeaderProps = {
-    mobileDevice: MobileDeviceModel,
-    departure: string | null,
-    destination: string | null
-}
+import { TimelineInfoHeaderProps } from '../../../../models/timeline-info-header-props';
 
 export function TimelineInfoHeader ({ mobileDevice, departure, destination }: TimelineInfoHeaderProps ) {
     const { isXSmall } = useScreenSize();

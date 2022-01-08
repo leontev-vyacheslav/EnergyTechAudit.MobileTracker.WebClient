@@ -12,6 +12,16 @@ import { useAuth } from '../../contexts/auth';
 import { AppSettingsContextModel } from '../../models/app-settings-context';
 import { AuthContextModel } from '../../models/auth-context';
 
+type TreeViewItemModel = {
+  expanded: boolean,
+  text: string,
+  icon: () => JSX.Element,
+  path: string | undefined,
+  restricted: boolean,
+  items?: any[],
+  command?: string
+} | any
+
 export default function SideNavigationMenu (props: any) {
     const {
         children,
@@ -22,11 +32,11 @@ export default function SideNavigationMenu (props: any) {
     } = props;
 
     const { isLarge } = useScreenSize();
-    const { showWorkDatePicker, signOutWithConfirm } = useSharedArea();
+    const { showWorkDatePicker, signOutWithConfirm, treeViewRef } = useSharedArea();
     const { navigationData: { currentPath } } = useNavigation();
     const { setWorkDateToday }: AppSettingsContextModel = useAppSettings();
     const { user }: AuthContextModel = useAuth();
-    const treeViewRef = useRef<TreeView<any>>(null) ;
+    // const treeViewRef = useRef<TreeView<any>>(null) ;
     const wrapperRef = useRef();
 
     function normalizePath () {
@@ -43,7 +53,7 @@ export default function SideNavigationMenu (props: any) {
             });
     }
 
-    const items = useMemo(
+    const items: TreeViewItemModel[] = useMemo<TreeViewItemModel[]>(
         normalizePath,
         // eslint-disable-next-line react-hooks/exhaustive-deps
         []
@@ -62,21 +72,22 @@ export default function SideNavigationMenu (props: any) {
 
     useEffect(() => {
       (async () => {
-        const treeView = treeViewRef.current && treeViewRef.current.instance;
-        if (!treeView) {
-          return;
-        }
-        if (currentPath !== undefined) {
-          treeView.selectItem(currentPath);
-          await treeView.expandItem(currentPath);
-        }
-        if (compactMode) {
-          treeView.collapseAll();
+        const treeView = treeViewRef.current?.instance;
+        if (treeView) {
+          if (currentPath !== undefined) {
+            treeView.selectItem(currentPath);
+            try {
+              await treeView.expandItem(currentPath);
+            } catch (ex) {
+              //
+            }
+          }
+          if (compactMode) {
+            treeView.collapseAll();
+          }
         }
       })();
-    }, [currentPath, compactMode]);
-
-    SideNavigationMenu.treeViewRef = treeViewRef;
+    }, [currentPath, compactMode, treeViewRef]);
 
     const TreeViewItemContent = (e: any) => {
         return (
@@ -101,13 +112,14 @@ export default function SideNavigationMenu (props: any) {
                     expandEvent={ 'click' }
                     onItemClick={ event => {
                       if (event.itemData) {
-                        if (event.itemData.command === 'workDate') {
+                        const treeViewItem: TreeViewItemModel =  event.itemData as TreeViewItemModel;
+                        if (treeViewItem.command === 'workDate') {
                           showWorkDatePicker();
                         }
-                        if (event.itemData.command === 'exit') {
+                        if (treeViewItem.command === 'exit') {
                           signOutWithConfirm();
                         }
-                        if (event.itemData.command === 'workDateToday') {
+                        if (treeViewItem.command === 'workDateToday') {
                           setWorkDateToday();
                         }
                         selectedItemChanged(event);

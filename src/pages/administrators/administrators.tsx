@@ -3,13 +3,24 @@ import { AdminIcon, EmailIcon, GridAdditionalMenuIcon } from '../../constants/ap
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { AppDataContextModel, useAppData } from '../../contexts/app-data';
 import AppConstants from '../../constants/app-constants';
-import DataGrid, { Column, Grouping, LoadPanel, Pager, Paging, Scrolling, SearchPanel } from 'devextreme-react/data-grid';
-import { DataGridToolbarButton, onDataGridToolbarPreparing } from '../../components/data-grid-utils/data-grid-toolbar-button';
+import DataGrid, {
+    Column,
+    Grouping,
+    LoadPanel,
+    Pager,
+    Paging,
+    Scrolling,
+    SearchPanel
+} from 'devextreme-react/data-grid';
+import {
+    DataGridToolbarButton,
+    onDataGridToolbarPreparing
+} from '../../components/data-grid-utils/data-grid-toolbar-button';
 import { Template } from 'devextreme-react/core/template';
 import { useScreenSize } from '../../utils/media-query';
 import { Button } from 'devextreme-react/button';
 import DataGridIconCellValueContainer from '../../components/data-grid-utils/data-grid-icon-cell-value-container';
-import DataGridMainContextMenu from  '../../components/data-grid-main-context-menu/data-grid-main-context-menu';
+import DataGridMainContextMenu from '../../components/data-grid-main-context-menu/data-grid-main-context-menu';
 import DataGridRowContextMenu from '../../components/data-grid-row-context-menu/data-grid-row-context-menu';
 import AdministratorPopup from '../../components/popups/administrator-popup/administrator-popup';
 import { DialogConstants } from '../../constants/app-dialog-constant';
@@ -18,22 +29,8 @@ import { administratorExcelExporter } from './administrators-excel-exporter';
 import { SimpleDialogModel } from '../../models/simple-dialog';
 import ContextMenu from 'devextreme-react/context-menu';
 import { AdministratorPopupModel } from '../../models/administrator-popup';
-
-export type AdministratorModel = {
-    id: number,
-    roleId: number,
-    email: string,
-    extendedUserInfo: any,
-    isActive: boolean,
-    mobileDevices: any[] | null,
-    organization: null,
-    organizationId: null,
-    password: string,
-    updateDate: string,
-    updateUserId: number,
-    createDate: string,
-    createUserId: number,
-} | null
+import { IconBaseProps } from 'react-icons/lib/cjs/iconBase';
+import { AdministratorModel } from '../../models/administrator';
 
 const Administrators = () => {
 
@@ -104,7 +101,7 @@ const Administrators = () => {
                         cellDataFormatter={ () => {
                             return `${groupDataItem.organization ? groupDataItem.organization.shortName : 'Общая группа'}`;
                         } }
-                        iconRenderer={ (iconProps: any) => {
+                        iconRenderer={ (iconProps: IconBaseProps) => {
                             return <AdminIcon { ...iconProps } />;
                         } }
                     />

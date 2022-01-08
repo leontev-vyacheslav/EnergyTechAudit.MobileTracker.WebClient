@@ -1,10 +1,10 @@
 export class SphericalCalculator {
 
-    static toRad(value) {
+    static toRad(value: number) {
         return (value * Math.PI) / 180;
     }
 
-    static computeDistanceBetween(lat1, lon1, lat2, lon2) {
+    static computeDistanceBetween(lat1: number, lon1: number, lat2: number, lon2: number) {
         const dLat = this.toRad(lat2 - lat1);
         const dLon = this.toRad(lon2 - lon1);
 
@@ -17,7 +17,7 @@ export class SphericalCalculator {
         return 6371000 * c;
     }
 
-    static computeDistanceBetween2(p1, p2) {
+    static computeDistanceBetween2(p1: number[], p2: number[]) {
         return SphericalCalculator.computeDistanceBetween(p1[0], p1[1], p2[0], p2[1]);
     }
 }

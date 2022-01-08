@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Toolbar, { Item } from 'devextreme-react/toolbar';
 import Button from 'devextreme-react/button';
 import UserPanel from '../user-panel/user-panel';
@@ -77,12 +76,6 @@ const Header = ({ title, menuToggleEnabled,  toggleMenu } : HeaderProps) => {
             </Toolbar>
         </header>
     )
-}
-
-Header.propTypes = {
-    menuToggleEnabled: PropTypes.bool.isRequired,
-    title: PropTypes.string.isRequired,
-    toggleMenu: PropTypes.func.isRequired
 }
 
 export default Header;

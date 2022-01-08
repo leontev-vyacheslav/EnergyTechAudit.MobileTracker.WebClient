@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Button } from 'devextreme-react/button';
 import { GridAdditionalMenuIcon } from '../../constants/app-icons';
 
@@ -28,13 +27,6 @@ const DataGridToolbarButton = ({ contextMenuRef }: { contextMenuRef: any }) => {
             <GridAdditionalMenuIcon/>
         </Button>
     );
-}
-
-DataGridToolbarButton.propTypes = {
-    contextMenuRef: PropTypes.oneOfType([
-        PropTypes.func,
-        PropTypes.shape({ current: PropTypes.any })
-    ])
 }
 
 export { onDataGridToolbarPreparing, DataGridToolbarButton };

@@ -1,10 +1,5 @@
-import React, { CSSProperties, FunctionComponent, ReactNode } from 'react';
-
-export type DataGridIconCellValueContainerProps = {
-  cellDataFormatter: () => ReactNode,
-  iconRenderer: FunctionComponent<any>,
-  rowStyle?: CSSProperties
-}
+import React from 'react';
+import { DataGridIconCellValueContainerProps } from '../../models/data-grid-icon-cell-value-container-props';
 
 const DataGridIconCellValueContainer = ({ cellDataFormatter, iconRenderer, rowStyle }: DataGridIconCellValueContainerProps) => {
     const iconProps = { style: {} };

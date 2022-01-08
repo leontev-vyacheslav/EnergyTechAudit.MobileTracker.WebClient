@@ -4,16 +4,7 @@ import Form, { SimpleItem } from 'devextreme-react/form';
 import Button from 'devextreme-react/button';
 import { useScreenSize } from '../../../utils/media-query';
 import { DialogConstants } from '../../../constants/app-dialog-constant';
-
-export type TrackSheetPopupProps = {
-  currentDate: Date,
-  callback: ({ ...any }: PopupCallbackModel) => void
-}
-
-export type PopupCallbackModel = {
-  modalResult: string,
-  parametric: any
-}
+import { TrackSheetPopupProps } from '../../../models/track-sheet-popup-props';
 
 const TrackSheetPopup = ({ currentDate, callback }: TrackSheetPopupProps) => {
 

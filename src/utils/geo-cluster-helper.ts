@@ -1,7 +1,8 @@
 import { DBSCAN } from 'density-clustering';
 import { SphericalCalculator } from './spherical';
+import { TrackLocationRecordModel } from '../models/track-location-record';
 
-const getGeoClusters = (locationRecordsData, options) => {
+const getGeoClusters = (locationRecordsData: TrackLocationRecordModel[], options: any) => {
     const {
         stationaryZoneRadius,
         stationaryZoneElementCount,
@@ -10,10 +11,10 @@ const getGeoClusters = (locationRecordsData, options) => {
         useStationaryZoneCriteriaAccuracy
     } = options;
 
-    const geoClusterData = locationRecordsData
+    const geoClusterData: any = locationRecordsData
         .filter(locationRecord =>
             locationRecord.speed < stationaryZoneCriteriaSpeed &&
-            ( !useStationaryZoneCriteriaAccuracy === true || locationRecord.accuracy < stationaryZoneCriteriaAccuracy )
+            (!useStationaryZoneCriteriaAccuracy || locationRecord.accuracy < stationaryZoneCriteriaAccuracy)
         )
         .map(locationRecord => [locationRecord.latitude, locationRecord.longitude, locationRecord]);
 

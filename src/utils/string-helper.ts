@@ -1,4 +1,4 @@
-import { MobileDeviceModel } from '../pages/mobile-devices/mobile-devices';
+import { MobileDeviceModel } from '../models/mobile-device';
 
 const getUserDescription = (mobileDevice: MobileDeviceModel) => {
     if(mobileDevice) {

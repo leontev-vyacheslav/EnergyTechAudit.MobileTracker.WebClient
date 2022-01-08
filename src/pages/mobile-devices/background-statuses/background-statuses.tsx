@@ -3,12 +3,16 @@ import { AppDataContextModel, useAppData } from '../../../contexts/app-data';
 import { useAppSettings } from '../../../contexts/app-settings';
 import AppConstants from '../../../constants/app-constants';
 import DataGrid, { Column, LoadPanel, Scrolling } from 'devextreme-react/ui/data-grid';
-import { DataGridToolbarButton, onDataGridToolbarPreparing } from '../../../components/data-grid-utils/data-grid-toolbar-button';
+import {
+    DataGridToolbarButton,
+    onDataGridToolbarPreparing
+} from '../../../components/data-grid-utils/data-grid-toolbar-button';
 import { Template } from 'devextreme-react/core/template';
 import { Pager, Paging } from 'devextreme-react/data-grid';
 import DataGridIconCellValueContainer from '../../../components/data-grid-utils/data-grid-icon-cell-value-container';
 import { stationaryZonesExcelExporter } from '../stationary-zones/stationary-zones-excel-exporter';
-import StationaryZoneMainContextMenu from '../stationary-zones/stationary-zones-main-context-menu/stationary-zones-main-context-menu';
+import StationaryZoneMainContextMenu
+    from '../stationary-zones/stationary-zones-main-context-menu/stationary-zones-main-context-menu';
 import {
     BackgroundGeolocationOffIcon,
     BackgroundGeolocationOnIcon,
@@ -22,6 +26,7 @@ import {
 } from '../../../constants/app-icons';
 import { AppSettingsContextModel } from '../../../models/app-settings-context';
 import { MobileDeviceWorkDateModel } from '../../../models/mobile-device-work-date-model';
+import { MobileDeviceBackgroundStatusModel } from '../../../models/mobile-device-background-status-model';
 
 const BackgroundStatuses = ({ mobileDevice, workDate }: MobileDeviceWorkDateModel) => {
 
@@ -32,10 +37,10 @@ const BackgroundStatuses = ({ mobileDevice, workDate }: MobileDeviceWorkDateMode
         }
     }: AppSettingsContextModel = useAppSettings();
 
-    const [backgroundStatusList, setBackgroundStatusList] = useState([]);
+    const [backgroundStatusList, setBackgroundStatusList] = useState<MobileDeviceBackgroundStatusModel[]>([]);
     const [currentWorkDate] = useState(workDate ?? appSettingsWorkDate);
 
-    const dxDataGridRef = useRef<DataGrid<any, number>>(null);
+    const dxDataGridRef = useRef<DataGrid<MobileDeviceBackgroundStatusModel, number>>(null);
     const mainContextMenuRef = useRef(null);
 
     useEffect(() => {
@@ -125,21 +130,20 @@ const BackgroundStatuses = ({ mobileDevice, workDate }: MobileDeviceWorkDateMode
                     />
                 </DataGrid>
                 <StationaryZoneMainContextMenu
-                    ref={ mainContextMenuRef }
-                    commands={
-                        {
-                            exportToXlsx: () => {
-                                if (dxDataGridRef.current) {
-                                    stationaryZonesExcelExporter({
-                                        dataGrid: dxDataGridRef.current.instance,
-                                        mobileDevice,
-                                        workDate: currentWorkDate,
-                                        title: 'Зоны стационарности'
-                                    });
-                                }
-                            }
-                        }
-                    }/>
+                  ref={ mainContextMenuRef }
+                  commands={ {
+                      exportToXlsx: () => {
+                          if (dxDataGridRef.current) {
+                              stationaryZonesExcelExporter({
+                                  dataGrid: dxDataGridRef.current.instance,
+                                  mobileDevice,
+                                  workDate: currentWorkDate,
+                                  title: 'Зоны стационарности'
+                              });
+                          }
+                      }
+                  }
+                  } />
             </>
         );
     }

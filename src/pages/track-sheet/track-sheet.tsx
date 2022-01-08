@@ -20,8 +20,9 @@ import { getUserDeviceDescription } from '../../utils/string-helper';
 import MobileDevicesMasterDetailView from '../mobile-devices/mobile-devices-master-detail-view/mobile-devices-master-detail-view';
 import './track-sheet.scss';
 import { AppSettingsContextModel } from '../../models/app-settings-context';
-import { MobileDeviceModel } from '../mobile-devices/mobile-devices';
 import ContextMenu from 'devextreme-react/context-menu';
+import { useSharedArea } from '../../contexts/shared-area';
+import { MobileDeviceModel } from '../../models/mobile-device';
 
 const TrackSheet = () => {
     function useQuery () {
@@ -44,6 +45,8 @@ const TrackSheet = () => {
     const mainContextMenuRef = useRef<ContextMenu<any>>();
     const rowContextMenuRef = useRef<ContextMenu<any>>();
 
+    const { treeViewRef } = useSharedArea();
+
     const refreshAsync = useCallback(async () => {
         if (currentDate) {
             const mobileDevice = await getMobileDeviceAsync(mobileDeviceId);
@@ -64,9 +67,9 @@ const TrackSheet = () => {
         ( async () => {
             await refreshAsync();
         } )();
-    }, [refreshAsync]);
 
-    SideNavigationMenu.treeViewRef?.current?.instance.unselectAll();
+      treeViewRef?.current?.instance.unselectAll();
+    }, [refreshAsync]);
 
     const GroupRowContent = () => {
         const userCaption = getUserDeviceDescription(mobileDevice);

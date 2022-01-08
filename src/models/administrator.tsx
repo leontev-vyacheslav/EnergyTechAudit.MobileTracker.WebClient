@@ -1,0 +1,15 @@
+export type AdministratorModel = {
+  id: number,
+  roleId: number,
+  email: string,
+  extendedUserInfo: any,
+  isActive: boolean,
+  mobileDevices: any[] | null,
+  organization: null,
+  organizationId: null,
+  password: string,
+  updateDate: string,
+  updateUserId: number,
+  createDate: string,
+  createUserId: number,
+} | null

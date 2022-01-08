@@ -3,6 +3,7 @@ import { DeleteIcon, EditIcon } from '../../constants/app-icons';
 import ContextMenu from 'devextreme-react/context-menu';
 import ContextMenuItem from '../context-menu-item/context-menu-item';
 import { ContextMenuProps } from '../../models/context-menu-props';
+import { ItemContextMenuEvent } from 'devextreme/ui/context_menu';
 
 const DataGridRowContextMenu = ({ innerRef, commands }: ContextMenuProps) => {
 
@@ -10,8 +11,8 @@ const DataGridRowContextMenu = ({ innerRef, commands }: ContextMenuProps) => {
         return [{
             text: 'Редактировать...',
             renderIconItem: () => <EditIcon size={ 18 } />,
-            onClick: async (e: any) => {
-                e.component.hide();
+            onClick: async (e: ItemContextMenuEvent) => {
+                await e.component.hide();
                 if (commands.edit) {
                     await commands.edit();
                 }
@@ -19,8 +20,8 @@ const DataGridRowContextMenu = ({ innerRef, commands }: ContextMenuProps) => {
         }, {
             text: 'Удалить...',
             renderIconItem: () => <DeleteIcon size={ 18 } />,
-            onClick: async (e: any) => {
-                e.component.hide();
+            onClick: async (e: ItemContextMenuEvent) => {
+                await e.component.hide();
                 if (commands.remove) {
                     await commands.remove();
                 }

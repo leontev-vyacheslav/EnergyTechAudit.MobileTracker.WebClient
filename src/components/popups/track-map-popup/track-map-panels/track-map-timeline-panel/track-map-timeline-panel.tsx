@@ -6,11 +6,12 @@ import { useTrackMapTimelineContext } from '../../track-map-contexts/track-map-t
 import { TrackMapTimelineItem } from '../../track-map-components/track-map-timeline-item/track-map-timeline-item';
 import { TimelineIcon } from '../../../../../constants/app-icons';
 import { TrackMapSettingsContextModel } from '../../../../../models/track-map-settings-context';
+import { TrackMapTimelineContextModel } from '../../../../../models/track-map-timeline-provider-props';
 
 const TrackMapTimelinePanel = () => {
 
     const { setIsShowTrackMapTimeline }: TrackMapSettingsContextModel = useTrackMapSettingsContext();
-    const { currentTimeline, currentTimelineItem, setCurrentTimelineItem }: any = useTrackMapTimelineContext();
+    const { currentTimeline, currentTimelineItem, setCurrentTimelineItem }: TrackMapTimelineContextModel = useTrackMapTimelineContext();
     return  currentTimeline && currentTimelineItem ? (
         <div style={ { height: 'calc(100% - 35px)' } }>
             <TrackMapPanelHeader title={ 'Хронология' } icon={ () => <TimelineIcon size={ 22 }/> } onClose={ () => {
@@ -22,9 +23,9 @@ const TrackMapTimelinePanel = () => {
                   showSelectionControls={ true }
                   selectionMode="single"
                   onSelectionChanged={ (e) => {
-                      const selectedItem: any = e.component.option('selectedItems')?.find(ti => !!ti);
-                      if(selectedItem) {
-                        setCurrentTimelineItem(currentTimeline.find((ti: any) => ti.id === (selectedItem ? selectedItem.id : 0)));
+                      const selectedItem = e.component.option('selectedItems')?.find(ti => !!ti);
+                      if (selectedItem) {
+                        setCurrentTimelineItem(currentTimeline.find(ti => ti.id === (selectedItem ? selectedItem.id : 0)) ?? null);
                       }
                   } }
                   itemRender={ (timelineItem) =>

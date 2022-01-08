@@ -11,8 +11,14 @@ import { useTrackMapLocationRecordsContext } from './track-map-location-records-
 import { getGeoClusters } from '../../../../utils/geo-cluster-helper';
 import { AppSettingsContextModel } from '../../../../models/app-settings-context';
 import { AppBaseProviderProps } from '../../../../models/app-base-provider-props';
-import { ClusterModel } from '../../../../pages/mobile-devices/stationary-zones/stationary-zones';
 import { IconBaseProps } from 'react-icons/lib/cjs/iconBase';
+import { ClusterModel } from '../../../../models/cluster-model';
+import {
+    TrackLocationRecordModel,
+    TrackMapLocationRecordsContextModel
+} from '../../../../models/track-location-record';
+import { TrackMapSettingsContextModel } from '../../../../models/track-map-settings-context';
+import { TrackMapTrackContextModel } from '../../../../models/track-map-context';
 
 const TrackMapStationaryZonesContext = createContext({});
 
@@ -20,9 +26,9 @@ const useTrackMapStationaryZonesContext = () => useContext(TrackMapStationaryZon
 
 function TrackMapStationaryZonesProvider (props: AppBaseProviderProps) {
 
-    const { trackLocationRecordList }: any = useTrackMapLocationRecordsContext();
-    const { isShowStationaryZone }: any = useTrackMapSettingsContext();
-    const { currentMapInstance, getBoundsByMarkers, buildInfoWindow }: any = useTrackMapTrackContext();
+    const { trackLocationRecordList }: TrackMapLocationRecordsContextModel = useTrackMapLocationRecordsContext();
+    const { isShowStationaryZone }: TrackMapSettingsContextModel = useTrackMapSettingsContext();
+    const { currentMapInstance, getBoundsByMarkers, buildInfoWindow }: TrackMapTrackContextModel = useTrackMapTrackContext();
     const { getGeocodedSelectedAddressesAsync }: AppDataContextModel = useAppData();
     const { appSettingsData }: AppSettingsContextModel = useAppSettings();
     const {
@@ -79,10 +85,10 @@ function TrackMapStationaryZonesProvider (props: AppBaseProviderProps) {
         }
 
         const locationRecordInfo = {
-            latitude: cluster.centroid.lat(),
-            longitude: cluster.centroid.lng(),
+            latitude: (cluster.centroid as google.maps.LatLng).lat(),
+            longitude: (cluster.centroid as google.maps.LatLng).lng(),
             motionActivityTypeId: 8,
-            isCharging: null,
+            isCharging: false,
             speed: cluster.elements
                 .map((element: any) => element[2].speed)
                 .reduce((acc: any, curr: any) => acc + curr, 0) / cluster.elements.length,
@@ -91,7 +97,7 @@ function TrackMapStationaryZonesProvider (props: AppBaseProviderProps) {
                 .map((element: any) => element[2].accuracy)
                 .reduce((acc: any, curr: any) => acc + curr, 0) / cluster.elements.length ) * 10) / 10,
 
-            batteryLevel: null,
+            batteryLevel: 1,
         };
 
         const selectedAddress = await  getGeocodedSelectedAddressesAsync(locationRecordInfo) ;
@@ -183,10 +189,19 @@ function TrackMapStationaryZonesProvider (props: AppBaseProviderProps) {
                 const centroid = getBoundsByMarkers(geoCluster.map(element => {
                     const [, , { latitude, longitude }] = element;
                     return {
+                        id: Number.MIN_VALUE,
+                        heading: Number.MIN_VALUE,
+                        speed: Number.MIN_VALUE,
+                        accuracy: Number.MIN_VALUE,
+                        mobileDeviceDateTime: new Date(),
                         latitude: latitude,
                         longitude: longitude
-                    };
+                    } as TrackLocationRecordModel;
                 }));
+
+                if (!centroid) {
+                    continue;
+                }
 
                 const centroidCenter = centroid.getCenter();
                 const diagonalDistance = window.google.maps.geometry.spherical.computeDistanceBetween(

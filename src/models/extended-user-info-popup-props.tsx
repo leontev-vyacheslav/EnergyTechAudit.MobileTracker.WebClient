@@ -1,4 +1,6 @@
+import { PopupCallbackModel } from './popup-callback';
+
 export type ExtendedUserInfoPopupProps = {
   userId: number,
-  callback: any
+  callback: ({ ...any }: PopupCallbackModel) => void
 }

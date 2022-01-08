@@ -1,13 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import './track-map-info-box.scss';
 import { BeginDateIcon, DateRangeIcon, EndDateIcon, MobileDeviceIcon } from '../../../../../constants/app-icons';
 import { useTrackMapTimelineContext } from '../../track-map-contexts/track-map-timeline-context';
-import { MobileDeviceModel } from '../../../../../pages/mobile-devices/mobile-devices';
+import { MobileDeviceModel } from '../../../../../models/mobile-device';
+import { TrackMapTimelineContextModel } from '../../../../../models/track-map-timeline-provider-props';
 
 const TrackMapInfoBox = ({ mobileDevice }: { mobileDevice: MobileDeviceModel }) => {
 
-    const { currentTimelineItem }: any = useTrackMapTimelineContext();
+    const { currentTimelineItem }: TrackMapTimelineContextModel = useTrackMapTimelineContext();
 
     return (
         currentTimelineItem ?
@@ -31,10 +31,6 @@ const TrackMapInfoBox = ({ mobileDevice }: { mobileDevice: MobileDeviceModel }) 
                 </div>
             </div> : null
     );
-}
-
-TrackMapInfoBox.propTypes = {
-    mobileDevice: PropTypes.object.isRequired
 }
 
 export default TrackMapInfoBox;

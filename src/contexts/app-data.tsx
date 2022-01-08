@@ -11,9 +11,10 @@ import notify from 'devextreme/ui/notify';
 import { SharedAreaContextModel } from '../models/shared-area-context';
 import { AuthContextModel } from '../models/auth-context';
 import { AppSettingsContextModel } from '../models/app-settings-context';
-import { MobileDeviceModel } from '../pages/mobile-devices/mobile-devices';
 import { AppBaseProviderProps } from '../models/app-base-provider-props';
 import { TimelineModel } from '../models/timeline';
+import { TrackLocationRecordModel } from '../models/track-location-record';
+import { MobileDeviceModel } from '../models/mobile-device';
 
 export type AxiosWithCredentialsFunc = (config: AxiosRequestConfig) => Promise<AxiosResponse<any, any> | undefined>;
 export type GetMobileDevicesAsyncFunc = () => Promise<MobileDeviceModel[] | null>;
@@ -21,7 +22,7 @@ export type GetMobileDeviceAsyncFunc = (mobileDeviceId: number) => Promise<Mobil
 export type GetAssignOrganizationAsyncFunc = (userVerificationData: any) => Promise<any>;
 export type GetMobileDeviceBackgroundStatusListAsyncFunc = (mobileDeviceId: number, beginDate: Date, endDate: Date) => Promise<any>;
 export type GetTimelinesAsyncFunc = (mobileDeviceId: number, workDate: Date) => Promise<TimelineModel[]>;
-export type GetLocationRecordsByRangeAsyncFunc = (mobileDeviceId: number, beginDate: Date, endDate: Date) => Promise<any>;
+export type GetLocationRecordsByRangeAsyncFunc = (mobileDeviceId: number, beginDate: Date, endDate: Date) => Promise<TrackLocationRecordModel[] | null>;
 export type GetLocationRecordAsyncFunc = (locationRecordId: number) => Promise<any>;
 export type GetGeocodedAddressesAsyncFunc = (locationRecord: any) => Promise<any[]>;
 export type GetGeocodedAddressAsyncFunc = (locationRecord: any) => Promise<any>;
@@ -183,24 +184,29 @@ function AppDataProvider (props: AppBaseProviderProps) {
                     method: HttpConstants.Methods.Get as Method,
                 },
             );
+
             if (response && response.status === HttpConstants.StatusCodes.Ok) {
-                let locationRecordsData = response.data;
+                let locationRecordsData = response.data as TrackLocationRecordModel[];
                 if (locationRecordsData) {
-                    locationRecordsData = locationRecordsData.filter((l: any) => l.accuracy <= appSettingsData.minimalAccuracy);
+                    locationRecordsData = locationRecordsData.filter(l => l.accuracy <= appSettingsData.minimalAccuracy);
+
                     return locationRecordsData;
                 }
             }
+
             return null;
         },
         [appSettingsData.minimalAccuracy, axiosWithCredentials]);
 
     const getLocationRecordAsync = useCallback<GetLocationRecordAsyncFunc>(async (locationRecordId) => {
+
             const response = await axiosWithCredentials({
                     url: `${ routes.host }${ routes.locationRecord }/${ locationRecordId }`,
                     method: HttpConstants.Methods.Get as Method,
                 },
             );
             if (response && response.status === HttpConstants.StatusCodes.Ok) {
+              console.log(response.data)
                 return response.data;
             }
             return null;

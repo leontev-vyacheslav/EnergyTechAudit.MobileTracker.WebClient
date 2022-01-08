@@ -9,8 +9,9 @@ import { ProcFunc } from '../models/primitive-type';
 import { SharedAreaContextModel } from '../models/shared-area-context';
 import { AuthContextModel } from '../models/auth-context';
 import { AppBaseProviderProps } from '../models/app-base-provider-props';
+import TreeView from 'devextreme-react/tree-view';
 
-const SharedAreaContext = createContext<SharedAreaContextModel>({});
+const SharedAreaContext = createContext<SharedAreaContextModel>({} as SharedAreaContextModel);
 const useSharedArea = () => useContext(SharedAreaContext);
 
 function SharedAreaProvider (props: AppBaseProviderProps) {
@@ -18,7 +19,8 @@ function SharedAreaProvider (props: AppBaseProviderProps) {
     const [isShowLoader, setIsShowLoader] = useState<boolean>(false);
     const [isShowWorkDatePicker, setIsWorkDatePicker] = useState<boolean>(false);
     const { signOut }: AuthContextModel = useAuth();
-    const workDatePickerRef = useRef();
+    const workDatePickerRef = useRef<any>();
+    const treeViewRef = useRef<TreeView<any>>(null) ;
 
     const signOutWithConfirm = useCallback<ProcFunc>(() => {
         const confirmSignOutContent = () => {
@@ -35,9 +37,9 @@ function SharedAreaProvider (props: AppBaseProviderProps) {
                 {}
             )
         );
-        confirm(content, 'Выход').then((dialogResult) => {
+        confirm(content, 'Выход').then(async (dialogResult) => {
             if (dialogResult) {
-                signOut();
+                await signOut();
             }
         });
     }, [signOut]);
@@ -64,7 +66,7 @@ function SharedAreaProvider (props: AppBaseProviderProps) {
     }, []);
 
     return (
-        <SharedAreaContext.Provider value={ { signOutWithConfirm, showWorkDatePicker, showLoader, hideLoader } } { ...props }>
+        <SharedAreaContext.Provider value={ { signOutWithConfirm, showWorkDatePicker, showLoader, hideLoader, treeViewRef } } { ...props }>
             { isShowLoader ? <Loader/> : null }
             { isShowWorkDatePicker ? <WorkDatePicker ref={ workDatePickerRef } onClosed={ hideWorkDatePicker }/> : null }
             { children }

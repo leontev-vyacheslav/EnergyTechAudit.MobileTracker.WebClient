@@ -1,16 +1,15 @@
 import React, { useRef } from 'react';
-import Form, { SimpleItem, Tab, TabbedItem, GroupItem } from 'devextreme-react/form';
+import Form, { GroupItem, SimpleItem, Tab, TabbedItem } from 'devextreme-react/form';
 import ScrollView from 'devextreme-react/ui/scroll-view';
 import Button from 'devextreme-react/ui/button';
 import notify from 'devextreme/ui/notify';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useScreenSize } from '../../utils/media-query';
-
-import './settings-form.scss';
 import { AppSettingsContextModel } from '../../models/app-settings-context';
+import './settings-form.scss';
+import { SettingsFormProps } from '../../models/settings-form-props';
 
-const SettingsForm = ({ style }: any) => {
-
+const SettingsForm = ({ style }: SettingsFormProps) => {
     const dxAppSettingsFormRef = useRef<Form>(null);
     const { appSettingsData, setAppSettingsData }: AppSettingsContextModel = useAppSettings();
     const { isXSmall } = useScreenSize();

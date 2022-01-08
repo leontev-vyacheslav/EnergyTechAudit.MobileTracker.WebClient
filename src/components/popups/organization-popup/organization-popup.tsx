@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import { DialogConstants } from '../../../constants/app-dialog-constant';
 import ScrollView from 'devextreme-react/scroll-view';
 import Form, { GroupItem, SimpleItem, Tab, TabbedItem } from 'devextreme-react/form';
@@ -36,7 +35,7 @@ const OrganizationPopup = ({ editMode, organization, callback }: OrganizationPop
                 const organizationOffice = organizationOffices.find((org: any) => !!org);
 
                 const scheduleItems: any = {};
-                organizationOffice.scheduleItems.forEach((si: any, i: any) => {
+                organizationOffice.scheduleItems.forEach((si: any, i: number) => {
                     si.periodBegin = Moment(si.periodBegin, 'HH:mm:ss').toDate();
                     si.periodEnd = Moment(si.periodEnd, 'HH:mm:ss').toDate();
                     scheduleItems[`scheduleItem${ i }`] = si;
@@ -116,15 +115,14 @@ const OrganizationPopup = ({ editMode, organization, callback }: OrganizationPop
     }, []);
 
     return currentOrganization ? (
-        <AppModalPopup title={ 'Организация' } onClose={ callback }>
+        <AppModalPopup title={ 'Организация' } callback={ callback }>
             <div className={ 'popup-form-container' }>
                 <ScrollView>
                     <Form className={ 'organization-popup-form responsive-paddings' } ref={ formRef } formData={ currentOrganization }>
                         <TabbedItem tabPanelOptions={ {
                             selectedIndex: currentSelectedIndex.current,
                             onSelectionChanged: (e: any) => {
-                                const selectedIndex = e.component.option('selectedIndex');
-                                currentSelectedIndex.current = selectedIndex;
+                                currentSelectedIndex.current = e.component.option('selectedIndex');
                             }
                         } }>
                             <Tab title={ 'Основные' } tabRender={ (tab) => <IconTab tab={ tab }><OrganizationIcon size={ 18 }/></IconTab> }>
@@ -252,14 +250,6 @@ const OrganizationPopup = ({ editMode, organization, callback }: OrganizationPop
             </ToolbarItem>
         </AppModalPopup>
     ) : null;
-}
-
-OrganizationPopup.propTypes = {
-    editMode: PropTypes.bool.isRequired,
-    organization: PropTypes.shape(
-        { organizationId: PropTypes.number.isRequired }
-        ),
-    callback: PropTypes.func.isRequired
 }
 
 export default OrganizationPopup;

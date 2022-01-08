@@ -1,14 +1,14 @@
-import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { AppDataContextModel, useAppData } from '../../../../contexts/app-data';
 import { useAppSettings } from '../../../../contexts/app-settings';
 import { AppSettingsContextModel } from '../../../../models/app-settings-context';
-import { MobileDeviceWorkDateModel } from '../../../../models/mobile-device-work-date-model';
 import { TimelineModel } from '../../../../models/timeline';
+import {
+    TrackMapTimelineContextModel,
+    TrackMapTimelineProviderProps
+} from '../../../../models/track-map-timeline-provider-props';
 
-export type TrackMapTimelineProviderProps = MobileDeviceWorkDateModel & { children: ReactNode }
-
-const TrackMapTimelineContext = createContext({});
+const TrackMapTimelineContext = createContext<TrackMapTimelineContextModel>({} as TrackMapTimelineContextModel);
 const useTrackMapTimelineContext = () => useContext(TrackMapTimelineContext);
 
 function TrackMapTimelineProvider (props: TrackMapTimelineProviderProps) {
@@ -16,8 +16,7 @@ function TrackMapTimelineProvider (props: TrackMapTimelineProviderProps) {
     const { getTimelinesAsync }: AppDataContextModel = useAppData();
     const { appSettingsData, getDailyTimelineItem }: AppSettingsContextModel = useAppSettings();
     const [currentTimeline, setCurrentTimeline] = useState<TimelineModel[]>([]);
-    const [currentTimelineItem, setCurrentTimelineItem] = useState<any>(null);
-
+    const [currentTimelineItem, setCurrentTimelineItem] = useState<TimelineModel | null>(null);
 
     useEffect(() => {
         ( async () => {
@@ -37,12 +36,6 @@ function TrackMapTimelineProvider (props: TrackMapTimelineProviderProps) {
 
     return (
         <TrackMapTimelineContext.Provider value={ { currentTimeline, currentTimelineItem, setCurrentTimelineItem } }  { ...props } />
-    )
-}
-
-TrackMapTimelineProvider.propTypes = {
-    props: PropTypes.shape(
-        { mobileDevice: PropTypes.shape({ id: PropTypes.number.isRequired }) }
     )
 }
 

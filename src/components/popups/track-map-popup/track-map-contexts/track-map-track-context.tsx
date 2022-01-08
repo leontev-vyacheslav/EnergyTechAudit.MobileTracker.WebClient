@@ -7,28 +7,35 @@ import { useAppSettings } from '../../../../contexts/app-settings';
 import { useTrackMapLocationRecordsContext } from './track-map-location-records-context';
 import { AppSettingsContextModel } from '../../../../models/app-settings-context';
 import { AppBaseProviderProps } from '../../../../models/app-base-provider-props';
+import { TrackMapLocationRecordsContextModel } from '../../../../models/track-location-record';
+import { ProcFunc } from '../../../../models/primitive-type';
+import {
+    BuildInfoWindowFunc,
+    GetBoundsByMarkersFunc,
+    TrackMapTrackContextModel
+} from '../../../../models/track-map-context';
 
-const TrackMapTrackContext = createContext({});
+const TrackMapTrackContext = createContext<TrackMapTrackContextModel>({} as TrackMapTrackContextModel);
 
 const useTrackMapTrackContext = () => useContext(TrackMapTrackContext);
 
 function TrackMapTrackProvider (props: AppBaseProviderProps) {
     const { appSettingsData }: AppSettingsContextModel = useAppSettings();
     const { getLocationRecordAsync, getGeocodedSelectedAddressesAsync }: AppDataContextModel = useAppData();
-    const { trackLocationRecordList }: any = useTrackMapLocationRecordsContext();
+    const { trackLocationRecordList }: TrackMapLocationRecordsContextModel = useTrackMapLocationRecordsContext();
     const [currentMapInstance, setCurrentMapInstance] = useState<google.maps.Map | null>(null);
     const currentInfoWindow = useRef<google.maps.InfoWindow | null>(null);
     const trackPath = useRef<google.maps.Polyline | null>(null);
     const currentMarkers = useRef<google.maps.Marker[]>([]);
     const currentBreakIntervals = useRef<google.maps.Polyline[]>([]);
 
-    const getBoundsByMarkers = useCallback<(locationList: any[]) => google.maps.LatLngBounds | null>((locationList) => {
+    const getBoundsByMarkers = useCallback<GetBoundsByMarkersFunc>((trackLocationList) => {
         if (currentMapInstance) {
             const boundBox = new window.google.maps.LatLngBounds();
-            for (let i = 0; i < locationList.length; i++) {
+            for (let i = 0; i < trackLocationList.length; i++) {
                 boundBox.extend({
-                    lat: locationList[i].latitude,
-                    lng: locationList[i].longitude
+                    lat: trackLocationList[i].latitude,
+                    lng: trackLocationList[i].longitude
                 });
             }
             return boundBox;
@@ -36,7 +43,7 @@ function TrackMapTrackProvider (props: AppBaseProviderProps) {
         return null;
     }, [currentMapInstance]);
 
-    const buildInfoWindow = useCallback((locationRecord, content) => {
+    const buildInfoWindow = useCallback<BuildInfoWindowFunc>((locationRecord, content) => {
         if (currentMapInstance) {
             const infoWindow = new window.google.maps.InfoWindow({
                 position: {
@@ -60,17 +67,20 @@ function TrackMapTrackProvider (props: AppBaseProviderProps) {
         return null;
     }, [currentMapInstance]);
 
-    const centerMapByInfoWindow = useCallback((infoWindow) => {
-        if (currentMapInstance&& infoWindow) {
+    const centerMapByInfoWindow = useCallback((infoWindow:  google.maps.InfoWindow) => {
+        if (currentMapInstance && infoWindow) {
             const currentZoom = currentMapInstance.getZoom() ?? AppConstants.trackMap.defaultZoom;
             if (currentZoom <= AppConstants.trackMap.defaultZoom) {
                 currentMapInstance.setZoom(AppConstants.trackMap.defaultZoom);
             }
-            currentMapInstance.setCenter(infoWindow.getPosition());
+            const center = infoWindow.getPosition();
+            if(center) {
+                currentMapInstance.setCenter(center);
+            }
         }
     }, [currentMapInstance]);
 
-    const closeAllOverlays = useCallback(() => {
+    const closeAllOverlays = useCallback<ProcFunc>(() => {
         if (trackPath.current !== null) {
             trackPath.current.setMap(null);
             trackPath.current = null;
@@ -93,7 +103,7 @@ function TrackMapTrackProvider (props: AppBaseProviderProps) {
 
     }, []);
 
-    const fitMapBoundsByLocations = useCallback(() => {
+    const fitMapBoundsByLocations = useCallback<ProcFunc>(() => {
         if (currentInfoWindow.current) {
             centerMapByInfoWindow(currentInfoWindow.current);
             return;
@@ -128,7 +138,7 @@ function TrackMapTrackProvider (props: AppBaseProviderProps) {
         }
     }, [currentMapInstance, getGeocodedSelectedAddressesAsync, buildInfoWindow, getLocationRecordAsync]);
 
-    const closeInfoWindow = useCallback(() => {
+    const closeInfoWindow = useCallback<ProcFunc>(() => {
         if (currentInfoWindow.current !== null) {
             currentInfoWindow.current.close();
             currentInfoWindow.current = null;
@@ -258,9 +268,9 @@ function TrackMapTrackProvider (props: AppBaseProviderProps) {
             p = 80 * k // < 1 %
         }
         trackLocationRecordList
-            .filter((_: any, i: number) => i % p === 0)
+            .filter((_, i: number) => i % p === 0)
             .concat(trackLocationRecordList.length > 0 ? trackLocationRecordList[trackLocationRecordList.length - 1] : [])
-            .forEach((locationRecord: any, i: number) => {
+            .forEach((locationRecord, i: number) => {
                 buildMarker(locationRecord, i + 1);
             });
     }, [buildMarker, getBoundsByMarkers, trackLocationRecordList]);
@@ -270,7 +280,7 @@ function TrackMapTrackProvider (props: AppBaseProviderProps) {
             fitMapBoundsByLocations();
 
             trackPath.current = new window.google.maps.Polyline({
-                path: trackLocationRecordList.map((locationRecord: any) => {
+                path: trackLocationRecordList.map(locationRecord => {
                     return {
                         lat: locationRecord.latitude,
                         lng: locationRecord.longitude
@@ -295,7 +305,7 @@ function TrackMapTrackProvider (props: AppBaseProviderProps) {
         showTrack();
     }, [closeAllOverlays, showTrack]);
 
-    TrackMapTrackProvider.fitMapBoundsByLocations = fitMapBoundsByLocations;
+    (TrackMapTrackProvider as any).fitMapBoundsByLocations = fitMapBoundsByLocations;
 
     return (
         <TrackMapTrackContext.Provider
@@ -308,5 +318,7 @@ function TrackMapTrackProvider (props: AppBaseProviderProps) {
         />
     );
 }
+
+
 
 export { TrackMapTrackProvider, useTrackMapTrackContext };

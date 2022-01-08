@@ -1,16 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { CountdownIcon, RadiusIcon } from '../../../../../constants/app-icons';
 import './track-map-stationary-zones-list-item.scss';
 import { useTrackMapStationaryZonesContext } from '../../track-map-contexts/track-map-stationary-zones-context';
+import { ClusterModel } from '../../../../../models/cluster-model';
 
-const TrackMapStationaryZonesListItem = ({ stationaryCluster }: any) => {
+export type TrackMapStationaryZonesListItemProps = {
+  stationaryCluster: ClusterModel
+}
+
+const TrackMapStationaryZonesListItem = ({ stationaryCluster }: TrackMapStationaryZonesListItemProps) => {
     const { stationaryClusterList, showInfoWindowAsync,  setCurrentStationaryCluster }: any = useTrackMapStationaryZonesContext();
     return (
         <>
             <div className={ 'track-map-stationary-zones-list-item' } onClick={ async () => {
-                const cluster = stationaryClusterList.find( (c: any) => c.index === stationaryCluster.index);
-                if(cluster) {
+                const cluster: ClusterModel = stationaryClusterList.find( (c: ClusterModel) => c.index === stationaryCluster.index);
+                if (cluster) {
                     setCurrentStationaryCluster(cluster)
                     await showInfoWindowAsync(cluster.index);
                 }
@@ -31,7 +35,7 @@ const TrackMapStationaryZonesListItem = ({ stationaryCluster }: any) => {
                 </div>
                 { stationaryCluster.addresses && stationaryCluster.addresses.length > 0 ?
                     <div>
-                        { stationaryCluster.addresses.map((a: any, i: any) => {
+                        { stationaryCluster.addresses.map((a: string, i: number) => {
                             return (
                                 <div style={ { whiteSpace: 'normal', fontSize: 13 } } key={ i }
                                      className={ 'track-map-stationary-zones-list-item-info' }>
@@ -46,14 +50,5 @@ const TrackMapStationaryZonesListItem = ({ stationaryCluster }: any) => {
         </>
     );
 }
-
-TrackMapStationaryZonesListItem.propTypes = {
-    stationaryCluster: PropTypes.shape({
-        index: PropTypes.number.isRequired,
-        radius: PropTypes.number.isRequired,
-        elements: PropTypes.array.isRequired
-    })
-}
-
 
 export default TrackMapStationaryZonesListItem;

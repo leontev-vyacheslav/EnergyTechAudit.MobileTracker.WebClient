@@ -1,14 +1,31 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import DataGrid, { Column, Grouping, LoadPanel, MasterDetail, Pager, Paging, Scrolling, SearchPanel } from 'devextreme-react/data-grid';
+import DataGrid, {
+  Column,
+  Grouping,
+  LoadPanel,
+  MasterDetail,
+  Pager,
+  Paging,
+  Scrolling,
+  SearchPanel
+} from 'devextreme-react/data-grid';
 import AppConstants from '../../constants/app-constants'
 import { Button } from 'devextreme-react/button';
 import TrackMapPopup from '../../components/popups/track-map-popup/track-map-popup';
 import DataGridIconCellValueContainer from '../../components/data-grid-utils/data-grid-icon-cell-value-container';
 import moment from 'moment';
 import TrackSheetPopup from '../track-sheet/track-sheet-popup/track-sheet-popup';
-import { AndroidIcon, GridAdditionalMenuIcon, IosIcon, MobileDeviceIcon, RegistrationDateIcon, UserIcon } from '../../constants/app-icons';
+import {
+  AndroidIcon,
+  GridAdditionalMenuIcon,
+  IosIcon,
+  MobileDeviceIcon,
+  RegistrationDateIcon,
+  UserIcon
+} from '../../constants/app-icons';
 import MobileDeviceRowContextMenu from './mobile-devices-row-context-menu/mobile-device-row-context-menu';
-import MobileDevicesGroupRowContextMenu from './mobile-devices-group-row-context-menu/mobile-devices-group-row-context-menu';
+import MobileDevicesGroupRowContextMenu
+  from './mobile-devices-group-row-context-menu/mobile-devices-group-row-context-menu';
 import ExtendedUserInfoPopup from '../../components/popups/extended-user-info-popup/extended-user-info-popup';
 import PageHeader from '../../components/page-header/page-header';
 import MobileDevicesMainContextMenu from './mobile-devices-main-context-menu/mobile-devices-main-context-menu';
@@ -18,30 +35,17 @@ import { AppDataContextModel, useAppData } from '../../contexts/app-data';
 import { useHistory } from 'react-router-dom';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useScreenSize } from '../../utils/media-query';
-import { DataGridToolbarButton, onDataGridToolbarPreparing } from '../../components/data-grid-utils/data-grid-toolbar-button';
+import {
+  DataGridToolbarButton,
+  onDataGridToolbarPreparing
+} from '../../components/data-grid-utils/data-grid-toolbar-button';
 import { mobileDeviceExcelExporter } from './mobile-devices-excel-exporter';
 
 import './mobile-devices.scss';
 import { getUserDescription } from '../../utils/string-helper';
 import { AppSettingsContextModel } from '../../models/app-settings-context';
 import ContextMenu from 'devextreme-react/context-menu';
-
-export type MobileDeviceModel = {
-  id: number,
-  deviceUid: string
-  email: string,
-  extendedUserInfo: MobileDeviceExtendedUserInfoModel
-  model: string
-  os: string
-  registrationDate: string
-  userId: number
-} | null
-
-export type MobileDeviceExtendedUserInfoModel = {
-  id: number,
-  firstName: string,
-  lastName: string
-}
+import { MobileDeviceModel } from '../../models/mobile-device';
 
 
 const MobileDevice = () => {

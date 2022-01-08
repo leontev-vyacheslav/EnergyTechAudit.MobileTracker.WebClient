@@ -4,7 +4,8 @@ import ContextMenu from 'devextreme-react/context-menu';
 import {  UserIcon } from '../../../constants/app-icons';
 import ContextMenuItem from '../../../components/context-menu-item/context-menu-item';
 import { ContextMenuProps } from '../../../models/context-menu-props';
-import { ContextMenuItemItemModel } from '../../../components/data-grid-main-context-menu/data-grid-main-context-menu';
+import { ContextMenuItemItemModel } from '../../../models/context-menu-item-props';
+import { ItemContextMenuEvent } from 'devextreme/ui/context_menu';
 
 const MobileDevicesGroupRowContextMenu = ({ innerRef, commands }: ContextMenuProps) => {
 
@@ -13,8 +14,8 @@ const MobileDevicesGroupRowContextMenu = ({ innerRef, commands }: ContextMenuPro
             {
                 text: 'Сведения о пользователе...',
                 renderIconItem: () => <UserIcon size={ 18 }/>,
-                onClick: (e) => {
-                    e.component.hide();
+                onClick: async (e: ItemContextMenuEvent) => {
+                    await e.component.hide();
                     commands.showExtendedUserInfo();
                 }
             }] as ContextMenuItemItemModel[];

@@ -1,7 +1,6 @@
 import saveAs from 'file-saver';
-import { Workbook } from 'exceljs';
 import { getUserDescription } from './string-helper';
-import { MobileDeviceModel } from '../pages/mobile-devices/mobile-devices';
+import { ExcelSaverModel } from './excel-saver-model';
 
 const ExcelExportConstants = {
     colors: {
@@ -11,12 +10,6 @@ const ExcelExportConstants = {
         excelHeaderTextColor: '#e0e6eb',
     }
 };
-export type ExcelSaverModel = {
-    workbook: Workbook,
-    mobileDevice?: MobileDeviceModel,
-    workDate?: Date,
-    title: string
-}
 
 const excelSaver = ({ workbook, mobileDevice, workDate, title }: ExcelSaverModel) => {
     const formattedDate = new Date(workDate ?? new Date())

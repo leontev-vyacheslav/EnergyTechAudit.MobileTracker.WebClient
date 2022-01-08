@@ -1,9 +1,9 @@
 import React from 'react';
-import  PropTypes from  'prop-types';
 import ContextMenu from 'devextreme-react/context-menu';
 import { ScheduleIcon } from '../../../../constants/app-icons';
 import ContextMenuItem from '../../../context-menu-item/context-menu-item';
 import { ContextMenuProps } from '../../../../models/context-menu-props';
+import { ItemContextMenuEvent } from 'devextreme/ui/context_menu';
 
 const OrganizationPopupMenu = ({ innerRef,  commands }: ContextMenuProps) => {
 
@@ -12,8 +12,8 @@ const OrganizationPopupMenu = ({ innerRef,  commands }: ContextMenuProps) => {
             name: 'addSchedule',
             text: 'Добавить расписание',
             renderIconItem: () => <ScheduleIcon size={ 18 }/>,
-            onClick: (e: any) => {
-                e.component.hide();
+            onClick: async (e: ItemContextMenuEvent) => {
+                await e.component.hide();
                 commands.addSchedule();
             },
         }];
@@ -25,14 +25,6 @@ const OrganizationPopupMenu = ({ innerRef,  commands }: ContextMenuProps) => {
         items={ items.filter(i => !!i ) }
         position={ { my: 'right top', at: 'right bottom' } }
     />
-}
-
-OrganizationPopupMenu.propTypes = {
-    innerRef: PropTypes.oneOfType([
-        PropTypes.func,
-        PropTypes.shape({ current: PropTypes.any })
-    ]),
-    commands: PropTypes.object.isRequired
 }
 
 export default React.forwardRef<any, ContextMenuProps>((props, ref) =>

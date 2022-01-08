@@ -1,5 +1,5 @@
 import { TimelineInfoModel } from './timeline-info';
-import { MobileDeviceModel } from '../pages/mobile-devices/mobile-devices';
+import { MobileDeviceModel } from './mobile-device';
 
 export type TimelineInfoProps = {
   timeline: any,

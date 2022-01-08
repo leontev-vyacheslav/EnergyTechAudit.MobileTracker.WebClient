@@ -1,5 +1,5 @@
 import React from 'react';
-import { ContextMenuItemItemModel } from '../data-grid-main-context-menu/data-grid-main-context-menu';
+import { ContextMenuItemItemModel } from '../../models/context-menu-item-props';
 
 const ContextMenuItem = ({ item }: { item: ContextMenuItemItemModel }) => {
     return (

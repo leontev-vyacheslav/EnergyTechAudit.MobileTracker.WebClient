@@ -9,7 +9,7 @@ const dialogContentRender = ({ iconName, iconSize, iconColor, textRender }: Simp
         React.createElement(
             () =>
                 <div style={ { display: 'flex', alignItems: 'center' } }>
-                    { React.createElement(AppIcons[iconName], { size: iconSize ? iconSize : 36, style: { color: iconColor ? iconColor : '#ff5722' } }) }
+                    { React.createElement((AppIcons as any)[iconName], { size: iconSize ? iconSize : 36, style: { color: iconColor ? iconColor : '#ff5722' } }) }
                     <span style={ { marginLeft: 10 } }>{ textRender() }</span>
                 </div>,
             {}
