@@ -1,7 +1,8 @@
 import { MobileDeviceModel } from './mobile-device';
+import { PopupCallbackModel } from './popup-callback';
 
 export type TrackMapPopupProps = {
   mobileDevice: MobileDeviceModel,
   workDate?: Date,
-  onClose: () => void
+  callback: ({ ...any }: PopupCallbackModel) => void
 }

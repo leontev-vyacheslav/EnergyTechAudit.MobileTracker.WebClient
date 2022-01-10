@@ -16,17 +16,18 @@ import {
 import { getGeoClusters } from '../../../utils/geo-cluster-helper';
 import { AppSettingsContextModel } from '../../../models/app-settings-context';
 import { MobileDeviceWorkDateModel } from '../../../models/mobile-device-work-date-model';
-import { ClusterModel } from '../../../models/cluster-model';
+import { Cluster } from '../../../models/cluster';
+import { GoogleLibraries } from '../../../models/google-liblaries';
 
 const StationaryZones = ({ mobileDevice, workDate }: MobileDeviceWorkDateModel) => {
-    const dxDataGridRef = useRef<DataGrid<ClusterModel, number>>(null);
+    const dxDataGridRef = useRef<DataGrid<Cluster, number>>(null);
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: AppConstants.trackMap.apiKey,
-        libraries: AppConstants.trackMap.libraries as any
+        libraries: AppConstants.trackMap.libraries as GoogleLibraries
     });
 
     const mainContextMenuRef = useRef(null);
-    const [stationaryClusterList, setStationaryClusterList] = useState<ClusterModel[]>([]);
+    const [stationaryClusterList, setStationaryClusterList] = useState<Cluster[]>([]);
     const { getLocationRecordsByRangeAsync, getGeocodedSelectedAddressesAsync }: AppDataContextModel = useAppData();
 
     const getBoundsByMarkers = useCallback((locationList) => {
@@ -78,7 +79,7 @@ const StationaryZones = ({ mobileDevice, workDate }: MobileDeviceWorkDateModel) 
                 useStationaryZoneCriteriaAccuracy
             });
 
-            const clusterList: ClusterModel[] = [];
+            const clusterList: Cluster[] = [];
             let index = 0;
             for (const geoCluster of geoClusters) {
 

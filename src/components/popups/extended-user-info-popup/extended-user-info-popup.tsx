@@ -6,13 +6,13 @@ import { AppDataContextModel, useAppData } from '../../../contexts/app-data';
 import ScrollView from 'devextreme-react/scroll-view';
 import AppModalPopup from '../app-modal-popup/app-modal-popup';
 import { ExtendedUserInfoPopupProps } from '../../../models/extended-user-info-popup-props';
+import { OfficeOrganizationPopupModel } from '../../../models/office-organization-popup';
 
 const ExtendedUserInfoPopup = ({ userId, callback }: ExtendedUserInfoPopupProps) => {
     const formRef = useRef<Form>(null);
     const { getExtendedUserInfoAsync, postExtendedUserInfoAsync, getOrganizationsAsync, getOrganizationOfficesAsync }: AppDataContextModel = useAppData();
-
     const [extendedUserInfo, setExtendedUserInfo] = useState(null);
-    const [offices, setOffices] = useState<[] | null>(null);
+    const [offices, setOffices] = useState<(OfficeOrganizationPopupModel | null)[]>([]);
     const [organizations, setOrganizations] = useState(null);
     const [currentOrganization, setCurrentOrganization] = useState(null);
 
@@ -27,10 +27,11 @@ const ExtendedUserInfoPopup = ({ userId, callback }: ExtendedUserInfoPopupProps)
             setOrganizations(organizations);
 
             const organizationOffices = await getOrganizationOfficesAsync(organizationId);
-            const offices = organizationOffices.map((org: any) => org.office);
-
-            if (extendedUserInfo && extendedUserInfo.officeId) {
-                setOffices(offices);
+            if(organizationOffices){
+                const offices = organizationOffices.filter(org => org.office).map(org => org.office);
+                if (extendedUserInfo && extendedUserInfo.officeId) {
+                    setOffices(offices);
+                }
             }
         } )();
     }, [getExtendedUserInfoAsync, getOrganizationOfficesAsync, getOrganizationsAsync, userId]);
@@ -39,9 +40,10 @@ const ExtendedUserInfoPopup = ({ userId, callback }: ExtendedUserInfoPopupProps)
         ( async () => {
             if (currentOrganization) {
                 const organizationOffices = await getOrganizationOfficesAsync(currentOrganization);
-                const offices = organizationOffices.map((org: any) => org.office);
-
-                setOffices(offices);
+                if(organizationOffices) {
+                    const offices = organizationOffices.filter(org => org.office).map(org => org.office);
+                    setOffices(offices);
+                }
             } else {
                 setOffices([]);
                 setExtendedUserInfo((previous: any) => {

@@ -13,46 +13,49 @@ import OrganizationPopupMenu from './organization-popup-menu/organization-popup-
 import { OrganizationPopupProps } from '../../../models/organization-popup-props';
 import ContextMenu from 'devextreme-react/context-menu';
 import './organization-popup.scss'
-
-export type OrganizationPopupModel = {
-    id: number,
-    shortName: string | null,
-    description: string | null,
-    scheduleItems: object
-}
+import { OrganizationPopupModel } from '../../../models/organization-popup';
 
 const OrganizationPopup = ({ editMode, organization, callback }: OrganizationPopupProps) => {
     const { getOrganizationOfficesAsync, postOrganizationAsync, deleteScheduleItemAsync }: AppDataContextModel = useAppData();
     const [currentOrganization, setCurrentOrganization] = useState<OrganizationPopupModel | null>(null);
     const formRef = useRef<Form>(null);
-    const contextMenuRef = useRef<ContextMenu<any>>(null);
+    const contextMenuRef = useRef<ContextMenu<any>>();
     const currentSelectedIndex = useRef<number>(0);
 
     useEffect(() => {
         ( async () => {
             if (editMode && organization) {
                 const organizationOffices = await getOrganizationOfficesAsync(organization.organizationId);
-                const organizationOffice = organizationOffices.find((org: any) => !!org);
+                if(organizationOffices) {
+                    const organizationOffice = organizationOffices.find(_ => true);
+                    if(organizationOffice) {
+                        const scheduleItems: any = {};
+                        organizationOffice.scheduleItems.forEach((si: any, i: number) => {
+                            si.periodBegin = Moment(si.periodBegin, 'HH:mm:ss').toDate();
+                            si.periodEnd = Moment(si.periodEnd, 'HH:mm:ss').toDate();
+                            scheduleItems[`scheduleItem${ i }`] = si;
+                        });
 
-                const scheduleItems: any = {};
-                organizationOffice.scheduleItems.forEach((si: any, i: number) => {
-                    si.periodBegin = Moment(si.periodBegin, 'HH:mm:ss').toDate();
-                    si.periodEnd = Moment(si.periodEnd, 'HH:mm:ss').toDate();
-                    scheduleItems[`scheduleItem${ i }`] = si;
-                });
-                const currentOrganization = {
-                    id: organizationOffice.organizationId,
-                    description: organizationOffice.description,
-                    shortName: organizationOffice.shortName,
-                    scheduleItems: scheduleItems
-                };
-                setCurrentOrganization(currentOrganization);
+                        const currentOrganization = {
+                            id: organizationOffice.organizationId,
+                            organizationId: 0,
+                            office: null,
+                            description: organizationOffice.description,
+                            shortName: organizationOffice.shortName,
+                            scheduleItems: scheduleItems
+                        };
+
+                        setCurrentOrganization(currentOrganization);
+                    }
+                }
             } else {
                 setCurrentOrganization({
                     id: 0,
+                    organizationId: 0,
+                    office: null,
                     shortName: null,
                     description: null,
-                    scheduleItems: {}
+                    scheduleItems: {},
                 })
             }
         } )()

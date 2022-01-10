@@ -39,12 +39,12 @@ const Administrators = () => {
 
     const [administrators, setAdministrators] = useState<AdministratorModel[] | null>(null);
     const [currentAdministrator, setCurrentAdministrator] = useState<AdministratorModel>(null);
-    const [administratorPopupTrigger, setAdministratorPopupTrigger] = useState(false);
+    const [administratorPopupTrigger, setAdministratorPopupTrigger] = useState<boolean>(false);
 
     const dxDataGridRef = useRef<DataGrid<AdministratorModel, number>>(null);
-    const mainContextMenuRef = useRef<ContextMenu<any>>(null);
-    const rowContextMenuRef = useRef<ContextMenu<any>>(null);
-    const editMode = useRef(false);
+    const mainContextMenuRef = useRef<ContextMenu<any>>();
+    const rowContextMenuRef = useRef<ContextMenu<any>>();
+    const editMode = useRef<boolean>(false);
 
     const updateDataAsync = useCallback(async () => {
         const administrators = await getAdminListAsync();

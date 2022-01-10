@@ -12,7 +12,7 @@ import { OfficePopupModel } from '../../../models/office-popup';
 const OfficePopup = ({ editMode, organization, callback }: OfficePopupProps) => {
 
     const { getOfficeAsync, postOfficeAsync }: AppDataContextModel = useAppData();
-    const autocompleteRef = useRef<any>(null);
+    const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
     const formRef = useRef<Form>(null);
     const [currentOffice, setCurrentOffice] = useState<OfficePopupModel>(null);
     const [mapIsLoaded, setMapIsLoaded] = useState<boolean>(false);
@@ -55,24 +55,27 @@ const OfficePopup = ({ editMode, organization, callback }: OfficePopupProps) => 
             const editor = formRef.current.instance.getEditor('address');
             const input = editor?.element().querySelector('input');
 
-            const place = autocompleteRef.current.getPlace();
-            if (input && place.geometry) {
-                input.value = place.formatted_address;
-                let formData = formRef.current.instance.option('formData');
+            if(autocompleteRef && autocompleteRef.current) {
 
-                formData = {
-                    ...formData,
-                    ...{ address: place.formatted_address },
-                    ...{
-                        place: {
-                            id: formData.place ? formData.place.id : 0,
-                            latitude: place.geometry.location.lat(),
-                            longitude: place.geometry.location.lng(),
+                const place = autocompleteRef.current.getPlace();
+                if (input && place.formatted_address && place.geometry && place.geometry.location) {
+                    input.value = place.formatted_address;
+                    let formData = formRef.current.instance.option('formData');
+
+                    formData = {
+                        ...formData,
+                        ...{ address: place.formatted_address },
+                        ...{
+                            place: {
+                                id: formData.place ? formData.place.id : 0,
+                                latitude: place.geometry.location.lat(),
+                                longitude: place.geometry.location.lng(),
+                            }
                         }
-                    }
-                };
-                setCurrentOffice(formData);
-                autocompleteRef.current = null;
+                    };
+                    setCurrentOffice(formData);
+                    autocompleteRef.current = null;
+                }
             }
         }
     }, [mapIsLoaded]);
@@ -103,7 +106,7 @@ const OfficePopup = ({ editMode, organization, callback }: OfficePopupProps) => 
                                 onFocusIn: (e: any) => {
                                     if (mapIsLoaded && !autocompleteRef.current) {
                                         const input = e.element.querySelector('input');
-                                        autocompleteRef.current = new window.google.maps.places.Autocomplete(input, {
+                                        autocompleteRef.current = new google.maps.places.Autocomplete(input, {
                                             types: ['geocode']
                                         });
                                         autocompleteRef.current.addListener('place_changed', onPlaceChangedHandler);

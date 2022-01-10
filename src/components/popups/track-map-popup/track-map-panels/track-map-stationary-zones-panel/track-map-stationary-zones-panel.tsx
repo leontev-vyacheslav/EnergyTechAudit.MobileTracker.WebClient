@@ -6,9 +6,10 @@ import { useTrackMapSettingsContext } from '../../track-map-contexts/track-map-s
 import { StationaryZonesIcon } from '../../../../../constants/app-icons';
 import { useTrackMapStationaryZonesContext } from '../../track-map-contexts/track-map-stationary-zones-context';
 import { TrackMapSettingsContextModel } from '../../../../../models/track-map-settings-context';
+import { TrackMapStationaryZonesContextModel } from '../../../../../models/track-map-stationary-zones-context';
 
 const TrackMapStationaryZonesPanel = () => {
-    const { stationaryClusterList, currentStationaryCluster }: any = useTrackMapStationaryZonesContext();
+    const { stationaryClusterList, currentStationaryCluster }: TrackMapStationaryZonesContextModel = useTrackMapStationaryZonesContext();
     const { setIsShowTrackMapZones }: TrackMapSettingsContextModel = useTrackMapSettingsContext();
     return (
         <div style={ { height: 'calc(100% - 35px)' } }>

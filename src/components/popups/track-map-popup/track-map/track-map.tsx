@@ -14,6 +14,7 @@ import './track-map.scss';
 import { TrackMapSettingsContextModel } from '../../../../models/track-map-settings-context';
 import { MobileDeviceModel } from '../../../../models/mobile-device';
 import { TrackMapTrackContextModel } from '../../../../models/track-map-context';
+import { GoogleLibraries } from '../../../../models/google-liblaries';
 
 const TrackMap = ({ mobileDevice }: { mobileDevice: MobileDeviceModel }) => {
     const { isXSmall, isSmall } = useScreenSize();
@@ -22,7 +23,7 @@ const TrackMap = ({ mobileDevice }: { mobileDevice: MobileDeviceModel }) => {
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: AppConstants.trackMap.apiKey,
-        libraries: AppConstants.trackMap.libraries as any
+        libraries: AppConstants.trackMap.libraries as GoogleLibraries
     });
 
     const onTrackMapLoadHandler = useCallback((googleMap: google.maps.Map) => {

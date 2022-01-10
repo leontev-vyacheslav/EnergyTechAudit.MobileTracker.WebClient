@@ -8,6 +8,7 @@ const AppModalPopup = ({ title,  children, callback }: AppModalPopupProps) => {
     const { isXSmall, isSmall } = useScreenSize();
     return (
         <Popup className={ 'app-popup' } title={ title }
+               copyRootClassesToWrapper={ true }
                dragEnabled={ true }
                visible={ true }
                showTitle={ true }

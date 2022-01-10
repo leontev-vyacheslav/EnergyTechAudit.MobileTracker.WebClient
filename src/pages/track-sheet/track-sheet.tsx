@@ -215,7 +215,7 @@ const TrackSheet = () => {
                     <TrackMapPopup
                         mobileDevice={ mobileDevice }
                         workDate={ trackMapCurrentDate }
-                        onClose={ () => {
+                        callback={ () => {
                             setCurrentTimelineItem(null);
                         } }/>
                     : null

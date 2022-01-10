@@ -1,12 +1,12 @@
-import React, { Dispatch } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 
 export type TrackMapSettingsContextModel = {
   isShowTrackMapSettings: boolean,
-  setIsShowTrackMapSettings: Dispatch<React.SetStateAction<boolean>>,
+  setIsShowTrackMapSettings: Dispatch<SetStateAction<boolean>>,
   isShowTrackMapZones: boolean,
-  setIsShowTrackMapZones: Dispatch<React.SetStateAction<boolean>>,
+  setIsShowTrackMapZones: Dispatch<SetStateAction<boolean>>,
   isShowStationaryZone: boolean,
-  setIsShowStationaryZone: Dispatch<React.SetStateAction<boolean>>,
+  setIsShowStationaryZone: Dispatch<SetStateAction<boolean>>,
   isShowTrackMapTimeline: boolean,
-  setIsShowTrackMapTimeline: Dispatch<React.SetStateAction<boolean>>
+  setIsShowTrackMapTimeline: Dispatch<SetStateAction<boolean>>
 }

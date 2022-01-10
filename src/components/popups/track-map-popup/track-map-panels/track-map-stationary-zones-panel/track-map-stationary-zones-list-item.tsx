@@ -2,18 +2,19 @@ import React from 'react';
 import { CountdownIcon, RadiusIcon } from '../../../../../constants/app-icons';
 import './track-map-stationary-zones-list-item.scss';
 import { useTrackMapStationaryZonesContext } from '../../track-map-contexts/track-map-stationary-zones-context';
-import { ClusterModel } from '../../../../../models/cluster-model';
+import { Cluster } from '../../../../../models/cluster';
+import { TrackMapStationaryZonesContextModel } from '../../../../../models/track-map-stationary-zones-context';
 
 export type TrackMapStationaryZonesListItemProps = {
-  stationaryCluster: ClusterModel
+  stationaryCluster: Cluster
 }
 
 const TrackMapStationaryZonesListItem = ({ stationaryCluster }: TrackMapStationaryZonesListItemProps) => {
-    const { stationaryClusterList, showInfoWindowAsync,  setCurrentStationaryCluster }: any = useTrackMapStationaryZonesContext();
+    const { stationaryClusterList, showInfoWindowAsync,  setCurrentStationaryCluster }: TrackMapStationaryZonesContextModel = useTrackMapStationaryZonesContext();
     return (
         <>
             <div className={ 'track-map-stationary-zones-list-item' } onClick={ async () => {
-                const cluster: ClusterModel = stationaryClusterList.find( (c: ClusterModel) => c.index === stationaryCluster.index);
+                const cluster = stationaryClusterList.find( (c: Cluster) => c.index === stationaryCluster.index);
                 if (cluster) {
                     setCurrentStationaryCluster(cluster)
                     await showInfoWindowAsync(cluster.index);

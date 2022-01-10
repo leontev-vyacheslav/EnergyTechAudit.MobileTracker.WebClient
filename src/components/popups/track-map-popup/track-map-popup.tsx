@@ -21,8 +21,9 @@ import { TrackMapStationaryZonesProvider } from './track-map-contexts/track-map-
 import { AppSettingsContextModel } from '../../../models/app-settings-context';
 import ContextMenu from 'devextreme-react/context-menu';
 import { TrackMapPopupProps } from '../../../models/track-map-popup-props';
+import { DialogConstants } from '../../../constants/app-dialog-constant';
 
-const TrackMapPopup = ({ mobileDevice, workDate, onClose }: TrackMapPopupProps) => {
+const TrackMapPopup = ({ mobileDevice, workDate, callback }: TrackMapPopupProps) => {
     const { isXSmall, isSmall } = useScreenSize();
     const { setAppSettingsData, setWorkDateToday }: AppSettingsContextModel = useAppSettings();
     const { showWorkDatePicker } = useSharedArea();
@@ -32,11 +33,12 @@ const TrackMapPopup = ({ mobileDevice, workDate, onClose }: TrackMapPopupProps) 
         <TrackMapTimelineProvider mobileDevice={ mobileDevice } workDate={ workDate } >
             <TrackMapSettingsProvider>
                 <Popup className={ 'app-popup track-map-popup' } title={ 'Карта маршрута' }
+                       copyRootClassesToWrapper={ true }
                        dragEnabled={ true }
                        visible={ true }
                        showTitle={ true }
                        showCloseButton={ true }
-                       onHiding={ onClose }
+                       onHiding={ () => callback({ modalResult: DialogConstants.ModalResults.Close }) }
                        width={ isXSmall || isSmall ? '95%' : '80%' }
                        height={ isXSmall || isSmall ? '95%' : '90%' }
                        contentRender={ () => {
@@ -50,6 +52,7 @@ const TrackMapPopup = ({ mobileDevice, workDate, onClose }: TrackMapPopupProps) 
                                </TrackMapLocationRecordsProvider>
                            );
                        } }>
+
                     <ToolbarItem location={ 'after' }>
                         { !workDate ?
                             <>

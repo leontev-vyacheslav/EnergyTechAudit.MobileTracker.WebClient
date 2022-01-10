@@ -1,3 +1,4 @@
+import React from 'react'
 import { render, act, screen } from '@testing-library/react';
 import Loader from '../../components/loader/loader';
 
@@ -5,7 +6,7 @@ import Loader from '../../components/loader/loader';
 it('loader', async () => {
 
     await act(async () => {
-        render(<Loader/>);
+        render(<Loader />);
     });
 
     // console.log(container.querySelector('svg'))

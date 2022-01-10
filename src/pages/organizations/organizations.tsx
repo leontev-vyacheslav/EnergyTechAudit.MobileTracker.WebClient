@@ -1,7 +1,15 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import AppConstants  from '../../constants/app-constants';
+import AppConstants from '../../constants/app-constants';
 import { AppDataContextModel, useAppData } from '../../contexts/app-data';
-import DataGrid, { Column, Grouping, LoadPanel, Pager, Paging, Scrolling, SearchPanel } from 'devextreme-react/data-grid';
+import DataGrid, {
+    Column,
+    Grouping,
+    LoadPanel,
+    Pager,
+    Paging,
+    Scrolling,
+    SearchPanel
+} from 'devextreme-react/data-grid';
 import { Button } from 'devextreme-react/button';
 import { AddressIcon, GridAdditionalMenuIcon, OrganizationIcon } from '../../constants/app-icons';
 import DataGridIconCellValueContainer from '../../components/data-grid-utils/data-grid-icon-cell-value-container';
@@ -13,23 +21,29 @@ import OrganizationPopup from '../../components/popups/organization-popup/organi
 import { showConfirmDialog } from '../../utils/dialogs';
 import { useScreenSize } from '../../utils/media-query';
 import OfficePopup from '../../components/popups/office-popup/office-popup';
-import { DataGridToolbarButton, onDataGridToolbarPreparing } from '../../components/data-grid-utils/data-grid-toolbar-button';
+import {
+    DataGridToolbarButton,
+    onDataGridToolbarPreparing
+} from '../../components/data-grid-utils/data-grid-toolbar-button';
 import { organizationsExcelExporter } from './organizations-excel-exporter';
 import DataGridMainContextMenu from '../../components/data-grid-main-context-menu/data-grid-main-context-menu';
 import { SimpleDialogModel } from '../../models/simple-dialog';
 import ContextMenu from 'devextreme-react/context-menu';
+import { OrganizationPopupModel } from '../../models/organization-popup';
+import DevExpress from 'devextreme';
+import RowPreparedEvent = DevExpress.ui.dxDataGrid.RowPreparedEvent;
 
 const Organizations = () => {
     const { getOrganizationOfficesAsync, deleteOrganizationAsync, deleteOfficeAsync }: AppDataContextModel = useAppData();
     const { isXSmall } = useScreenSize();
-    const [organizations, setOrganizations] = useState<any[] | null>(null);
+    const [organizations, setOrganizations] = useState<OrganizationPopupModel[] | null>(null);
     const [organizationPopupTrigger, setOrganizationPopupTrigger] = useState<boolean>(false);
     const [officePopupTrigger, setOfficePopupTrigger] = useState<boolean>(false);
-    const [currentOrganization, setCurrentOrganization] = useState<any>(null);
+    const [currentOrganization, setCurrentOrganization] = useState< OrganizationPopupModel | null>(null);
     const editMode = useRef<boolean>(false);
-    const dxDataGridRef = useRef<DataGrid<any, any>>(null);
+    const dxDataGridRef = useRef<DataGrid<OrganizationPopupModel, number>>(null);
     const mainContextMenuRef = useRef<ContextMenu<any>>();
-    const groupRowContextMenuRef = useRef<ContextMenu<any>>(null);
+    const groupRowContextMenuRef = useRef<ContextMenu<any>>();
     const rowContextMenuRef = useRef<ContextMenu<any>>();
 
     const refreshAsync = useCallback(async () => {
@@ -52,9 +66,8 @@ const Organizations = () => {
     const editOrganization = useCallback(() => {
         if (dxDataGridRef.current && dxDataGridRef.current.instance) {
             const currentGroupRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
-            const organization = organizations?.find(org => org.organizationId === currentGroupRowKey[0]);
+            const organization = organizations?.find(org => org.organizationId === currentGroupRowKey[0]) ?? null;
             setCurrentOrganization(organization);
-
             editMode.current = true;
             setOrganizationPopupTrigger(true);
         }
@@ -85,7 +98,7 @@ const Organizations = () => {
         if (dxDataGridRef.current && dxDataGridRef.current.instance) {
             const currentGroupRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
             if (organizations) {
-                const organization = organizations.find(org => org.organizationId === currentGroupRowKey[0]);
+                const organization = organizations.find(org => org.organizationId === currentGroupRowKey[0]) ?? null;
                 setCurrentOrganization(organization);
             }
             editMode.current = false;
@@ -97,7 +110,7 @@ const Organizations = () => {
         if (dxDataGridRef.current && dxDataGridRef.current.instance) {
             const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
             if (organizations) {
-                const organization = organizations.find(org => org.id === currentRowKey);
+                const organization = organizations.find(org => org.id === currentRowKey) ?? null;
                 setCurrentOrganization(organization);
             }
             editMode.current = true;
@@ -114,7 +127,7 @@ const Organizations = () => {
                 if (dxDataGridRef.current && dxDataGridRef.current.instance) {
                     const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
                     const organization = organizations?.find(md => md.id === currentRowKey);
-                    if (organization) {
+                    if (organization && organization.office) {
                         await deleteOfficeAsync(organization.office.id);
                         await refreshAsync();
                     }
@@ -176,11 +189,11 @@ const Organizations = () => {
                         e.component.collapseAll(-1);
                     } }
                     onToolbarPreparing={ onDataGridToolbarPreparing }
-                    onRowPrepared={ (e: any) => {
+                    onRowPrepared={ async (e: any) => {
                         if (e.rowType === 'group' && e.data && e.data.items) {
-                            if (e.data.items.find((o: any) => !!o).office === null) {
+                            if (e.data.items.find((o: OrganizationPopupModel) => !!o).office === null) {
                                 const key = e.component.getKeyByRowIndex(e.rowIndex);
-                                e.component.collapseRow(key);
+                                await e.component.collapseRow(key);
                             }
                         }
                     } }

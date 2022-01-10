@@ -15,6 +15,7 @@ import { AppBaseProviderProps } from '../models/app-base-provider-props';
 import { TimelineModel } from '../models/timeline';
 import { TrackLocationRecordModel } from '../models/track-location-record';
 import { MobileDeviceModel } from '../models/mobile-device';
+import { OrganizationPopupModel } from '../models/organization-popup';
 
 export type AxiosWithCredentialsFunc = (config: AxiosRequestConfig) => Promise<AxiosResponse<any, any> | undefined>;
 export type GetMobileDevicesAsyncFunc = () => Promise<MobileDeviceModel[] | null>;
@@ -27,6 +28,7 @@ export type GetLocationRecordAsyncFunc = (locationRecordId: number) => Promise<a
 export type GetGeocodedAddressesAsyncFunc = (locationRecord: any) => Promise<any[]>;
 export type GetGeocodedAddressAsyncFunc = (locationRecord: any) => Promise<any>;
 export type GetGeocodedLocationAsyncFunc = (address: string) => Promise<any>;
+export type GetOrganizationOfficesAsyncFunc = (organizationId?: number) => Promise<OrganizationPopupModel[] | null>
 
 export type AppDataContextModel = {
   getAssignOrganizationAsync: GetAssignOrganizationAsyncFunc,
@@ -44,7 +46,7 @@ export type AppDataContextModel = {
   getExtendedUserInfoAsync: any,
   postExtendedUserInfoAsync: any,
   getOrganizationsAsync: any,
-  getOrganizationOfficesAsync: any,
+  getOrganizationOfficesAsync: GetOrganizationOfficesAsyncFunc,
   deleteOrganizationAsync: any,
   postOrganizationAsync: any,
   getOfficeAsync: any,
@@ -116,8 +118,6 @@ function AppDataProvider (props: AppBaseProviderProps) {
     }, [axiosWithCredentials]);
 
     const getMobileDeviceAsync = useCallback<GetMobileDeviceAsyncFunc>(async (mobileDeviceId) => {
-      // eslint-disable-next-line no-debugger
-      debugger;
         const response = await axiosWithCredentials({
             url: `${ routes.host }${ routes.mobileDevice }/${mobileDeviceId}`,
             method: HttpConstants.Methods.Get as Method
@@ -311,7 +311,7 @@ function AppDataProvider (props: AppBaseProviderProps) {
         return null;
     }, [axiosWithCredentials]);
 
-    const getOrganizationOfficesAsync = useCallback(async (organizationId) => {
+    const getOrganizationOfficesAsync = useCallback<GetOrganizationOfficesAsyncFunc>(async (organizationId) => {
         const response = await axiosWithCredentials({
             url: `${ routes.host }${ routes.organization }/organization-offices` + (organizationId ? `/${organizationId}` :  ''),
             method: HttpConstants.Methods.Get as Method,
@@ -319,6 +319,7 @@ function AppDataProvider (props: AppBaseProviderProps) {
         if (response && response.status === HttpConstants.StatusCodes.Ok) {
             return response.data;
         }
+
         return null;
     }, [axiosWithCredentials]);
 

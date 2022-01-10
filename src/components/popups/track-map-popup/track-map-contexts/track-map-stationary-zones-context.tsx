@@ -12,15 +12,19 @@ import { getGeoClusters } from '../../../../utils/geo-cluster-helper';
 import { AppSettingsContextModel } from '../../../../models/app-settings-context';
 import { AppBaseProviderProps } from '../../../../models/app-base-provider-props';
 import { IconBaseProps } from 'react-icons/lib/cjs/iconBase';
-import { ClusterModel } from '../../../../models/cluster-model';
+import { Cluster } from '../../../../models/cluster';
 import {
     TrackLocationRecordModel,
     TrackMapLocationRecordsContextModel
 } from '../../../../models/track-location-record';
 import { TrackMapSettingsContextModel } from '../../../../models/track-map-settings-context';
 import { TrackMapTrackContextModel } from '../../../../models/track-map-context';
+import {
+    ShowInfoWindowAsyncFunc,
+    TrackMapStationaryZonesContextModel
+} from '../../../../models/track-map-stationary-zones-context';
 
-const TrackMapStationaryZonesContext = createContext({});
+const TrackMapStationaryZonesContext = createContext<TrackMapStationaryZonesContextModel>({} as TrackMapStationaryZonesContextModel);
 
 const useTrackMapStationaryZonesContext = () => useContext(TrackMapStationaryZonesContext);
 
@@ -40,8 +44,8 @@ function TrackMapStationaryZonesProvider (props: AppBaseProviderProps) {
         useStationaryZoneAddressesOnMap,
     } = appSettingsData;
 
-    const [stationaryClusterList, setStationaryClusterList] = useState<ClusterModel[]>([]);
-    const [currentStationaryCluster, setCurrentStationaryCluster] = useState<ClusterModel | null>(null);
+    const [stationaryClusterList, setStationaryClusterList] = useState<Cluster[]>([]);
+    const [currentStationaryCluster, setCurrentStationaryCluster] = useState<Cluster | null>(null);
 
     const currentClusterInfoWindow = useRef<google.maps.InfoWindow | null>(null);
     const currentStationaryClusterCircleList = useRef<google.maps.Circle[]>([]);
@@ -58,9 +62,8 @@ function TrackMapStationaryZonesProvider (props: AppBaseProviderProps) {
 
     const closeAllOverlays = useCallback(() => {
         if (currentStationaryClusterCircleList.current.length > 0) {
-            currentStationaryClusterCircleList.current.forEach((sc: any) => {
+            currentStationaryClusterCircleList.current.forEach((sc: google.maps.Circle) => {
                 sc.setMap(null);
-                sc = null;
             });
             currentStationaryClusterCircleList.current = [];
         }
@@ -71,14 +74,13 @@ function TrackMapStationaryZonesProvider (props: AppBaseProviderProps) {
         }
     }, []);
 
-    const showInfoWindowAsync = useCallback(async (clusterIndex) => {
-
+    const showInfoWindowAsync = useCallback<ShowInfoWindowAsyncFunc>(async (clusterIndex: number) => {
         if (currentClusterInfoWindow.current) {
             currentClusterInfoWindow.current.close();
             currentClusterInfoWindow.current = null;
         }
 
-        const cluster = stationaryClusterList.find((c: any) => c.index === clusterIndex);
+        const cluster = stationaryClusterList.find(c => c.index === clusterIndex);
 
         if (!cluster || !cluster.centroid) {
              return;
@@ -90,12 +92,12 @@ function TrackMapStationaryZonesProvider (props: AppBaseProviderProps) {
             motionActivityTypeId: 8,
             isCharging: false,
             speed: cluster.elements
-                .map((element: any) => element[2].speed)
-                .reduce((acc: any, curr: any) => acc + curr, 0) / cluster.elements.length,
+                .map((element) => (element[2] as TrackLocationRecordModel).speed)
+                .reduce((acc, curr) => acc + curr, 0) / cluster.elements.length,
 
             accuracy: Math.floor(( cluster.elements
-                .map((element: any) => element[2].accuracy)
-                .reduce((acc: any, curr: any) => acc + curr, 0) / cluster.elements.length ) * 10) / 10,
+                .map((element) => (element[2] as TrackLocationRecordModel).accuracy)
+                .reduce((acc, curr) => acc + curr, 0) / cluster.elements.length ) * 10) / 10,
 
             batteryLevel: 1,
         };
@@ -172,7 +174,7 @@ function TrackMapStationaryZonesProvider (props: AppBaseProviderProps) {
 
     const constructStationaryClusterListAsync = useCallback( async () => {
         if (currentMapInstance && trackLocationRecordList.length > 0) {
-            const currentStationaryClusterList: ClusterModel[] = [];
+            const currentStationaryClusterList: Cluster[] = [];
 
             const geoClusters = getGeoClusters(trackLocationRecordList, {
                 stationaryZoneRadius,
@@ -217,7 +219,7 @@ function TrackMapStationaryZonesProvider (props: AppBaseProviderProps) {
                     }) ;
                 }
 
-                const cluster: ClusterModel = {
+                const cluster: Cluster = {
                     id: index,
                     index: index,
                     centroid: centroidCenter,
@@ -228,7 +230,7 @@ function TrackMapStationaryZonesProvider (props: AppBaseProviderProps) {
                     accuracy: 0,
                     count: 0
                 };
-
+                console.log(geoCluster);
                 currentStationaryClusterList.push(cluster);
                 index++;
             }
