@@ -6,10 +6,9 @@ import { useAuth } from '../../contexts/auth';
 
 import './login-form.scss';
 import { LoginFormModel } from '../../models/login-form';
-import { AuthContextModel } from '../../models/auth-context';
 
 export default function () {
-    const { signIn }: AuthContextModel = useAuth();
+    const { signIn } = useAuth();
     const [loading, setLoading] = useState<boolean>(false);
     const formData = useRef<LoginFormModel>({} as LoginFormModel);
 

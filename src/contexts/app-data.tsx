@@ -9,13 +9,12 @@ import { useAppSettings } from './app-settings';
 import AppConstants from '../constants/app-constants';
 import notify from 'devextreme/ui/notify';
 import { SharedAreaContextModel } from '../models/shared-area-context';
-import { AuthContextModel } from '../models/auth-context';
-import { AppSettingsContextModel } from '../models/app-settings-context';
 import { AppBaseProviderProps } from '../models/app-base-provider-props';
 import { TimelineModel } from '../models/timeline';
 import { TrackLocationRecordModel } from '../models/track-location-record';
 import { MobileDeviceModel } from '../models/mobile-device';
 import { OrganizationPopupModel } from '../models/organization-popup';
+import { LocationRecordDataModel } from '../models/location-record-data';
 
 export type AxiosWithCredentialsFunc = (config: AxiosRequestConfig) => Promise<AxiosResponse<any, any> | undefined>;
 export type GetMobileDevicesAsyncFunc = () => Promise<MobileDeviceModel[] | null>;
@@ -24,8 +23,8 @@ export type GetAssignOrganizationAsyncFunc = (userVerificationData: any) => Prom
 export type GetMobileDeviceBackgroundStatusListAsyncFunc = (mobileDeviceId: number, beginDate: Date, endDate: Date) => Promise<any>;
 export type GetTimelinesAsyncFunc = (mobileDeviceId: number, workDate: Date) => Promise<TimelineModel[]>;
 export type GetLocationRecordsByRangeAsyncFunc = (mobileDeviceId: number, beginDate: Date, endDate: Date) => Promise<TrackLocationRecordModel[] | null>;
-export type GetLocationRecordAsyncFunc = (locationRecordId: number) => Promise<any>;
-export type GetGeocodedAddressesAsyncFunc = (locationRecord: any) => Promise<any[]>;
+export type GetLocationRecordAsyncFunc = (locationRecordId: number) => Promise<LocationRecordDataModel | null>;
+export type GetGeocodedAddressesAsyncFunc = (locationRecord: LocationRecordDataModel) => Promise<any[]>;
 export type GetGeocodedAddressAsyncFunc = (locationRecord: any) => Promise<any>;
 export type GetGeocodedLocationAsyncFunc = (address: string) => Promise<any>;
 export type GetOrganizationOfficesAsyncFunc = (organizationId?: number) => Promise<OrganizationPopupModel[] | null>
@@ -63,8 +62,8 @@ const AppDataContext = createContext<AppDataContextModel>({} as AppDataContextMo
 const useAppData = () => useContext(AppDataContext);
 
 function AppDataProvider (props: AppBaseProviderProps) {
-    const { appSettingsData }: AppSettingsContextModel = useAppSettings();
-    const { getUserAuthDataFromStorage }: AuthContextModel = useAuth();
+    const { appSettingsData } = useAppSettings();
+    const { getUserAuthDataFromStorage } = useAuth();
     const { showLoader, hideLoader }: SharedAreaContextModel = useSharedArea();
 
     const axiosWithCredentials = useCallback<AxiosWithCredentialsFunc>(
@@ -206,9 +205,9 @@ function AppDataProvider (props: AppBaseProviderProps) {
                 },
             );
             if (response && response.status === HttpConstants.StatusCodes.Ok) {
-              console.log(response.data)
-                return response.data;
+                return response.data as LocationRecordDataModel;
             }
+
             return null;
         },
         [axiosWithCredentials]);

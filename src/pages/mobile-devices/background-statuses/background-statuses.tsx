@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { AppDataContextModel, useAppData } from '../../../contexts/app-data';
+import {  useAppData } from '../../../contexts/app-data';
 import { useAppSettings } from '../../../contexts/app-settings';
 import AppConstants from '../../../constants/app-constants';
 import DataGrid, { Column, LoadPanel, Scrolling } from 'devextreme-react/ui/data-grid';
@@ -24,22 +24,19 @@ import {
     LowPowerModeDisabledIcon,
     LowPowerModeEnabledIcon
 } from '../../../constants/app-icons';
-import { AppSettingsContextModel } from '../../../models/app-settings-context';
 import { MobileDeviceWorkDateModel } from '../../../models/mobile-device-work-date-model';
 import { MobileDeviceBackgroundStatusModel } from '../../../models/mobile-device-background-status-model';
 
 const BackgroundStatuses = ({ mobileDevice, workDate }: MobileDeviceWorkDateModel) => {
 
-    const { getMobileDeviceBackgroundStatusListAsync }: AppDataContextModel = useAppData();
+    const { getMobileDeviceBackgroundStatusListAsync } = useAppData();
     const {
         appSettingsData: {
             workDate: appSettingsWorkDate,
         }
-    }: AppSettingsContextModel = useAppSettings();
-
+    } = useAppSettings();
     const [backgroundStatusList, setBackgroundStatusList] = useState<MobileDeviceBackgroundStatusModel[]>([]);
     const [currentWorkDate] = useState(workDate ?? appSettingsWorkDate);
-
     const dxDataGridRef = useRef<DataGrid<MobileDeviceBackgroundStatusModel, number>>(null);
     const mainContextMenuRef = useRef(null);
 

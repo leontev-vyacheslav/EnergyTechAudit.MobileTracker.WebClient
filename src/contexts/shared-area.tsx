@@ -7,7 +7,6 @@ import Loader from '../components/loader/loader';
 import WorkDatePicker from '../components/work-date-picker/work-date-picker';
 import { ProcFunc } from '../models/primitive-type';
 import { SharedAreaContextModel } from '../models/shared-area-context';
-import { AuthContextModel } from '../models/auth-context';
 import { AppBaseProviderProps } from '../models/app-base-provider-props';
 import TreeView from 'devextreme-react/tree-view';
 
@@ -18,7 +17,7 @@ function SharedAreaProvider (props: AppBaseProviderProps) {
     const { children } = props;
     const [isShowLoader, setIsShowLoader] = useState<boolean>(false);
     const [isShowWorkDatePicker, setIsWorkDatePicker] = useState<boolean>(false);
-    const { signOut }: AuthContextModel = useAuth();
+    const { signOut } = useAuth();
     const workDatePickerRef = useRef<any>();
     const treeViewRef = useRef<TreeView<any>>(null) ;
 

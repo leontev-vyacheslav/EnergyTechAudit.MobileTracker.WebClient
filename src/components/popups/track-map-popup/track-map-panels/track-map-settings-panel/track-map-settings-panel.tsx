@@ -3,10 +3,9 @@ import TrackMapPanelHeader from '../track-map-panel-header/track-map-panel-heade
 import SettingsForm from '../../../../settings-form/settings-form';
 import { SettingsIcon } from '../../../../../constants/app-icons';
 import { useTrackMapSettingsContext } from '../../track-map-contexts/track-map-settings-context';
-import { TrackMapSettingsContextModel } from '../../../../../models/track-map-settings-context';
 
 const TrackMapSettingsPanel = () => {
-    const { setIsShowTrackMapSettings }: TrackMapSettingsContextModel = useTrackMapSettingsContext();
+    const { setIsShowTrackMapSettings } = useTrackMapSettingsContext();
     return (
         <div style={ { height: 'calc(100% - 35px)' } }>
             <TrackMapPanelHeader title={ 'Настроки' } icon={ () => <SettingsIcon size={ 22 }/> } onClose={ () => {

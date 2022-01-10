@@ -10,7 +10,7 @@ export type TrackMapStationaryZonesListItemProps = {
 }
 
 const TrackMapStationaryZonesListItem = ({ stationaryCluster }: TrackMapStationaryZonesListItemProps) => {
-    const { stationaryClusterList, showInfoWindowAsync,  setCurrentStationaryCluster }: TrackMapStationaryZonesContextModel = useTrackMapStationaryZonesContext();
+    const { stationaryClusterList, showInfoWindowAsync,  setCurrentStationaryCluster } = useTrackMapStationaryZonesContext();
     return (
         <>
             <div className={ 'track-map-stationary-zones-list-item' } onClick={ async () => {

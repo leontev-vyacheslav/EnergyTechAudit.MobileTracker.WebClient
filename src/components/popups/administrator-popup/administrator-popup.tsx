@@ -4,15 +4,15 @@ import ScrollView from 'devextreme-react/scroll-view';
 import Form, { SimpleItem } from 'devextreme-react/form';
 import Button from 'devextreme-react/button';
 import { DialogConstants } from '../../../constants/app-dialog-constant';
-import { AppDataContextModel, useAppData } from '../../../contexts/app-data';
 import { AdministratorPopupProps } from '../../../models/administrator-popup-props';
 import { AdministratorPopupModel } from '../../../models/administrator-popup';
+import { useAppData } from '../../../contexts/app-data';
 
 const AdministratorPopup = ({ editMode, administrator, callback }: AdministratorPopupProps) => {
 
     const [currentAdministrator, setCurrentAdministrator] = useState<AdministratorPopupModel | null>(null);
     const [organizations, setOrganizations] = useState(null);
-    const { getAdminAsync, postAdminAsync, getOrganizationsAsync }: AppDataContextModel = useAppData();
+    const { getAdminAsync, postAdminAsync, getOrganizationsAsync } = useAppData();
 
     const formRef = useRef<Form>(null);
 

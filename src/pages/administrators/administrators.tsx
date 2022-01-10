@@ -1,7 +1,6 @@
 import PageHeader from '../../components/page-header/page-header';
 import { AdminIcon, EmailIcon, GridAdditionalMenuIcon } from '../../constants/app-icons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { AppDataContextModel, useAppData } from '../../contexts/app-data';
 import AppConstants from '../../constants/app-constants';
 import DataGrid, {
     Column,
@@ -31,10 +30,11 @@ import ContextMenu from 'devextreme-react/context-menu';
 import { AdministratorPopupModel } from '../../models/administrator-popup';
 import { IconBaseProps } from 'react-icons/lib/cjs/iconBase';
 import { AdministratorModel } from '../../models/administrator';
+import { useAppData } from '../../contexts/app-data';
 
 const Administrators = () => {
 
-    const { getAdminListAsync, deleteAdminAsync }: AppDataContextModel = useAppData();
+    const { getAdminListAsync, deleteAdminAsync } = useAppData();
     const { isXSmall } = useScreenSize();
 
     const [administrators, setAdministrators] = useState<AdministratorModel[] | null>(null);

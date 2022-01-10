@@ -1,5 +1,7 @@
+import { LocationRecordDataModel } from './location-record-data';
+
 export type TrackMapInfoWindowProps = {
-  locationRecord: any,
-  addresses: any,
+  locationRecord: LocationRecordDataModel,
+  addresses: string[],
   externalDatasheet: any
 }

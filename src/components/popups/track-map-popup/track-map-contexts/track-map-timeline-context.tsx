@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { AppDataContextModel, useAppData } from '../../../../contexts/app-data';
+import {  useAppData } from '../../../../contexts/app-data';
 import { useAppSettings } from '../../../../contexts/app-settings';
-import { AppSettingsContextModel } from '../../../../models/app-settings-context';
 import { TimelineModel } from '../../../../models/timeline';
 import {
     TrackMapTimelineContextModel,
@@ -13,8 +12,8 @@ const useTrackMapTimelineContext = () => useContext(TrackMapTimelineContext);
 
 function TrackMapTimelineProvider (props: TrackMapTimelineProviderProps) {
     const { mobileDevice, workDate } = props;
-    const { getTimelinesAsync }: AppDataContextModel = useAppData();
-    const { appSettingsData, getDailyTimelineItem }: AppSettingsContextModel = useAppSettings();
+    const { getTimelinesAsync } = useAppData();
+    const { appSettingsData, getDailyTimelineItem } = useAppSettings();
     const [currentTimeline, setCurrentTimeline] = useState<TimelineModel[]>([]);
     const [currentTimelineItem, setCurrentTimelineItem] = useState<TimelineModel | null>(null);
 

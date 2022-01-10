@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Form, { SimpleItem } from 'devextreme-react/form';
 import Button from 'devextreme-react/button';
 import { DialogConstants } from '../../../constants/app-dialog-constant';
-import { AppDataContextModel, useAppData } from '../../../contexts/app-data';
+import { useAppData } from '../../../contexts/app-data';
 import ScrollView from 'devextreme-react/scroll-view';
 import AppModalPopup from '../app-modal-popup/app-modal-popup';
 import { ExtendedUserInfoPopupProps } from '../../../models/extended-user-info-popup-props';
@@ -10,7 +10,7 @@ import { OfficeOrganizationPopupModel } from '../../../models/office-organizatio
 
 const ExtendedUserInfoPopup = ({ userId, callback }: ExtendedUserInfoPopupProps) => {
     const formRef = useRef<Form>(null);
-    const { getExtendedUserInfoAsync, postExtendedUserInfoAsync, getOrganizationsAsync, getOrganizationOfficesAsync }: AppDataContextModel = useAppData();
+    const { getExtendedUserInfoAsync, postExtendedUserInfoAsync, getOrganizationsAsync, getOrganizationOfficesAsync } = useAppData();
     const [extendedUserInfo, setExtendedUserInfo] = useState(null);
     const [offices, setOffices] = useState<(OfficeOrganizationPopupModel | null)[]>([]);
     const [organizations, setOrganizations] = useState(null);

@@ -11,3 +11,4 @@ export type TrackLocationRecordModel = {
   latitude: number,
   longitude: number
 }
+

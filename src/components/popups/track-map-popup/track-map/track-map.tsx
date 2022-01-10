@@ -9,17 +9,14 @@ import TrackMapTimelinePanel from '../track-map-panels/track-map-timeline-panel/
 import { useTrackMapSettingsContext } from '../track-map-contexts/track-map-settings-context';
 import { useScreenSize } from '../../../../utils/media-query';
 import { useTrackMapTrackContext } from '../track-map-contexts/track-map-track-context';
-
 import './track-map.scss';
-import { TrackMapSettingsContextModel } from '../../../../models/track-map-settings-context';
 import { MobileDeviceModel } from '../../../../models/mobile-device';
-import { TrackMapTrackContextModel } from '../../../../models/track-map-context';
 import { GoogleLibraries } from '../../../../models/google-liblaries';
 
 const TrackMap = ({ mobileDevice }: { mobileDevice: MobileDeviceModel }) => {
     const { isXSmall, isSmall } = useScreenSize();
-    const { isShowTrackMapSettings, isShowTrackMapZones, isShowTrackMapTimeline }: TrackMapSettingsContextModel = useTrackMapSettingsContext();
-    const { setCurrentMapInstance, fitMapBoundsByLocations, closeInfoWindow }: TrackMapTrackContextModel = useTrackMapTrackContext();
+    const { isShowTrackMapSettings, isShowTrackMapZones, isShowTrackMapTimeline } = useTrackMapSettingsContext();
+    const { setCurrentMapInstance, fitMapBoundsByLocations, closeInfoWindow } = useTrackMapTrackContext();
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: AppConstants.trackMap.apiKey,

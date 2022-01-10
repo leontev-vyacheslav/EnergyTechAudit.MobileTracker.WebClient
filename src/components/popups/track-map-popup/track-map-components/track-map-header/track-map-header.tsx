@@ -5,14 +5,13 @@ import { TrackMapTimelineItem } from '../track-map-timeline-item/track-map-timel
 import { useScreenSize } from '../../../../../utils/media-query';
 import { useTrackMapTimelineContext } from '../../track-map-contexts/track-map-timeline-context';
 import { getUserDeviceDescription } from '../../../../../utils/string-helper';
-
 import './track-map-header.scss';
 import { MobileDeviceModel } from '../../../../../models/mobile-device';
 
 const TrackMapHeader = ({ mobileDevice }: { mobileDevice: MobileDeviceModel }) => {
 
     const { isXSmall } = useScreenSize();
-    const { currentTimeline, currentTimelineItem, setCurrentTimelineItem }: any = useTrackMapTimelineContext();
+    const { currentTimeline, currentTimelineItem, setCurrentTimelineItem } = useTrackMapTimelineContext();
 
     return (
         <div className={ 'track-map-header' }>

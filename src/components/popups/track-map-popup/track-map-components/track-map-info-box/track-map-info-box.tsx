@@ -3,11 +3,10 @@ import './track-map-info-box.scss';
 import { BeginDateIcon, DateRangeIcon, EndDateIcon, MobileDeviceIcon } from '../../../../../constants/app-icons';
 import { useTrackMapTimelineContext } from '../../track-map-contexts/track-map-timeline-context';
 import { MobileDeviceModel } from '../../../../../models/mobile-device';
-import { TrackMapTimelineContextModel } from '../../../../../models/track-map-timeline-provider-props';
 
 const TrackMapInfoBox = ({ mobileDevice }: { mobileDevice: MobileDeviceModel }) => {
 
-    const { currentTimelineItem }: TrackMapTimelineContextModel = useTrackMapTimelineContext();
+    const { currentTimelineItem } = useTrackMapTimelineContext();
 
     return (
         currentTimelineItem ?

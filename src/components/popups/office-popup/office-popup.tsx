@@ -3,7 +3,7 @@ import { DialogConstants } from '../../../constants/app-dialog-constant';
 import ScrollView from 'devextreme-react/scroll-view';
 import Form, { SimpleItem } from 'devextreme-react/form';
 import Button from 'devextreme-react/button';
-import { AppDataContextModel, useAppData } from '../../../contexts/app-data';
+import { useAppData } from '../../../contexts/app-data';
 import AppConstants from '../../../constants/app-constants';
 import AppModalPopup from '../app-modal-popup/app-modal-popup';
 import { OfficePopupProps } from '../../../models/office-popup-props';
@@ -11,7 +11,7 @@ import { OfficePopupModel } from '../../../models/office-popup';
 
 const OfficePopup = ({ editMode, organization, callback }: OfficePopupProps) => {
 
-    const { getOfficeAsync, postOfficeAsync }: AppDataContextModel = useAppData();
+    const { getOfficeAsync, postOfficeAsync } = useAppData();
     const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
     const formRef = useRef<Form>(null);
     const [currentOffice, setCurrentOffice] = useState<OfficePopupModel>(null);

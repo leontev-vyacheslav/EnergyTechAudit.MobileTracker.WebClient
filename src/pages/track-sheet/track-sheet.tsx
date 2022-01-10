@@ -2,9 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import DataGrid, { Column, Grouping, LoadPanel, MasterDetail, Pager, Paging, Scrolling, SearchPanel } from 'devextreme-react/data-grid';
 import { Template } from 'devextreme-react/core/template';
 import { Button } from 'devextreme-react/button';
-import { AppDataContextModel, useAppData } from '../../contexts/app-data';
+import { useAppData } from '../../contexts/app-data';
 import AppConstants from '../../constants/app-constants'
-import SideNavigationMenu from '../../components/side-navigation-menu/side-navigation-menu';
 import { useLocation } from 'react-router';
 import TrackSheetContextMenu from './track-sheet-context-menu'
 import { useScreenSize } from '../../utils/media-query';
@@ -31,8 +30,8 @@ const TrackSheet = () => {
 
     const query = useQuery();
     const { isXSmall } = useScreenSize();
-    const { appSettingsData: { workDate }, getDailyTimelineItem }: AppSettingsContextModel = useAppSettings();
-    const { getMobileDeviceAsync, getTrackSheetAsync }: AppDataContextModel = useAppData();
+    const { appSettingsData: { workDate }, getDailyTimelineItem } = useAppSettings();
+    const { getMobileDeviceAsync, getTrackSheetAsync } = useAppData();
 
     const [trackSheet, setTrackSheet] = useState<any>(null);
     const [mobileDevice, setMobileDevice] = useState<MobileDeviceModel | null>(null);

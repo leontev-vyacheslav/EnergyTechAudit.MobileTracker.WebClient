@@ -5,12 +5,10 @@ import TrackMapPanelHeader from '../track-map-panel-header/track-map-panel-heade
 import { useTrackMapSettingsContext } from '../../track-map-contexts/track-map-settings-context';
 import { StationaryZonesIcon } from '../../../../../constants/app-icons';
 import { useTrackMapStationaryZonesContext } from '../../track-map-contexts/track-map-stationary-zones-context';
-import { TrackMapSettingsContextModel } from '../../../../../models/track-map-settings-context';
-import { TrackMapStationaryZonesContextModel } from '../../../../../models/track-map-stationary-zones-context';
 
 const TrackMapStationaryZonesPanel = () => {
-    const { stationaryClusterList, currentStationaryCluster }: TrackMapStationaryZonesContextModel = useTrackMapStationaryZonesContext();
-    const { setIsShowTrackMapZones }: TrackMapSettingsContextModel = useTrackMapSettingsContext();
+    const { stationaryClusterList, currentStationaryCluster } = useTrackMapStationaryZonesContext();
+    const { setIsShowTrackMapZones } = useTrackMapSettingsContext();
     return (
         <div style={ { height: 'calc(100% - 35px)' } }>
             <TrackMapPanelHeader title={ 'Зоны стационарности' } icon={ () => <StationaryZonesIcon size={ 22 }/> } onClose={ () => {

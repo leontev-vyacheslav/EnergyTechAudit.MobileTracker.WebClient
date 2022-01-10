@@ -5,13 +5,10 @@ import { useTrackMapSettingsContext } from '../../track-map-contexts/track-map-s
 import { useTrackMapTimelineContext } from '../../track-map-contexts/track-map-timeline-context';
 import { TrackMapTimelineItem } from '../../track-map-components/track-map-timeline-item/track-map-timeline-item';
 import { TimelineIcon } from '../../../../../constants/app-icons';
-import { TrackMapSettingsContextModel } from '../../../../../models/track-map-settings-context';
-import { TrackMapTimelineContextModel } from '../../../../../models/track-map-timeline-provider-props';
 
 const TrackMapTimelinePanel = () => {
-
-    const { setIsShowTrackMapTimeline }: TrackMapSettingsContextModel = useTrackMapSettingsContext();
-    const { currentTimeline, currentTimelineItem, setCurrentTimelineItem }: TrackMapTimelineContextModel = useTrackMapTimelineContext();
+    const { setIsShowTrackMapTimeline } = useTrackMapSettingsContext();
+    const { currentTimeline, currentTimelineItem, setCurrentTimelineItem } = useTrackMapTimelineContext();
     return  currentTimeline && currentTimelineItem ? (
         <div style={ { height: 'calc(100% - 35px)' } }>
             <TrackMapPanelHeader title={ 'Хронология' } icon={ () => <TimelineIcon size={ 22 }/> } onClose={ () => {

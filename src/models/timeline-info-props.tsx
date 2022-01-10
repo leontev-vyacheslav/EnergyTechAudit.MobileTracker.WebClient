@@ -1,8 +1,9 @@
 import { TimelineInfoModel } from './timeline-info';
 import { MobileDeviceModel } from './mobile-device';
+import { TimelineModel } from './timeline';
 
 export type TimelineInfoProps = {
-  timeline: any,
+  timeline: TimelineModel,
   mobileDevice: MobileDeviceModel
 }
 

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import AppConstants from '../../constants/app-constants';
-import { AppDataContextModel, useAppData } from '../../contexts/app-data';
+import { useAppData } from '../../contexts/app-data';
 import DataGrid, {
     Column,
     Grouping,
@@ -30,11 +30,9 @@ import DataGridMainContextMenu from '../../components/data-grid-main-context-men
 import { SimpleDialogModel } from '../../models/simple-dialog';
 import ContextMenu from 'devextreme-react/context-menu';
 import { OrganizationPopupModel } from '../../models/organization-popup';
-import DevExpress from 'devextreme';
-import RowPreparedEvent = DevExpress.ui.dxDataGrid.RowPreparedEvent;
 
 const Organizations = () => {
-    const { getOrganizationOfficesAsync, deleteOrganizationAsync, deleteOfficeAsync }: AppDataContextModel = useAppData();
+    const { getOrganizationOfficesAsync, deleteOrganizationAsync, deleteOfficeAsync } = useAppData();
     const { isXSmall } = useScreenSize();
     const [organizations, setOrganizations] = useState<OrganizationPopupModel[] | null>(null);
     const [organizationPopupTrigger, setOrganizationPopupTrigger] = useState<boolean>(false);

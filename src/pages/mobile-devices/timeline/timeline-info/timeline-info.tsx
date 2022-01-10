@@ -3,7 +3,7 @@ import DataGrid, { Column, LoadPanel, Scrolling } from 'devextreme-react/data-gr
 import { TimelineInfoHeader } from './timeline-info-header';
 import AppConstants from '../../../../constants/app-constants';
 import { useScreenSize } from '../../../../utils/media-query';
-import { AppDataContextModel, useAppData } from '../../../../contexts/app-data';
+import { useAppData } from '../../../../contexts/app-data';
 import { AccuracyIcon, BreakIcon, CountdownIcon, EdgePointsIcon, IntervalIcon } from '../../../../constants/app-icons';
 
 import './timeline-info.scss';
@@ -12,9 +12,8 @@ import { TimelineInfoModel } from '../../../../models/timeline-info';
 import { TimelineInfoProps, TimelineInfoRowProps } from '../../../../models/timeline-info-props';
 
 const TimelineInfo = ({ timeline, mobileDevice }: TimelineInfoProps) => {
-
     const { isXSmall, isSmall } = useScreenSize();
-    const { getGeocodedAddressAsync }: AppDataContextModel = useAppData();
+    const { getGeocodedAddressAsync } = useAppData();
 
     const [departure, setDeparture] = useState<string | null>(null);
     const [destination, setDestination] = useState<string | null>(null);

@@ -1,13 +1,11 @@
 import AppConstants from '../../../../constants/app-constants';
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
-import { AppDataContextModel, useAppData } from '../../../../contexts/app-data';
+import {  useAppData } from '../../../../contexts/app-data';
 import TrackMapInfoWindow from '../track-map-components/track-map-info-window/track-map-info-window';
 import { useAppSettings } from '../../../../contexts/app-settings';
 import { useTrackMapLocationRecordsContext } from './track-map-location-records-context';
-import { AppSettingsContextModel } from '../../../../models/app-settings-context';
 import { AppBaseProviderProps } from '../../../../models/app-base-provider-props';
-import { TrackMapLocationRecordsContextModel } from '../../../../models/track-location-record';
 import { ProcFunc } from '../../../../models/primitive-type';
 import {
     BuildInfoWindowFunc,
@@ -20,9 +18,9 @@ const TrackMapTrackContext = createContext<TrackMapTrackContextModel>({} as Trac
 const useTrackMapTrackContext = () => useContext(TrackMapTrackContext);
 
 function TrackMapTrackProvider (props: AppBaseProviderProps) {
-    const { appSettingsData }: AppSettingsContextModel = useAppSettings();
-    const { getLocationRecordAsync, getGeocodedSelectedAddressesAsync }: AppDataContextModel = useAppData();
-    const { trackLocationRecordList }: TrackMapLocationRecordsContextModel = useTrackMapLocationRecordsContext();
+    const { appSettingsData } = useAppSettings();
+    const { getLocationRecordAsync, getGeocodedSelectedAddressesAsync } = useAppData();
+    const { trackLocationRecordList } = useTrackMapLocationRecordsContext();
     const [currentMapInstance, setCurrentMapInstance] = useState<google.maps.Map | null>(null);
     const currentInfoWindow = useRef<google.maps.InfoWindow | null>(null);
     const trackPath = useRef<google.maps.Polyline | null>(null);

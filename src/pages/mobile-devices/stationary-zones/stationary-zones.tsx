@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import DataGrid, { Column, LoadPanel, Scrolling } from 'devextreme-react/ui/data-grid';
-import { AppDataContextModel, useAppData } from '../../../contexts/app-data';
+import { useAppData } from '../../../contexts/app-data';
 import { useAppSettings } from '../../../contexts/app-settings';
 import AppConstants from '../../../constants/app-constants';
 import { useJsApiLoader } from '@react-google-maps/api';
@@ -14,10 +14,10 @@ import {
   onDataGridToolbarPreparing
 } from '../../../components/data-grid-utils/data-grid-toolbar-button';
 import { getGeoClusters } from '../../../utils/geo-cluster-helper';
-import { AppSettingsContextModel } from '../../../models/app-settings-context';
 import { MobileDeviceWorkDateModel } from '../../../models/mobile-device-work-date-model';
 import { Cluster } from '../../../models/cluster';
 import { GoogleLibraries } from '../../../models/google-liblaries';
+import { LocationRecordDataModel } from '../../../models/location-record-data';
 
 const StationaryZones = ({ mobileDevice, workDate }: MobileDeviceWorkDateModel) => {
     const dxDataGridRef = useRef<DataGrid<Cluster, number>>(null);
@@ -28,7 +28,7 @@ const StationaryZones = ({ mobileDevice, workDate }: MobileDeviceWorkDateModel) 
 
     const mainContextMenuRef = useRef(null);
     const [stationaryClusterList, setStationaryClusterList] = useState<Cluster[]>([]);
-    const { getLocationRecordsByRangeAsync, getGeocodedSelectedAddressesAsync }: AppDataContextModel = useAppData();
+    const { getLocationRecordsByRangeAsync, getGeocodedSelectedAddressesAsync } = useAppData();
 
     const getBoundsByMarkers = useCallback((locationList) => {
         if (!isLoaded) return null;
@@ -53,7 +53,7 @@ const StationaryZones = ({ mobileDevice, workDate }: MobileDeviceWorkDateModel) 
             useStationaryZoneCriteriaAccuracy,
             useStationaryZoneAddressesOnList
         }
-    }: AppSettingsContextModel = useAppSettings();
+    } = useAppSettings();
 
     const [currentWorkDate] = useState<Date>(workDate ?? appSettingsWorkDate);
 
@@ -106,7 +106,7 @@ const StationaryZones = ({ mobileDevice, workDate }: MobileDeviceWorkDateModel) 
                     selectedAddresses = await getGeocodedSelectedAddressesAsync({
                         latitude: centroid.getCenter().lat(),
                         longitude: centroid.getCenter().lng(),
-                    });
+                    } as LocationRecordDataModel);
                 }
 
                 clusterList.push({

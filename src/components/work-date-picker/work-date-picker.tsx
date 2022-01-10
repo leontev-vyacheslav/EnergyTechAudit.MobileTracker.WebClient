@@ -2,10 +2,9 @@ import React from 'react';
 import DateBox from 'devextreme-react/date-box';
 import { useAppSettings } from '../../contexts/app-settings';
 import { WorkDatePickerProps } from '../../models/work-date-picker-props';
-import { AppSettingsContextModel } from '../../models/app-settings-context';
 
 const WorkDatePicker = ({ innerRef, onClosed }: WorkDatePickerProps) => {
-    const { appSettingsData, setAppSettingsData }: AppSettingsContextModel = useAppSettings();
+    const { appSettingsData, setAppSettingsData } = useAppSettings();
 
     return (
       <DateBox

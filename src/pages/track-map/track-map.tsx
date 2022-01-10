@@ -9,11 +9,10 @@ import TrackMap from '../../components/popups/track-map-popup/track-map/track-ma
 import { TrackMapLocationRecordsProvider } from '../../components/popups/track-map-popup/track-map-contexts/track-map-location-records-context';
 import { useLocation } from 'react-router';
 import { useAppSettings } from '../../contexts/app-settings';
-import { AppDataContextModel, useAppData } from '../../contexts/app-data';
+import { useAppData } from '../../contexts/app-data';
 import AppConstants from '../../constants/app-constants';
 
 import './track-map.css';
-import { AppSettingsContextModel } from '../../models/app-settings-context';
 import { MobileDeviceModel } from '../../models/mobile-device';
 
 export default () => {
@@ -22,11 +21,11 @@ export default () => {
     }
 
     const query = useQuery();
-    const { appSettingsData: { workDate } }: AppSettingsContextModel = useAppSettings();
-    const { getMobileDeviceAsync }: AppDataContextModel = useAppData();
+    const { appSettingsData: { workDate } } = useAppSettings();
+    const { getMobileDeviceAsync } = useAppData();
     const [mobileDevice, setMobileDevice] = useState<MobileDeviceModel>(null);
     const [mobileDeviceId] = useState<number>(parseInt(query.get('mobileDeviceId') ?? '0'));
-    const { setAppSettingsData }: AppSettingsContextModel = useAppSettings();
+    const { setAppSettingsData } = useAppSettings();
 
     useEffect(() => {
         ( async () => {

@@ -14,21 +14,20 @@ import { useScreenSize } from '../../../../utils/media-query';
 import { useTrackMapSettingsContext } from '../track-map-contexts/track-map-settings-context';
 import { useAppSettings } from '../../../../contexts/app-settings';
 import { ContextMenuProps } from '../../../../models/context-menu-props';
-import { AppSettingsContextModel } from '../../../../models/app-settings-context';
 import { TrackMapSettingsContextModel } from '../../../../models/track-map-settings-context';
 import { ContextMenuItemItemModel } from '../../../../models/context-menu-item-props';
 import { ItemContextMenuEvent } from 'devextreme/ui/context_menu';
 
 const TrackMapPopupMenu = ({ innerRef, initialDate, commands }: (ContextMenuProps & { initialDate?: Date}) ) => {
 
-    const { setWorkDateToday }: AppSettingsContextModel = useAppSettings();
+    const { setWorkDateToday } = useAppSettings();
 
     const {
         isShowTrackMapSettings, setIsShowTrackMapSettings,
         isShowTrackMapZones, setIsShowTrackMapZones,
         isShowStationaryZone, setIsShowStationaryZone,
         isShowTrackMapTimeline, setIsShowTrackMapTimeline
-    }: TrackMapSettingsContextModel = useTrackMapSettingsContext();
+    } = useTrackMapSettingsContext();
 
     const { isXSmall } = useScreenSize();
 

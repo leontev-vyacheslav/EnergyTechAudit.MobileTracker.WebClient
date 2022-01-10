@@ -9,14 +9,12 @@ import ContextMenuItem from '../context-menu-item/context-menu-item';
 import './user-panel.scss';
 import { useAppSettings } from '../../contexts/app-settings';
 import { UserPanelProps } from '../../models/user-panel-props';
-import { AppSettingsContextModel } from '../../models/app-settings-context';
-import { AuthContextModel } from '../../models/auth-context';
 import { ContextMenuItemItemModel } from '../../models/context-menu-item-props';
 
 export default function ({ menuMode }: UserPanelProps) {
-    const { user }: AuthContextModel = useAuth();
+    const { user } = useAuth();
     const { showWorkDatePicker, signOutWithConfirm } = useSharedArea();
-    const { setWorkDateToday }: AppSettingsContextModel = useAppSettings();
+    const { setWorkDateToday } = useAppSettings();
     const menuItems = useMemo(() => {
         return [
             {

@@ -10,7 +10,7 @@ import DataGrid, {
   TotalItem
 } from 'devextreme-react/data-grid';
 import { Button } from 'devextreme-react/button';
-import { AppDataContextModel, useAppData } from '../../../contexts/app-data';
+import { useAppData } from '../../../contexts/app-data';
 import { useAppSettings } from '../../../contexts/app-settings';
 import TimelineInfo from './timeline-info/timeline-info';
 import AppConstants from '../../../constants/app-constants';
@@ -27,9 +27,9 @@ import { TimelineModel } from '../../../models/timeline';
 
 const Timelines = ({ mobileDevice, workDate }: MobileDeviceWorkDateModel) => {
 
-    const { appSettingsData: { workDate: appSettingsWorkDate } }: AppSettingsContextModel = useAppSettings();
+    const { appSettingsData: { workDate: appSettingsWorkDate } } = useAppSettings();
     const [currentWorkDate] = useState<Date>(workDate ?? appSettingsWorkDate);
-    const { getTimelinesAsync }: AppDataContextModel = useAppData();
+    const { getTimelinesAsync } = useAppData();
     const [currentTimeline, setCurrentTimeline] = useState<TimelineModel[] | null>(null);
     const dxDataGridRef = useRef<DataGrid<TimelineModel, number>>(null);
     const mainContextMenuRef = useRef(null);

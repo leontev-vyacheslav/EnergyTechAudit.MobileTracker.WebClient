@@ -10,10 +10,9 @@ import { useAppSettings } from '../../contexts/app-settings';
 import { MenuIcon } from '../../constants/app-icons';
 import { WorkDateWidgetProps } from '../../models/work-date-widget-props';
 import { HeaderProps } from '../../models/header-props';
-import { AppSettingsContextModel } from '../../models/app-settings-context';
 
 const Header = ({ title, menuToggleEnabled,  toggleMenu } : HeaderProps) => {
-    const { appSettingsData }: AppSettingsContextModel = useAppSettings();
+    const { appSettingsData } = useAppSettings();
 
     const WorkDateWidget = ( { outerStyle }: WorkDateWidgetProps) => {
         return (

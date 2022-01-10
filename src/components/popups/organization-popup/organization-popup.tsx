@@ -3,7 +3,7 @@ import { DialogConstants } from '../../../constants/app-dialog-constant';
 import ScrollView from 'devextreme-react/scroll-view';
 import Form, { GroupItem, SimpleItem, Tab, TabbedItem } from 'devextreme-react/form';
 import Button from 'devextreme-react/button';
-import { AppDataContextModel, useAppData } from '../../../contexts/app-data';
+import {  useAppData } from '../../../contexts/app-data';
 import AppModalPopup from '../app-modal-popup/app-modal-popup';
 import { ToolbarItem } from 'devextreme-react/popup';
 import Moment from 'moment';
@@ -16,7 +16,7 @@ import './organization-popup.scss'
 import { OrganizationPopupModel } from '../../../models/organization-popup';
 
 const OrganizationPopup = ({ editMode, organization, callback }: OrganizationPopupProps) => {
-    const { getOrganizationOfficesAsync, postOrganizationAsync, deleteScheduleItemAsync }: AppDataContextModel = useAppData();
+    const { getOrganizationOfficesAsync, postOrganizationAsync, deleteScheduleItemAsync } = useAppData();
     const [currentOrganization, setCurrentOrganization] = useState<OrganizationPopupModel | null>(null);
     const formRef = useRef<Form>(null);
     const contextMenuRef = useRef<ContextMenu<any>>();

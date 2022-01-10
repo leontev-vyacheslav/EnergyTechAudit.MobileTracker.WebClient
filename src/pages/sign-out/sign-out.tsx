@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { useAuth } from '../../contexts/auth';
-import { AuthContextModel } from '../../models/auth-context';
 
 export default function () {
-    const { signOut }: AuthContextModel = useAuth();
+    const { signOut } = useAuth();
 
     useEffect(() => {
         (async () => {

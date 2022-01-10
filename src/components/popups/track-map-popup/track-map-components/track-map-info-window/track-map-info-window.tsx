@@ -14,6 +14,7 @@ import {
 
 import './track-map-info-window.scss'
 import { TrackMapInfoWindowProps } from '../../../../../models/track-map-info-window-props';
+import { IconBaseProps } from 'react-icons/lib/cjs/iconBase';
 
 const TrackMapInfoWindow = ({ locationRecord, addresses, externalDatasheet }: TrackMapInfoWindowProps) => {
     const { isXSmall, isSmall } = useScreenSize();
@@ -24,37 +25,37 @@ const TrackMapInfoWindow = ({ locationRecord, addresses, externalDatasheet }: Tr
         return externalDatasheet ?? [
             {
                 id: 1,
-                iconRender: (props: any) => <TimeIcon { ...props }/>,
+                iconRender: (props: IconBaseProps) => <TimeIcon { ...props }/>,
                 description: 'Время:',
                 value: new Date(locationRecord.mobileDeviceDateTime).toLocaleString('ru-RU')
             },
             {
                 id: 2,
-                iconRender: (props: any) => <AccuracyIcon { ...props }/>,
+                iconRender: (props: IconBaseProps) => <AccuracyIcon { ...props }/>,
                 description: 'Точность:',
                 value: `${ locationRecord.accuracy } м`
             },
             {
                 id: 3,
-                iconRender: (props: any) => <ActivityIcon { ...props }/>,
+                iconRender: (props: IconBaseProps) => <ActivityIcon { ...props }/>,
                 description: 'Активность:',
                 value: activityTypeDescription ? activityTypeDescription.description : locationRecord.motionActivityTypeId
             },
             {
                 id: 4,
-                iconRender: (props: any) => <SpeedIcon { ...props }/>,
+                iconRender: (props: IconBaseProps) => <SpeedIcon { ...props }/>,
                 description: 'Скорость:',
                 value: locationRecord.speed < 0 ? '-' : `${ Math.floor(locationRecord.speed * 3.6 * 100) / 100 } км/ч`
             },
             {
                 id: 5,
-                iconRender: (props: any) => <ChargingLevelIcon { ...props }/>,
+                iconRender: (props: IconBaseProps) => <ChargingLevelIcon { ...props }/>,
                 description: 'Уровень заряда:',
                 value: `${ Math.floor(locationRecord.batteryLevel * 100 * 100) / 100 } %`
             },
             {
                 id: 6,
-                iconRender: (props: any) => <BatteryIcon { ...props }/>,
+                iconRender: (props: IconBaseProps) => <BatteryIcon { ...props }/>,
                 description: 'На зарядке:',
                 value: locationRecord.isCharging ? 'Да' : 'Нет'
             }
@@ -70,7 +71,7 @@ const TrackMapInfoWindow = ({ locationRecord, addresses, externalDatasheet }: Tr
                             <div className={ 'track-map-info-window-data-row' }>
                                 <AddressIcon size={ 18 }/>
                                 <div style={ { display: 'grid', gap: 3 } }>
-                                    { addresses.map((a: any, i: number) => (
+                                    { addresses.map((a: string, i: number) => (
                                         <div key={ i } style={ { fontWeight: 500 } }>{ a ?? AppConstants.noDataLongText }</div>
                                     )) }
                                 </div>

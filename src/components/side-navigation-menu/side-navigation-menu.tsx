@@ -9,8 +9,6 @@ import { useSharedArea } from '../../contexts/shared-area';
 import './side-navigation-menu.scss';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useAuth } from '../../contexts/auth';
-import { AppSettingsContextModel } from '../../models/app-settings-context';
-import { AuthContextModel } from '../../models/auth-context';
 
 type TreeViewItemModel = {
   expanded: boolean,
@@ -34,9 +32,9 @@ export default function SideNavigationMenu (props: any) {
     const { isLarge } = useScreenSize();
     const { showWorkDatePicker, signOutWithConfirm, treeViewRef } = useSharedArea();
     const { navigationData: { currentPath } } = useNavigation();
-    const { setWorkDateToday }: AppSettingsContextModel = useAppSettings();
-    const { user }: AuthContextModel = useAuth();
-    // const treeViewRef = useRef<TreeView<any>>(null) ;
+    const { setWorkDateToday } = useAppSettings();
+    const { user } = useAuth();
+
     const wrapperRef = useRef();
 
     function normalizePath () {

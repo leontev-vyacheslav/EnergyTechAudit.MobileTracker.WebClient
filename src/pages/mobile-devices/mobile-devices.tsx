@@ -31,7 +31,7 @@ import PageHeader from '../../components/page-header/page-header';
 import MobileDevicesMainContextMenu from './mobile-devices-main-context-menu/mobile-devices-main-context-menu';
 import { Template } from 'devextreme-react/core/template';
 import MobileDevicesMasterDetailView from './mobile-devices-master-detail-view/mobile-devices-master-detail-view';
-import { AppDataContextModel, useAppData } from '../../contexts/app-data';
+import { useAppData } from '../../contexts/app-data';
 import { useHistory } from 'react-router-dom';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useScreenSize } from '../../utils/media-query';
@@ -40,10 +40,8 @@ import {
   onDataGridToolbarPreparing
 } from '../../components/data-grid-utils/data-grid-toolbar-button';
 import { mobileDeviceExcelExporter } from './mobile-devices-excel-exporter';
-
 import './mobile-devices.scss';
 import { getUserDescription } from '../../utils/string-helper';
-import { AppSettingsContextModel } from '../../models/app-settings-context';
 import ContextMenu from 'devextreme-react/context-menu';
 import { MobileDeviceModel } from '../../models/mobile-device';
 
@@ -51,9 +49,8 @@ import { MobileDeviceModel } from '../../models/mobile-device';
 const MobileDevice = () => {
     const dxDataGridRef = useRef<DataGrid<MobileDeviceModel, number>>(null);
     const history = useHistory();
-
-    const { appSettingsData, getDailyTimelineItem }: AppSettingsContextModel = useAppSettings();
-    const { getMobileDevicesAsync }: AppDataContextModel = useAppData();
+    const { appSettingsData, getDailyTimelineItem } = useAppSettings();
+    const { getMobileDevicesAsync } = useAppData();
     const { isXSmall } = useScreenSize();
     const [mobileDevices, setMobileDevices] = useState<MobileDeviceModel[] | null>(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState<any>(null);
@@ -62,8 +59,8 @@ const MobileDevice = () => {
     const groupRowContextMenuRef = useRef<ContextMenu<any>>();
     const rowContextMenuRef = useRef<ContextMenu<any>>();
 
-    const [trackSheetPopupTrigger, setTrackSheetPopupTrigger] = useState(false);
-    const [extendedUserInfoPopupTrigger, setExtendedUserInfoPopupTrigger] = useState(false);
+    const [trackSheetPopupTrigger, setTrackSheetPopupTrigger] = useState<boolean>(false);
+    const [extendedUserInfoPopupTrigger, setExtendedUserInfoPopupTrigger] = useState<boolean>(false);
 
     const showTrackMap = useCallback((e) => {
         if (dxDataGridRef.current && dxDataGridRef.current.instance) {

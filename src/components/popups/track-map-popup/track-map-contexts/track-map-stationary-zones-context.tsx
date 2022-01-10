@@ -6,23 +6,20 @@ import { AccuracyIcon, CountdownIcon, RadiusIcon, SpeedIcon } from '../../../../
 import { useTrackMapSettingsContext } from './track-map-settings-context';
 import { useAppSettings } from '../../../../contexts/app-settings';
 import { useTrackMapTrackContext } from './track-map-track-context';
-import { AppDataContextModel, useAppData } from '../../../../contexts/app-data';
+import { useAppData } from '../../../../contexts/app-data';
 import { useTrackMapLocationRecordsContext } from './track-map-location-records-context';
 import { getGeoClusters } from '../../../../utils/geo-cluster-helper';
-import { AppSettingsContextModel } from '../../../../models/app-settings-context';
 import { AppBaseProviderProps } from '../../../../models/app-base-provider-props';
 import { IconBaseProps } from 'react-icons/lib/cjs/iconBase';
 import { Cluster } from '../../../../models/cluster';
 import {
-    TrackLocationRecordModel,
-    TrackMapLocationRecordsContextModel
+    TrackLocationRecordModel
 } from '../../../../models/track-location-record';
-import { TrackMapSettingsContextModel } from '../../../../models/track-map-settings-context';
-import { TrackMapTrackContextModel } from '../../../../models/track-map-context';
 import {
     ShowInfoWindowAsyncFunc,
     TrackMapStationaryZonesContextModel
 } from '../../../../models/track-map-stationary-zones-context';
+import { LocationRecordDataModel } from '../../../../models/location-record-data';
 
 const TrackMapStationaryZonesContext = createContext<TrackMapStationaryZonesContextModel>({} as TrackMapStationaryZonesContextModel);
 
@@ -30,11 +27,11 @@ const useTrackMapStationaryZonesContext = () => useContext(TrackMapStationaryZon
 
 function TrackMapStationaryZonesProvider (props: AppBaseProviderProps) {
 
-    const { trackLocationRecordList }: TrackMapLocationRecordsContextModel = useTrackMapLocationRecordsContext();
-    const { isShowStationaryZone }: TrackMapSettingsContextModel = useTrackMapSettingsContext();
-    const { currentMapInstance, getBoundsByMarkers, buildInfoWindow }: TrackMapTrackContextModel = useTrackMapTrackContext();
-    const { getGeocodedSelectedAddressesAsync }: AppDataContextModel = useAppData();
-    const { appSettingsData }: AppSettingsContextModel = useAppSettings();
+    const { trackLocationRecordList } = useTrackMapLocationRecordsContext();
+    const { isShowStationaryZone } = useTrackMapSettingsContext();
+    const { currentMapInstance, getBoundsByMarkers, buildInfoWindow } = useTrackMapTrackContext();
+    const { getGeocodedSelectedAddressesAsync } = useAppData();
+    const { appSettingsData } = useAppSettings();
     const {
         stationaryZoneRadius,
         stationaryZoneElementCount,
@@ -100,7 +97,7 @@ function TrackMapStationaryZonesProvider (props: AppBaseProviderProps) {
                 .reduce((acc, curr) => acc + curr, 0) / cluster.elements.length ) * 10) / 10,
 
             batteryLevel: 1,
-        };
+        } as LocationRecordDataModel;
 
         const selectedAddress = await  getGeocodedSelectedAddressesAsync(locationRecordInfo) ;
 
@@ -216,7 +213,7 @@ function TrackMapStationaryZonesProvider (props: AppBaseProviderProps) {
                     selectedAddresses = await  getGeocodedSelectedAddressesAsync({
                         latitude: centroidCenter.lat(),
                         longitude: centroidCenter.lng(),
-                    }) ;
+                    } as LocationRecordDataModel) ;
                 }
 
                 const cluster: Cluster = {
@@ -230,7 +227,6 @@ function TrackMapStationaryZonesProvider (props: AppBaseProviderProps) {
                     accuracy: 0,
                     count: 0
                 };
-                console.log(geoCluster);
                 currentStationaryClusterList.push(cluster);
                 index++;
             }

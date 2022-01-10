@@ -5,13 +5,12 @@ import Button from 'devextreme-react/ui/button';
 import notify from 'devextreme/ui/notify';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useScreenSize } from '../../utils/media-query';
-import { AppSettingsContextModel } from '../../models/app-settings-context';
 import './settings-form.scss';
 import { SettingsFormProps } from '../../models/settings-form-props';
 
 const SettingsForm = ({ style }: SettingsFormProps) => {
     const dxAppSettingsFormRef = useRef<Form>(null);
-    const { appSettingsData, setAppSettingsData }: AppSettingsContextModel = useAppSettings();
+    const { appSettingsData, setAppSettingsData } = useAppSettings();
     const { isXSmall } = useScreenSize();
 
     return (
