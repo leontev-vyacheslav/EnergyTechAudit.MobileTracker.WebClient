@@ -14,7 +14,6 @@ import { useScreenSize } from '../../../../utils/media-query';
 import { useTrackMapSettingsContext } from '../track-map-contexts/track-map-settings-context';
 import { useAppSettings } from '../../../../contexts/app-settings';
 import { ContextMenuProps } from '../../../../models/context-menu-props';
-import { TrackMapSettingsContextModel } from '../../../../models/track-map-settings-context';
 import { ContextMenuItemItemModel } from '../../../../models/context-menu-item-props';
 import { ItemContextMenuEvent } from 'devextreme/ui/context_menu';
 

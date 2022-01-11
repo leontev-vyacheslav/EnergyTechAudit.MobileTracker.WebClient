@@ -24,11 +24,9 @@ const TrackMapHeader = ({ mobileDevice }: { mobileDevice: MobileDeviceModel }) =
                     <SelectBox
                         className={ 'track-map-header-select-box' }
                         dataSource={ currentTimeline }
-                        // selectionMode={ 'single' }
-                        // keyExpr={ 'id' }
                         displayExpr={ () => `${ currentTimelineItem.beginDate.toLocaleTimeString('ru-RU') } - ${ currentTimelineItem.endDate.toLocaleTimeString('ru-RU') }` }
                         onSelectionChanged={ (e) => {
-                            const timeLineItem = currentTimeline.find((ti: any) => ti.id === e.selectedItem.id);
+                            const timeLineItem = currentTimeline.find(ti => ti.id === e.selectedItem.id);
                             if(timeLineItem) {
                                 setCurrentTimelineItem(timeLineItem)
                             }

@@ -5,7 +5,7 @@ import { LocationRecordDataModel } from './location-record-data';
 
 export type GetBoundsByMarkersFunc = (trackLocationList: TrackLocationRecordModel[]) => (google.maps.LatLngBounds | null);
 
-export type BuildInfoWindowFunc = (locationRecord: LocationRecordDataModel, content: any) => (google.maps.InfoWindow | null);
+export type BuildInfoWindowFunc = (locationRecord: LocationRecordDataModel, content: string | Node | null | undefined) => (google.maps.InfoWindow | null);
 
 export type TrackMapTrackContextModel = {
   currentMapInstance: google.maps.Map | null,

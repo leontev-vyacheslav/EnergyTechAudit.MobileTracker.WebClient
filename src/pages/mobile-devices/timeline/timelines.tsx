@@ -21,7 +21,6 @@ import {  DataGridToolbarButton,  onDataGridToolbarPreparing } from '../../../co
 import { timelineExcelExporter } from './timeline-excel-exporter';
 import TimelineMainContextMenu from './timeline-main-context-menu/timeline-main-context-menu';
 import './timeline.scss';
-import { AppSettingsContextModel } from '../../../models/app-settings-context';
 import { MobileDeviceWorkDateModel } from '../../../models/mobile-device-work-date-model';
 import { TimelineModel } from '../../../models/timeline';
 

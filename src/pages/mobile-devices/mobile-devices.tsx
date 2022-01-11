@@ -44,6 +44,7 @@ import './mobile-devices.scss';
 import { getUserDescription } from '../../utils/string-helper';
 import ContextMenu from 'devextreme-react/context-menu';
 import { MobileDeviceModel } from '../../models/mobile-device';
+import { TimelineModel } from '../../models/timeline';
 
 
 const MobileDevice = () => {
@@ -53,7 +54,7 @@ const MobileDevice = () => {
     const { getMobileDevicesAsync } = useAppData();
     const { isXSmall } = useScreenSize();
     const [mobileDevices, setMobileDevices] = useState<MobileDeviceModel[] | null>(null);
-    const [currentTimelineItem, setCurrentTimelineItem] = useState<any>(null);
+    const [currentTimelineItem, setCurrentTimelineItem] = useState<TimelineModel | null>(null);
     const [currentMobileDevice, setCurrentMobileDevice] = useState<MobileDeviceModel>(null);
     const mainContextMenuRef = useRef<ContextMenu<any>>();
     const groupRowContextMenuRef = useRef<ContextMenu<any>>();

@@ -129,7 +129,7 @@ function TrackMapTrackProvider (props: AppBaseProviderProps) {
             const content = ReactDOMServer.renderToString(
                 React.createElement(
                     TrackMapInfoWindow,
-                    { locationRecord: locationRecord, addresses: addresses, externalDatasheet: null }
+                    { locationRecord: locationRecord, addresses: addresses }
                 )
             );
             currentInfoWindow.current = buildInfoWindow(locationRecord, content);

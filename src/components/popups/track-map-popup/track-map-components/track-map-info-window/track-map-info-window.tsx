@@ -15,13 +15,14 @@ import {
 import './track-map-info-window.scss'
 import { TrackMapInfoWindowProps } from '../../../../../models/track-map-info-window-props';
 import { IconBaseProps } from 'react-icons/lib/cjs/iconBase';
+import { TimelineInfoModel } from '../../../../../models/timeline-info';
 
 const TrackMapInfoWindow = ({ locationRecord, addresses, externalDatasheet }: TrackMapInfoWindowProps) => {
     const { isXSmall, isSmall } = useScreenSize();
 
     const activityTypeDescription = AppConstants.motionActivityTypeDictionary.find(activity => activity.id === locationRecord.motionActivityTypeId);
 
-    const dataSheet = useMemo(() => {
+    const dataSheet = useMemo<TimelineInfoModel[]>(() => {
         return externalDatasheet ?? [
             {
                 id: 1,
@@ -59,7 +60,7 @@ const TrackMapInfoWindow = ({ locationRecord, addresses, externalDatasheet }: Tr
                 description: 'На зарядке:',
                 value: locationRecord.isCharging ? 'Да' : 'Нет'
             }
-        ];
+        ] as TimelineInfoModel[];
     }, [activityTypeDescription, externalDatasheet, locationRecord.accuracy, locationRecord.batteryLevel, locationRecord.isCharging, locationRecord.mobileDeviceDateTime, locationRecord.motionActivityTypeId, locationRecord.speed]);
 
     return (
@@ -82,7 +83,7 @@ const TrackMapInfoWindow = ({ locationRecord, addresses, externalDatasheet }: Tr
                 : null
             }
             <tbody>
-            { dataSheet.map((dataItem: any) =>
+            { dataSheet.map(dataItem =>
                 <tr key={ dataItem.id }>
                     <td>
                         <div className={ 'track-map-info-window-data-row' }>

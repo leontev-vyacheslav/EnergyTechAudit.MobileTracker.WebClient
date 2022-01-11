@@ -1,3 +1,5 @@
+import { TimelineModel } from './timeline';
+
 export type TrackMapTimelineItemProps = {
-  timelineItem: any
+  timelineItem: TimelineModel
 }

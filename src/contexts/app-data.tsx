@@ -15,6 +15,7 @@ import { TrackLocationRecordModel } from '../models/track-location-record';
 import { MobileDeviceModel } from '../models/mobile-device';
 import { OrganizationPopupModel } from '../models/organization-popup';
 import { LocationRecordDataModel } from '../models/location-record-data';
+import { TrackSheetModel } from '../models/track-sheet';
 
 export type AxiosWithCredentialsFunc = (config: AxiosRequestConfig) => Promise<AxiosResponse<any, any> | undefined>;
 export type GetMobileDevicesAsyncFunc = () => Promise<MobileDeviceModel[] | null>;
@@ -29,6 +30,8 @@ export type GetGeocodedAddressAsyncFunc = (locationRecord: any) => Promise<any>;
 export type GetGeocodedLocationAsyncFunc = (address: string) => Promise<any>;
 export type GetOrganizationOfficesAsyncFunc = (organizationId?: number) => Promise<OrganizationPopupModel[] | null>
 
+export type GetTrackSheetAsyncFunc = (mobileDeviceId: number, currentData: Date) => Promise<TrackSheetModel | null>;
+
 export type AppDataContextModel = {
   getAssignOrganizationAsync: GetAssignOrganizationAsyncFunc,
   getMobileDeviceAsync: GetMobileDeviceAsyncFunc,
@@ -41,7 +44,7 @@ export type AppDataContextModel = {
   getGeocodedAddressesAsync: GetGeocodedAddressAsyncFunc,
   getGeocodedSelectedAddressesAsync: GetGeocodedAddressesAsyncFunc,
   getGeocodedLocationAsync: GetGeocodedLocationAsyncFunc,
-  getTrackSheetAsync: any,
+  getTrackSheetAsync: GetTrackSheetAsyncFunc,
   getExtendedUserInfoAsync: any,
   postExtendedUserInfoAsync: any,
   getOrganizationsAsync: any,
@@ -272,7 +275,7 @@ function AppDataProvider (props: AppBaseProviderProps) {
         },
         []);
 
-    const getTrackSheetAsync = useCallback(async (mobileDeviceId, currentData) => {
+    const getTrackSheetAsync = useCallback<GetTrackSheetAsyncFunc>(async (mobileDeviceId, currentData) => {
             const utcOffset = Moment().utcOffset();
             const response = await axiosWithCredentials({
                     url: `${ routes.host }${ routes.timeline }/track-sheet?mobileDeviceId=${ mobileDeviceId }&currentDate=${Moment(currentData).add(utcOffset, 'm').toDate().toISOString()}`,
@@ -282,6 +285,7 @@ function AppDataProvider (props: AppBaseProviderProps) {
             if (response && response.status === HttpConstants.StatusCodes.Ok) {
                 return response.data;
             }
+
             return null;
         },
         [axiosWithCredentials],

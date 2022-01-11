@@ -1,5 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import DataGrid, { Column, Grouping, LoadPanel, MasterDetail, Pager, Paging, Scrolling, SearchPanel } from 'devextreme-react/data-grid';
+import DataGrid, {
+  Column,
+  Grouping,
+  LoadPanel,
+  MasterDetail,
+  Pager,
+  Paging,
+  Scrolling,
+  SearchPanel
+} from 'devextreme-react/data-grid';
 import { Template } from 'devextreme-react/core/template';
 import { Button } from 'devextreme-react/button';
 import { useAppData } from '../../contexts/app-data';
@@ -10,18 +19,30 @@ import { useScreenSize } from '../../utils/media-query';
 import TrackMapPopup from '../../components/popups/track-map-popup/track-map-popup';
 import { useAppSettings } from '../../contexts/app-settings';
 import DataGridIconCellValueContainer from '../../components/data-grid-utils/data-grid-icon-cell-value-container';
-import { AccuracyIcon, CurrentDateIcon, DistanceIcon, GridAdditionalMenuIcon, TimelineIcon } from '../../constants/app-icons';
+import {
+  AccuracyIcon,
+  CurrentDateIcon,
+  DistanceIcon,
+  GridAdditionalMenuIcon,
+  TimelineIcon
+} from '../../constants/app-icons';
 import PageHeader from '../../components/page-header/page-header';
 import TrackSheetMainContextMenu from './track-sheet-main-context-menu/track-sheet-main-context-menu'
 import { trackSheetExcelExporter } from './track-sheet-excel-exporter';
-import { DataGridToolbarButton, onDataGridToolbarPreparing } from '../../components/data-grid-utils/data-grid-toolbar-button';
+import {
+  DataGridToolbarButton,
+  onDataGridToolbarPreparing
+} from '../../components/data-grid-utils/data-grid-toolbar-button';
 import { getUserDeviceDescription } from '../../utils/string-helper';
-import MobileDevicesMasterDetailView from '../mobile-devices/mobile-devices-master-detail-view/mobile-devices-master-detail-view';
+import MobileDevicesMasterDetailView
+  from '../mobile-devices/mobile-devices-master-detail-view/mobile-devices-master-detail-view';
 import './track-sheet.scss';
-import { AppSettingsContextModel } from '../../models/app-settings-context';
 import ContextMenu from 'devextreme-react/context-menu';
 import { useSharedArea } from '../../contexts/shared-area';
 import { MobileDeviceModel } from '../../models/mobile-device';
+import { TimelineModel } from '../../models/timeline';
+import { DailyCoveredDistanceModel } from '../../models/daily-covered-distance';
+import { TrackSheetModel } from '../../models/track-sheet';
 
 const TrackSheet = () => {
     function useQuery () {
@@ -32,15 +53,13 @@ const TrackSheet = () => {
     const { isXSmall } = useScreenSize();
     const { appSettingsData: { workDate }, getDailyTimelineItem } = useAppSettings();
     const { getMobileDeviceAsync, getTrackSheetAsync } = useAppData();
-
-    const [trackSheet, setTrackSheet] = useState<any>(null);
+    const [trackSheet, setTrackSheet] = useState<TrackSheetModel | null>(null);
     const [mobileDevice, setMobileDevice] = useState<MobileDeviceModel | null>(null);
-    const [currentTimelineItem, setCurrentTimelineItem] = useState<any>(null);
-    const [trackMapCurrentDate, setTrackMapCurrentDate] = useState<any>(null);
+    const [currentTimelineItem, setCurrentTimelineItem] = useState< TimelineModel | null>(null);
+    const [trackMapCurrentDate, setTrackMapCurrentDate] = useState<Date>();
     const [mobileDeviceId] = useState<number>(parseInt(query.get('mobileDeviceId') ?? '0'));
     const [currentDate] = useState(query.get('currentDate'));
-
-    const dxDataGridRef = useRef<DataGrid<any, number>>(null);
+    const dxDataGridRef = useRef<DataGrid<DailyCoveredDistanceModel, number>>(null);
     const mainContextMenuRef = useRef<ContextMenu<any>>();
     const rowContextMenuRef = useRef<ContextMenu<any>>();
 
@@ -51,9 +70,9 @@ const TrackSheet = () => {
             const mobileDevice = await getMobileDeviceAsync(mobileDeviceId);
             setMobileDevice(mobileDevice);
             if(mobileDevice) {
-              const trackSheet = await getTrackSheetAsync(mobileDeviceId, currentDate);
+              const trackSheet = await getTrackSheetAsync(mobileDeviceId, new Date(Date.parse(currentDate)));
               if (trackSheet && trackSheet.dailyCoveredDistances) {
-                trackSheet.dailyCoveredDistances = trackSheet.dailyCoveredDistances.map((ts: any) => {
+                trackSheet.dailyCoveredDistances = trackSheet.dailyCoveredDistances.map(ts => {
                   return { ...ts, ...{ userId: mobileDevice.userId, mobileDeviceId: mobileDevice.id } }
                 });
                 setTrackSheet(trackSheet);
@@ -68,11 +87,12 @@ const TrackSheet = () => {
         } )();
 
       treeViewRef?.current?.instance.unselectAll();
-    }, [refreshAsync]);
+    }, [refreshAsync, treeViewRef]);
 
     const GroupRowContent = () => {
         const userCaption = getUserDeviceDescription(mobileDevice);
-        return (
+
+        return  (trackSheet && userCaption ?
             <div className={ 'user-grid-group track-sheet-group ' }>
                 <div className={ 'dx-icon dx-icon-user' }/>
                 <div style={ { display: 'grid', gap: 5 } }>
@@ -89,10 +109,10 @@ const TrackSheet = () => {
                     </div>
                 </div>
             </div>
-        );
+         : null);
     }
 
-    if (currentDate && trackSheet !== null && trackSheet.length !== 0 && mobileDevice) {
+    if (mobileDevice && currentDate && trackSheet && trackSheet.dailyCoveredDistances.length !== 0 ) {
         return (
             <>
                 <PageHeader caption={ 'Путевой отчет' }>
@@ -103,7 +123,7 @@ const TrackSheet = () => {
                     keyExpr={ 'id' }
                     className={ 'app-grid mobile-devices track-sheet dx-card wide-card' }
                     noDataText={ AppConstants.noDataLongText }
-                    dataSource={ trackSheet?.dailyCoveredDistances ?? [] }
+                    dataSource={ trackSheet.dailyCoveredDistances }
                     showBorders={ false }
                     focusedRowEnabled={ true }
                     showColumnHeaders={ !isXSmall }
@@ -186,9 +206,11 @@ const TrackSheet = () => {
                 <TrackSheetContextMenu ref={ rowContextMenuRef } commands={ { showTrackMap : () => {
                     if (dxDataGridRef.current && dxDataGridRef.current.instance) {
                       const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
-                      const currentDailyCoveredDistanceItem = trackSheet.dailyCoveredDistances.find((ts: any) => ts.id === currentRowKey);
-                      setTrackMapCurrentDate(currentDailyCoveredDistanceItem.date)
-                      setCurrentTimelineItem(getDailyTimelineItem(currentDailyCoveredDistanceItem.date));
+                      const currentDailyCoveredDistanceItem = trackSheet.dailyCoveredDistances.find(ts => ts.id === currentRowKey);
+                      if (currentDailyCoveredDistanceItem) {
+                        setTrackMapCurrentDate(currentDailyCoveredDistanceItem.date)
+                        setCurrentTimelineItem(getDailyTimelineItem(currentDailyCoveredDistanceItem.date));
+                      }
                     }
                   }
                 } }/>

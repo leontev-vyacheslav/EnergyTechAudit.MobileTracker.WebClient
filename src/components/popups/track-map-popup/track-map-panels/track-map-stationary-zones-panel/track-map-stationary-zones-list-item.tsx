@@ -3,7 +3,6 @@ import { CountdownIcon, RadiusIcon } from '../../../../../constants/app-icons';
 import './track-map-stationary-zones-list-item.scss';
 import { useTrackMapStationaryZonesContext } from '../../track-map-contexts/track-map-stationary-zones-context';
 import { Cluster } from '../../../../../models/cluster';
-import { TrackMapStationaryZonesContextModel } from '../../../../../models/track-map-stationary-zones-context';
 
 export type TrackMapStationaryZonesListItemProps = {
   stationaryCluster: Cluster

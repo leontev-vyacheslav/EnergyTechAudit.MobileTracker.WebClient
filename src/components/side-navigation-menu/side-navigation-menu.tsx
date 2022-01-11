@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import TreeView from 'devextreme-react/tree-view';
 import * as events from 'devextreme/events';
 import { navigation } from '../../constants/app-navigation';
@@ -9,16 +9,7 @@ import { useSharedArea } from '../../contexts/shared-area';
 import './side-navigation-menu.scss';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useAuth } from '../../contexts/auth';
-
-type TreeViewItemModel = {
-  expanded: boolean,
-  text: string,
-  icon: () => JSX.Element,
-  path: string | undefined,
-  restricted: boolean,
-  items?: any[],
-  command?: string
-} | any
+import { TreeViewItemModel } from '../../models/tree-view-item';
 
 export default function SideNavigationMenu (props: any) {
     const {
@@ -47,7 +38,7 @@ export default function SideNavigationMenu (props: any) {
                 if(item.items) {
                     item.items = item.items.filter(i => i.restricted === false || (i.restricted === true && user.organizationId === null))
                 }
-                return { ...item, expanded: isLarge }
+                return { ...item, expanded: isLarge } as TreeViewItemModel
             });
     }
 
