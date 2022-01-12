@@ -16,6 +16,8 @@ import { MobileDeviceModel } from '../models/mobile-device';
 import { OrganizationPopupModel } from '../models/organization-popup';
 import { LocationRecordDataModel } from '../models/location-record-data';
 import { TrackSheetModel } from '../models/track-sheet';
+import { ExtendedUserInfoModel } from '../models/extended-user-info';
+import { UserModel } from '../models/user';
 
 export type AxiosWithCredentialsFunc = (config: AxiosRequestConfig) => Promise<AxiosResponse<any, any> | undefined>;
 export type GetMobileDevicesAsyncFunc = () => Promise<MobileDeviceModel[] | null>;
@@ -29,8 +31,11 @@ export type GetGeocodedAddressesAsyncFunc = (locationRecord: LocationRecordDataM
 export type GetGeocodedAddressAsyncFunc = (locationRecord: any) => Promise<any>;
 export type GetGeocodedLocationAsyncFunc = (address: string) => Promise<any>;
 export type GetOrganizationOfficesAsyncFunc = (organizationId?: number) => Promise<OrganizationPopupModel[] | null>
-
 export type GetTrackSheetAsyncFunc = (mobileDeviceId: number, currentData: Date) => Promise<TrackSheetModel | null>;
+export type GetExtendedUserInfoAsyncFunc = (userId: number) => Promise<ExtendedUserInfoModel | null>;
+export type GetAdminListAsyncFunc = () => Promise<UserModel[] | null>;
+export type GetAdminAsyncFunc = (userId: number) => Promise<UserModel | null>;
+
 
 export type AppDataContextModel = {
   getAssignOrganizationAsync: GetAssignOrganizationAsyncFunc,
@@ -45,7 +50,7 @@ export type AppDataContextModel = {
   getGeocodedSelectedAddressesAsync: GetGeocodedAddressesAsyncFunc,
   getGeocodedLocationAsync: GetGeocodedLocationAsyncFunc,
   getTrackSheetAsync: GetTrackSheetAsyncFunc,
-  getExtendedUserInfoAsync: any,
+  getExtendedUserInfoAsync: GetExtendedUserInfoAsyncFunc,
   postExtendedUserInfoAsync: any,
   getOrganizationsAsync: any,
   getOrganizationOfficesAsync: GetOrganizationOfficesAsyncFunc,
@@ -55,8 +60,8 @@ export type AppDataContextModel = {
   postOfficeAsync: any,
   deleteOfficeAsync: any,
   deleteScheduleItemAsync: any,
-  getAdminListAsync: any,
-  getAdminAsync: any,
+  getAdminListAsync: GetAdminListAsyncFunc,
+  getAdminAsync: GetAdminAsyncFunc,
   postAdminAsync: any,
   deleteAdminAsync: any
 };
@@ -223,9 +228,8 @@ function AppDataProvider (props: AppBaseProviderProps) {
             if (response && response.status === HttpConstants.StatusCodes.Ok) {
                 const dataResponse = await response.json();
                 if(dataResponse && dataResponse.status === 'OK') {
-                    if(dataResponse.results.length > 0)
-                    {
-                        return dataResponse.results.map((e: any) => e);
+                    if(dataResponse.results.length > 0) {
+                        return dataResponse.results;
                     }
                 }
             }
@@ -291,7 +295,7 @@ function AppDataProvider (props: AppBaseProviderProps) {
         [axiosWithCredentials],
     );
 
-    const getExtendedUserInfoAsync = useCallback(async (userId) => {
+    const getExtendedUserInfoAsync = useCallback<GetExtendedUserInfoAsyncFunc>(async (userId) => {
         const response = await axiosWithCredentials({
             url: `${ routes.host }${ routes.userManagement }/${ userId }`,
             method: HttpConstants.Methods.Get as Method,
@@ -299,6 +303,7 @@ function AppDataProvider (props: AppBaseProviderProps) {
         if (response && response.status === HttpConstants.StatusCodes.Ok) {
             return response.data;
         }
+
         return null;
     }, [axiosWithCredentials]);
 
@@ -402,10 +407,11 @@ function AppDataProvider (props: AppBaseProviderProps) {
         if (response && response.status === HttpConstants.StatusCodes.Ok) {
             return response.data;
         }
+
         return null;
     }, [axiosWithCredentials]);
 
-    const getAdminListAsync = useCallback( async () => {
+    const getAdminListAsync = useCallback<GetAdminListAsyncFunc>( async () => {
         const response = await axiosWithCredentials({
             url: `${ routes.host }${ routes.administrator }/administrators`,
             method: HttpConstants.Methods.Get as Method
@@ -413,10 +419,11 @@ function AppDataProvider (props: AppBaseProviderProps) {
         if (response && response.status === HttpConstants.StatusCodes.Ok) {
             return response.data;
         }
+
         return null;
     }, [axiosWithCredentials]);
 
-    const getAdminAsync = useCallback(async (id) =>{
+    const getAdminAsync = useCallback<GetAdminAsyncFunc>(async (id) =>{
         const response = await axiosWithCredentials({
             url: `${ routes.host }${ routes.administrator }/${id}`,
             method: HttpConstants.Methods.Get as Method,

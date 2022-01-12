@@ -7,11 +7,12 @@ import ScrollView from 'devextreme-react/scroll-view';
 import AppModalPopup from '../app-modal-popup/app-modal-popup';
 import { ExtendedUserInfoPopupProps } from '../../../models/extended-user-info-popup-props';
 import { OfficeOrganizationPopupModel } from '../../../models/office-organization-popup';
+import { ExtendedUserInfoModel } from '../../../models/extended-user-info';
 
 const ExtendedUserInfoPopup = ({ userId, callback }: ExtendedUserInfoPopupProps) => {
     const formRef = useRef<Form>(null);
     const { getExtendedUserInfoAsync, postExtendedUserInfoAsync, getOrganizationsAsync, getOrganizationOfficesAsync } = useAppData();
-    const [extendedUserInfo, setExtendedUserInfo] = useState(null);
+    const [extendedUserInfo, setExtendedUserInfo] = useState<ExtendedUserInfoModel | null>(null);
     const [offices, setOffices] = useState<(OfficeOrganizationPopupModel | null)[]>([]);
     const [organizations, setOrganizations] = useState(null);
     const [currentOrganization, setCurrentOrganization] = useState(null);
@@ -19,19 +20,22 @@ const ExtendedUserInfoPopup = ({ userId, callback }: ExtendedUserInfoPopupProps)
     useEffect(() => {
         ( async () => {
             let extendedUserInfo = await getExtendedUserInfoAsync(userId);
-            extendedUserInfo = extendedUserInfo !== null ? { ...extendedUserInfo, ...{ organizationId: extendedUserInfo.office?.organizationId } } : null;
-            setExtendedUserInfo(extendedUserInfo);
 
-            const organizationId = extendedUserInfo !== null ? extendedUserInfo.office?.organizationId : null;
-            const organizations = await getOrganizationsAsync();
-            setOrganizations(organizations);
+            if(extendedUserInfo) {
+              extendedUserInfo = { ...extendedUserInfo, ...{ organizationId: extendedUserInfo.office?.organizationId } };
+              setExtendedUserInfo(extendedUserInfo);
 
-            const organizationOffices = await getOrganizationOfficesAsync(organizationId);
-            if(organizationOffices){
+              const organizationId = extendedUserInfo.office?.organizationId;
+              const organizations = await getOrganizationsAsync();
+              setOrganizations(organizations);
+
+              const organizationOffices = await getOrganizationOfficesAsync(organizationId);
+              if (organizationOffices) {
                 const offices = organizationOffices.filter(org => org.office).map(org => org.office);
                 if (extendedUserInfo && extendedUserInfo.officeId) {
-                    setOffices(offices);
+                  setOffices(offices);
                 }
+              }
             }
         } )();
     }, [getExtendedUserInfoAsync, getOrganizationOfficesAsync, getOrganizationsAsync, userId]);
@@ -46,8 +50,8 @@ const ExtendedUserInfoPopup = ({ userId, callback }: ExtendedUserInfoPopupProps)
                 }
             } else {
                 setOffices([]);
-                setExtendedUserInfo((previous: any) => {
-                    return { ...previous, ...{ officeId: null } }
+                setExtendedUserInfo(previous => {
+                    return previous ? { ...previous, officeId: null } : null;
                 });
             }
         } )();

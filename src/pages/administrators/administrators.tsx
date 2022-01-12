@@ -29,19 +29,19 @@ import { SimpleDialogModel } from '../../models/simple-dialog';
 import ContextMenu from 'devextreme-react/context-menu';
 import { AdministratorPopupModel } from '../../models/administrator-popup';
 import { IconBaseProps } from 'react-icons/lib/cjs/iconBase';
-import { AdministratorModel } from '../../models/administrator';
 import { useAppData } from '../../contexts/app-data';
+import { UserModel } from '../../models/user';
 
 const Administrators = () => {
 
     const { getAdminListAsync, deleteAdminAsync } = useAppData();
     const { isXSmall } = useScreenSize();
 
-    const [administrators, setAdministrators] = useState<AdministratorModel[] | null>(null);
-    const [currentAdministrator, setCurrentAdministrator] = useState<AdministratorModel>(null);
+    const [administrators, setAdministrators] = useState<UserModel[] | null>(null);
+    const [currentAdministrator, setCurrentAdministrator] = useState<UserModel | null>(null);
     const [administratorPopupTrigger, setAdministratorPopupTrigger] = useState<boolean>(false);
 
-    const dxDataGridRef = useRef<DataGrid<AdministratorModel, number>>(null);
+    const dxDataGridRef = useRef<DataGrid<UserModel, number>>(null);
     const mainContextMenuRef = useRef<ContextMenu<any>>();
     const rowContextMenuRef = useRef<ContextMenu<any>>();
     const editMode = useRef<boolean>(false);
@@ -132,11 +132,11 @@ const Administrators = () => {
                         e.component.collapseAll(-1);
                     } }
                     onToolbarPreparing={ onDataGridToolbarPreparing }
-                    onRowPrepared={ (e: any) => {
+                    onRowPrepared={ async (e: any) => {
                         if (e.rowType === 'group' && e.data && e.data.items) {
                             if (e.data.items.find((o: any) => !!o).office === null) {
                                 const key = e.component.getKeyByRowIndex(e.rowIndex);
-                                e.component.collapseRow(key);
+                                await e.component.collapseRow(key);
                             }
                         }
                     } }
