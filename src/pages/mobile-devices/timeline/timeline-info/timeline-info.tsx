@@ -69,8 +69,12 @@ const TimelineInfo = ({ timeline, mobileDevice }: TimelineInfoProps) => {
                 ];
 
                 setTimelineInfo(timelineInfo);
-                setDeparture(await getGeocodedAddressAsync(timeline.firstLocationRecord));
-                setDestination(await getGeocodedAddressAsync(timeline.lastLocationRecord));
+                if(timeline.firstLocationRecord) {
+                    setDeparture(await getGeocodedAddressAsync(timeline.firstLocationRecord));
+                }
+                if(timeline.lastLocationRecord) {
+                    setDestination(await getGeocodedAddressAsync(timeline.lastLocationRecord));
+                }
             }
         } )();
     }, [getGeocodedAddressAsync, timeline]);

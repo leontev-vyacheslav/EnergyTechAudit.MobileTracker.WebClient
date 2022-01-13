@@ -20,10 +20,12 @@ const OfficePopup = ({ editMode, organization, callback }: OfficePopupProps) => 
     useEffect(() => {
         ( async () => {
             if (organization) {
-                if (editMode) {
+                if (editMode && organization.office) {
                     let office = await getOfficeAsync(organization.office.id);
-                    office = { ...office, ...{ organizationDescription: organization.description } };
-                    setCurrentOffice(office);
+                    if (office) {
+                        office = { ...office, ...{ organizationDescription: organization.description } };
+                        setCurrentOffice(office);
+                    }
                 } else {
                     setCurrentOffice({
                         organizationId: organization.organizationId,

@@ -6,13 +6,14 @@ import Button from 'devextreme-react/button';
 import Form, { SimpleItem } from 'devextreme-react/form';
 import { useAppData } from '../../contexts/app-data';
 import { useScreenSize } from '../../utils/media-query';
+import { OrganizationModel } from '../../models/organization-model';
 
 const Registration = () => {
     const { user } = useAuth();
     const { isXSmall, isSmall } = useScreenSize();
     const { getOrganizationsAsync, getAssignOrganizationAsync } = useAppData();
 
-    const [organizations, setOrganizations] = useState(null);
+    const [organizations, setOrganizations] = useState<OrganizationModel[] | null>(null);
     const [userVerificationData, setUserVerificationData] = useState<any>();
     const [currentUserOrganization] = useState({ organizationId: null });
     const [assignedOrganization, setAssignedOrganization] = useState<any>(null);

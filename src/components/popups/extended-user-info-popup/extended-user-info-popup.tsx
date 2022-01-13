@@ -8,14 +8,15 @@ import AppModalPopup from '../app-modal-popup/app-modal-popup';
 import { ExtendedUserInfoPopupProps } from '../../../models/extended-user-info-popup-props';
 import { OfficeOrganizationPopupModel } from '../../../models/office-organization-popup';
 import { ExtendedUserInfoModel } from '../../../models/extended-user-info';
+import { OrganizationModel } from '../../../models/organization-model';
 
 const ExtendedUserInfoPopup = ({ userId, callback }: ExtendedUserInfoPopupProps) => {
     const formRef = useRef<Form>(null);
     const { getExtendedUserInfoAsync, postExtendedUserInfoAsync, getOrganizationsAsync, getOrganizationOfficesAsync } = useAppData();
     const [extendedUserInfo, setExtendedUserInfo] = useState<ExtendedUserInfoModel | null>(null);
     const [offices, setOffices] = useState<(OfficeOrganizationPopupModel | null)[]>([]);
-    const [organizations, setOrganizations] = useState(null);
-    const [currentOrganization, setCurrentOrganization] = useState(null);
+    const [organizations, setOrganizations] = useState<OrganizationModel[] | null>(null);
+    const [currentOrganizationId, setCurrentOrganizationId] = useState< number | null>(null);
 
     useEffect(() => {
         ( async () => {
@@ -42,8 +43,8 @@ const ExtendedUserInfoPopup = ({ userId, callback }: ExtendedUserInfoPopupProps)
 
     useEffect(() => {
         ( async () => {
-            if (currentOrganization) {
-                const organizationOffices = await getOrganizationOfficesAsync(currentOrganization);
+            if (currentOrganizationId) {
+                const organizationOffices = await getOrganizationOfficesAsync(currentOrganizationId);
                 if(organizationOffices) {
                     const offices = organizationOffices.filter(org => org.office).map(org => org.office);
                     setOffices(offices);
@@ -55,7 +56,7 @@ const ExtendedUserInfoPopup = ({ userId, callback }: ExtendedUserInfoPopupProps)
                 });
             }
         } )();
-    }, [currentOrganization, getOrganizationOfficesAsync]);
+    }, [currentOrganizationId, getOrganizationOfficesAsync]);
 
     return organizations ? (
         <AppModalPopup title={ 'Сведения о пользователе' } callback={ callback }>
@@ -72,7 +73,7 @@ const ExtendedUserInfoPopup = ({ userId, callback }: ExtendedUserInfoPopupProps)
                                             valueExpr: 'id',
                                             displayExpr: 'shortName',
                                             onValueChanged: (e: any) => {
-                                                setCurrentOrganization(e.value);
+                                                setCurrentOrganizationId(e.value);
                                             }
                                         } }
                         />

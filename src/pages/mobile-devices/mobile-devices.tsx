@@ -7,7 +7,7 @@ import DataGrid, {
   Pager,
   Paging,
   Scrolling,
-  SearchPanel
+  SearchPanel, Toolbar
 } from 'devextreme-react/data-grid';
 import AppConstants from '../../constants/app-constants'
 import { Button } from 'devextreme-react/button';
@@ -158,7 +158,11 @@ const MobileDevice = () => {
                     onRowExpanding={ (e) => {
                         e.component.collapseAll(-1);
                     } }
+                    /*onInitialized={ (e) => {
+                       console.log(e.component?.option('toolbar'));
+                    } }*/
                 >
+                    <Toolbar visible={ true }/>
                     <LoadPanel enabled={ false }/>
                     <SearchPanel visible={ true } searchVisibleColumnsOnly={ false }/>
                     <Scrolling showScrollbar={ 'never' }/>

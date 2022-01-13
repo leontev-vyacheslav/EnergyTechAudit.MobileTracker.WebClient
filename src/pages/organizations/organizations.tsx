@@ -29,17 +29,17 @@ import { organizationsExcelExporter } from './organizations-excel-exporter';
 import DataGridMainContextMenu from '../../components/data-grid-main-context-menu/data-grid-main-context-menu';
 import { SimpleDialogModel } from '../../models/simple-dialog';
 import ContextMenu from 'devextreme-react/context-menu';
-import { OrganizationPopupModel } from '../../models/organization-popup';
+import { OrganizationOfficesModel } from '../../models/organization-popup';
 
 const Organizations = () => {
     const { getOrganizationOfficesAsync, deleteOrganizationAsync, deleteOfficeAsync } = useAppData();
     const { isXSmall } = useScreenSize();
-    const [organizations, setOrganizations] = useState<OrganizationPopupModel[] | null>(null);
+    const [organizations, setOrganizations] = useState<OrganizationOfficesModel[] | null>(null);
     const [organizationPopupTrigger, setOrganizationPopupTrigger] = useState<boolean>(false);
     const [officePopupTrigger, setOfficePopupTrigger] = useState<boolean>(false);
-    const [currentOrganization, setCurrentOrganization] = useState< OrganizationPopupModel | null>(null);
+    const [currentOrganization, setCurrentOrganization] = useState< OrganizationOfficesModel | null>(null);
     const editMode = useRef<boolean>(false);
-    const dxDataGridRef = useRef<DataGrid<OrganizationPopupModel, number>>(null);
+    const dxDataGridRef = useRef<DataGrid<OrganizationOfficesModel, number>>(null);
     const mainContextMenuRef = useRef<ContextMenu<any>>();
     const groupRowContextMenuRef = useRef<ContextMenu<any>>();
     const rowContextMenuRef = useRef<ContextMenu<any>>();
@@ -187,11 +187,13 @@ const Organizations = () => {
                         e.component.collapseAll(-1);
                     } }
                     onToolbarPreparing={ onDataGridToolbarPreparing }
-                    onRowPrepared={ async (e: any) => {
-                        if (e.rowType === 'group' && e.data && e.data.items) {
-                            if (e.data.items.find((o: OrganizationPopupModel) => !!o).office === null) {
+                    onRowPrepared={ async e => {
+                        if (e.rowType === 'group' && e.data && (e.data as any).items) {
+                            if ((e.data as any).items.find((_: any) => true).office === null) {
                                 const key = e.component.getKeyByRowIndex(e.rowIndex);
-                                await e.component.collapseRow(key);
+                                if (key) {
+                                    await e.component.collapseRow(key);
+                                }
                             }
                         }
                     } }
@@ -255,7 +257,7 @@ const Organizations = () => {
                         setOrganizationPopupTrigger(false);
                     }
                  }/> : null }
-                { officePopupTrigger
+                { officePopupTrigger && currentOrganization
                     ? <OfficePopup
                         editMode={ editMode.current }
                         organization={ currentOrganization }

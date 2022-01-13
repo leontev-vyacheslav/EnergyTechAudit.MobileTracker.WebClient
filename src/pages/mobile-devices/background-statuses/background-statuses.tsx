@@ -35,7 +35,7 @@ const BackgroundStatuses = ({ mobileDevice, workDate }: MobileDeviceWorkDateMode
             workDate: appSettingsWorkDate,
         }
     } = useAppSettings();
-    const [backgroundStatusList, setBackgroundStatusList] = useState<MobileDeviceBackgroundStatusModel[]>([]);
+    const [backgroundStatusList, setBackgroundStatusList] = useState<MobileDeviceBackgroundStatusModel[] | null>([]);
     const [currentWorkDate] = useState(workDate ?? appSettingsWorkDate);
     const dxDataGridRef = useRef<DataGrid<MobileDeviceBackgroundStatusModel, number>>(null);
     const mainContextMenuRef = useRef(null);
@@ -53,7 +53,7 @@ const BackgroundStatuses = ({ mobileDevice, workDate }: MobileDeviceWorkDateMode
         })();
     }, [currentWorkDate, getMobileDeviceBackgroundStatusListAsync, mobileDevice])
 
-    if (backgroundStatusList.length > 0) {
+    if (backgroundStatusList && backgroundStatusList.length > 0) {
         return (
             <>
                 <DataGrid

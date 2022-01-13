@@ -13,29 +13,35 @@ import { AppBaseProviderProps } from '../models/app-base-provider-props';
 import { TimelineModel } from '../models/timeline';
 import { TrackLocationRecordModel } from '../models/track-location-record';
 import { MobileDeviceModel } from '../models/mobile-device';
-import { OrganizationPopupModel } from '../models/organization-popup';
+import { OrganizationOfficesModel } from '../models/organization-popup';
 import { LocationRecordDataModel } from '../models/location-record-data';
 import { TrackSheetModel } from '../models/track-sheet';
 import { ExtendedUserInfoModel } from '../models/extended-user-info';
 import { UserModel } from '../models/user';
+import { OrganizationModel } from '../models/organization-model';
+import { MobileDeviceBackgroundStatusModel } from '../models/mobile-device-background-status-model';
+import { OfficePopupModel } from '../models/office-popup';
 
 export type AxiosWithCredentialsFunc = (config: AxiosRequestConfig) => Promise<AxiosResponse<any, any> | undefined>;
 export type GetMobileDevicesAsyncFunc = () => Promise<MobileDeviceModel[] | null>;
 export type GetMobileDeviceAsyncFunc = (mobileDeviceId: number) => Promise<MobileDeviceModel | null>;
 export type GetAssignOrganizationAsyncFunc = (userVerificationData: any) => Promise<any>;
-export type GetMobileDeviceBackgroundStatusListAsyncFunc = (mobileDeviceId: number, beginDate: Date, endDate: Date) => Promise<any>;
-export type GetTimelinesAsyncFunc = (mobileDeviceId: number, workDate: Date) => Promise<TimelineModel[]>;
+export type GetMobileDeviceBackgroundStatusListAsyncFunc = (mobileDeviceId: number, beginDate: Date, endDate: Date) => Promise<MobileDeviceBackgroundStatusModel[] | null>;
+export type GetTimelinesAsyncFunc = (mobileDeviceId: number, workDate: Date) => Promise<TimelineModel[] | null>;
 export type GetLocationRecordsByRangeAsyncFunc = (mobileDeviceId: number, beginDate: Date, endDate: Date) => Promise<TrackLocationRecordModel[] | null>;
 export type GetLocationRecordAsyncFunc = (locationRecordId: number) => Promise<LocationRecordDataModel | null>;
 export type GetGeocodedAddressesAsyncFunc = (locationRecord: LocationRecordDataModel) => Promise<any[]>;
-export type GetGeocodedAddressAsyncFunc = (locationRecord: any) => Promise<any>;
+export type GetGeocodedAddressAsyncFunc = (locationRecord: LocationRecordDataModel) => Promise<any>;
 export type GetGeocodedLocationAsyncFunc = (address: string) => Promise<any>;
-export type GetOrganizationOfficesAsyncFunc = (organizationId?: number) => Promise<OrganizationPopupModel[] | null>
+export type GetOrganizationOfficesAsyncFunc = (organizationId?: number) => Promise<OrganizationOfficesModel[] | null>
 export type GetTrackSheetAsyncFunc = (mobileDeviceId: number, currentData: Date) => Promise<TrackSheetModel | null>;
 export type GetExtendedUserInfoAsyncFunc = (userId: number) => Promise<ExtendedUserInfoModel | null>;
 export type GetAdminListAsyncFunc = () => Promise<UserModel[] | null>;
 export type GetAdminAsyncFunc = (userId: number) => Promise<UserModel | null>;
-
+export type GetOrganizationsAsyncFunc = () => Promise<OrganizationModel[] | null>;
+export type GetOfficeAsyncFunc  = (id: number) => Promise<OfficePopupModel | null>;
+export type DeleteAsyncFunc = (id: number) => Promise<number | null>;
+export type PostAsyncFunc = (entity: any) => Promise<number | null>;
 
 export type AppDataContextModel = {
   getAssignOrganizationAsync: GetAssignOrganizationAsyncFunc,
@@ -51,19 +57,19 @@ export type AppDataContextModel = {
   getGeocodedLocationAsync: GetGeocodedLocationAsyncFunc,
   getTrackSheetAsync: GetTrackSheetAsyncFunc,
   getExtendedUserInfoAsync: GetExtendedUserInfoAsyncFunc,
-  postExtendedUserInfoAsync: any,
-  getOrganizationsAsync: any,
+  postExtendedUserInfoAsync: PostAsyncFunc,
+  getOrganizationsAsync: GetOrganizationsAsyncFunc,
   getOrganizationOfficesAsync: GetOrganizationOfficesAsyncFunc,
-  deleteOrganizationAsync: any,
-  postOrganizationAsync: any,
-  getOfficeAsync: any,
-  postOfficeAsync: any,
-  deleteOfficeAsync: any,
-  deleteScheduleItemAsync: any,
+  deleteOrganizationAsync: DeleteAsyncFunc,
+  postOrganizationAsync: PostAsyncFunc,
+  getOfficeAsync: GetOfficeAsyncFunc,
+  postOfficeAsync: PostAsyncFunc,
+  deleteOfficeAsync: DeleteAsyncFunc,
+  deleteScheduleItemAsync: DeleteAsyncFunc,
   getAdminListAsync: GetAdminListAsyncFunc,
   getAdminAsync: GetAdminAsyncFunc,
-  postAdminAsync: any,
-  deleteAdminAsync: any
+  postAdminAsync: PostAsyncFunc,
+  deleteAdminAsync: DeleteAsyncFunc
 };
 
 const AppDataContext = createContext<AppDataContextModel>({} as AppDataContextModel);
@@ -142,22 +148,17 @@ function AppDataProvider (props: AppBaseProviderProps) {
                 method: HttpConstants.Methods.Get as Method,
             },
         );
+        let backgroundStatuses = null;
         if (response && response.status === HttpConstants.StatusCodes.Ok) {
-            const rwaBackgroundStatuses = response.data;
-            let backgroundStatuses = null;
+            const rwaBackgroundStatuses = response.data as MobileDeviceBackgroundStatusModel[];
             if (rwaBackgroundStatuses) {
-                backgroundStatuses = rwaBackgroundStatuses.map((r: any) => {
-                    return {
-                        id: r.id,
-                        mobileDeviceId: r.mobileDeviceId,
-                        mobileDeviceDateTime: r.mobileDeviceDateTime,
-                        serverDateTime: r.serverDateTime,
-                        statusInfo: JSON.parse(r.statusInfo)
-                    }
+                backgroundStatuses = rwaBackgroundStatuses.map(r => {
+                    return { ...r, statusInfo: JSON.parse(r.statusInfo) };
                 });
             }
-            return backgroundStatuses;
         }
+      return backgroundStatuses;
+
     }, [axiosWithCredentials]);
 
     const getTimelinesAsync = useCallback<GetTimelinesAsyncFunc>(async (mobileDeviceId, workDate) => {
@@ -169,8 +170,8 @@ function AppDataProvider (props: AppBaseProviderProps) {
                 } as AxiosRequestConfig,
             );
             if (response && response.status === HttpConstants.StatusCodes.Ok) {
-                let timeline = response.data;
-                timeline = timeline.map((t: any) => {
+                let timeline = response.data as TimelineModel[];
+                timeline = timeline.map(t => {
                     return {
                         ...t, ...{
                             beginDate: Moment(t.beginDate).add(-utcOffset, 'm').toDate(),
@@ -307,7 +308,7 @@ function AppDataProvider (props: AppBaseProviderProps) {
         return null;
     }, [axiosWithCredentials]);
 
-    const postExtendedUserInfoAsync = useCallback(async (extendedUserInfo) => {
+    const postExtendedUserInfoAsync = useCallback<PostAsyncFunc>(async (extendedUserInfo) => {
         const response = await axiosWithCredentials({
             url: `${ routes.host }${ routes.userManagement }`,
             method: HttpConstants.Methods.Post as Method,
@@ -331,18 +332,19 @@ function AppDataProvider (props: AppBaseProviderProps) {
         return null;
     }, [axiosWithCredentials]);
 
-    const getOrganizationsAsync = useCallback(async () => {
+    const getOrganizationsAsync = useCallback<GetOrganizationsAsyncFunc>(async () => {
         const response = await axiosWithCredentials({
             url: `${ routes.host }${ routes.organization }`,
             method: HttpConstants.Methods.Get as Method
         });
         if (response && response.status === HttpConstants.StatusCodes.Ok) {
+
             return response.data;
         }
         return null;
     }, [axiosWithCredentials]);
 
-    const deleteOrganizationAsync = useCallback(async (organizationId) => {
+    const deleteOrganizationAsync = useCallback<DeleteAsyncFunc>(async (organizationId) => {
         const response = await axiosWithCredentials({
             url: `${ routes.host }${ routes.organization }/${ organizationId }`,
             method: HttpConstants.Methods.Delete as Method,
@@ -353,7 +355,7 @@ function AppDataProvider (props: AppBaseProviderProps) {
         return null;
     }, [axiosWithCredentials]);
 
-    const deleteOfficeAsync = useCallback(async (officeId) => {
+    const deleteOfficeAsync = useCallback<DeleteAsyncFunc>(async (officeId) => {
         const response = await axiosWithCredentials({
             url: `${ routes.host }${ routes.organization }/offices/${ officeId }`,
             method: HttpConstants.Methods.Delete as Method
@@ -364,7 +366,7 @@ function AppDataProvider (props: AppBaseProviderProps) {
         return null;
     }, [axiosWithCredentials]);
 
-    const postOrganizationAsync = useCallback(async (organization) => {
+    const postOrganizationAsync = useCallback<PostAsyncFunc>(async (organization) => {
         const response = await axiosWithCredentials({
             url: `${ routes.host }${ routes.organization }`,
             method: HttpConstants.Methods.Post as Method,
@@ -376,7 +378,7 @@ function AppDataProvider (props: AppBaseProviderProps) {
         return null;
     }, [axiosWithCredentials]);
 
-    const getOfficeAsync = useCallback(async (officeId) => {
+    const getOfficeAsync = useCallback<GetOfficeAsyncFunc>(async (officeId) => {
         const response = await axiosWithCredentials({
             url: `${ routes.host }${ routes.organization }/offices/${ officeId }`,
             method: HttpConstants.Methods.Get as Method
@@ -387,7 +389,7 @@ function AppDataProvider (props: AppBaseProviderProps) {
         return null;
     }, [axiosWithCredentials]);
 
-    const postOfficeAsync = useCallback(async (office) => {
+    const postOfficeAsync = useCallback<PostAsyncFunc>(async (office) => {
         const response = await axiosWithCredentials({
             url: `${ routes.host }${ routes.organization }/offices`,
             method: HttpConstants.Methods.Post as Method,
@@ -399,7 +401,7 @@ function AppDataProvider (props: AppBaseProviderProps) {
         return null;
     }, [axiosWithCredentials]);
 
-    const deleteScheduleItemAsync = useCallback(async (scheduleItemId) => {
+    const deleteScheduleItemAsync = useCallback<DeleteAsyncFunc>(async (scheduleItemId) => {
         const response = await axiosWithCredentials({
             url: `${ routes.host }${ routes.organization }/schedule-items/${ scheduleItemId }`,
             method: HttpConstants.Methods.Delete as Method
@@ -434,7 +436,7 @@ function AppDataProvider (props: AppBaseProviderProps) {
         return null;
     }, [axiosWithCredentials] );
 
-    const postAdminAsync = useCallback(async (admin) => {
+    const postAdminAsync = useCallback<PostAsyncFunc>(async (admin) => {
         const response = await axiosWithCredentials({
             url: `${ routes.host }${ routes.administrator }`,
             method: HttpConstants.Methods.Post as Method,
@@ -446,7 +448,7 @@ function AppDataProvider (props: AppBaseProviderProps) {
         return null;
     }, [axiosWithCredentials]);
 
-    const deleteAdminAsync = useCallback(async (id) => {
+    const deleteAdminAsync = useCallback<DeleteAsyncFunc>(async (id) => {
         const response = await axiosWithCredentials({
             url: `${ routes.host }${ routes.administrator }/${ id }`,
             method: HttpConstants.Methods.Delete as Method

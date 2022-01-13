@@ -32,7 +32,7 @@ const TrackMapPopup = ({ mobileDevice, workDate, callback }: TrackMapPopupProps)
         <TrackMapTimelineProvider mobileDevice={ mobileDevice } workDate={ workDate } >
             <TrackMapSettingsProvider>
                 <Popup className={ 'app-popup track-map-popup' } title={ 'Карта маршрута' }
-                       copyRootClassesToWrapper={ true }
+                       wrapperAttr={ { class: 'app-popup track-map-popup' } }
                        dragEnabled={ true }
                        visible={ true }
                        showTitle={ true }

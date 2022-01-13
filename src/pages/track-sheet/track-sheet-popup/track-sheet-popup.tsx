@@ -13,7 +13,7 @@ const TrackSheetPopup = ({ currentDate, callback }: TrackSheetPopupProps) => {
 
     return (
         <Popup className={ 'app-popup' } title={ 'Период' }
-               copyRootClassesToWrapper={ true }
+               wrapperAttr={ { class: 'app-popup' } }
                dragEnabled={ false }
                visible={ true }
                showTitle={ true }

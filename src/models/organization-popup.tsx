@@ -1,6 +1,6 @@
 import { OfficeOrganizationPopupModel } from './office-organization-popup';
 
-export type OrganizationPopupModel = {
+export type OrganizationOfficesModel = {
   id: number,
   description: string | null,
   organizationId: number,

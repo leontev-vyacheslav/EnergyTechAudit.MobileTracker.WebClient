@@ -13,11 +13,11 @@ import OrganizationPopupMenu from './organization-popup-menu/organization-popup-
 import { OrganizationPopupProps } from '../../../models/organization-popup-props';
 import ContextMenu from 'devextreme-react/context-menu';
 import './organization-popup.scss'
-import { OrganizationPopupModel } from '../../../models/organization-popup';
+import { OrganizationOfficesModel } from '../../../models/organization-popup';
 
 const OrganizationPopup = ({ editMode, organization, callback }: OrganizationPopupProps) => {
     const { getOrganizationOfficesAsync, postOrganizationAsync, deleteScheduleItemAsync } = useAppData();
-    const [currentOrganization, setCurrentOrganization] = useState<OrganizationPopupModel | null>(null);
+    const [currentOrganization, setCurrentOrganization] = useState<OrganizationOfficesModel | null>(null);
     const formRef = useRef<Form>(null);
     const contextMenuRef = useRef<ContextMenu<any>>();
     const currentSelectedIndex = useRef<number>(0);
