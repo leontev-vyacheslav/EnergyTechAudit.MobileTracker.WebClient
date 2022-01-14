@@ -19,10 +19,13 @@ import { TrackSheetModel } from '../models/track-sheet';
 import { ExtendedUserInfoModel } from '../models/extended-user-info';
 import { UserModel } from '../models/user';
 import { OrganizationModel } from '../models/organization-model';
-import { MobileDeviceBackgroundStatusModel } from '../models/mobile-device-background-status-model';
+import {
+  MobileDeviceBackgroundStatusModel,
+  MobileDeviceBackgroundStatusRawModel
+} from '../models/mobile-device-background-status-model';
 import { OfficePopupModel } from '../models/office-popup';
 
-export type AxiosWithCredentialsFunc = (config: AxiosRequestConfig) => Promise<AxiosResponse<any, any> | undefined>;
+export type AxiosWithCredentialsFunc = (config: AxiosRequestConfig) => Promise<AxiosResponse | undefined>;
 export type GetMobileDevicesAsyncFunc = () => Promise<MobileDeviceModel[] | null>;
 export type GetMobileDeviceAsyncFunc = (mobileDeviceId: number) => Promise<MobileDeviceModel | null>;
 export type GetAssignOrganizationAsyncFunc = (userVerificationData: any) => Promise<any>;
@@ -94,7 +97,7 @@ function AppDataProvider (props: AppBaseProviderProps) {
 
             try {
                 showLoader();
-                response = await axios.request(config) as AxiosResponse<any, any>;
+                response = await axios.request(config) as AxiosResponse;
             } catch (error) {
                 response = (error as AxiosError).response;
                 notify('В процессе выполнения запроса или получения данных от сервера произошла ошибка', 'error', 10000);
@@ -150,13 +153,14 @@ function AppDataProvider (props: AppBaseProviderProps) {
         );
         let backgroundStatuses = null;
         if (response && response.status === HttpConstants.StatusCodes.Ok) {
-            const rwaBackgroundStatuses = response.data as MobileDeviceBackgroundStatusModel[];
+            const rwaBackgroundStatuses = response.data as MobileDeviceBackgroundStatusRawModel[];
             if (rwaBackgroundStatuses) {
                 backgroundStatuses = rwaBackgroundStatuses.map(r => {
                     return { ...r, statusInfo: JSON.parse(r.statusInfo) };
                 });
             }
         }
+
       return backgroundStatuses;
 
     }, [axiosWithCredentials]);

@@ -1,4 +1,6 @@
-export type OrganizationModel = {
+import { Entity } from './entity';
+
+export interface OrganizationModel extends Entity {
   id: number,
   description: string,
   shortName: string,

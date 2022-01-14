@@ -30,13 +30,13 @@ export default function SideNavigationMenu (props: any) {
 
     function normalizePath () {
         return navigation
-            .filter(i => !i.restricted || (i.restricted && user.organizationId === null) )
+            .filter(i => !i.restricted || (i.restricted && user?.organizationId === null) )
             .map((item) => {
                 if (item.path && !( /^\//.test(item.path) )) {
                     item.path = `/${ item.path }`;
                 }
                 if(item.items) {
-                    item.items = item.items.filter(i => i.restricted === false || (i.restricted === true && user.organizationId === null))
+                    item.items = item.items.filter(i => i.restricted === false || (i.restricted === true && user?.organizationId === null))
                 }
                 return { ...item, expanded: isLarge } as TreeViewItemModel
             });
@@ -78,7 +78,7 @@ export default function SideNavigationMenu (props: any) {
       })();
     }, [currentPath, compactMode, treeViewRef]);
 
-    const TreeViewItemContent = (e: any) => {
+    const TreeViewItemContent = (e: TreeViewItemModel) => {
         return (
             <>
                 { e.icon ? <i className="dx-icon">{ e.icon() }</i> : null }

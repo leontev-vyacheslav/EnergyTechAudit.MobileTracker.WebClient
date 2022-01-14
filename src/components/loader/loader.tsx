@@ -12,7 +12,8 @@ const Loader = () => {
             shading={ true }
             width={ 200 } height={ 70 }
             maxWidth={ 200 } maxHeight={ 70 }
-            shadingColor={ 'rgba(0, 0, 0, 0.15)' }>
+            shadingColor={ 'rgba(0, 0, 0, 0.15)' }
+        >
             <ProgressGear />
             <span data-testid="testId">Загрузка...</span>
         </LoadPanel>

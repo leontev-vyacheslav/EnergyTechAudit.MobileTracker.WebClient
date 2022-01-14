@@ -6,7 +6,8 @@ import {
     AuthContextModel,
     GetUserAuthDataFromStorageFunc,
     SignInAsyncFunc,
-    SignOutAsyncFunc
+    SignOutAsyncFunc,
+    AuthUserModel
 } from '../models/auth-context';
 import { AppBaseProviderProps } from '../models/app-base-provider-props';
 
@@ -14,7 +15,7 @@ const AuthContext = createContext<AuthContextModel>({ } as AuthContextModel);
 const useAuth = () => useContext(AuthContext);
 
 function AuthProvider (props: AppBaseProviderProps) {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState<AuthUserModel | null>(null);
 
     const getUserAuthDataFromStorage = useCallback<GetUserAuthDataFromStorageFunc>( () => {
         let userAuthData = null;

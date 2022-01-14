@@ -14,7 +14,7 @@ const OfficePopup = ({ editMode, organization, callback }: OfficePopupProps) => 
     const { getOfficeAsync, postOfficeAsync } = useAppData();
     const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
     const formRef = useRef<Form>(null);
-    const [currentOffice, setCurrentOffice] = useState<OfficePopupModel>(null);
+    const [currentOffice, setCurrentOffice] = useState<OfficePopupModel | null>(null);
     const [mapIsLoaded, setMapIsLoaded] = useState<boolean>(false);
 
     useEffect(() => {

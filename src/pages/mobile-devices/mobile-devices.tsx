@@ -45,6 +45,7 @@ import { getUserDescription } from '../../utils/string-helper';
 import ContextMenu from 'devextreme-react/context-menu';
 import { MobileDeviceModel } from '../../models/mobile-device';
 import { TimelineModel } from '../../models/timeline';
+import { ContextMenuItemItemModel } from '../../models/context-menu-item-props';
 
 
 const MobileDevice = () => {
@@ -55,10 +56,10 @@ const MobileDevice = () => {
     const { isXSmall } = useScreenSize();
     const [mobileDevices, setMobileDevices] = useState<MobileDeviceModel[] | null>(null);
     const [currentTimelineItem, setCurrentTimelineItem] = useState<TimelineModel | null>(null);
-    const [currentMobileDevice, setCurrentMobileDevice] = useState<MobileDeviceModel>(null);
-    const mainContextMenuRef = useRef<ContextMenu<any>>();
-    const groupRowContextMenuRef = useRef<ContextMenu<any>>();
-    const rowContextMenuRef = useRef<ContextMenu<any>>();
+    const [currentMobileDevice, setCurrentMobileDevice] = useState<MobileDeviceModel | null>(null);
+    const mainContextMenuRef = useRef<ContextMenu<ContextMenuItemItemModel>>(null);
+    const groupRowContextMenuRef = useRef<ContextMenu<ContextMenuItemItemModel>>(null);
+    const rowContextMenuRef = useRef<ContextMenu< ContextMenuItemItemModel>>(null);
 
     const [trackSheetPopupTrigger, setTrackSheetPopupTrigger] = useState<boolean>(false);
     const [extendedUserInfoPopupTrigger, setExtendedUserInfoPopupTrigger] = useState<boolean>(false);

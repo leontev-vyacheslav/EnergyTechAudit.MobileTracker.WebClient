@@ -4,12 +4,12 @@ import Button from 'devextreme-react/button';
 import UserPanel from '../user-panel/user-panel';
 import { Template } from 'devextreme-react/core/template';
 import { ReactComponent as AppLogo } from '../../assets/app-logo.svg';
-
-import './header.scss';
 import { useAppSettings } from '../../contexts/app-settings';
 import { MenuIcon } from '../../constants/app-icons';
 import { WorkDateWidgetProps } from '../../models/work-date-widget-props';
 import { HeaderProps } from '../../models/header-props';
+
+import './header.scss';
 
 const Header = ({ title, menuToggleEnabled,  toggleMenu } : HeaderProps) => {
     const { appSettingsData } = useAppSettings();

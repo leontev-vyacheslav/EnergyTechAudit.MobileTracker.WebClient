@@ -1,5 +1,7 @@
+import { ClickEvent } from 'devextreme/ui/button';
+
 export type HeaderProps = {
   title: string,
   menuToggleEnabled: boolean,
-  toggleMenu: ((e: any) => void) | undefined
+  toggleMenu:  ((e: ClickEvent) => void) | undefined
 }

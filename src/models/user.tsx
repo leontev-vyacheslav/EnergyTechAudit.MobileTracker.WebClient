@@ -1,8 +1,8 @@
 import { MobileDeviceModel } from './mobile-device';
 import { ExtendedUserInfoModel } from './extended-user-info';
+import { Entity } from './entity';
 
-export type UserModel = {
-  id: number,
+export interface UserModel extends Entity {
   roleId: number,
   organizationId: number | null,
   email: string,

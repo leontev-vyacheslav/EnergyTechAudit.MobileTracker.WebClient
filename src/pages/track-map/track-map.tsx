@@ -23,7 +23,7 @@ export default () => {
     const query = useQuery();
     const { appSettingsData: { workDate } } = useAppSettings();
     const { getMobileDeviceAsync } = useAppData();
-    const [mobileDevice, setMobileDevice] = useState<MobileDeviceModel>(null);
+    const [mobileDevice, setMobileDevice] = useState<MobileDeviceModel | null>(null);
     const [mobileDeviceId] = useState<number>(parseInt(query.get('mobileDeviceId') ?? '0'));
     const { setAppSettingsData } = useAppSettings();
 

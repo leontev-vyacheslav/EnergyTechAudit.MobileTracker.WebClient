@@ -1,5 +1,6 @@
-export type OfficeOrganizationPopupModel = {
-  id: number
+import { Entity } from './entity';
+
+export interface OfficeOrganizationPopupModel extends Entity{
   organizationId: number
   placeId: number
   address: string

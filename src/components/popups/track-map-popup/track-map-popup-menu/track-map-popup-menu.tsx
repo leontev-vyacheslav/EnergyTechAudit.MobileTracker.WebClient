@@ -130,6 +130,6 @@ const TrackMapPopupMenu = ({ innerRef, initialDate, commands }: (ContextMenuProp
     />
 }
 
-export default React.forwardRef<any, (ContextMenuProps & { initialDate?: any})>((props, ref) =>
+export default React.forwardRef<ContextMenu<ContextMenuItemItemModel>, (ContextMenuProps & { initialDate?: Date})>((props, ref) =>
   <TrackMapPopupMenu  { ...props } innerRef={ ref } />
 );

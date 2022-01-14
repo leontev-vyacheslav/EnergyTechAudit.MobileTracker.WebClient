@@ -18,6 +18,8 @@ import { MobileDeviceWorkDateModel } from '../../../models/mobile-device-work-da
 import { Cluster } from '../../../models/cluster';
 import { GoogleLibraries } from '../../../models/google-liblaries';
 import { LocationRecordDataModel } from '../../../models/location-record-data';
+import ContextMenu from 'devextreme-react/context-menu';
+import { ContextMenuItemItemModel } from '../../../models/context-menu-item-props';
 
 const StationaryZones = ({ mobileDevice, workDate }: MobileDeviceWorkDateModel) => {
     const dxDataGridRef = useRef<DataGrid<Cluster, number>>(null);
@@ -26,7 +28,7 @@ const StationaryZones = ({ mobileDevice, workDate }: MobileDeviceWorkDateModel) 
         libraries: AppConstants.trackMap.libraries as GoogleLibraries
     });
 
-    const mainContextMenuRef = useRef(null);
+    const mainContextMenuRef = useRef<ContextMenu<ContextMenuItemItemModel>>(null);
     const [stationaryClusterList, setStationaryClusterList] = useState<Cluster[]>([]);
     const { getLocationRecordsByRangeAsync, getGeocodedSelectedAddressesAsync } = useAppData();
 

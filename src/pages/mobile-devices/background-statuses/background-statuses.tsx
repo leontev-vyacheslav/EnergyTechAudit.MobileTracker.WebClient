@@ -26,6 +26,8 @@ import {
 } from '../../../constants/app-icons';
 import { MobileDeviceWorkDateModel } from '../../../models/mobile-device-work-date-model';
 import { MobileDeviceBackgroundStatusModel } from '../../../models/mobile-device-background-status-model';
+import ContextMenu from 'devextreme-react/context-menu';
+import { ContextMenuItemItemModel } from '../../../models/context-menu-item-props';
 
 const BackgroundStatuses = ({ mobileDevice, workDate }: MobileDeviceWorkDateModel) => {
 
@@ -38,7 +40,7 @@ const BackgroundStatuses = ({ mobileDevice, workDate }: MobileDeviceWorkDateMode
     const [backgroundStatusList, setBackgroundStatusList] = useState<MobileDeviceBackgroundStatusModel[] | null>([]);
     const [currentWorkDate] = useState(workDate ?? appSettingsWorkDate);
     const dxDataGridRef = useRef<DataGrid<MobileDeviceBackgroundStatusModel, number>>(null);
-    const mainContextMenuRef = useRef(null);
+    const mainContextMenuRef = useRef<ContextMenu<ContextMenuItemItemModel>>(null);
 
     useEffect(() => {
         (async () => {
@@ -90,7 +92,7 @@ const BackgroundStatuses = ({ mobileDevice, workDate }: MobileDeviceWorkDateMode
                             {
                                 const status = !e.data.statusInfo.appBackgroundGeolocationSettings
                                     ? 'Неопределено'
-                                    : (e.data.statusInfo.appBackgroundGeolocationSettings.geoTrackingEnabled === true ? 'Включено' : 'Выключено');
+                                    : (e.data.statusInfo.appBackgroundGeolocationSettings.geoTrackingEnabled ? 'Включено' : 'Выключено');
 
                                 return <DataGridIconCellValueContainer
                                     cellDataFormatter={ () => `${ status }` }
@@ -105,8 +107,8 @@ const BackgroundStatuses = ({ mobileDevice, workDate }: MobileDeviceWorkDateMode
                     <Column dataField={ 'isLocationEnabled' } dataType={ 'boolean' } caption={ 'Геолокации' } width={ 135 } alignment={ 'left' } hidingPriority={ 4 }
                             cellRender={ (e) =>
                                 <DataGridIconCellValueContainer
-                                    cellDataFormatter={ () => `${ e.data.statusInfo.isLocationEnabled === true ? 'Разрешены' : 'Запрещены' } ` }
-                                    iconRenderer={ (iconProps) => e.data.statusInfo.isLocationEnabled === true ? <LocationEnabledIcon { ...iconProps } />  : <LocationDisabledIcon { ...iconProps } /> }
+                                    cellDataFormatter={ () => `${ e.data.statusInfo.isLocationEnabled ? 'Разрешены' : 'Запрещены' } ` }
+                                    iconRenderer={ (iconProps) => e.data.statusInfo.isLocationEnabled ? <LocationEnabledIcon { ...iconProps } />  : <LocationDisabledIcon { ...iconProps } /> }
                                 /> }
                     />
 
@@ -121,8 +123,8 @@ const BackgroundStatuses = ({ mobileDevice, workDate }: MobileDeviceWorkDateMode
                     <Column dataField={ 'lowPowerMode' } dataType={ 'boolean' } caption={ 'Энергосбережение' } width={ 120 } alignment={ 'left' } hidingPriority={ 1 }
                             cellRender={ (e) =>
                                 <DataGridIconCellValueContainer
-                                    cellDataFormatter={ () => `${ e.data.statusInfo.powerState.lowPowerMode === true ? 'Разрешено' : 'Запрещено'} ` }
-                                    iconRenderer={ (iconProps) =>  e.data.statusInfo.powerState.lowPowerMode === true ? <LowPowerModeEnabledIcon { ...iconProps } /> : <LowPowerModeDisabledIcon { ...iconProps } /> }
+                                    cellDataFormatter={ () => `${ e.data.statusInfo.powerState.lowPowerMode ? 'Разрешено' : 'Запрещено'} ` }
+                                    iconRenderer={ (iconProps) =>  e.data.statusInfo.powerState.lowPowerMode ? <LowPowerModeEnabledIcon { ...iconProps } /> : <LowPowerModeDisabledIcon { ...iconProps } /> }
                                 /> }
                     />
                 </DataGrid>

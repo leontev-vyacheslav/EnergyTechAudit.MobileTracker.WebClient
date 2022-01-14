@@ -4,6 +4,7 @@ import ContextMenu from 'devextreme-react/context-menu';
 import ContextMenuItem from '../context-menu-item/context-menu-item';
 import { ContextMenuProps } from '../../models/context-menu-props';
 import { ItemContextMenuEvent } from 'devextreme/ui/context_menu';
+import { ContextMenuItemItemModel } from '../../models/context-menu-item-props';
 
 const DataGridRowContextMenu = ({ innerRef, commands }: ContextMenuProps) => {
 
@@ -26,7 +27,7 @@ const DataGridRowContextMenu = ({ innerRef, commands }: ContextMenuProps) => {
                     await commands.remove();
                 }
             }
-        }];
+        }] as ContextMenuItemItemModel[];
     }, [commands]);
 
     return <ContextMenu
@@ -39,6 +40,6 @@ const DataGridRowContextMenu = ({ innerRef, commands }: ContextMenuProps) => {
     />
 }
 
-export default React.forwardRef<any, ContextMenuProps>((props, ref) =>
+export default React.forwardRef<ContextMenu<ContextMenuItemItemModel>, ContextMenuProps>((props, ref) =>
   <DataGridRowContextMenu { ...props } innerRef={ ref } />
 );

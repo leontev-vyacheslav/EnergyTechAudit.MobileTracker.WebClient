@@ -4,10 +4,11 @@ import { ScheduleIcon } from '../../../../constants/app-icons';
 import ContextMenuItem from '../../../context-menu-item/context-menu-item';
 import { ContextMenuProps } from '../../../../models/context-menu-props';
 import { ItemContextMenuEvent } from 'devextreme/ui/context_menu';
+import { ContextMenuItemItemModel } from '../../../../models/context-menu-item-props';
 
 const OrganizationPopupMenu = ({ innerRef,  commands }: ContextMenuProps) => {
 
-    const items = [
+    const items: ContextMenuItemItemModel[] = [
         {
             name: 'addSchedule',
             text: 'Добавить расписание',
@@ -16,7 +17,7 @@ const OrganizationPopupMenu = ({ innerRef,  commands }: ContextMenuProps) => {
                 await e.component.hide();
                 commands.addSchedule();
             },
-        }];
+        }] ;
 
     return <ContextMenu
         ref={ innerRef }
@@ -27,6 +28,6 @@ const OrganizationPopupMenu = ({ innerRef,  commands }: ContextMenuProps) => {
     />
 }
 
-export default React.forwardRef<any, ContextMenuProps>((props, ref) =>
+export default React.forwardRef<ContextMenu<ContextMenuItemItemModel>, ContextMenuProps>((props, ref) =>
   <OrganizationPopupMenu  { ...props } innerRef={ ref } />
 );

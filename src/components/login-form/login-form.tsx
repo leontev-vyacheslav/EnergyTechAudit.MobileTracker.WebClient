@@ -10,19 +10,21 @@ import { LoginFormModel } from '../../models/login-form';
 export default function () {
     const { signIn } = useAuth();
     const [loading, setLoading] = useState<boolean>(false);
-    const formData = useRef<LoginFormModel>({} as LoginFormModel);
+    const formData = useRef<LoginFormModel>(null);
 
     const onSubmit = useCallback(async (e) => {
         e.preventDefault();
-        const { email, password } = formData.current;
-        setLoading(true);
-        try {
-            await signIn(email, password);
-            notify(`Пользователь ${email} успешно выполнил вход.`, 'success', 5000);
-        } catch (error) {
-            notify('Пользователь не найден или неверный пароль.', 'error', 5000);
+        if(formData.current) {
+            const { email, password } = formData.current;
+            setLoading(true);
+            try {
+                await signIn(email, password);
+                notify(`Пользователь ${email} успешно выполнил вход.`, 'success', 5000);
+            } catch (error) {
+                notify('Пользователь не найден или неверный пароль.', 'error', 5000);
+            }
+            setLoading(false);
         }
-        setLoading(false);
     }, [signIn]);
 
     return (

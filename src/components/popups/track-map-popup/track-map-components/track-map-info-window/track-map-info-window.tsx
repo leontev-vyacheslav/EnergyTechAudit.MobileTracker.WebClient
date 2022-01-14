@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import AppConstants from '../../../../../constants/app-constants';
 import { useScreenSize } from '../../../../../utils/media-query';
-
 import {
     AccuracyIcon,
     ActivityIcon,
@@ -11,11 +10,11 @@ import {
     SpeedIcon,
     TimeIcon
 } from '../../../../../constants/app-icons'
-
-import './track-map-info-window.scss'
 import { TrackMapInfoWindowProps } from '../../../../../models/track-map-info-window-props';
 import { IconBaseProps } from 'react-icons/lib/cjs/iconBase';
 import { TimelineInfoModel } from '../../../../../models/timeline-info';
+
+import './track-map-info-window.scss'
 
 const TrackMapInfoWindow = ({ locationRecord, addresses, externalDatasheet }: TrackMapInfoWindowProps) => {
     const { isXSmall, isSmall } = useScreenSize();

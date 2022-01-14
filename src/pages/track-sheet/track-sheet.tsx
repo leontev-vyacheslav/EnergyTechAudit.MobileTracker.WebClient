@@ -43,6 +43,7 @@ import { MobileDeviceModel } from '../../models/mobile-device';
 import { TimelineModel } from '../../models/timeline';
 import { DailyCoveredDistanceModel } from '../../models/daily-covered-distance';
 import { TrackSheetModel } from '../../models/track-sheet';
+import { ContextMenuItemItemModel } from '../../models/context-menu-item-props';
 
 const TrackSheet = () => {
     function useQuery () {
@@ -60,8 +61,8 @@ const TrackSheet = () => {
     const [mobileDeviceId] = useState<number>(parseInt(query.get('mobileDeviceId') ?? '0'));
     const [currentDate] = useState(query.get('currentDate'));
     const dxDataGridRef = useRef<DataGrid<DailyCoveredDistanceModel, number>>(null);
-    const mainContextMenuRef = useRef<ContextMenu<any>>();
-    const rowContextMenuRef = useRef<ContextMenu<any>>();
+    const mainContextMenuRef = useRef<ContextMenu<ContextMenuItemItemModel>>(null);
+    const rowContextMenuRef = useRef<ContextMenu<ContextMenuItemItemModel>>(null);
 
     const { treeViewRef } = useSharedArea();
 
@@ -90,7 +91,7 @@ const TrackSheet = () => {
     }, [refreshAsync, treeViewRef]);
 
     const GroupRowContent = () => {
-        const userCaption = getUserDeviceDescription(mobileDevice);
+        const userCaption = mobileDevice ? getUserDeviceDescription(mobileDevice) : null;
 
         return  (trackSheet && userCaption ?
             <div className={ 'user-grid-group track-sheet-group ' }>

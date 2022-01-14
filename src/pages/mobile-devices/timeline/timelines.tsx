@@ -23,6 +23,8 @@ import TimelineMainContextMenu from './timeline-main-context-menu/timeline-main-
 import './timeline.scss';
 import { MobileDeviceWorkDateModel } from '../../../models/mobile-device-work-date-model';
 import { TimelineModel } from '../../../models/timeline';
+import ContextMenu from 'devextreme-react/context-menu';
+import { ContextMenuItemItemModel } from '../../../models/context-menu-item-props';
 
 const Timelines = ({ mobileDevice, workDate }: MobileDeviceWorkDateModel) => {
 
@@ -31,7 +33,7 @@ const Timelines = ({ mobileDevice, workDate }: MobileDeviceWorkDateModel) => {
     const { getTimelinesAsync } = useAppData();
     const [currentTimeline, setCurrentTimeline] = useState<TimelineModel[] | null>(null);
     const dxDataGridRef = useRef<DataGrid<TimelineModel, number>>(null);
-    const mainContextMenuRef = useRef(null);
+    const mainContextMenuRef = useRef<ContextMenu<ContextMenuItemItemModel>>(null);
 
     useEffect(() => {
       (async () => {

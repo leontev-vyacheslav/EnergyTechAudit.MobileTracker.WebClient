@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { RefObject } from 'react';
 import { Button } from 'devextreme-react/button';
 import { GridAdditionalMenuIcon } from '../../constants/app-icons';
+import ContextMenu from 'devextreme-react/context-menu';
+import { ContextMenuItemItemModel } from '../../models/context-menu-item-props';
 
 const onDataGridToolbarPreparing = (e: any) => {
     if (e?.toolbarOptions) {
@@ -16,12 +18,12 @@ const onDataGridToolbarPreparing = (e: any) => {
     }
 }
 
-const DataGridToolbarButton = ({ contextMenuRef }: { contextMenuRef: any }) => {
+const DataGridToolbarButton = ({ contextMenuRef }: { contextMenuRef:  RefObject<ContextMenu<ContextMenuItemItemModel>> }) => {
     return (
-        <Button className={ 'app-command-button app-command-button-small' } onClick={ (e) => {
+        <Button className={ 'app-command-button app-command-button-small' } onClick={ async (e) => {
             if (contextMenuRef && contextMenuRef.current) {
                 contextMenuRef.current.instance.option('target', e.element);
-                contextMenuRef.current.instance.show();
+                await contextMenuRef.current.instance.show();
             }
         } }>
             <GridAdditionalMenuIcon/>

@@ -1,5 +1,6 @@
-export type ExtendedUserInfoModel = {
-  id: number,
+import { Entity } from './entity';
+
+export interface ExtendedUserInfoModel extends Entity {
   firstName: string,
   lastName: string,
   birthDate: Date | null,

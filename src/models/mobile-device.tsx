@@ -1,5 +1,6 @@
-export type MobileDeviceModel = {
-  id: number,
+import { Entity } from './entity';
+
+export interface MobileDeviceModel extends Entity {
   deviceUid: string
   email: string,
   extendedUserInfo: MobileDeviceExtendedUserInfoModel
@@ -7,10 +8,9 @@ export type MobileDeviceModel = {
   os: string
   registrationDate: string
   userId: number
-} | null
+}
 
-export type MobileDeviceExtendedUserInfoModel = {
-  id: number,
+export interface MobileDeviceExtendedUserInfoModel extends Entity {
   firstName: string,
   lastName: string
 }

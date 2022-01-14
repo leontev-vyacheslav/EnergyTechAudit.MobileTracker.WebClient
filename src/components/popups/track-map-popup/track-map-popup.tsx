@@ -21,12 +21,13 @@ import { TrackMapStationaryZonesProvider } from './track-map-contexts/track-map-
 import ContextMenu from 'devextreme-react/context-menu';
 import { TrackMapPopupProps } from '../../../models/track-map-popup-props';
 import { DialogConstants } from '../../../constants/app-dialog-constant';
+import { ContextMenuItemItemModel } from '../../../models/context-menu-item-props';
 
 const TrackMapPopup = ({ mobileDevice, workDate, callback }: TrackMapPopupProps) => {
     const { isXSmall, isSmall } = useScreenSize();
     const { setAppSettingsData, setWorkDateToday } = useAppSettings();
     const { showWorkDatePicker } = useSharedArea();
-    const contextMenuRef = useRef<ContextMenu<any>>();
+    const contextMenuRef = useRef<ContextMenu<ContextMenuItemItemModel>>(null);
 
     return (
         <TrackMapTimelineProvider mobileDevice={ mobileDevice } workDate={ workDate } >

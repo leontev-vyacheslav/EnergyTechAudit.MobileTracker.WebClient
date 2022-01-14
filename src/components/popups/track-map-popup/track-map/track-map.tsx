@@ -9,9 +9,10 @@ import TrackMapTimelinePanel from '../track-map-panels/track-map-timeline-panel/
 import { useTrackMapSettingsContext } from '../track-map-contexts/track-map-settings-context';
 import { useScreenSize } from '../../../../utils/media-query';
 import { useTrackMapTrackContext } from '../track-map-contexts/track-map-track-context';
-import './track-map.scss';
 import { MobileDeviceModel } from '../../../../models/mobile-device';
 import { GoogleLibraries } from '../../../../models/google-liblaries';
+
+import './track-map.scss';
 
 const TrackMap = ({ mobileDevice }: { mobileDevice: MobileDeviceModel }) => {
     const { isXSmall, isSmall } = useScreenSize();

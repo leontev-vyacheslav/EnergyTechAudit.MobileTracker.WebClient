@@ -31,7 +31,7 @@ const MobileDevicesGroupRowContextMenu = ({ innerRef, commands }: ContextMenuPro
     />
 }
 
-export default React.forwardRef<any, ContextMenuProps>((props, ref) =>
+export default React.forwardRef<ContextMenu<ContextMenuItemItemModel>, ContextMenuProps>((props, ref) =>
   <MobileDevicesGroupRowContextMenu  { ...props } innerRef={ ref } />
 );
 

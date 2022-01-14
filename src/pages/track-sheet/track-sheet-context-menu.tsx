@@ -4,6 +4,7 @@ import ContextMenuItem from '../../components/context-menu-item/context-menu-ite
 import { TrackMapIcon } from '../../constants/app-icons';
 import { ContextMenuProps } from '../../models/context-menu-props';
 import { ItemContextMenuEvent } from 'devextreme/ui/context_menu';
+import { ContextMenuItemItemModel } from '../../models/context-menu-item-props';
 
 const TrackSheetContextMenu = ({ innerRef, commands }: ContextMenuProps) => {
 
@@ -16,7 +17,7 @@ const TrackSheetContextMenu = ({ innerRef, commands }: ContextMenuProps) => {
                     await e.component.hide();
                     commands.showTrackMap(e);
                 }
-            }];
+            }] as ContextMenuItemItemModel[];
     }, [commands]);
 
     return <ContextMenu
@@ -29,7 +30,7 @@ const TrackSheetContextMenu = ({ innerRef, commands }: ContextMenuProps) => {
     />
 }
 
-export default React.forwardRef<any, ContextMenuProps>((props, ref) =>
+export default React.forwardRef<ContextMenu<ContextMenuItemItemModel>, ContextMenuProps>((props, ref) =>
   <TrackSheetContextMenu { ...props }  innerRef={ ref }/>
 );
 

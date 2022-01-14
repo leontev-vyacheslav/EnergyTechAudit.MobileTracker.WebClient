@@ -31,6 +31,7 @@ import { AdministratorPopupModel } from '../../models/administrator-popup';
 import { IconBaseProps } from 'react-icons/lib/cjs/iconBase';
 import { useAppData } from '../../contexts/app-data';
 import { UserModel } from '../../models/user';
+import { ContextMenuItemItemModel } from '../../models/context-menu-item-props';
 
 const Administrators = () => {
 
@@ -42,8 +43,8 @@ const Administrators = () => {
     const [administratorPopupTrigger, setAdministratorPopupTrigger] = useState<boolean>(false);
 
     const dxDataGridRef = useRef<DataGrid<UserModel, number>>(null);
-    const mainContextMenuRef = useRef<ContextMenu<any>>();
-    const rowContextMenuRef = useRef<ContextMenu<any>>();
+    const mainContextMenuRef = useRef<ContextMenu<ContextMenuItemItemModel>>(null);
+    const rowContextMenuRef = useRef<ContextMenu<ContextMenuItemItemModel>>(null);
     const editMode = useRef<boolean>(false);
 
     const updateDataAsync = useCallback(async () => {

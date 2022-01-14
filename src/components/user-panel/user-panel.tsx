@@ -18,7 +18,7 @@ export default function ({ menuMode }: UserPanelProps) {
     const menuItems = useMemo(() => {
         return [
             {
-                text: user.email,
+                text: user?.email,
                 renderIconItem: () => <UserIcon size={ 22 }/>,
                 renderTextItem: (item: ContextMenuItemItemModel) => {
                     return (
@@ -57,7 +57,7 @@ export default function ({ menuMode }: UserPanelProps) {
                 }
             },
         ];
-    }, [setWorkDateToday, showWorkDatePicker, signOutWithConfirm, user.email]);
+    }, [setWorkDateToday, showWorkDatePicker, signOutWithConfirm, user?.email]);
 
     return (
         <div className={ 'user-panel' }>

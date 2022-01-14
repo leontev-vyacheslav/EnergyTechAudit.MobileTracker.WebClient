@@ -66,16 +66,15 @@ const AdministratorPopup = ({ editMode, administrator, callback }: Administrator
                                 ? [{ type: 'required' }, { type: 'stringLength', min: 8, message: 'Длина пароля не менее 8 символов' }]
                                 : null
                             }
-                            editorOptions={
-                                {
-                                    mode: 'password',
-                                    readOnly: true,
-                                    placeholder: 'Новый пароль',
-                                    inputAttr: { autocomplete: 'new-password' },
-                                    onFocusIn: (e: any) => {
-                                        e.component.option('readOnly', false)
-                                    }
-                                }
+                            editorOptions={ {
+                              mode: 'password',
+                              readOnly: true,
+                              placeholder: 'Новый пароль',
+                              inputAttr: { autocomplete: 'new-password' },
+                              onFocusIn: (e: any) => {
+                                e.component.option('readOnly', false)
+                              }
+                            }
                             }
                         />
 

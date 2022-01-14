@@ -34,7 +34,7 @@ const StationaryZoneMainContextMenu = ({ innerRef, commands }: ContextMenuProps)
     />
 }
 
-export default React.forwardRef<any, ContextMenuProps>((props, ref) =>
+export default React.forwardRef<ContextMenu<ContextMenuItemItemModel>, ContextMenuProps>((props, ref) =>
   <StationaryZoneMainContextMenu { ...props } innerRef={ ref } />
 );
 

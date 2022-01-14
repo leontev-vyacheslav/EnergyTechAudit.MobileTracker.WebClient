@@ -1,7 +1,7 @@
 import { LocationRecordDataModel } from './location-record-data';
+import { Entity } from './entity';
 
-export type TimelineModel = {
-  id: number,
+export interface TimelineModel extends Entity {
   beginDate: Date,
   endDate: Date,
   distance: number,

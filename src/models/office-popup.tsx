@@ -3,4 +3,4 @@ export type OfficePopupModel = {
   organizationDescription: string | null,
   address: null,
   placeId: number
-} | null;
+};

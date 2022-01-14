@@ -1,7 +1,7 @@
 import { TrackLocationRecordModel } from './track-location-record';
+import { Entity } from './entity';
 
-export type Cluster = {
-  id: number,
+export interface Cluster extends  Entity {
   index: number,
   centroid: google.maps.LatLngBounds | google.maps.LatLng | null,
   radius: number,

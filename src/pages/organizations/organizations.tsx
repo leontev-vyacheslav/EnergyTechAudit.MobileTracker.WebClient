@@ -30,6 +30,7 @@ import DataGridMainContextMenu from '../../components/data-grid-main-context-men
 import { SimpleDialogModel } from '../../models/simple-dialog';
 import ContextMenu from 'devextreme-react/context-menu';
 import { OrganizationOfficesModel } from '../../models/organization-popup';
+import { ContextMenuItemItemModel } from '../../models/context-menu-item-props';
 
 const Organizations = () => {
     const { getOrganizationOfficesAsync, deleteOrganizationAsync, deleteOfficeAsync } = useAppData();
@@ -40,9 +41,9 @@ const Organizations = () => {
     const [currentOrganization, setCurrentOrganization] = useState< OrganizationOfficesModel | null>(null);
     const editMode = useRef<boolean>(false);
     const dxDataGridRef = useRef<DataGrid<OrganizationOfficesModel, number>>(null);
-    const mainContextMenuRef = useRef<ContextMenu<any>>();
-    const groupRowContextMenuRef = useRef<ContextMenu<any>>();
-    const rowContextMenuRef = useRef<ContextMenu<any>>();
+    const mainContextMenuRef = useRef<ContextMenu<ContextMenuItemItemModel>>(null);
+    const groupRowContextMenuRef = useRef<ContextMenu<ContextMenuItemItemModel>>(null);
+    const rowContextMenuRef = useRef<ContextMenu<ContextMenuItemItemModel>>(null);
 
     const refreshAsync = useCallback(async () => {
         const organizationOffices = await getOrganizationOfficesAsync();
@@ -208,10 +209,10 @@ const Organizations = () => {
 
                     <Column type={ 'buttons' } width={ 50 } cellRender={ (e) => {
                         return e.data.office ?
-                            <Button className={ 'app-command-button app-command-button-small' } onClick={ (e) => {
+                            <Button className={ 'app-command-button app-command-button-small' } onClick={ async (e) => {
                                 if (rowContextMenuRef && rowContextMenuRef.current) {
                                     rowContextMenuRef.current.instance.option('target', e.element);
-                                    rowContextMenuRef.current.instance.show();
+                                    await rowContextMenuRef.current.instance.show();
                                 }
                             } }>
                                 <GridAdditionalMenuIcon/>
@@ -247,7 +248,7 @@ const Organizations = () => {
                     />
                 </DataGrid>
 
-                { organizationPopupTrigger ? <OrganizationPopup
+                { organizationPopupTrigger && currentOrganization ? <OrganizationPopup
                     editMode={ editMode.current }
                     organization={ currentOrganization }
                     callback={ async (result) => {

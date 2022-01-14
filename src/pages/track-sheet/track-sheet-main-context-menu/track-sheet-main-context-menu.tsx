@@ -4,6 +4,7 @@ import { ExportToXlsxIcon, RefreshIcon } from '../../../constants/app-icons';
 import ContextMenuItem from '../../../components/context-menu-item/context-menu-item';
 import { ContextMenuProps } from '../../../models/context-menu-props';
 import { ItemContextMenuEvent } from 'devextreme/ui/context_menu';
+import { ContextMenuItemItemModel } from '../../../models/context-menu-item-props';
 
 const TrackSheetMainContextMenu = ({ innerRef, commands }: ContextMenuProps) => {
 
@@ -29,7 +30,7 @@ const TrackSheetMainContextMenu = ({ innerRef, commands }: ContextMenuProps) => 
                     }
                 }
             }
-        ];
+        ] as ContextMenuItemItemModel[];
     }, [commands]);
 
     return <ContextMenu
@@ -42,6 +43,6 @@ const TrackSheetMainContextMenu = ({ innerRef, commands }: ContextMenuProps) => 
     />
 }
 
-export default React.forwardRef<any, ContextMenuProps>((props, ref) =>
+export default React.forwardRef<ContextMenu<ContextMenuItemItemModel>, ContextMenuProps>((props, ref) =>
   <TrackSheetMainContextMenu { ...props } innerRef={ ref } />);
 

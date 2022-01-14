@@ -1,8 +1,9 @@
 import React from 'react';
-import './track-map-info-box.scss';
 import { BeginDateIcon, DateRangeIcon, EndDateIcon, MobileDeviceIcon } from '../../../../../constants/app-icons';
 import { useTrackMapTimelineContext } from '../../track-map-contexts/track-map-timeline-context';
 import { MobileDeviceModel } from '../../../../../models/mobile-device';
+
+import './track-map-info-box.scss';
 
 const TrackMapInfoBox = ({ mobileDevice }: { mobileDevice: MobileDeviceModel }) => {
 

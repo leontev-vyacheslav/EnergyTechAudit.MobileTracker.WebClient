@@ -1,6 +1,7 @@
-export type LocationRecordDataModel =
+import { Entity } from './entity';
+
+export interface LocationRecordDataModel extends Entity
 {
-  id: number,
   mobileDeviceId: number,
   trackerEventId: number | null,
   isMoving: boolean,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { AppSettingsProvider } from './contexts/app-settings';
 import { AuthProvider } from './contexts/auth';
 import { SharedAreaProvider } from './contexts/shared-area';

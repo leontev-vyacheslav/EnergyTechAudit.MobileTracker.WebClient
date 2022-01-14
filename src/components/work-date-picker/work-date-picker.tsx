@@ -20,6 +20,6 @@ const WorkDatePicker = ({ innerRef, onClosed }: WorkDatePickerProps) => {
     );
 };
 
-export default React.forwardRef<any, WorkDatePickerProps>((props, ref) =>
+export default React.forwardRef<DateBox, WorkDatePickerProps>((props, ref) =>
   <WorkDatePicker { ...props } innerRef={ ref } />
 );

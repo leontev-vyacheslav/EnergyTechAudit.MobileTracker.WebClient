@@ -10,6 +10,7 @@ import { SharedAreaContextModel } from '../models/shared-area-context';
 import { AppBaseProviderProps } from '../models/app-base-provider-props';
 import TreeView from 'devextreme-react/tree-view';
 import { TreeViewItemModel } from '../models/tree-view-item';
+import DateBox from 'devextreme-react/date-box';
 
 const SharedAreaContext = createContext<SharedAreaContextModel>({} as SharedAreaContextModel);
 const useSharedArea = () => useContext(SharedAreaContext);
@@ -19,7 +20,7 @@ function SharedAreaProvider (props: AppBaseProviderProps) {
     const [isShowLoader, setIsShowLoader] = useState<boolean>(false);
     const [isShowWorkDatePicker, setIsWorkDatePicker] = useState<boolean>(false);
     const { signOut } = useAuth();
-    const workDatePickerRef = useRef<any>();
+    const workDatePickerRef = useRef<DateBox>(null);
     const treeViewRef = useRef<TreeView<TreeViewItemModel>>(null) ;
 
     const signOutWithConfirm = useCallback<ProcFunc>(() => {

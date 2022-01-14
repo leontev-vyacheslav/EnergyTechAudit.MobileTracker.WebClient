@@ -52,7 +52,7 @@ const OrganizationGroupRowContextMenu = ({ innerRef, commands }: ContextMenuProp
     />
 }
 
-export default React.forwardRef<any, ContextMenuProps>((props, ref) =>
+export default React.forwardRef<ContextMenu<ContextMenuItemItemModel>, ContextMenuProps>((props, ref) =>
   <OrganizationGroupRowContextMenu { ...props } innerRef={ ref } />
 );
 
