@@ -4,6 +4,6 @@ export type TreeViewItemModel = {
   icon: () => JSX.Element,
   path: string | undefined,
   restricted: boolean,
-  items?: any[],
+  items?: TreeViewItemModel[],
   command?: string
 } | any
