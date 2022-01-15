@@ -5,13 +5,14 @@ import { navigation } from '../../constants/app-navigation';
 import { useNavigation } from '../../contexts/navigation';
 import { useScreenSize } from '../../utils/media-query';
 import { useSharedArea } from '../../contexts/shared-area';
-
-import './side-navigation-menu.scss';
 import { useAppSettings } from '../../contexts/app-settings';
 import { useAuth } from '../../contexts/auth';
 import { TreeViewItemModel } from '../../models/tree-view-item';
+import { SideNavigationMenuProps } from '../../models/side-navigation-menu-props';
 
-export default function SideNavigationMenu (props: any) {
+import './side-navigation-menu.scss';
+
+export default function SideNavigationMenu (props: SideNavigationMenuProps) {
     const {
         children,
         selectedItemChanged,
@@ -36,7 +37,7 @@ export default function SideNavigationMenu (props: any) {
                     item.path = `/${ item.path }`;
                 }
                 if(item.items) {
-                    item.items = item.items.filter(i => i.restricted === false || (i.restricted === true && user?.organizationId === null))
+                    item.items = item.items.filter(i => !i.restricted || (i.restricted && user?.organizationId === null))
                 }
                 return { ...item, expanded: isLarge } as TreeViewItemModel
             });
@@ -81,7 +82,7 @@ export default function SideNavigationMenu (props: any) {
     const TreeViewItemContent = (e: TreeViewItemModel) => {
         return (
             <>
-                { e.icon ? <i className="dx-icon">{ e.icon() }</i> : null }
+                { e.iconRender ? <i className="dx-icon">{ e.iconRender({}) }</i> : null }
                 <span>{ e.text }</span>
             </>
         );
@@ -93,7 +94,7 @@ export default function SideNavigationMenu (props: any) {
             <div className={ 'menu-container' }>
                 <TreeView
                     ref={ treeViewRef }
-                    items={ items }
+                    items={ items as TreeViewItemModel[] }
                     keyExpr={ 'path' }
                     selectionMode={ 'single' }
                     itemRender={ TreeViewItemContent }
@@ -101,7 +102,7 @@ export default function SideNavigationMenu (props: any) {
                     expandEvent={ 'click' }
                     onItemClick={ event => {
                       if (event.itemData) {
-                        const treeViewItem: TreeViewItemModel =  event.itemData as TreeViewItemModel;
+                        const treeViewItem =  event.itemData as TreeViewItemModel;
                         if (treeViewItem.command === 'workDate') {
                           showWorkDatePicker();
                         }
@@ -114,7 +115,9 @@ export default function SideNavigationMenu (props: any) {
                         selectedItemChanged(event);
                       }
                     } }
-                    onContentReady={ onMenuReady }
+                    onContentReady={ () => {
+                      onMenuReady();
+                    } }
                     width={ '100%' }
                 />
             </div>

@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
+import { IconBaseProps } from 'react-icons';
 
 export type TrackMapPanelHeaderProps = {
   title: string,
-  icon: () => ReactNode,
+  iconRender: (props: IconBaseProps) => JSX.Element,
   onClose: () => void
 }

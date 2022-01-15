@@ -1,5 +1,5 @@
-import { Workbook } from 'exceljs';
-import { exportDataGrid } from 'devextreme/excel_exporter';
+import { Workbook, Cell } from 'exceljs';
+import { DataGridCell, exportDataGrid } from 'devextreme/excel_exporter';
 import { excelCommonCellStyler, excelHeaderCellStyler, excelSaver } from '../../../utils/excel-export-helper';
 import { GridExporterExtendedModel } from '../../../models/grid-exporter';
 
@@ -13,9 +13,9 @@ const timelineExcelExporter = ({ dataGrid, mobileDevice, workDate, title }: Grid
     exportDataGrid({
         component: dataGrid,
         worksheet: worksheet,
-        customizeCell: ({ gridCell, excelCell }) => {
-            excelCommonCellStyler({ excelCell });
-            if (gridCell) {
+        customizeCell: ({ gridCell, excelCell }: {gridCell?: DataGridCell, excelCell?: Cell}) => {
+            if (gridCell && excelCell) {
+                excelCommonCellStyler(excelCell);
                 if (gridCell.rowType === 'data') {
                     switch (gridCell.column?.dataField) {
                         case 'distance': {
@@ -38,7 +38,7 @@ const timelineExcelExporter = ({ dataGrid, mobileDevice, workDate, title }: Grid
                         }
                     }
                 } else if (gridCell.rowType === 'header') {
-                    excelHeaderCellStyler({ excelCell });
+                    excelHeaderCellStyler(excelCell);
                 }
             }
         }

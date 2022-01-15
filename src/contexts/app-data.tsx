@@ -24,6 +24,7 @@ import {
   MobileDeviceBackgroundStatusRawModel
 } from '../models/mobile-device-background-status-model';
 import { OfficePopupModel } from '../models/office-popup';
+import { Entity } from '../models/entity';
 
 export type AxiosWithCredentialsFunc = (config: AxiosRequestConfig) => Promise<AxiosResponse | undefined>;
 export type GetMobileDevicesAsyncFunc = () => Promise<MobileDeviceModel[] | null>;
@@ -44,7 +45,7 @@ export type GetAdminAsyncFunc = (userId: number) => Promise<UserModel | null>;
 export type GetOrganizationsAsyncFunc = () => Promise<OrganizationModel[] | null>;
 export type GetOfficeAsyncFunc  = (id: number) => Promise<OfficePopupModel | null>;
 export type DeleteAsyncFunc = (id: number) => Promise<number | null>;
-export type PostAsyncFunc = (entity: any) => Promise<number | null>;
+export type PostAsyncFunc = (entity: Entity) => Promise<number | null>;
 
 export type AppDataContextModel = {
   getAssignOrganizationAsync: GetAssignOrganizationAsyncFunc,

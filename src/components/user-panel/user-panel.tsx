@@ -5,11 +5,11 @@ import { useAuth } from '../../contexts/auth';
 import { useSharedArea } from '../../contexts/shared-area';
 import { AdditionalMenuIcon, ExitIcon, UserIcon, WorkDateIcon, WorkDateTodayIcon } from '../../constants/app-icons';
 import ContextMenuItem from '../context-menu-item/context-menu-item';
-
-import './user-panel.scss';
 import { useAppSettings } from '../../contexts/app-settings';
 import { UserPanelProps } from '../../models/user-panel-props';
 import { ContextMenuItemItemModel } from '../../models/context-menu-item-props';
+
+import './user-panel.scss';
 
 export default function ({ menuMode }: UserPanelProps) {
     const { user } = useAuth();

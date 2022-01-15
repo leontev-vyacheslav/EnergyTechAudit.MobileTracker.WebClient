@@ -5,11 +5,11 @@ import { CloseIcon } from '../../../../../constants/app-icons';
 import './track-map-panel-header.scss'
 import { TrackMapPanelHeaderProps } from '../../../../../models/track-map-panel-header-props';
 
-const TrackMapPanelHeader = ({ title, icon, onClose }: TrackMapPanelHeaderProps) => {
+const TrackMapPanelHeader = ({ title, iconRender, onClose }: TrackMapPanelHeaderProps) => {
     return (
         <div className={ 'track-map-panel-header dx-popup-title' } >
             <div style={ { marginTop: 5 } }>
-                { icon() }
+                { iconRender({}) }
             </div>
             <div>
                 <span>{title}</span>

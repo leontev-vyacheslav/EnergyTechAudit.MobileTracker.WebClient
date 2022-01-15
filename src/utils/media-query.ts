@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import { ProcFunc } from '../models/primitive-type';
 
 export const useScreenSize = () => {
     const [screenSize, setScreenSize] = useState(getScreenSize());
@@ -35,7 +36,7 @@ export const useScreenSizeClass = () => {
     return 'screen-x-small';
 }
 
-let handlers: any[] = [];
+let handlers: ProcFunc[] = [];
 const xSmallMedia = window.matchMedia('(max-width: 599.99px)');
 const smallMedia = window.matchMedia('(min-width: 600px) and (max-width: 959.99px)');
 const mediumMedia = window.matchMedia('(min-width: 960px) and (max-width: 1279.99px)');
@@ -47,9 +48,9 @@ const largeMedia = window.matchMedia('(min-width: 1280px)');
     });
 });
 
-const subscribe = (handler: any) => handlers.push(handler);
+const subscribe = (handler: ProcFunc) => handlers.push(handler);
 
-const unsubscribe = (handler: any) => {
+const unsubscribe = (handler: ProcFunc) => {
     handlers = handlers.filter(item => item !== handler);
 };
 

@@ -1,4 +1,4 @@
-import { Workbook } from 'exceljs';
+import { Workbook, Cell } from 'exceljs';
 import { DataGridCell, exportDataGrid } from 'devextreme/excel_exporter';
 import { excelCommonCellStyler, excelGroupCellStyler, excelHeaderCellStyler, excelSaver } from '../../utils/excel-export-helper';
 import { GridExporterModel } from '../../models/grid-exporter';
@@ -14,9 +14,9 @@ const administratorExcelExporter = ({ dataGrid, title }: GridExporterModel) => {
     exportDataGrid({
         component: dataGrid,
         worksheet: worksheet,
-        customizeCell: ({ gridCell, excelCell }: {gridCell?: DataGridCell, excelCell?: any}) => {
-            excelCommonCellStyler({ excelCell });
-            if(gridCell) {
+        customizeCell: ({ gridCell, excelCell }: {gridCell?: DataGridCell, excelCell?: Cell}) => {
+            if(gridCell && excelCell) {
+                excelCommonCellStyler( excelCell);
                 if (gridCell.rowType === 'data') {
                     switch (gridCell.column?.dataField) {
                         case 'email': {
@@ -35,10 +35,10 @@ const administratorExcelExporter = ({ dataGrid, title }: GridExporterModel) => {
                     if (groupElement) {
                         excelCell.value = organization ? organization.shortName : 'Общая группа';
                     }
-                    excelGroupCellStyler({ excelCell });
+                    excelGroupCellStyler(excelCell);
 
                 } else if (gridCell.rowType === 'header') {
-                    excelHeaderCellStyler({ excelCell });
+                    excelHeaderCellStyler(excelCell);
                 }
             }
         }

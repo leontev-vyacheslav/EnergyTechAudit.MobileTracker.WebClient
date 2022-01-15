@@ -1,3 +1,4 @@
+import { Cell } from 'exceljs';
 import saveAs from 'file-saver';
 import { getUserDescription } from './string-helper';
 import { ExcelSaverModel } from './excel-saver-model';
@@ -24,12 +25,12 @@ const excelSaver = ({ workbook, mobileDevice, workDate, title }: ExcelSaverModel
     workbook.xlsx.writeBuffer().then(buffer => saveAs(new Blob([buffer], { type: 'application/octet-stream' }), fileName));
 };
 
-const excelCommonCellStyler = ({ excelCell }: any) => {
+const excelCommonCellStyler = (excelCell: Cell) => {
     excelCell.font = { name: 'Tahoma', size: 12 };
     excelCell.alignment = { horizontal: 'left', vertical: 'middle' };
 };
 
-const excelHeaderCellStyler = ({ excelCell }: any) => {
+const excelHeaderCellStyler = (excelCell: Cell) => {
     excelCell.font = {
         name: 'Tahoma',
         size: 12,
@@ -45,7 +46,7 @@ const excelHeaderCellStyler = ({ excelCell }: any) => {
     };
 };
 
-const excelGroupCellStyler = ({ excelCell }: any) => {
+const excelGroupCellStyler = (excelCell: Cell) => {
 
     excelCell.font = {
         name: 'Tahoma',

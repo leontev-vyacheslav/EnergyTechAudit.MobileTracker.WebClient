@@ -1,4 +1,4 @@
-import { Workbook } from 'exceljs';
+import { Workbook, Cell } from 'exceljs';
 import { DataGridCell, exportDataGrid } from 'devextreme/excel_exporter';
 import { excelCommonCellStyler, excelGroupCellStyler, excelHeaderCellStyler, excelSaver } from '../../utils/excel-export-helper';
 import { GridExporterModel } from '../../models/grid-exporter';
@@ -15,9 +15,9 @@ const mobileDeviceExcelExporter = ({ dataGrid, title }: GridExporterModel) => {
     exportDataGrid({
         component: dataGrid,
         worksheet: worksheet,
-        customizeCell: ({ gridCell, excelCell }: { gridCell?: DataGridCell; excelCell?: any }) => {
-            excelCommonCellStyler({ excelCell });
-            if (gridCell) {
+        customizeCell: ({ gridCell, excelCell }: { gridCell?: DataGridCell; excelCell?: Cell }) => {
+            if (gridCell && excelCell) {
+                excelCommonCellStyler(excelCell);
                 if (gridCell.rowType === 'data') {
                     switch (gridCell.column?.dataField) {
                         case 'registrationDate': {
@@ -38,9 +38,9 @@ const mobileDeviceExcelExporter = ({ dataGrid, title }: GridExporterModel) => {
                         const extendedUserInfo = groupItem?.extendedUserInfo;
                         excelCell.value = extendedUserInfo ? `${extendedUserInfo.firstName} ${extendedUserInfo.lastName}` : groupItem.email;
                     }
-                    excelGroupCellStyler({ excelCell });
+                    excelGroupCellStyler(excelCell);
                 } else if (gridCell.rowType === 'header') {
-                    excelHeaderCellStyler({ excelCell });
+                    excelHeaderCellStyler(excelCell);
                 }
             }
         }

@@ -1,14 +1,15 @@
 import Drawer from 'devextreme-react/drawer';
 import ScrollView from 'devextreme-react/scroll-view';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { ReactElement, useCallback, useRef, useState } from 'react';
 import { useHistory } from 'react-router';
 import { Footer, Header, SideNavigationMenu } from '../../components';
 import { useScreenSize } from '../../utils/media-query';
 import { useMenuPatch } from '../../utils/patches';
 import { Template } from 'devextreme-react/core/template';
+import { SideNavProps } from '../../models/side-nav-props';
 
 import './side-nav-outer-toolbar.scss';
-import { SideNavProps } from '../../models/side-nav-props';
+import { ProcFunc } from '../../models/primitive-type';
 
 export default function ({ title, children }: SideNavProps) {
     const scrollViewRef = useRef<ScrollView>(null);
@@ -74,7 +75,6 @@ export default function ({ title, children }: SideNavProps) {
     return (
         <div className={ 'side-nav-outer-toolbar' }>
             <Header
-                /*className={ 'layout-header' }*/
                 menuToggleEnabled
                 toggleMenu={ toggleMenu }
                 title={ title }
@@ -87,8 +87,8 @@ export default function ({ title, children }: SideNavProps) {
                 revealMode={ isXSmall ? 'slide' : 'expand' }
                 minSize={ isXSmall ? 0 : 45 }
                 maxSize={ 250 }
-                shading={ isLarge ? false : true }
-                opened={ menuStatus === MenuStatus.Closed ? false : true }
+                shading={ !isLarge }
+                opened={ menuStatus !== MenuStatus.Closed }
                 template={ 'menu' }
             >
                 <div className={ 'container' }>
@@ -96,13 +96,13 @@ export default function ({ title, children }: SideNavProps) {
                         return window.innerHeight - 76;
                     } }>
                         <div className={ 'content' }>
-                            { React.Children.map(children, (item: any) => {
-                                return item.type !== Footer && item;
+                            { React.Children.map(children, (item) => {
+                                return (item as ReactElement).type !== Footer && item;
                             }) }
                         </div>
                         <div className={ 'content-block' }>
-                            { React.Children.map(children, (item: any) => {
-                                return item.type === Footer && item;
+                            { React.Children.map(children, (item) => {
+                                return (item as ReactElement).type === Footer && item;
                             }) }
                         </div>
                     </ScrollView>
@@ -112,7 +112,9 @@ export default function ({ title, children }: SideNavProps) {
                         compactMode={ menuStatus === MenuStatus.Closed }
                         selectedItemChanged={ onNavigationChanged }
                         openMenu={ temporaryOpenMenu }
-                        onMenuReady={ onMenuReady }
+                        onMenuReady={  () => {
+                            (onMenuReady as ProcFunc)();
+                        } }
                     />
                 </Template>
             </Drawer>

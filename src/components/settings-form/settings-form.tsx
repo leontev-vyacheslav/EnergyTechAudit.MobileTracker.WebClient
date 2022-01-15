@@ -22,7 +22,6 @@ const SettingsForm = ({ style }: SettingsFormProps) => {
                 colCount={ 1 }
                 formData={ appSettingsData }
                 ref={ dxAppSettingsFormRef }
-
             >
                 <TabbedItem >
                     <Tab title={ 'Основные' }>

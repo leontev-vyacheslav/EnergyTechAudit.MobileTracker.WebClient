@@ -11,7 +11,7 @@ const TrackMapTimelinePanel = () => {
     const { currentTimeline, currentTimelineItem, setCurrentTimelineItem } = useTrackMapTimelineContext();
     return  currentTimeline && currentTimelineItem ? (
         <div style={ { height: 'calc(100% - 35px)' } }>
-            <TrackMapPanelHeader title={ 'Хронология' } icon={ () => <TimelineIcon size={ 22 }/> } onClose={ () => {
+            <TrackMapPanelHeader title={ 'Хронология' } iconRender={ (props) => <TimelineIcon size={ 22 } { ...props }/> } onClose={ () => {
                 setIsShowTrackMapTimeline(false);
             } }/>
             <List className={ 'app-list' } height={ '100%' }

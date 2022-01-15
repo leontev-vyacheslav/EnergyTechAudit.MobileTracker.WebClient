@@ -1,12 +1,12 @@
 import React, { createContext, FunctionComponent, useContext, useEffect, useState } from 'react';
-import { NavigationContextModel } from '../models/navigation-context';
+import { NavigationContextModel, NavigationDataModel } from '../models/navigation-context';
 import { AppBaseProviderProps } from '../models/app-base-provider-props';
 
 const NavigationContext = createContext<NavigationContextModel>({} as NavigationContextModel);
 const useNavigation = () => useContext(NavigationContext);
 
 function NavigationProvider (props: AppBaseProviderProps) {
-    const [navigationData, setNavigationData] = useState({});
+    const [navigationData, setNavigationData] = useState<NavigationDataModel>({} as NavigationDataModel);
 
     return (
         <NavigationContext.Provider

@@ -8,7 +8,7 @@ const TrackMapSettingsPanel = () => {
     const { setIsShowTrackMapSettings } = useTrackMapSettingsContext();
     return (
         <div style={ { height: 'calc(100% - 35px)' } }>
-            <TrackMapPanelHeader title={ 'Настроки' } icon={ () => <SettingsIcon size={ 22 }/> } onClose={ () => {
+            <TrackMapPanelHeader title={ 'Настроки' } iconRender={ (props) => <SettingsIcon size={ 22 } { ...props }/> } onClose={ () => {
                 setIsShowTrackMapSettings(false);
             } }/>
             <SettingsForm style={ { width: '100%' } } />

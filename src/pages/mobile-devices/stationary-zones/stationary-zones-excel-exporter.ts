@@ -1,7 +1,10 @@
-import { Workbook } from 'exceljs';
+import { Workbook, Cell } from 'exceljs';
+
+
 import { DataGridCell, exportDataGrid } from 'devextreme/excel_exporter';
 import { excelCommonCellStyler, excelHeaderCellStyler, excelSaver } from '../../../utils/excel-export-helper';
 import { GridExporterExtendedModel } from '../../../models/grid-exporter';
+
 
 const stationaryZonesExcelExporter = ({ dataGrid, mobileDevice, workDate, title }: GridExporterExtendedModel) => {
     const workbook = new Workbook(),
@@ -14,9 +17,9 @@ const stationaryZonesExcelExporter = ({ dataGrid, mobileDevice, workDate, title 
     exportDataGrid({
         component: dataGrid,
         worksheet: worksheet,
-        customizeCell: ({ gridCell, excelCell }: { gridCell?: DataGridCell; excelCell?: any }) => {
-            excelCommonCellStyler({ excelCell });
-            if (gridCell) {
+        customizeCell: ({ gridCell, excelCell }: { gridCell?: DataGridCell; excelCell?: Cell }) => {
+            if (gridCell && excelCell) {
+                excelCommonCellStyler(excelCell);
                 if (gridCell.rowType === 'data') {
                     switch (gridCell.column?.dataField) {
                         case 'speed': {
@@ -35,7 +38,7 @@ const stationaryZonesExcelExporter = ({ dataGrid, mobileDevice, workDate, title 
                         }
                     }
                 } else if (gridCell.rowType === 'header') {
-                    excelHeaderCellStyler({ excelCell });
+                    excelHeaderCellStyler(excelCell);
                 }
             }
         }

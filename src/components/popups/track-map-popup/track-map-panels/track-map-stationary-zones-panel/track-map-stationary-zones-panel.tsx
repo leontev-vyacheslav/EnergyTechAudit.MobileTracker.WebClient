@@ -11,7 +11,7 @@ const TrackMapStationaryZonesPanel = () => {
     const { setIsShowTrackMapZones } = useTrackMapSettingsContext();
     return (
         <div style={ { height: 'calc(100% - 35px)' } }>
-            <TrackMapPanelHeader title={ 'Зоны стационарности' } icon={ () => <StationaryZonesIcon size={ 22 }/> } onClose={ () => {
+            <TrackMapPanelHeader title={ 'Зоны стационарности' } iconRender={ (props) => <StationaryZonesIcon size={ 22 } { ...props }/> } onClose={ () => {
                 setIsShowTrackMapZones(false);
             } }/>
                 <List className={ 'app-list' }
