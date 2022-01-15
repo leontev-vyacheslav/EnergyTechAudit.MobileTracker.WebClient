@@ -24,7 +24,7 @@ function App () {
     }
     loadMessages(ruMessages);
     locale('ru-RU');
-    return user == null ? <ContentNonAuth/> : <ContentAuth/>
+    return user === null ? <ContentNonAuth/> : <ContentAuth/>
 }
 
 function Main () {

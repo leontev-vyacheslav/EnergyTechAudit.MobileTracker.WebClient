@@ -12,7 +12,6 @@ export interface UserModel extends Entity {
   updateUserId: number,
   createDate: Date,
   updateDate: Date
-  organization: any | null,
   mobileDevices: MobileDeviceModel[]
   extendedUserInfo: ExtendedUserInfoModel | null
 }

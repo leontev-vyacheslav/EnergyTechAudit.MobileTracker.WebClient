@@ -35,7 +35,8 @@ export type GetTimelinesAsyncFunc = (mobileDeviceId: number, workDate: Date) => 
 export type GetLocationRecordsByRangeAsyncFunc = (mobileDeviceId: number, beginDate: Date, endDate: Date) => Promise<TrackLocationRecordModel[] | null>;
 export type GetLocationRecordAsyncFunc = (locationRecordId: number) => Promise<LocationRecordDataModel | null>;
 export type GetGeocodedAddressesAsyncFunc = (locationRecord: LocationRecordDataModel) => Promise<any[]>;
-export type GetGeocodedAddressAsyncFunc = (locationRecord: LocationRecordDataModel) => Promise<any>;
+export type GetGeocodedAddressAsyncFunc = (locationRecord: LocationRecordDataModel) => Promise<string | null>;
+export type GetGeocodedSelectedAddressesAsyncFunc = (locationRecord: LocationRecordDataModel) => Promise<string[] | null>;
 export type GetGeocodedLocationAsyncFunc = (address: string) => Promise<any>;
 export type GetOrganizationOfficesAsyncFunc = (organizationId?: number) => Promise<OrganizationOfficesModel[] | null>
 export type GetTrackSheetAsyncFunc = (mobileDeviceId: number, currentData: Date) => Promise<TrackSheetModel | null>;
@@ -56,8 +57,8 @@ export type AppDataContextModel = {
   getLocationRecordsByRangeAsync: GetLocationRecordsByRangeAsyncFunc,
   getLocationRecordAsync: GetLocationRecordAsyncFunc,
   getGeocodedAddressAsync: GetGeocodedAddressAsyncFunc,
-  getGeocodedAddressesAsync: GetGeocodedAddressAsyncFunc,
-  getGeocodedSelectedAddressesAsync: GetGeocodedAddressesAsyncFunc,
+  getGeocodedAddressesAsync: GetGeocodedAddressesAsyncFunc,
+  getGeocodedSelectedAddressesAsync: GetGeocodedSelectedAddressesAsyncFunc,
   getGeocodedLocationAsync: GetGeocodedLocationAsyncFunc,
   getTrackSheetAsync: GetTrackSheetAsyncFunc,
   getExtendedUserInfoAsync: GetExtendedUserInfoAsyncFunc,
@@ -245,7 +246,7 @@ function AppDataProvider (props: AppBaseProviderProps) {
 
     const getGeocodedAddressAsync = useCallback<GetGeocodedAddressAsyncFunc>(async (locationRecord) => {
             const results = await getGeocodedAddressesAsync(locationRecord);
-            if(results) {
+            if (results) {
                 return results.find(() => true)?.formatted_address;
             }
 
@@ -253,8 +254,8 @@ function AppDataProvider (props: AppBaseProviderProps) {
         },
         [getGeocodedAddressesAsync]);
 
-    const getGeocodedSelectedAddressesAsync = useCallback<GetGeocodedAddressesAsyncFunc>(async (locationRecord) => {
-        let selectedAddress = [];
+    const getGeocodedSelectedAddressesAsync = useCallback<GetGeocodedSelectedAddressesAsyncFunc>(async (locationRecord) => {
+        let selectedAddress: string[] = [];
         const addresses = await getGeocodedAddressesAsync(locationRecord);
         if (addresses) {
             selectedAddress = addresses

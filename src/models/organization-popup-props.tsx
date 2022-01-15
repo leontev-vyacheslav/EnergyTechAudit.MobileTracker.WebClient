@@ -3,6 +3,7 @@ import { OrganizationOfficesModel } from './organization-popup';
 
 export type OrganizationPopupProps = {
   editMode: boolean,
-  organization: OrganizationOfficesModel,
+  organization: OrganizationOfficesModel | null,
   callback: ({ ...any }: PopupCallbackModel) => void
 }
+

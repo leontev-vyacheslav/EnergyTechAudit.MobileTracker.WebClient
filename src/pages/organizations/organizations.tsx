@@ -248,7 +248,7 @@ const Organizations = () => {
                     />
                 </DataGrid>
 
-                { organizationPopupTrigger && currentOrganization ? <OrganizationPopup
+                { organizationPopupTrigger ? <OrganizationPopup
                     editMode={ editMode.current }
                     organization={ currentOrganization }
                     callback={ async (result) => {

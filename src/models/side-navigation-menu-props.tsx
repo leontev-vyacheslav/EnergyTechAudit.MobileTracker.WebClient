@@ -5,7 +5,7 @@ import { ProcFunc } from './primitive-type';
 
 export type SideNavigationMenuProps = {
   children?: ReactNode,
-  selectedItemChanged: (e: ItemClickEvent<TreeViewItemModel>) => void, // ({ itemData: { path }, event, node }: any) => void,
+  selectedItemChanged: (e: ItemClickEvent<TreeViewItemModel>) => void,
   openMenu: ProcFunc,
   compactMode: boolean,
   onMenuReady: ProcFunc

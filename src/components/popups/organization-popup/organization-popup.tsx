@@ -27,14 +27,15 @@ const OrganizationPopup = ({ editMode, organization, callback }: OrganizationPop
         ( async () => {
             if (editMode && organization) {
                 const organizationOffices = await getOrganizationOfficesAsync(organization.organizationId);
+                console.log(organizationOffices)
                 if(organizationOffices) {
                     const organizationOffice = organizationOffices.find(_ => true);
-                    if(organizationOffice) {
-                        const scheduleItems: any = {};
-                        organizationOffice.scheduleItems.forEach((si: any, i: number) => {
+                    if(organizationOffice && organizationOffice.scheduleItems) {
+                        const schedules: any = {};
+                        organizationOffice.scheduleItems.forEach((si, i: number) => {
                             si.periodBegin = Moment(si.periodBegin, 'HH:mm:ss').toDate();
                             si.periodEnd = Moment(si.periodEnd, 'HH:mm:ss').toDate();
-                            scheduleItems[`scheduleItem${ i }`] = si;
+                            schedules[`scheduleItem${ i }`] = si;
                         });
 
                         const currentOrganization = {
@@ -43,7 +44,8 @@ const OrganizationPopup = ({ editMode, organization, callback }: OrganizationPop
                             office: null,
                             description: organizationOffice.description,
                             shortName: organizationOffice.shortName,
-                            scheduleItems: scheduleItems
+                            scheduleItems: organizationOffice.scheduleItems,
+                            schedules: schedules
                         };
 
                         setCurrentOrganization(currentOrganization);
@@ -56,8 +58,9 @@ const OrganizationPopup = ({ editMode, organization, callback }: OrganizationPop
                     office: null,
                     shortName: null,
                     description: null,
-                    scheduleItems: {},
-                })
+                    scheduleItems: null,
+                    schedules: {},
+                });
             }
         } )()
     }, [editMode, getOrganizationOfficesAsync, organization])
@@ -67,20 +70,20 @@ const OrganizationPopup = ({ editMode, organization, callback }: OrganizationPop
             return;
         }
 
-        const count = Object.keys(currentOrganization.scheduleItems).length;
+        const count = Object.keys(currentOrganization.schedules).length;
         const periodBegin = new Date(), periodEnd = new Date();
         periodBegin.setHours(8, 30, 0);
         periodEnd.setHours(17, 30, 0);
 
-        const scheduleItem = {
+        const schedule = {
             scheduleTypeId: 2,
             periodBegin: periodBegin,
             periodEnd: periodEnd,
         };
 
-        const scheduleItems: any = currentOrganization.scheduleItems;
-        scheduleItems[`scheduleItem${ count }`] = scheduleItem;
-        setCurrentOrganization({ ...currentOrganization, ...{ scheduleItems: scheduleItems } });
+        const schedules = currentOrganization.schedules;
+        schedules[`scheduleItem${ count }`] = schedule;
+        setCurrentOrganization({ ...currentOrganization, ...{ schedules: schedules } });
     }, [currentOrganization]);
 
     const removeSchedule = useCallback(async (index) => {
@@ -88,26 +91,26 @@ const OrganizationPopup = ({ editMode, organization, callback }: OrganizationPop
             return;
         }
 
-        const scheduleItems: any = currentOrganization.scheduleItems;
-        const scheduleItem = scheduleItems[`scheduleItem${ index }`];
-        if (scheduleItem) {
-            delete scheduleItems[`scheduleItem${ index }`];
+        const schedules = currentOrganization.schedules;
+        const schedule = schedules[`scheduleItem${ index }`];
+        if (schedule) {
+            delete schedules[`scheduleItem${ index }`];
 
-            Object.keys(scheduleItems).forEach((fieldName, i) => {
+            Object.keys(schedules).forEach((fieldName, i) => {
 
                 if (fieldName !== `scheduleItem${ i }`) {
-                    const propertyDescriptor = Object.getOwnPropertyDescriptor(scheduleItems, fieldName);
+                    const propertyDescriptor = Object.getOwnPropertyDescriptor(schedules, fieldName);
                     if(propertyDescriptor) {
-                        Object.defineProperty(scheduleItems, `scheduleItem${i}`, propertyDescriptor);
+                        Object.defineProperty(schedules, `scheduleItem${i}`, propertyDescriptor);
                     }
-                    delete scheduleItems[fieldName];
+                    delete schedules[fieldName];
                 }
             })
-            if (scheduleItem.id) {
-                await deleteScheduleItemAsync(scheduleItem.id);
+            if (schedule.id) {
+                await deleteScheduleItemAsync(schedule.id);
             }
         }
-        setCurrentOrganization({ ...currentOrganization, ...{ scheduleItems: scheduleItems } });
+        setCurrentOrganization({ ...currentOrganization, ...{ schedules: schedules } });
         }, [currentOrganization, deleteScheduleItemAsync]
     );
 
@@ -150,11 +153,11 @@ const OrganizationPopup = ({ editMode, organization, callback }: OrganizationPop
                                 />
                             </Tab>
                             <Tab title={ 'Расписание' } tabRender={ (tab) => <IconTab tab={ tab }><ScheduleIcon size={ 18 }/></IconTab> }>
-                                { Object.keys(currentOrganization.scheduleItems).map((fieldName, i) => {
+                                { Object.keys(currentOrganization.schedules).map((fieldName, i) => {
                                     return (
                                         <GroupItem key={ i } caption={ `Элемент расписания № ${ i + 1 }` } >
                                             <SimpleItem
-                                                dataField={ `scheduleItems.${ fieldName }.scheduleTypeId` }
+                                                dataField={ `schedules.${ fieldName }.scheduleTypeId` }
                                                 label={ { location: 'top', showColon: true, text: 'Тип' } }
                                                 editorType={ 'dxSelectBox' }
                                                 editorOptions=
@@ -165,7 +168,7 @@ const OrganizationPopup = ({ editMode, organization, callback }: OrganizationPop
                                                     } }
                                             />
                                             <SimpleItem
-                                                dataField={ `scheduleItems.${ fieldName }.periodBegin` }
+                                                dataField={ `schedules.${ fieldName }.periodBegin` }
                                                 label={ { location: 'top', showColon: true, text: 'Начало периода' } }
                                                 editorType={ 'dxDateBox' } editorOptions=
                                                     { {
@@ -174,7 +177,7 @@ const OrganizationPopup = ({ editMode, organization, callback }: OrganizationPop
                                                     } }
                                             />
                                             <SimpleItem
-                                                dataField={ `scheduleItems.${ fieldName }.periodEnd` }
+                                                dataField={ `schedules.${ fieldName }.periodEnd` }
                                                 label={ { location: 'top', showColon: true, text: 'Конец периода' } }
                                                 editorType={ 'dxDateBox' } editorOptions=
                                                     { {

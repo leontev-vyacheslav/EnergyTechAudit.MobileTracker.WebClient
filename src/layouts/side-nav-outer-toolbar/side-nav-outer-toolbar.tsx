@@ -7,9 +7,9 @@ import { useScreenSize } from '../../utils/media-query';
 import { useMenuPatch } from '../../utils/patches';
 import { Template } from 'devextreme-react/core/template';
 import { SideNavProps } from '../../models/side-nav-props';
+import { ClickEvent } from 'devextreme/ui/button';
 
 import './side-nav-outer-toolbar.scss';
-import { ProcFunc } from '../../models/primitive-type';
 
 export default function ({ title, children }: SideNavProps) {
     const scrollViewRef = useRef<ScrollView>(null);
@@ -20,13 +20,13 @@ export default function ({ title, children }: SideNavProps) {
         isLarge ? MenuStatus.Opened : MenuStatus.Closed
     );
 
-    const toggleMenu = useCallback(({ event }) => {
+    const toggleMenu = useCallback(({ event }: ClickEvent) => {
         setMenuStatus(
             prevMenuStatus => prevMenuStatus === MenuStatus.Closed
                 ? MenuStatus.Opened
                 : MenuStatus.Closed
         );
-        event.stopPropagation();
+        event?.stopPropagation();
     }, []);
 
     const temporaryOpenMenu = useCallback(() => {
@@ -112,9 +112,7 @@ export default function ({ title, children }: SideNavProps) {
                         compactMode={ menuStatus === MenuStatus.Closed }
                         selectedItemChanged={ onNavigationChanged }
                         openMenu={ temporaryOpenMenu }
-                        onMenuReady={  () => {
-                            (onMenuReady as ProcFunc)();
-                        } }
+                        onMenuReady={ onMenuReady }
                     />
                 </Template>
             </Drawer>

@@ -1,8 +1,9 @@
 import { DBSCAN } from 'density-clustering';
 import { SphericalCalculator } from './spherical';
 import { TrackLocationRecordModel } from '../models/track-location-record';
+import { AppSettingsMapModel } from '../models/app-settings-context';
 
-const getGeoClusters = (locationRecordsData: TrackLocationRecordModel[], options: any) => {
+const getGeoClusters = (locationRecordsData: TrackLocationRecordModel[], options: AppSettingsMapModel) => {
     const {
         stationaryZoneRadius,
         stationaryZoneElementCount,
