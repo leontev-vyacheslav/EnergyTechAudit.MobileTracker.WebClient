@@ -101,51 +101,54 @@ function TrackMapStationaryZonesProvider (props: AppBaseProviderProps) {
 
         const selectedAddress = await  getGeocodedSelectedAddressesAsync(locationRecordInfo) ;
 
-        const dataSheet = [
-            {
-                id: 1,
-                iconRender: (props: IconBaseProps) => <CountdownIcon { ...props }/>,
-                description: 'Отсчетов:',
-                value: `${ cluster.elements.length }`
-            },
-            {
-                id: 1,
-                iconRender: (props: IconBaseProps) => <RadiusIcon { ...props }/>,
-                description: 'Радиус центроида:',
-                value: `${ Math.floor(cluster.radius * 10) / 10 } м`
-            },
-            {
-                id: 2,
-                iconRender: (props: IconBaseProps) => <AccuracyIcon { ...props }/>,
-                description: 'Средняя точность:',
-                value: `${ locationRecordInfo.accuracy } м`
-            },
-            {
-                id: 4,
-                iconRender: (props: IconBaseProps) => <SpeedIcon { ...props }/>,
-                description: 'Средняя скорость:',
-                value: locationRecordInfo.speed < 0 ? '-' : `${ Math.floor(locationRecordInfo.speed * 3.6 * 100) / 100 } км/ч`
-            }
-        ];
+        if(selectedAddress) {
+            const dataSheet = [
+                {
+                    id: 1,
+                    iconRender: (props: IconBaseProps) => <CountdownIcon { ...props } />,
+                    description: 'Отсчетов:',
+                    value: `${cluster.elements.length}`
+                },
+                {
+                    id: 1,
+                    iconRender: (props: IconBaseProps) => <RadiusIcon { ...props } />,
+                    description: 'Радиус центроида:',
+                    value: `${Math.floor(cluster.radius * 10) / 10} м`
+                },
+                {
+                    id: 2,
+                    iconRender: (props: IconBaseProps) => <AccuracyIcon { ...props } />,
+                    description: 'Средняя точность:',
+                    value: `${locationRecordInfo.accuracy} м`
+                },
+                {
+                    id: 4,
+                    iconRender: (props: IconBaseProps) => <SpeedIcon { ...props } />,
+                    description: 'Средняя скорость:',
+                    value: locationRecordInfo.speed < 0 ? '-' : `${Math.floor(locationRecordInfo.speed * 3.6 * 100) / 100} км/ч`
+                }
+            ];
 
-        const content = ReactDOMServer.renderToString(
-            React.createElement(
+            const content = ReactDOMServer.renderToString(
+              React.createElement(
                 TrackMapInfoWindow,
                 { locationRecord: locationRecordInfo, addresses: selectedAddress, externalDatasheet: dataSheet }
-            )
-        );
+              )
+            );
 
-        const offset = window.google.maps.geometry.spherical.computeOffset
-        (
-            new window.google.maps.LatLng ( locationRecordInfo.latitude, locationRecordInfo.longitude),
-            0.85 * cluster.radius, 0
-        );
-        if (offset) {
-            locationRecordInfo.latitude = offset.lat();
-            locationRecordInfo.longitude = offset.lng();
+
+            const offset = window.google.maps.geometry.spherical.computeOffset
+            (
+              new window.google.maps.LatLng(locationRecordInfo.latitude, locationRecordInfo.longitude),
+              0.85 * cluster.radius, 0
+            );
+            if (offset) {
+                locationRecordInfo.latitude = offset.lat();
+                locationRecordInfo.longitude = offset.lng();
+            }
+
+            currentClusterInfoWindow.current = buildInfoWindow(locationRecordInfo, content);
         }
-
-        currentClusterInfoWindow.current = buildInfoWindow(locationRecordInfo, content);
 
     }, [stationaryClusterList, getGeocodedSelectedAddressesAsync, buildInfoWindow]);
 
@@ -208,12 +211,12 @@ function TrackMapStationaryZonesProvider (props: AppBaseProviderProps) {
                     centroid.getSouthWest()
                 );
 
-                let selectedAddresses = [];
+                let selectedAddresses: string[] = [];
                 if (useStationaryZoneAddressesOnMap) {
                     selectedAddresses = await  getGeocodedSelectedAddressesAsync({
                         latitude: centroidCenter.lat(),
                         longitude: centroidCenter.lng(),
-                    } as LocationRecordDataModel) ;
+                    } as LocationRecordDataModel) ?? [] ;
                 }
 
                 const cluster: Cluster = {

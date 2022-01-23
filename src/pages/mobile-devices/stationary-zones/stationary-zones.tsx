@@ -102,13 +102,13 @@ const StationaryZones = ({ mobileDevice, workDate }: MobileDeviceWorkDateModel) 
                     centroid.getSouthWest()
                 );
                 const radius = diagonalDistance / 2;
-                let selectedAddresses = [];
+                let selectedAddresses: string[] = [];
 
                 if (useStationaryZoneAddressesOnList) {
                     selectedAddresses = await getGeocodedSelectedAddressesAsync({
                         latitude: centroid.getCenter().lat(),
                         longitude: centroid.getCenter().lng(),
-                    } as LocationRecordDataModel);
+                    } as LocationRecordDataModel) ?? []
                 }
 
                 clusterList.push({

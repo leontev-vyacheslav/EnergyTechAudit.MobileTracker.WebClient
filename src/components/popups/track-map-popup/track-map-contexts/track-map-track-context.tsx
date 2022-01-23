@@ -125,14 +125,17 @@ function TrackMapTrackProvider (props: AppBaseProviderProps) {
                 currentInfoWindow.current.close();
             }
 
-            const addresses = await getGeocodedSelectedAddressesAsync(locationRecord);
-            const content = ReactDOMServer.renderToString(
-                React.createElement(
+            const selectedAddresses = await getGeocodedSelectedAddressesAsync(locationRecord);
+
+            if (selectedAddresses) {
+                const content = ReactDOMServer.renderToString(
+                  React.createElement(
                     TrackMapInfoWindow,
-                    { locationRecord: locationRecord, addresses: addresses }
-                )
-            );
-            currentInfoWindow.current = buildInfoWindow(locationRecord, content);
+                    { locationRecord: locationRecord, addresses: selectedAddresses }
+                  )
+                );
+                currentInfoWindow.current = buildInfoWindow(locationRecord, content);
+            }
         }
     }, [currentMapInstance, getGeocodedSelectedAddressesAsync, buildInfoWindow, getLocationRecordAsync]);
 
