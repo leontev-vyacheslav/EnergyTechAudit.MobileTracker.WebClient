@@ -3,6 +3,7 @@
 .idea
 /.idea
 /.idea/*.*
+/src/themes/generated/*.*
 
 # dependencies
 /node_modules
