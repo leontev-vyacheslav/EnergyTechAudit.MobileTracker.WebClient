@@ -1,13 +1,13 @@
 export default {
-    host: process.env.NODE_ENV !== 'production' ? 'https://192.168.1.2:5001' : 'xxxx',
-    mobileDevice: '/api/mobileDevice',
-    timeline: '/api/timeline',
-    locationRecord: '/api/locationRecord',
-    userManagement: '/api/userManagement',
+    host: process.env.NODE_ENV !== 'production' ? 'https://localhost:5000' : 'xxxx',
+    mobileDevice: '/api/mobile-devices',
+    timeline: '/api/timelines',
+    locationRecord: '/api/location-records',
+    userManagement: '/api/user-management',
     organization: '/api/organizations',
-    administrator: '/api/administrator',
+    administrator: '/api/administrators',
 
-    accountSignIn: '/account/signIn',
-    accountSignOut: '/account/signOut',
+    accountSignIn: '/account/sign-in',
+    accountSignOut: '/account/sign-out',
     accountAssignOrganization: '/account/assign-organization',
 };

@@ -7,7 +7,7 @@ import { useAuth } from '../../contexts/auth';
 import './login-form.scss';
 import { LoginFormModel } from '../../models/login-form';
 
-export default function () {
+const LoginForm = () => {
     const { signIn } = useAuth();
     const [loading, setLoading] = useState<boolean>(false);
     const formData = useRef<LoginFormModel>(null);
@@ -60,3 +60,5 @@ export default function () {
 const emailEditorOptions = { stylingMode: 'filled', placeholder: 'Имя пользователя', mode: 'text' };
 const passwordEditorOptions = { stylingMode: 'filled', placeholder: 'Пароль', mode: 'password' };
 const rememberMeEditorOptions = { text: 'Запомнить меня', elementAttr: { class: 'form-text' } };
+
+export default LoginForm;

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { useAuth } from '../../contexts/auth';
 
-export default function () {
+const SignOut = () => {
     const { signOut } = useAuth();
 
     useEffect(() => {
@@ -17,3 +17,4 @@ export default function () {
         </Switch>
     );
 }
+export default SignOut;

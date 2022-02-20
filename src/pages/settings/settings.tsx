@@ -4,7 +4,7 @@ import PageHeader from '../../components/page-header/page-header';
 import SettingsForm from '../../components/settings-form/settings-form';
 import AppConstants from '../../constants/app-constants';
 
-export default () => {
+const Settings = () => {
     return (
         <>
             <PageHeader caption={ 'Настройки' }>
@@ -18,3 +18,5 @@ export default () => {
         </>
     );
 };
+
+export default Settings;

@@ -46,6 +46,8 @@ import ContextMenu from 'devextreme-react/context-menu';
 import { MobileDeviceModel } from '../../models/mobile-device';
 import { TimelineModel } from '../../models/timeline';
 import { ContextMenuItemItemModel } from '../../models/context-menu-item-props';
+import dxDataGrid from 'devextreme/ui/data_grid';
+import { Entity } from '../../models/entity';
 
 
 const MobileDevice = () => {
@@ -87,11 +89,14 @@ const MobileDevice = () => {
 
     const showExtendedUserInfo = useCallback(() => {
         if (dxDataGridRef.current && dxDataGridRef.current.instance) {
+
             const currentGroupRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
-            const mobileDevice = mobileDevices?.find(md => md?.userId === currentGroupRowKey[0]);
-            if (mobileDevice) {
-              setCurrentMobileDevice(mobileDevice);
-              setExtendedUserInfoPopupTrigger(true);
+            if (currentGroupRowKey) {
+              const mobileDevice = mobileDevices?.find(md => md?.userId === (currentGroupRowKey as any)[0]);
+              if (mobileDevice) {
+                setCurrentMobileDevice(mobileDevice);
+                setExtendedUserInfoPopupTrigger(true);
+              }
             }
         }
     }, [mobileDevices]);
@@ -285,7 +290,7 @@ const MobileDevice = () => {
                             exportToXlsx: () => {
                               if (dxDataGridRef.current) {
                                 mobileDeviceExcelExporter({
-                                  dataGrid: dxDataGridRef.current.instance,
+                                  dataGrid: dxDataGridRef.current.instance as unknown as dxDataGrid<Entity, number>,
                                   title: 'Мобильные устройства'
                                 })
                               }

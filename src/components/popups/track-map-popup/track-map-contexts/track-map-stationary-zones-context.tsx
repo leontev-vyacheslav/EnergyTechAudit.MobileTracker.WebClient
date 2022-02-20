@@ -136,12 +136,11 @@ function TrackMapStationaryZonesProvider (props: AppBaseProviderProps) {
               )
             );
 
-
-            const offset = window.google.maps.geometry.spherical.computeOffset
-            (
+            const offset = window.google.maps.geometry.spherical.computeOffset(
               new window.google.maps.LatLng(locationRecordInfo.latitude, locationRecordInfo.longitude),
               0.85 * cluster.radius, 0
             );
+
             if (offset) {
                 locationRecordInfo.latitude = offset.lat();
                 locationRecordInfo.longitude = offset.lng();
@@ -218,7 +217,6 @@ function TrackMapStationaryZonesProvider (props: AppBaseProviderProps) {
                         longitude: centroidCenter.lng(),
                     } as LocationRecordDataModel) ?? [] ;
                 }
-
                 const cluster: Cluster = {
                     id: index,
                     index: index,

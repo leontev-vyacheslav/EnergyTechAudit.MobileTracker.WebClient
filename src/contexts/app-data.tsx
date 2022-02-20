@@ -421,7 +421,7 @@ function AppDataProvider (props: AppBaseProviderProps) {
 
     const getAdminListAsync = useCallback<GetAdminListAsyncFunc>( async () => {
         const response = await axiosWithCredentials({
-            url: `${ routes.host }${ routes.administrator }/administrators`,
+            url: `${ routes.host }${ routes.administrator }/list`,
             method: HttpConstants.Methods.Get as Method
         });
         if (response && response.status === HttpConstants.StatusCodes.Ok) {

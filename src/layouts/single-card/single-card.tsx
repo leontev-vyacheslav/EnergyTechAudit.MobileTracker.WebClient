@@ -5,7 +5,7 @@ import AppConstants from '../../constants/app-constants';
 import './single-card.scss';
 import { SingleCardProps } from '../../models/single-card-props';
 
-export default ({ title, description, children }: SingleCardProps) => (
+const SingleCard = ({ title, description, children }: SingleCardProps) => (
     <ScrollView height={ '100vh' } width={ '100%' } className={ 'with-footer single-card' }>
         <div className={ 'dx-card content' }>
             <div className={ 'header' }>
@@ -20,3 +20,5 @@ export default ({ title, description, children }: SingleCardProps) => (
         </div>
     </ScrollView>
 );
+
+export default SingleCard;

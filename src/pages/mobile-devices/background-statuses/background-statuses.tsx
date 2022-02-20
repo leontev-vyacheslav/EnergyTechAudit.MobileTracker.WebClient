@@ -28,6 +28,8 @@ import { MobileDeviceWorkDateModel } from '../../../models/mobile-device-work-da
 import { MobileDeviceBackgroundStatusModel } from '../../../models/mobile-device-background-status-model';
 import ContextMenu from 'devextreme-react/context-menu';
 import { ContextMenuItemItemModel } from '../../../models/context-menu-item-props';
+import dxDataGrid from 'devextreme/ui/data_grid';
+import { Entity } from '../../../models/entity';
 
 const BackgroundStatuses = ({ mobileDevice, workDate }: MobileDeviceWorkDateModel) => {
 
@@ -134,7 +136,7 @@ const BackgroundStatuses = ({ mobileDevice, workDate }: MobileDeviceWorkDateMode
                       exportToXlsx: () => {
                           if (dxDataGridRef.current) {
                               stationaryZonesExcelExporter({
-                                  dataGrid: dxDataGridRef.current.instance,
+                                  dataGrid: dxDataGridRef.current.instance as unknown as dxDataGrid<Entity, number>,
                                   mobileDevice,
                                   workDate: currentWorkDate,
                                   title: 'Зоны стационарности'

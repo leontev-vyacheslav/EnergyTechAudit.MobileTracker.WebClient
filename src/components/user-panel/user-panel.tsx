@@ -11,7 +11,7 @@ import { ContextMenuItemItemModel } from '../../models/context-menu-item-props';
 
 import './user-panel.scss';
 
-export default function ({ menuMode }: UserPanelProps) {
+const UserPanel = ({ menuMode }: UserPanelProps) => {
     const { user } = useAuth();
     const { showWorkDatePicker, signOutWithConfirm } = useSharedArea();
     const { setWorkDateToday } = useAppSettings();
@@ -91,3 +91,5 @@ export default function ({ menuMode }: UserPanelProps) {
         </div>
     );
 }
+
+export default UserPanel;

@@ -20,6 +20,8 @@ import { GoogleLibraries } from '../../../models/google-liblaries';
 import { LocationRecordDataModel } from '../../../models/location-record-data';
 import ContextMenu from 'devextreme-react/context-menu';
 import { ContextMenuItemItemModel } from '../../../models/context-menu-item-props';
+import dxDataGrid from 'devextreme/ui/data_grid';
+import { Entity } from '../../../models/entity';
 
 const StationaryZones = ({ mobileDevice, workDate }: MobileDeviceWorkDateModel) => {
     const dxDataGridRef = useRef<DataGrid<Cluster, number>>(null);
@@ -207,7 +209,7 @@ const StationaryZones = ({ mobileDevice, workDate }: MobileDeviceWorkDateModel) 
                             exportToXlsx: () => {
                                 if (dxDataGridRef.current) {
                                     stationaryZonesExcelExporter({
-                                        dataGrid: dxDataGridRef.current.instance,
+                                        dataGrid: dxDataGridRef.current.instance as unknown as dxDataGrid<Entity, number>,
                                         mobileDevice,
                                         workDate: currentWorkDate,
                                         title: 'Зоны стационарности'

@@ -44,6 +44,8 @@ import { TimelineModel } from '../../models/timeline';
 import { DailyCoveredDistanceModel } from '../../models/daily-covered-distance';
 import { TrackSheetModel } from '../../models/track-sheet';
 import { ContextMenuItemItemModel } from '../../models/context-menu-item-props';
+import dxDataGrid from 'devextreme/ui/data_grid';
+import { Entity } from '../../models/entity';
 
 const TrackSheet = () => {
     function useQuery () {
@@ -223,7 +225,7 @@ const TrackSheet = () => {
                             exportToXlsx: () => {
                               if (dxDataGridRef.current) {
                                 trackSheetExcelExporter({
-                                  dataGrid: dxDataGridRef.current.instance,
+                                  dataGrid: dxDataGridRef.current.instance as unknown as dxDataGrid<Entity, number>,
                                   mobileDevice,
                                   workDate,
                                   title: 'Путевой отчет'

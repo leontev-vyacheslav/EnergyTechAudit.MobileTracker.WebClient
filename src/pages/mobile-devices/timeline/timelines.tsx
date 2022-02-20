@@ -25,6 +25,8 @@ import { MobileDeviceWorkDateModel } from '../../../models/mobile-device-work-da
 import { TimelineModel } from '../../../models/timeline';
 import ContextMenu from 'devextreme-react/context-menu';
 import { ContextMenuItemItemModel } from '../../../models/context-menu-item-props';
+import dxDataGrid from 'devextreme/ui/data_grid';
+import { Entity } from '../../../models/entity';
 
 const Timelines = ({ mobileDevice, workDate }: MobileDeviceWorkDateModel) => {
 
@@ -189,7 +191,7 @@ const Timelines = ({ mobileDevice, workDate }: MobileDeviceWorkDateModel) => {
                     exportToXlsx: () => {
                       if (dxDataGridRef.current) {
                         timelineExcelExporter({
-                          dataGrid: dxDataGridRef.current.instance,
+                          dataGrid: dxDataGridRef.current.instance as unknown as dxDataGrid<Entity, number>,
                           mobileDevice,
                           workDate: currentWorkDate,
                           title: 'Хронология',

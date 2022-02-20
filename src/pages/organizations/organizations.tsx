@@ -31,6 +31,8 @@ import { SimpleDialogModel } from '../../models/simple-dialog';
 import ContextMenu from 'devextreme-react/context-menu';
 import { OrganizationOfficesModel } from '../../models/organization-popup';
 import { ContextMenuItemItemModel } from '../../models/context-menu-item-props';
+import { Entity } from '../../models/entity';
+import dxDataGrid from 'devextreme/ui/data_grid';
 
 const Organizations = () => {
     const { getOrganizationOfficesAsync, deleteOrganizationAsync, deleteOfficeAsync } = useAppData();
@@ -65,7 +67,7 @@ const Organizations = () => {
     const editOrganization = useCallback(() => {
         if (dxDataGridRef.current && dxDataGridRef.current.instance) {
             const currentGroupRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
-            const organization = organizations?.find(org => org.organizationId === currentGroupRowKey[0]) ?? null;
+            const organization = organizations?.find(org => org.organizationId === (currentGroupRowKey as any)[0]) ?? null;
             setCurrentOrganization(organization);
             editMode.current = true;
             setOrganizationPopupTrigger(true);
@@ -79,10 +81,10 @@ const Organizations = () => {
             textRender: () => <>Действительно хотите <b>удалить</b> организацию!</>,
             callback: async () => {
                 if (dxDataGridRef.current && dxDataGridRef.current.instance) {
-                    const currentGroupRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
+                    const currentGroupRowKey = dxDataGridRef.current.instance.option('focusedRowKey') ;
 
                     if(organizations) {
-                        const organization = organizations.find(md => md.organizationId === currentGroupRowKey[0]);
+                        const organization = organizations.find(md => md.organizationId === (currentGroupRowKey as any)[0]);
                         if (organization) {
                             await deleteOrganizationAsync(organization.organizationId);
                             await refreshAsync();
@@ -97,7 +99,7 @@ const Organizations = () => {
         if (dxDataGridRef.current && dxDataGridRef.current.instance) {
             const currentGroupRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
             if (organizations) {
-                const organization = organizations.find(org => org.organizationId === currentGroupRowKey[0]) ?? null;
+                const organization = organizations.find(org => org.organizationId === (currentGroupRowKey as any)[0]) ?? null;
                 setCurrentOrganization(organization);
             }
             editMode.current = false;
@@ -281,7 +283,7 @@ const Organizations = () => {
                             exportToXlsx: () => {
                                 if (dxDataGridRef.current) {
                                     organizationsExcelExporter({
-                                        dataGrid: dxDataGridRef.current.instance,
+                                        dataGrid: dxDataGridRef.current.instance as unknown as dxDataGrid<Entity, number>,
                                         title: 'Организации'
                                     });
                                 }

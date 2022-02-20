@@ -4,7 +4,7 @@ import './home.scss';
 import { HomeIcon } from '../../constants/app-icons';
 import PageHeader from '../../components/page-header/page-header';
 
-export default () => {
+const Home = () => {
     return (
         <>
             <PageHeader caption={ 'Главная' }>
@@ -45,3 +45,5 @@ export default () => {
         </>
     );
 };
+
+export default Home;

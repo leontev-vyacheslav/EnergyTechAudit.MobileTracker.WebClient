@@ -11,7 +11,7 @@ import { ClickEvent } from 'devextreme/ui/button';
 
 import './side-nav-outer-toolbar.scss';
 
-export default function ({ title, children }: SideNavProps) {
+const SideNavOuterToolbar = ({ title, children }: SideNavProps) => {
     const scrollViewRef = useRef<ScrollView>(null);
     const history = useHistory();
     const { isXSmall, isLarge } = useScreenSize();
@@ -125,3 +125,5 @@ const MenuStatus = {
     Opened: 2,
     TemporaryOpened: 3
 };
+
+export default SideNavOuterToolbar;

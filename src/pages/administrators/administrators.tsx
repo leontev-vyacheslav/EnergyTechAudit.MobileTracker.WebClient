@@ -32,6 +32,8 @@ import { IconBaseProps } from 'react-icons/lib/cjs/iconBase';
 import { useAppData } from '../../contexts/app-data';
 import { UserModel } from '../../models/user';
 import { ContextMenuItemItemModel } from '../../models/context-menu-item-props';
+import dxDataGrid from 'devextreme/ui/data_grid';
+import { Entity } from '../../models/entity';
 
 const Administrators = () => {
 
@@ -77,8 +79,10 @@ const Administrators = () => {
             callback: async () => {
                 if (dxDataGridRef.current && dxDataGridRef.current.instance) {
                     const currentRowKey = dxDataGridRef.current.instance.option('focusedRowKey');
-                    await deleteAdminAsync(currentRowKey);
-                    await updateDataAsync();
+                    if(currentRowKey) {
+                        await deleteAdminAsync(currentRowKey);
+                        await updateDataAsync();
+                    }
                 }
             }
         } as SimpleDialogModel);
@@ -212,7 +216,7 @@ const Administrators = () => {
                             exportToXlsx: () => {
                                 if (dxDataGridRef.current) {
                                     administratorExcelExporter({
-                                        dataGrid: dxDataGridRef.current.instance,
+                                        dataGrid: dxDataGridRef.current.instance as unknown as dxDataGrid<Entity, number>,
                                         title: 'Администраторы'
                                     });
                                 }
