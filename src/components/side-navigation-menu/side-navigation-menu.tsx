@@ -65,9 +65,9 @@ export default function SideNavigationMenu (props: SideNavigationMenuProps) {
         const treeView = treeViewRef.current?.instance;
         if (treeView) {
           if (currentPath !== undefined) {
-            treeView.selectItem(currentPath);
+            treeView.selectItem(currentPath as any);
             try {
-              await treeView.expandItem(currentPath);
+              await treeView.expandItem(currentPath as any);
             } catch (ex) {
               //
             }
