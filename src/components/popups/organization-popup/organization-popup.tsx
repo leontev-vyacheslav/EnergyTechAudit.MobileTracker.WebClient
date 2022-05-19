@@ -29,7 +29,7 @@ const OrganizationPopup = ({ editMode, organization, callback }: OrganizationPop
                 const organizationOffices = await getOrganizationOfficesAsync(organization.organizationId);
                 console.log(organizationOffices)
                 if(organizationOffices) {
-                    const organizationOffice = organizationOffices.find(_ => true);
+                    const organizationOffice = organizationOffices.find(() => true);
                     if(organizationOffice && organizationOffice.scheduleItems) {
                         const schedules: any = {};
                         organizationOffice.scheduleItems.forEach((si, i: number) => {

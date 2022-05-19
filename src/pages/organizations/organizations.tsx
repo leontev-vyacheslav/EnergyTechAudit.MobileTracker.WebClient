@@ -192,7 +192,7 @@ const Organizations = () => {
                     onToolbarPreparing={ onDataGridToolbarPreparing }
                     onRowPrepared={ async e => {
                         if (e.rowType === 'group' && e.data && (e.data as any).items) {
-                            if ((e.data as any).items.find((_: any) => true).office === null) {
+                            if ((e.data as any).items.find(() => true).office === null) {
                                 const key = e.component.getKeyByRowIndex(e.rowIndex);
                                 if (key) {
                                     await e.component.collapseRow(key);

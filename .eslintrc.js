@@ -29,6 +29,7 @@ module.exports = {
     }
   },
   'rules': {
+    '@typescript-eslint/no-explicit-any': 'off',
     'no-unused-vars': ['warn', { 'vars': 'all', 'args': 'none', 'ignoreRestSiblings': false }],
     'object-curly-spacing': [2, 'always'],
     'prettier/prettier': [0, 'always'],
